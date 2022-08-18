@@ -1,0 +1,74 @@
+[gd_scene load_steps=2 format=3 uid="uid://c1n473yjtej4v"]
+
+[ext_resource type="Script" path="res://MetroidvaniaSystem/MapEditor/MapEditor.gd" id="1_6eyhl"]
+
+[node name="MapEditor" type="HBoxContainer"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("1_6eyhl")
+metadata/_edit_lock_ = true
+
+[node name="PanelContainer" type="PanelContainer" parent="."]
+offset_right = 115.0
+offset_bottom = 600.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer"]
+offset_right = 115.0
+offset_bottom = 600.0
+alignment = 1
+
+[node name="Label" type="Label" parent="PanelContainer/VBoxContainer"]
+offset_top = 199.0
+offset_right = 115.0
+offset_bottom = 225.0
+text = "Mode"
+horizontal_alignment = 1
+
+[node name="Button" type="Button" parent="PanelContainer/VBoxContainer"]
+offset_top = 229.0
+offset_right = 115.0
+offset_bottom = 260.0
+text = "Room Layout"
+
+[node name="Button2" type="Button" parent="PanelContainer/VBoxContainer"]
+offset_top = 264.0
+offset_right = 115.0
+offset_bottom = 295.0
+text = "Room Symbol"
+
+[node name="Button5" type="Button" parent="PanelContainer/VBoxContainer"]
+offset_top = 299.0
+offset_right = 115.0
+offset_bottom = 330.0
+text = "Room Color"
+
+[node name="Button3" type="Button" parent="PanelContainer/VBoxContainer"]
+offset_top = 334.0
+offset_right = 115.0
+offset_bottom = 365.0
+text = "Border Type"
+
+[node name="Button4" type="Button" parent="PanelContainer/VBoxContainer"]
+offset_top = 369.0
+offset_right = 115.0
+offset_bottom = 400.0
+text = "Border Color"
+
+[node name="MapOverlay" type="Control" parent="."]
+offset_left = 119.0
+offset_right = 1024.0
+offset_bottom = 600.0
+size_flags_horizontal = 3
+
+[node name="Map" type="Control" parent="MapOverlay"]
+unique_name_in_owner = true
+show_behind_parent = true
+clip_contents = true
+anchor_right = 1.0
+anchor_bottom = 1.0
+size_flags_horizontal = 3
+mouse_filter = 2
+
+[connection signal="draw" from="MapOverlay" to="." method="_on_overlay_draw"]
+[connection signal="gui_input" from="MapOverlay" to="." method="_on_map_input"]
+[connection signal="draw" from="MapOverlay/Map" to="." method="_on_map_draw"]

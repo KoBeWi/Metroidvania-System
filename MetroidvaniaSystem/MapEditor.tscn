@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3 uid="uid://w35o8l63vjqw"]
+
+[ext_resource type="Script" path="res://Trash/MapEditor.gd" id="1"]
+
+[node name="MapEditor" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("1")
+highlight_color = Color(0, 0, 0.5, 1)

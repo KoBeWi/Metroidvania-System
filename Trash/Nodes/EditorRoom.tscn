@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://dh5pbbvpwtd2d"]
+
+[ext_resource type="Script" path="res://Trash/Scripts/EditorRoom.gd" id="1"]
+
+[node name="EditorRoom" type="Control"]
+show_behind_parent = true
+script = ExtResource("1")
