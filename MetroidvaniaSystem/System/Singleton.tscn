@@ -11,6 +11,9 @@
 [node name="MetroidvaniaSettings" type="Node"]
 script = ExtResource("1_y1fyl")
 map_root_folder = "res://MetroidvaniaSystem/Map"
+show_collected_items_on_map = false
+show_uncollected_items_on_map = false
+display_exact_player_position = false
 default_room_separator_color = Color(0.745098, 0.745098, 0.745098, 0.501961)
 room_fill_texture = ExtResource("2_mjkl0")
 room_separator_texture = ExtResource("3_uqa6s")
@@ -19,3 +22,4 @@ border_outer_corner_texture = ExtResource("4_3go5k")
 border_inner_corner_texture = ExtResource("5_hkxje")
 map_borders = [ExtResource("3_5eq0t"), ExtResource("4_g1ime")]
 map_symbols = []
+in_game_room_size = Vector2(1024, 600)

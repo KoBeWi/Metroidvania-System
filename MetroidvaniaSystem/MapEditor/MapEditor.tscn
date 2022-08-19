@@ -1,6 +1,8 @@
-[gd_scene load_steps=2 format=3 uid="uid://c1n473yjtej4v"]
+[gd_scene load_steps=3 format=3 uid="uid://c1n473yjtej4v"]
 
 [ext_resource type="Script" path="res://MetroidvaniaSystem/MapEditor/MapEditor.gd" id="1_6eyhl"]
+
+[sub_resource type="ButtonGroup" id="ButtonGroup_pv7fp"]
 
 [node name="MapEditor" type="HBoxContainer"]
 anchor_right = 1.0
@@ -18,41 +20,61 @@ offset_bottom = 600.0
 alignment = 1
 
 [node name="Label" type="Label" parent="PanelContainer/VBoxContainer"]
-offset_top = 199.0
+offset_top = 182.0
 offset_right = 115.0
-offset_bottom = 225.0
+offset_bottom = 208.0
 text = "Mode"
 horizontal_alignment = 1
 
-[node name="Button" type="Button" parent="PanelContainer/VBoxContainer"]
-offset_top = 229.0
+[node name="ButtonLayout" type="Button" parent="PanelContainer/VBoxContainer"]
+unique_name_in_owner = true
+offset_top = 212.0
 offset_right = 115.0
-offset_bottom = 260.0
+offset_bottom = 243.0
+toggle_mode = true
+button_pressed = true
+button_group = SubResource("ButtonGroup_pv7fp")
 text = "Room Layout"
 
 [node name="Button2" type="Button" parent="PanelContainer/VBoxContainer"]
-offset_top = 264.0
+offset_top = 247.0
 offset_right = 115.0
-offset_bottom = 295.0
+offset_bottom = 278.0
+toggle_mode = true
+button_group = SubResource("ButtonGroup_pv7fp")
 text = "Room Symbol"
 
 [node name="Button5" type="Button" parent="PanelContainer/VBoxContainer"]
-offset_top = 299.0
+offset_top = 282.0
 offset_right = 115.0
-offset_bottom = 330.0
+offset_bottom = 313.0
+toggle_mode = true
+button_group = SubResource("ButtonGroup_pv7fp")
 text = "Room Color"
 
 [node name="Button3" type="Button" parent="PanelContainer/VBoxContainer"]
-offset_top = 334.0
+offset_top = 317.0
 offset_right = 115.0
-offset_bottom = 365.0
+offset_bottom = 348.0
+toggle_mode = true
+button_group = SubResource("ButtonGroup_pv7fp")
 text = "Border Type"
 
 [node name="Button4" type="Button" parent="PanelContainer/VBoxContainer"]
-offset_top = 369.0
+offset_top = 352.0
 offset_right = 115.0
-offset_bottom = 400.0
+offset_bottom = 383.0
+toggle_mode = true
+button_group = SubResource("ButtonGroup_pv7fp")
 text = "Border Color"
+
+[node name="Button6" type="Button" parent="PanelContainer/VBoxContainer"]
+offset_top = 387.0
+offset_right = 115.0
+offset_bottom = 418.0
+toggle_mode = true
+button_group = SubResource("ButtonGroup_pv7fp")
+text = "Map Assign"
 
 [node name="MapOverlay" type="Control" parent="."]
 offset_left = 119.0
@@ -69,6 +91,15 @@ anchor_bottom = 1.0
 size_flags_horizontal = 3
 mouse_filter = 2
 
+[node name="FileDialog" type="FileDialog" parent="."]
+unique_name_in_owner = true
+title = "Open a File"
+size = Vector2i(312, 160)
+ok_button_text = "Open"
+file_mode = 0
+filters = PackedStringArray("*.tscn")
+
 [connection signal="draw" from="MapOverlay" to="." method="_on_overlay_draw"]
 [connection signal="gui_input" from="MapOverlay" to="." method="_on_map_input"]
 [connection signal="draw" from="MapOverlay/Map" to="." method="_on_map_draw"]
+[connection signal="file_selected" from="FileDialog" to="." method="on_map_selected"]

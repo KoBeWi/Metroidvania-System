@@ -1,7 +1,8 @@
+@tool
 extends Node
 
 enum { R, D, L, U }
-const FWD = {R: Vector2i.LEFT, D: Vector2i.DOWN, L: Vector2i.LEFT, U: Vector2i.UP}
+const FWD = {R: Vector2i.RIGHT, D: Vector2i.DOWN, L: Vector2i.LEFT, U: Vector2i.UP}
 
 ## TODO: plugin - minimapa (dialog, z otwieraniem scen?), wyświetlacz krawędzie
 ## TODO: przypisania scen do pomieszczeń i na tej podstawie krawędzie
@@ -33,11 +34,17 @@ const FWD = {R: Vector2i.LEFT, D: Vector2i.DOWN, L: Vector2i.LEFT, U: Vector2i.U
 @export var map_borders: Array[Texture2D] ## każda ściana może mieć teksturę
 @export var map_symbols: Array[Texture2D] ## można przypisywać 1 symbol do pomieszczeń
 
+@export var in_game_room_size: Vector2
+
 @onready var ROOM_SIZE: Vector2i = room_fill_texture.get_size()
 
 var map_data: Dictionary
+var assigned_maps: Dictionary
 
 func _enter_tree() -> void:
+	reload_data()
+
+func reload_data():
 	var file := File.new()
 	file.open(map_root_folder.plus_file("MapData.txt"), File.READ)
 	
@@ -61,9 +68,18 @@ func _enter_tree() -> void:
 			for j in 4:
 				room_data.borders[j] = line.get_slice(",", j).to_int()
 			
+			var assigned_map := line.get_slice("|", 1)
+			if not assigned_map.is_empty():
+				assigned_maps[assigned_map] = [coords]
+				room_data.assigned_map = assigned_map
+			
 			map_data[coords] = room_data
 		
 		i += 1
+	
+	for map in assigned_maps.keys():
+		var rooms: Array[Vector3i] = assigned_maps[map]
+		assigned_maps[map] = _get_whole_room(rooms[0])
 
 func get_save_data() -> Dictionary:
 	return {} ## odkryte pokoje i umiejętności?
@@ -136,3 +152,24 @@ func draw_map_square(canvas_item: CanvasItem, offset: Vector2i, room: Vector3i):
 		border_outer_corner_texture.draw(ci, -ROOM_SIZE / 2)
 	
 	canvas_item.draw_set_transform_matrix(Transform2D())
+
+func _get_whole_room(at: Vector3i) -> Array[Vector3i]:
+	var room: Array[Vector3i]
+	
+	var to_check: Array[Vector2i] = [Vector2i(at.x, at.y)]
+	var checked: Array[Vector2i]
+	
+	while not to_check.is_empty():
+		var p: Vector2i = to_check.pop_back()
+		checked.append(p)
+		
+		var coord := Vector3i(p.x, p.y, at.z)
+		if coord in map_data:
+			room.append(coord)
+			for i in 4:
+				if map_data[coord].borders[i] == -1:
+					var p2: Vector2i = p + MetroidvaniaSystem.FWD[i]
+					if not p2 in to_check and not p2 in checked:
+						to_check.append(p2)
+	
+	return room
