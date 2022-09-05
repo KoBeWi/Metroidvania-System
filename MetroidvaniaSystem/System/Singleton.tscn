@@ -22,4 +22,3 @@ border_outer_corner_texture = ExtResource("4_3go5k")
 border_inner_corner_texture = ExtResource("5_hkxje")
 map_borders = [ExtResource("3_5eq0t"), ExtResource("4_g1ime")]
 map_symbols = []
-in_game_room_size = Vector2(1024, 600)

@@ -185,7 +185,7 @@ func _exit_tree() -> void:
 
 func save_map_data():
 	var file := File.new()
-	file.open(MetroidvaniaSystem.map_root_folder.plus_file("MapData.txt"), File.WRITE)
+	file.open(MetroidvaniaSystem.map_root_folder.path_join("MapData.txt"), File.WRITE)
 	
 	for coords in MetroidvaniaSystem.map_data:
 		file.store_line("[%s,%s,%s]" % [coords.x, coords.y, coords.z])

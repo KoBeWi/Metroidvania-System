@@ -4,6 +4,8 @@ extends Node
 enum { R, D, L, U }
 const FWD = {R: Vector2i.RIGHT, D: Vector2i.DOWN, L: Vector2i.LEFT, U: Vector2i.UP}
 
+const MAP_HANDLER = preload("res://MetroidvaniaSystem/System/MapHandler.gd")
+
 ## TODO: plugin - minimapa (dialog, z otwieraniem scen?), wyświetlacz krawędzie
 ## TODO: przypisania scen do pomieszczeń i na tej podstawie krawędzie
 ## TODO: mapowanie: discovered level. 0 = nieodkryty, 1 = mapa, 2 = odkryty
@@ -34,19 +36,25 @@ const FWD = {R: Vector2i.RIGHT, D: Vector2i.DOWN, L: Vector2i.LEFT, U: Vector2i.
 @export var map_borders: Array[Texture2D] ## każda ściana może mieć teksturę
 @export var map_symbols: Array[Texture2D] ## można przypisywać 1 symbol do pomieszczeń
 
-@export var in_game_room_size: Vector2
+@export var in_game_room_size := Vector2(1152, 648)
 
 @onready var ROOM_SIZE: Vector2i = room_fill_texture.get_size()
 
 var map_data: Dictionary
 var assigned_maps: Dictionary
 
+var last_player_position := Vector2i(999999, 99999999)
+var current_map: MAP_HANDLER
+
 func _enter_tree() -> void:
 	reload_data()
 
+func _ready() -> void:
+	set_physics_process(false)
+
 func reload_data():
 	var file := File.new()
-	file.open(map_root_folder.plus_file("MapData.txt"), File.READ)
+	file.open(map_root_folder.path_join("MapData.txt"), File.READ)
 	
 	var data := file.get_as_text().split("\n")
 	var i: int
@@ -88,7 +96,11 @@ func set_save_data(data: Dictionary):
 	pass ## do wczytywania
 
 func set_player_position(position: Vector2):
-	pass
+	var player_pos := Vector2i(position / in_game_room_size)
+	if player_pos != last_player_position:
+		print("dif")
+	
+	last_player_position = player_pos
 	## tutaj mapuje to na koordynaty mapy i automatycznie odkrywa, zmienia scenę (albo wysyła sygnał) itp
 
 ## format mapy: automatyczne wykrywanie całych pomieszczeń na podstawie ścian

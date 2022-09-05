@@ -1,3 +1,35 @@
-[gd_scene format=3 uid="uid://c3xqaietfgs7l"]
+[gd_scene load_steps=3 format=3 uid="uid://c3xqaietfgs7l"]
+
+[ext_resource type="PackedScene" uid="uid://xpbhai8nlgtx" path="res://SampleProject/Player.tscn" id="2_bam1a"]
+
+[sub_resource type="GDScript" id="GDScript_qo4m8"]
+script/source = "extends Node2D
+
+@onready var player = $Player
+
+var map: Node2D
+
+func _ready() -> void:
+	goto_map(\"Corridor\")
+
+func goto_map(map_name: String):
+	if map:
+		map.queue_free()
+		map = null
+	
+	map = load(\"res://SampleProject/Maps/%s.tscn\" % map_name).instantiate()
+	add_child(map)
+	map.get_node(^\"MapHandler\").adjust_camera($Player/Camera2D)
+
+func _physics_process(delta: float) -> void:
+	MetroidvaniaSystem.set_player_position(player.global_position)
+"
 
 [node name="Game" type="Node2D"]
+script = SubResource("GDScript_qo4m8")
+
+[node name="Player" parent="." instance=ExtResource("2_bam1a")]
+position = Vector2(161, 468)
+
+[node name="Camera2D" type="Camera2D" parent="Player"]
+current = true
