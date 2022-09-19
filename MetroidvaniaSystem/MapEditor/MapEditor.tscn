@@ -14,15 +14,18 @@ script = ExtResource("1_6eyhl")
 metadata/_edit_lock_ = true
 
 [node name="PanelContainer" type="PanelContainer" parent="."]
+layout_mode = 2
 offset_right = 115.0
 offset_bottom = 648.0
 
 [node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer"]
+layout_mode = 2
 offset_right = 115.0
 offset_bottom = 648.0
 alignment = 1
 
 [node name="Label" type="Label" parent="PanelContainer/VBoxContainer"]
+layout_mode = 2
 offset_top = 206.0
 offset_right = 115.0
 offset_bottom = 232.0
@@ -31,6 +34,7 @@ horizontal_alignment = 1
 
 [node name="ButtonLayout" type="Button" parent="PanelContainer/VBoxContainer"]
 unique_name_in_owner = true
+layout_mode = 2
 offset_top = 236.0
 offset_right = 115.0
 offset_bottom = 267.0
@@ -40,6 +44,7 @@ button_group = SubResource("ButtonGroup_pv7fp")
 text = "Room Layout"
 
 [node name="Button2" type="Button" parent="PanelContainer/VBoxContainer"]
+layout_mode = 2
 offset_top = 271.0
 offset_right = 115.0
 offset_bottom = 302.0
@@ -48,6 +53,7 @@ button_group = SubResource("ButtonGroup_pv7fp")
 text = "Room Symbol"
 
 [node name="Button5" type="Button" parent="PanelContainer/VBoxContainer"]
+layout_mode = 2
 offset_top = 306.0
 offset_right = 115.0
 offset_bottom = 337.0
@@ -56,6 +62,7 @@ button_group = SubResource("ButtonGroup_pv7fp")
 text = "Room Color"
 
 [node name="Button3" type="Button" parent="PanelContainer/VBoxContainer"]
+layout_mode = 2
 offset_top = 341.0
 offset_right = 115.0
 offset_bottom = 372.0
@@ -64,6 +71,7 @@ button_group = SubResource("ButtonGroup_pv7fp")
 text = "Border Type"
 
 [node name="Button4" type="Button" parent="PanelContainer/VBoxContainer"]
+layout_mode = 2
 offset_top = 376.0
 offset_right = 115.0
 offset_bottom = 407.0
@@ -72,6 +80,7 @@ button_group = SubResource("ButtonGroup_pv7fp")
 text = "Border Color"
 
 [node name="Button6" type="Button" parent="PanelContainer/VBoxContainer"]
+layout_mode = 2
 offset_top = 411.0
 offset_right = 115.0
 offset_bottom = 442.0
@@ -80,7 +89,7 @@ button_group = SubResource("ButtonGroup_pv7fp")
 text = "Map Assign"
 
 [node name="MapOverlay" type="Control" parent="."]
-layout_mode = 3
+layout_mode = 2
 anchors_preset = 0
 offset_left = 119.0
 offset_right = 1152.0
@@ -91,7 +100,7 @@ size_flags_horizontal = 3
 unique_name_in_owner = true
 show_behind_parent = true
 clip_contents = true
-layout_mode = 3
+layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0

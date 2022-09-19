@@ -11,6 +11,7 @@ const MAP_HANDLER = preload("res://MetroidvaniaSystem/System/MapHandler.gd")
 ## TODO: mapowanie: discovered level. 0 = nieodkryty, 1 = mapa, 2 = odkryty
 ## TODO: mapowanie: jak tylko mapowany, to opcje: wyświetlaj krawędzie, wyświetlaj symbole itp, kolor nieodkrytego
 ## TODO: shared borders - że są pośrodku między pomieszczeniami
+## TODO: room groups - do map (itemów)
 
 @export_dir var map_root_folder: String
 
@@ -98,7 +99,7 @@ func set_save_data(data: Dictionary):
 func set_player_position(position: Vector2):
 	var player_pos := Vector2i(position / in_game_room_size)
 	if player_pos != last_player_position:
-		print("dif")
+		visit_room(Vector3i(player_pos.x, player_pos.y, 0)) ## TODO
 	
 	last_player_position = player_pos
 	## tutaj mapuje to na koordynaty mapy i automatycznie odkrywa, zmienia scenę (albo wysyła sygnał) itp
@@ -119,6 +120,9 @@ func mark_object_on_map(object: Object):
 func store_object(object: Object):
 	pass ## zapisuje, że jest
 
+func visit_room(room: Vector3i):
+	pass
+	## tu odkrywanie i sygnał teleportacji
 
 ## w edytorze map: można rysować prostokąty, trochę jak w trackmanii się łączą (że kwadraty obok siebie mają ściany, ale jak się przeciągnie prostokąt między nimi to są 1 pomieszczenie)
 ## można klikać ściany, żeby edytować
