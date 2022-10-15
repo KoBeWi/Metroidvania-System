@@ -11,18 +11,27 @@ var map: Node2D
 
 func _ready() -> void:
 	goto_map(\"Corridor\")
+	MetroidvaniaSystem.map_changed.connect(on_map_changed)
 
 func goto_map(map_name: String):
+	var prev_map_position: Vector2i = MetroidvaniaSystem.VECTOR2INF
 	if map:
+		prev_map_position = map.get_node(^\"MapHandler\").min_room
 		map.queue_free()
 		map = null
 	
 	map = load(\"res://SampleProject/Maps/%s.tscn\" % map_name).instantiate()
 	add_child(map)
 	map.get_node(^\"MapHandler\").adjust_camera($Player/Camera2D)
+	
+	if prev_map_position != MetroidvaniaSystem.VECTOR2INF:
+		player.position -= Vector2(map.get_node(^\"MapHandler\").min_room - prev_map_position) * MetroidvaniaSystem.in_game_room_size
 
 func _physics_process(delta: float) -> void:
 	MetroidvaniaSystem.set_player_position(player.global_position)
+
+func on_map_changed(target_map: String):
+	goto_map(target_map.get_file().get_basename())
 "
 
 [node name="Game" type="Node2D"]

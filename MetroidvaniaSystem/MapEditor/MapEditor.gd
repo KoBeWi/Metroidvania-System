@@ -113,7 +113,8 @@ func close_border(pos: Vector2i, border: int):
 		room.borders[border] = 0
 
 func on_map_selected(path: String) -> void:
-	MetroidvaniaSystem.map_data[highlighted_room[0]].assigned_map = path
+	for coords in highlighted_room:
+		MetroidvaniaSystem.map_data[coords].assigned_map = path
 
 func _on_map_input(event: InputEvent) -> void:
 	match mode:
@@ -247,8 +248,7 @@ func _exit_tree() -> void:
 	save_map_data()
 
 func save_map_data():
-	var file := File.new()
-	file.open(MetroidvaniaSystem.map_root_folder.path_join("MapData.txt"), File.WRITE)
+	var file := FileAccess.open(MetroidvaniaSystem.map_root_folder.path_join("MapData.txt"), FileAccess.WRITE)
 	
 	for coords in MetroidvaniaSystem.map_data:
 		file.store_line("[%s,%s,%s]" % [coords.x, coords.y, coords.z])

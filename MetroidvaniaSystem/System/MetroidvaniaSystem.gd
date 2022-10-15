@@ -3,15 +3,19 @@ extends Node
 
 enum { R, D, L, U }
 const FWD = {R: Vector2i.RIGHT, D: Vector2i.DOWN, L: Vector2i.LEFT, U: Vector2i.UP}
+const VECTOR2INF = Vector2i(999999, 99999999)
 
 const MAP_HANDLER = preload("res://MetroidvaniaSystem/System/MapHandler.gd")
 
 ## TODO: plugin - minimapa (dialog, z otwieraniem scen?), wyświetlacz krawędzie
 ## TODO: przypisania scen do pomieszczeń i na tej podstawie krawędzie
-## TODO: mapowanie: discovered level. 0 = nieodkryty, 1 = mapa, 2 = odkryty
+## TODO: mapowanie: discovered level. 0 = nieodkryty, 1 = mapa (discovered), 2 = odkryty (explored)
 ## TODO: mapowanie: jak tylko mapowany, to opcje: wyświetlaj krawędzie, wyświetlaj symbole itp, kolor nieodkrytego
 ## TODO: shared borders - że są pośrodku między pomieszczeniami
 ## TODO: room groups - do map (itemów)
+## TODO: sposób wyświetlania ścian w nieodkrytych (mapowanych) pomieszczeniach: brak, bez przejść, wszystko
+## TODO: map root, żeby nie były takie długie nazwy / albo ID używać
+## TODO: zmienić na MetSys??
 
 @export_dir var map_root_folder: String
 
@@ -44,8 +48,10 @@ const MAP_HANDLER = preload("res://MetroidvaniaSystem/System/MapHandler.gd")
 var map_data: Dictionary
 var assigned_maps: Dictionary
 
-var last_player_position := Vector2i(999999, 99999999)
+var last_player_position := VECTOR2INF
 var current_map: MAP_HANDLER
+
+signal map_changed(new_map: String)
 
 func _enter_tree() -> void:
 	reload_data()
@@ -54,8 +60,7 @@ func _ready() -> void:
 	set_physics_process(false)
 
 func reload_data():
-	var file := File.new()
-	file.open(map_root_folder.path_join("MapData.txt"), File.READ)
+	var file := FileAccess.open(map_root_folder.path_join("MapData.txt"), FileAccess.READ)
 	
 	var data := file.get_as_text().split("\n")
 	var i: int
@@ -97,7 +102,7 @@ func set_save_data(data: Dictionary):
 	pass ## do wczytywania
 
 func set_player_position(position: Vector2):
-	var player_pos := Vector2i(position / in_game_room_size)
+	var player_pos := Vector2i((position / in_game_room_size).floor()) + current_map.min_room
 	if player_pos != last_player_position:
 		visit_room(Vector3i(player_pos.x, player_pos.y, 0)) ## TODO
 	
@@ -121,7 +126,10 @@ func store_object(object: Object):
 	pass ## zapisuje, że jest
 
 func visit_room(room: Vector3i):
-	pass
+	var previous_map: String = map_data.get(Vector3i(last_player_position.x, last_player_position.y, 0), {}).get("assigned_map", "")
+	var current_map: String = map_data.get(room, {}).get("assigned_map", "")
+	if not current_map.is_empty() and not previous_map.is_empty() and current_map != previous_map:
+		map_changed.emit(map_data[room].assigned_map)
 	## tu odkrywanie i sygnał teleportacji
 
 ## w edytorze map: można rysować prostokąty, trochę jak w trackmanii się łączą (że kwadraty obok siebie mają ściany, ale jak się przeciągnie prostokąt między nimi to są 1 pomieszczenie)
