@@ -22,7 +22,7 @@ func _ready() -> void:
 	%ButtonLayout.button_group.pressed.connect(func(button: BaseButton): mode = button.get_index())
 
 func get_cursor_pos() -> Vector2i:
-	var room_size: Vector2 = MetroidvaniaSystem.ROOM_SIZE
+	var room_size: Vector2 = MetSys.ROOM_SIZE
 	var pos := (map_overlay.get_local_mouse_position() - room_size / 2).snapped(room_size) / room_size as Vector2i
 	return pos - map_offset
 
@@ -41,22 +41,22 @@ func get_rect_between(point1: Vector2, point2: Vector2) -> Rect2:
 	return Rect2(start, Vector2.ONE).expand(end + Vector2.ONE)
 
 func get_square_border_idx(rel: Vector2) -> int:
-	if rel.x < MetroidvaniaSystem.ROOM_SIZE.x / 3:
-		return MetroidvaniaSystem.L
+	if rel.x < MetSys.ROOM_SIZE.x / 3:
+		return MetSys.L
 	
-	if rel.x > MetroidvaniaSystem.ROOM_SIZE.x - MetroidvaniaSystem.ROOM_SIZE.x / 3:
-		return MetroidvaniaSystem.R
+	if rel.x > MetSys.ROOM_SIZE.x - MetSys.ROOM_SIZE.x / 3:
+		return MetSys.R
 	
-	if rel.y < MetroidvaniaSystem.ROOM_SIZE.y / 3:
-		return MetroidvaniaSystem.U
+	if rel.y < MetSys.ROOM_SIZE.y / 3:
+		return MetSys.U
 	
-	if rel.y > MetroidvaniaSystem.ROOM_SIZE.y - MetroidvaniaSystem.ROOM_SIZE.y / 3:
-		return MetroidvaniaSystem.D
+	if rel.y > MetSys.ROOM_SIZE.y - MetSys.ROOM_SIZE.y / 3:
+		return MetSys.D
 	
 	return -1
 
 func update_rooms(rect: Rect2i):
-	var map_data: Dictionary = MetroidvaniaSystem.map_data
+	var map_data: Dictionary = MetSys.map_data
 	
 	for x in range(rect.position.x, rect.end.x):
 		for y in range(rect.position.y, rect.end.y):
@@ -87,7 +87,7 @@ func update_rooms(rect: Rect2i):
 	map.queue_redraw()
 
 func erase_rooms(rect: Rect2i):
-	var map_data: Dictionary = MetroidvaniaSystem.map_data
+	var map_data: Dictionary = MetSys.map_data
 	
 	for x in range(rect.position.x, rect.end.x):
 		for y in range(rect.position.y, rect.end.y):
@@ -107,14 +107,14 @@ func erase_rooms(rect: Rect2i):
 	map.queue_redraw()
 
 func close_border(pos: Vector2i, border: int):
-	var room: Dictionary = MetroidvaniaSystem.map_data.get(get_coord(pos), {})
+	var room: Dictionary = MetSys.map_data.get(get_coord(pos), {})
 	
 	if not room.is_empty():
 		room.borders[border] = 0
 
 func on_map_selected(path: String) -> void:
 	for coords in highlighted_room:
-		MetroidvaniaSystem.map_data[coords].assigned_map = path
+		MetSys.map_data[coords].assigned_map = path
 
 func _on_map_input(event: InputEvent) -> void:
 	match mode:
@@ -128,7 +128,7 @@ func _on_map_input(event: InputEvent) -> void:
 func layout_input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion:
 		if view_drag != Vector4():
-			map_offset = (Vector2i(view_drag.z, view_drag.w) + Vector2i(map_overlay.get_local_mouse_position() - Vector2(view_drag.x, view_drag.y)) / MetroidvaniaSystem.ROOM_SIZE)
+			map_offset = (Vector2i(view_drag.z, view_drag.w) + Vector2i(map_overlay.get_local_mouse_position() - Vector2(view_drag.x, view_drag.y)) / MetSys.ROOM_SIZE)
 			map.queue_redraw()
 		else:
 			map_overlay.queue_redraw()
@@ -139,7 +139,7 @@ func layout_input(event: InputEvent) -> void:
 				drag_from = get_cursor_pos()
 			else:
 				var rect := get_rect_between(drag_from, get_cursor_pos())
-				rect.position -= map.position / Vector2(MetroidvaniaSystem.ROOM_SIZE)
+				rect.position -= map.position / Vector2(MetSys.ROOM_SIZE)
 				update_rooms(rect)
 				drag_from = NULL_VECTOR2I
 		elif event.button_index == MOUSE_BUTTON_RIGHT:
@@ -149,7 +149,7 @@ func layout_input(event: InputEvent) -> void:
 				queue_redraw()
 			else:
 				var rect := get_rect_between(drag_from, get_cursor_pos())
-				rect.position -= map.position / Vector2(MetroidvaniaSystem.ROOM_SIZE)
+				rect.position -= map.position / Vector2(MetSys.ROOM_SIZE)
 				erase_rooms(rect)
 				erase_mode = false
 				drag_from = NULL_VECTOR2I
@@ -163,14 +163,14 @@ func layout_input(event: InputEvent) -> void:
 				view_drag = Vector4()
 
 func border_type_input(event: InputEvent) -> void:
-	var room_data: Dictionary = MetroidvaniaSystem.map_data.get(get_coord(get_cursor_pos()), {})
+	var room_data: Dictionary = MetSys.map_data.get(get_coord(get_cursor_pos()), {})
 	
 	if event is InputEventMouseMotion:
 		if room_data.is_empty():
 			highlighted_border = -1
 			map_overlay.queue_redraw()
 		else:
-			var rel := map_overlay.get_local_mouse_position().posmodv(MetroidvaniaSystem.ROOM_SIZE)
+			var rel := map_overlay.get_local_mouse_position().posmodv(MetSys.ROOM_SIZE)
 			var border := get_square_border_idx(rel)
 			
 			var new_border := -1
@@ -197,7 +197,7 @@ func border_type_input(event: InputEvent) -> void:
 func map_assign_input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion:
 		var hr := highlighted_room
-		highlighted_room = MetroidvaniaSystem._get_whole_room(get_coord(get_cursor_pos()))
+		highlighted_room = MetSys._get_whole_room(get_coord(get_cursor_pos()))
 		if highlighted_room != hr:
 			map_overlay.queue_redraw()
 	
@@ -208,10 +208,10 @@ func map_assign_input(event: InputEvent) -> void:
 					%FileDialog.popup_centered_ratio()
 		elif event.button_index == MOUSE_BUTTON_RIGHT:
 			for p in highlighted_room:
-				MetroidvaniaSystem.map_data[p].erase("assigned_map")
+				MetSys.map_data[p].erase("assigned_map")
 
 func _on_overlay_draw() -> void:
-	var room_size: Vector2 = MetroidvaniaSystem.ROOM_SIZE
+	var room_size: Vector2 = MetSys.ROOM_SIZE
 	
 	for p in highlighted_room:
 		map_overlay.draw_rect(Rect2((Vector2(p.x, p.y) + Vector2(map_offset)) * room_size, room_size), Color(1, 1, 0, 0.25))
@@ -228,13 +228,13 @@ func _on_overlay_draw() -> void:
 	
 	if highlighted_border > -1:
 		match highlighted_border:
-			0: # MetroidvaniaSystem.R
+			0: # MetSys.R
 				map_overlay.draw_rect(Rect2(Vector2(get_cursor_pos() + map_offset) * room_size + Vector2(room_size.x * 0.667, 0), room_size * Vector2(0.333, 1)), Color(0, 1, 0, 0.5))
-			1: # MetroidvaniaSystem.D
+			1: # MetSys.D
 				map_overlay.draw_rect(Rect2(Vector2(get_cursor_pos() + map_offset) * room_size + Vector2(0, room_size.y * 0.667), room_size * Vector2(1, 0.333)), Color(0, 1, 0, 0.5))
-			2: # MetroidvaniaSystem.L
+			2: # MetSys.L
 				map_overlay.draw_rect(Rect2(Vector2(get_cursor_pos() + map_offset) * room_size, room_size * Vector2(0.333, 1)), Color(0, 1, 0, 0.5))
-			3: # MetroidvaniaSystem.U
+			3: # MetSys.U
 				map_overlay.draw_rect(Rect2(Vector2(get_cursor_pos() + map_offset) * room_size, room_size * Vector2(1, 0.333)), Color(0, 1, 0, 0.5))
 	
 	map_overlay.draw_string(get_theme_font(&"font", &"Label"), Vector2(0, 20), str(get_cursor_pos()))
@@ -242,16 +242,16 @@ func _on_overlay_draw() -> void:
 func _on_map_draw() -> void:
 	for x in range(-100, 100):
 		for y in range(-100, 100):
-			MetroidvaniaSystem.draw_map_square(map, Vector2i(x, y) + map_offset, Vector3i(x, y, current_layer))
+			MetSys.draw_map_square(map, Vector2i(x, y) + map_offset, Vector3i(x, y, current_layer))
 
 func _exit_tree() -> void:
 	save_map_data()
 
 func save_map_data():
-	var file := FileAccess.open(MetroidvaniaSystem.map_root_folder.path_join("MapData.txt"), FileAccess.WRITE)
+	var file := FileAccess.open(MetSys.map_root_folder.path_join("MapData.txt"), FileAccess.WRITE)
 	
-	for coords in MetroidvaniaSystem.map_data:
+	for coords in MetSys.map_data:
 		file.store_line("[%s,%s,%s]" % [coords.x, coords.y, coords.z])
 		
-		var room_data: Dictionary = MetroidvaniaSystem.map_data[coords]
+		var room_data: Dictionary = MetSys.map_data[coords]
 		file.store_line("%s,%s,%s,%s|%s" % [room_data.borders[0], room_data.borders[1], room_data.borders[2], room_data.borders[3], room_data.get("assigned_map", "")])

@@ -15,7 +15,6 @@ const MAP_HANDLER = preload("res://MetroidvaniaSystem/System/MapHandler.gd")
 ## TODO: room groups - do map (itemów)
 ## TODO: sposób wyświetlania ścian w nieodkrytych (mapowanych) pomieszczeniach: brak, bez przejść, wszystko
 ## TODO: map root, żeby nie były takie długie nazwy / albo ID używać
-## TODO: zmienić na MetSys??
 
 @export_dir var map_root_folder: String
 
@@ -192,7 +191,7 @@ func _get_whole_room(at: Vector3i) -> Array[Vector3i]:
 			room.append(coord)
 			for i in 4:
 				if map_data[coord].borders[i] == -1:
-					var p2: Vector2i = p + MetroidvaniaSystem.FWD[i]
+					var p2: Vector2i = p + FWD[i]
 					if not p2 in to_check and not p2 in checked:
 						to_check.append(p2)
 	

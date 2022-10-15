@@ -13,12 +13,12 @@ func _enter_tree() -> void:
 	initialized = true
 	
 	if Engine.is_editor_hint():
-		MetroidvaniaSystem.reload_data()
+		MetSys.reload_data()
 	else:
-		MetroidvaniaSystem.current_map = self
+		MetSys.current_map = self
 	
 	var owner_node := owner if owner != null else self
-	rooms = MetroidvaniaSystem.assigned_maps.get(owner_node.scene_file_path, [])
+	rooms = MetSys.assigned_maps.get(owner_node.scene_file_path, [])
 	if rooms.is_empty():
 		return
 	
@@ -31,8 +31,8 @@ func _enter_tree() -> void:
 func adjust_camera(camera: Camera2D):
 	camera.limit_left = 0
 	camera.limit_top = 0
-	camera.limit_right = (max_room.x - min_room.x + 1) * MetroidvaniaSystem.in_game_room_size.x
-	camera.limit_bottom = (max_room.y - min_room.y + 1) * MetroidvaniaSystem.in_game_room_size.y
+	camera.limit_right = (max_room.x - min_room.x + 1) * MetSys.in_game_room_size.x
+	camera.limit_bottom = (max_room.y - min_room.y + 1) * MetSys.in_game_room_size.y
 
 func _draw() -> void:
 	if not Engine.is_editor_hint() or rooms.is_empty():
@@ -40,4 +40,4 @@ func _draw() -> void:
 	
 	for p in rooms:
 		var coord := Vector2(p.x - min_room.x, p.y - min_room.y)
-		draw_rect(Rect2(coord * MetroidvaniaSystem.in_game_room_size, MetroidvaniaSystem.in_game_room_size), Color.WHITE, false, 2)
+		draw_rect(Rect2(coord * MetSys.in_game_room_size, MetSys.in_game_room_size), Color.WHITE, false, 2)
