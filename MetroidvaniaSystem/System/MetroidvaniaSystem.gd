@@ -6,6 +6,7 @@ const FWD = {R: Vector2i.RIGHT, D: Vector2i.DOWN, L: Vector2i.LEFT, U: Vector2i.
 const VECTOR2INF = Vector2i(999999, 99999999)
 
 const MAP_HANDLER = preload("res://MetroidvaniaSystem/System/MapHandler.gd")
+const SAVE_DATA = preload("res://MetroidvaniaSystem/System/SaveData.gd")
 
 ## TODO: plugin - minimapa (dialog, z otwieraniem scen?), wyświetlacz krawędzie
 ## TODO: przypisania scen do pomieszczeń i na tej podstawie krawędzie
@@ -50,6 +51,9 @@ var assigned_maps: Dictionary
 var last_player_position := VECTOR2INF
 var current_map: MAP_HANDLER
 
+var save_data := SAVE_DATA.new()
+
+signal room_changed(new_room: Vector2i)
 signal map_changed(new_map: String)
 
 func _enter_tree() -> void:
@@ -103,7 +107,8 @@ func set_save_data(data: Dictionary):
 func set_player_position(position: Vector2):
 	var player_pos := Vector2i((position / in_game_room_size).floor()) + current_map.min_room
 	if player_pos != last_player_position:
-		visit_room(Vector3i(player_pos.x, player_pos.y, 0)) ## TODO
+		visit_room(Vector3i(player_pos.x, player_pos.y, 0))
+		room_changed.emit(player_pos)
 	
 	last_player_position = player_pos
 	## tutaj mapuje to na koordynaty mapy i automatycznie odkrywa, zmienia scenę (albo wysyła sygnał) itp
@@ -125,6 +130,8 @@ func store_object(object: Object):
 	pass ## zapisuje, że jest
 
 func visit_room(room: Vector3i):
+	save_data.explore_room(room)
+	
 	var previous_map: String = map_data.get(Vector3i(last_player_position.x, last_player_position.y, 0), {}).get("assigned_map", "")
 	var current_map: String = map_data.get(room, {}).get("assigned_map", "")
 	if not current_map.is_empty() and not previous_map.is_empty() and current_map != previous_map:
@@ -137,9 +144,16 @@ func visit_room(room: Vector3i):
 func discover_secret_passage(gdzie):
 	pass ## usuwa ścianę?
 
-func draw_map_square(canvas_item: CanvasItem, offset: Vector2i, room: Vector3i):
+func draw_map_square(canvas_item: CanvasItem, offset: Vector2i, room: Vector3i, use_save_data := false):
 	var room_data: Dictionary = map_data.get(room, {})
 	if room_data.is_empty():
+		return
+	
+	var discovered := 2
+	if use_save_data:
+		discovered = save_data.is_room_discovered(room)
+	
+	if discovered == 0:
 		return
 	
 	var ci := canvas_item.get_canvas_item()
@@ -196,3 +210,6 @@ func _get_whole_room(at: Vector3i) -> Array[Vector3i]:
 						to_check.append(p2)
 	
 	return room
+
+func reset_save_data():
+	save_data = SAVE_DATA.new()

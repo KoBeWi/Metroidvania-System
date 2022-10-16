@@ -1,4 +1,4 @@
-[gd_scene load_steps=3 format=3 uid="uid://c3xqaietfgs7l"]
+[gd_scene load_steps=7 format=3 uid="uid://c3xqaietfgs7l"]
 
 [ext_resource type="PackedScene" uid="uid://xpbhai8nlgtx" path="res://SampleProject/Player.tscn" id="2_bam1a"]
 
@@ -34,6 +34,62 @@ func on_map_changed(target_map: String):
 	goto_map(target_map.get_file().get_basename())
 "
 
+[sub_resource type="GDScript" id="GDScript_u7odr"]
+resource_name = "Minimap"
+script/source = "extends Panel
+
+var current_room: Vector2i
+
+func _ready() -> void:
+	MetSys.room_changed.connect(on_room_changed)
+
+func on_room_changed(new_room: Vector2i):
+	current_room = new_room
+	queue_redraw()
+
+func _draw() -> void:
+	for x in range(-1, 2):
+		for y in range(-1, 2):
+			MetSys.draw_map_square(self, Vector2i(x + 1, y + 1), Vector3i(current_room.x + x, current_room.y + y, 0), true)
+"
+
+[sub_resource type="Animation" id="Animation_lgykt"]
+resource_name = "Flash"
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(0.5, 2),
+"update": 0,
+"values": [Color(1, 1, 1, 0.752941), Color(1, 1, 1, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_0p0d4"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0.752941)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_kkw8m"]
+_data = {
+"Flash": SubResource("Animation_lgykt"),
+"RESET": SubResource("Animation_0p0d4")
+}
+
 [node name="Game" type="Node2D"]
 script = SubResource("GDScript_qo4m8")
 
@@ -42,3 +98,30 @@ position = Vector2(161, 468)
 
 [node name="Camera2D" type="Camera2D" parent="Player"]
 current = true
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="Minimal" type="Panel" parent="UI"]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -112.0
+offset_top = 16.0
+offset_right = -16.0
+offset_bottom = 112.0
+grow_horizontal = 0
+script = SubResource("GDScript_u7odr")
+
+[node name="ColorRect" type="ColorRect" parent="UI/Minimal"]
+modulate = Color(1, 1, 1, 0.752941)
+layout_mode = 0
+offset_left = 32.0
+offset_top = 32.0
+offset_right = 64.0
+offset_bottom = 64.0
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="UI/Minimal/ColorRect"]
+autoplay = "Flash"
+libraries = {
+"": SubResource("AnimationLibrary_kkw8m")
+}
