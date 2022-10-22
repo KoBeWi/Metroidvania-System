@@ -5,6 +5,8 @@ enum {MODE_LAYOUT = 1, MODE_ROOM_SYMBOL, MODE_ROOM_COLOR, MODE_ROOM_GROUP, MODE_
 @onready var map_overlay: Control = $MapOverlay
 @onready var map: Control = %Map
 
+@export var mode_group: ButtonGroup
+
 const NULL_VECTOR2I = Vector2i(-9999999, -9999999)
 
 var drag_from: Vector2i = NULL_VECTOR2I
@@ -15,7 +17,7 @@ var mode: int = MODE_LAYOUT
 var current_layer: int
 
 func _ready() -> void:
-	%RoomLayout.button_group.pressed.connect(mode_pressed)
+	mode_group.pressed.connect(mode_pressed)
 	get_current_sub_editor()._editor_enter()
 
 func mode_pressed(button: BaseButton):
@@ -31,7 +33,7 @@ func layer_changed(l: int):
 	map_overlay.queue_redraw()
 
 func get_current_sub_editor() -> Control:
-	return %Modes.get_child(mode)
+	return mode_group.get_pressed_button()
 
 func _on_map_input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion:

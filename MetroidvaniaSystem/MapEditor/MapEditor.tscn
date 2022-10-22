@@ -239,6 +239,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_6eyhl")
+mode_group = SubResource("ButtonGroup_pv7fp")
 metadata/_edit_lock_ = true
 
 [node name="PanelContainer" type="PanelContainer" parent="."]
@@ -247,7 +248,6 @@ offset_right = 115.0
 offset_bottom = 648.0
 
 [node name="Modes" type="VBoxContainer" parent="PanelContainer"]
-unique_name_in_owner = true
 layout_mode = 2
 offset_right = 115.0
 offset_bottom = 648.0
@@ -262,7 +262,6 @@ text = "Mode"
 horizontal_alignment = 1
 
 [node name="RoomLayout" type="Button" parent="PanelContainer/Modes"]
-unique_name_in_owner = true
 layout_mode = 2
 offset_top = 218.0
 offset_right = 115.0
@@ -339,6 +338,7 @@ offset_right = 115.0
 offset_bottom = 648.0
 mouse_filter = 2
 alignment = 2
+metadata/_edit_lock_ = true
 
 [node name="Groups" type="VBoxContainer" parent="PanelContainer/EditControls"]
 unique_name_in_owner = true
@@ -367,6 +367,7 @@ layout_mode = 2
 offset_right = 115.0
 offset_bottom = 648.0
 mouse_filter = 2
+metadata/_edit_lock_ = true
 
 [node name="Label" type="Label" parent="PanelContainer/Layer"]
 layout_mode = 2
