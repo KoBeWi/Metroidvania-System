@@ -1,8 +1,236 @@
-[gd_scene load_steps=3 format=3 uid="uid://c1n473yjtej4v"]
+[gd_scene load_steps=10 format=3 uid="uid://c1n473yjtej4v"]
 
 [ext_resource type="Script" path="res://MetroidvaniaSystem/MapEditor/MapEditor.gd" id="1_6eyhl"]
 
 [sub_resource type="ButtonGroup" id="ButtonGroup_pv7fp"]
+
+[sub_resource type="GDScript" id="GDScript_dsps8"]
+resource_name = "RoomLayout"
+script/source = "extends \"res://MetroidvaniaSystem/MapEditor/SubEditor.gd\"
+
+var erase_mode: bool
+
+func _editor_exit():
+	cursor_color = Color.GREEN
+
+func _editor_input(event: InputEvent):
+	if event is InputEventMouseButton:
+		if event.button_index == MOUSE_BUTTON_LEFT:
+			if event.pressed:
+				drag_from = get_cursor_pos()
+			else:
+				var rect := get_rect_between(drag_from, get_cursor_pos())
+				rect.position -= editor.map.position / Vector2(MetSys.ROOM_SIZE)
+				update_rooms(rect)
+				drag_from = EDITOR_SCRIPT.NULL_VECTOR2I
+		elif event.button_index == MOUSE_BUTTON_RIGHT:
+			if event.pressed:
+				drag_from = get_cursor_pos()
+				erase_mode = true
+				cursor_color = Color.RED
+				queue_redraw()
+			else:
+				var rect := get_rect_between(drag_from, get_cursor_pos())
+				rect.position -= editor.map.position / Vector2(MetSys.ROOM_SIZE)
+				erase_rooms(rect)
+				erase_mode = false
+				cursor_color = Color.GREEN
+				drag_from = EDITOR_SCRIPT.NULL_VECTOR2I
+
+func update_rooms(rect: Rect2i):
+	var map_data: Dictionary = MetSys.map_data
+	
+	for x in range(rect.position.x, rect.end.x):
+		for y in range(rect.position.y, rect.end.y):
+			var coords := Vector3i(x, y, editor.current_layer)
+			
+			var room: Dictionary = map_data.get(coords, {})
+			if room.is_empty():
+				room.borders = [-1, -1, -1, -1]
+				if x == rect.end.x - 1:
+					room.borders[0] = 0
+				if y == rect.end.y - 1:
+					room.borders[1] = 0
+				if x == rect.position.x:
+					room.borders[2] = 0
+				if y == rect.position.y:
+					room.borders[3] = 0
+				map_data[coords] = room
+			else:
+				if x != rect.end.x - 1:
+					room.borders[0] = -1
+				if y != rect.end.y - 1:
+					room.borders[1] = -1
+				if x != rect.position.x:
+					room.borders[2] = -1
+				if y != rect.position.y:
+					room.borders[3] = -1
+	
+	editor.map.queue_redraw()
+
+func erase_rooms(rect: Rect2i):
+	var map_data: Dictionary = MetSys.map_data
+	
+	for x in range(rect.position.x, rect.end.x):
+		for y in range(rect.position.y, rect.end.y):
+			var coords := Vector3i(x, y, editor.current_layer)
+			
+			if x == rect.end.x - 1:
+				close_border(Vector2i(x + 1, y), 2)
+			if y == rect.end.y - 1:
+				close_border(Vector2i(x, y + 1), 3)
+			if x == rect.position.x:
+				close_border(Vector2i(x - 1, y), 0)
+			if y == rect.position.y:
+				close_border(Vector2i(x, y - 1), 1)
+			
+			map_data.erase(coords)
+	
+	editor.map.queue_redraw()
+
+func close_border(pos: Vector2i, border: int):
+	var room: Dictionary = MetSys.map_data.get(get_coords(pos), {})
+	
+	if not room.is_empty():
+		room.borders[border] = 0
+"
+
+[sub_resource type="GDScript" id="GDScript_ujwfx"]
+resource_name = "RoomSymbol"
+script/source = "extends \"res://MetroidvaniaSystem/MapEditor/SubEditor.gd\"
+"
+
+[sub_resource type="GDScript" id="GDScript_tlx5u"]
+script/source = "extends \"res://MetroidvaniaSystem/MapEditor/SubEditor.gd\"
+"
+
+[sub_resource type="GDScript" id="GDScript_a80ln"]
+resource_name = "RoomGroup"
+script/source = "extends \"res://MetroidvaniaSystem/MapEditor/SubEditor.gd\"
+
+func _editor_enter():
+	%Groups.show()
+
+func _editor_exit():
+	%Groups.hide()
+
+func _editor_draw(map_overlay: CanvasItem):
+	var room_size: Vector2 = MetSys.ROOM_SIZE
+	super(map_overlay)
+	
+	for p in MetSys.room_groups.get(%CurrentGroup.value as int, []):
+		map_overlay.draw_rect(Rect2(Vector2(p.x, p.y) * room_size, room_size), Color(Color.MEDIUM_PURPLE, 0.8))
+
+func _editor_input(event: InputEvent):
+	if event is InputEventMouseMotion:
+		editor.map_overlay.queue_redraw()
+	
+	if event is InputEventMouseButton:
+		if event.pressed:
+			var coord := get_coords(get_cursor_pos())
+			var current_group: int = %CurrentGroup.value
+			
+			if event.button_index == MOUSE_BUTTON_LEFT:
+				var room_data: Dictionary = MetSys.map_data.get(coord, {})
+				if room_data.is_empty():
+					return
+				
+				if not current_group in MetSys.room_groups:
+					MetSys.room_groups[current_group] = []
+				
+				if not coord in MetSys.room_groups[current_group]:
+					MetSys.room_groups[current_group].append(coord)
+				editor.map_overlay.queue_redraw()
+			elif event.button_index == MOUSE_BUTTON_RIGHT:
+				if not current_group in MetSys.room_groups:
+					return
+				
+				var room_data: Dictionary = MetSys.map_data.get(coord, {})
+				if room_data.is_empty():
+					return
+				
+				MetSys.room_groups[current_group].erase(coord)
+				editor.map_overlay.queue_redraw()
+"
+
+[sub_resource type="GDScript" id="GDScript_ilxbw"]
+resource_name = "BorderType"
+script/source = "extends \"res://MetroidvaniaSystem/MapEditor/SubEditor.gd\"
+
+func _ready() -> void:
+	super()
+	use_cursor = false
+
+func _editor_input(event: InputEvent):
+	var room_data: Dictionary = MetSys.map_data.get(get_coords(get_cursor_pos()), {})
+	
+	if event is InputEventMouseMotion:
+		if room_data.is_empty():
+			highlighted_border = -1
+			editor.map_overlay.queue_redraw()
+		else:
+			var rel := editor.map_overlay.get_local_mouse_position().posmodv(MetSys.ROOM_SIZE)
+			var border := get_square_border_idx(rel)
+			
+			var new_border := -1
+			var borders: Array[int] = room_data[\"borders\"]
+			
+			for i in 4:
+				if border == i and borders[i] > -1:
+					new_border = border
+					break
+			
+			if new_border != highlighted_border:
+				highlighted_border = new_border
+				editor.map_overlay.queue_redraw()
+	
+	if event is InputEventMouseButton:
+		if room_data.is_empty() or highlighted_border == -1:
+			return
+		
+		if event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+			var borders: Array[int] = room_data[\"borders\"]
+			room_data[\"borders\"][highlighted_border] = (borders[highlighted_border] + 1) % 2
+			editor.map.queue_redraw()
+"
+
+[sub_resource type="GDScript" id="GDScript_a3fsx"]
+resource_name = "BorderColor"
+script/source = "extends \"res://MetroidvaniaSystem/MapEditor/SubEditor.gd\"
+
+func _ready() -> void:
+	super()
+	use_cursor = false
+"
+
+[sub_resource type="GDScript" id="GDScript_ibl4j"]
+resource_name = "MapAssign"
+script/source = "extends \"res://MetroidvaniaSystem/MapEditor/SubEditor.gd\"
+
+func _ready() -> void:
+	super()
+	use_cursor = false
+
+func _editor_input(event: InputEvent):
+	if event is InputEventMouseMotion:
+		var hr := highlighted_room
+		highlighted_room = MetSys._get_whole_room(get_coords(get_cursor_pos()))
+		if highlighted_room != hr:
+			editor.map_overlay.queue_redraw()
+	
+	if event is InputEventMouseButton:
+		if event.button_index == MOUSE_BUTTON_LEFT:
+			if event.pressed:
+				if not highlighted_room.is_empty():
+					%FileDialog.popup_centered_ratio()
+		elif event.button_index == MOUSE_BUTTON_RIGHT:
+			for p in highlighted_room:
+				MetSys.map_data[p].erase(\"assigned_map\")
+
+func on_map_selected(path: String) -> void:
+	for coords in highlighted_room:
+		MetSys.map_data[coords].assigned_map = path
+"
 
 [node name="MapEditor" type="HBoxContainer"]
 anchors_preset = 15
@@ -14,23 +242,28 @@ script = ExtResource("1_6eyhl")
 metadata/_edit_lock_ = true
 
 [node name="PanelContainer" type="PanelContainer" parent="."]
+layout_mode = 2
 offset_right = 115.0
 offset_bottom = 648.0
 
 [node name="Modes" type="VBoxContainer" parent="PanelContainer"]
+unique_name_in_owner = true
+layout_mode = 2
 offset_right = 115.0
 offset_bottom = 648.0
 alignment = 1
 
 [node name="Label" type="Label" parent="PanelContainer/Modes"]
+layout_mode = 2
 offset_top = 188.0
 offset_right = 115.0
 offset_bottom = 214.0
 text = "Mode"
 horizontal_alignment = 1
 
-[node name="ButtonLayout" type="Button" parent="PanelContainer/Modes"]
+[node name="RoomLayout" type="Button" parent="PanelContainer/Modes"]
 unique_name_in_owner = true
+layout_mode = 2
 offset_top = 218.0
 offset_right = 115.0
 offset_bottom = 249.0
@@ -38,56 +271,70 @@ toggle_mode = true
 button_pressed = true
 button_group = SubResource("ButtonGroup_pv7fp")
 text = "Room Layout"
+script = SubResource("GDScript_dsps8")
 
-[node name="Button2" type="Button" parent="PanelContainer/Modes"]
+[node name="RoomSymbol" type="Button" parent="PanelContainer/Modes"]
+layout_mode = 2
 offset_top = 253.0
 offset_right = 115.0
 offset_bottom = 284.0
 toggle_mode = true
 button_group = SubResource("ButtonGroup_pv7fp")
 text = "Room Symbol"
+script = SubResource("GDScript_ujwfx")
 
-[node name="Button5" type="Button" parent="PanelContainer/Modes"]
+[node name="RoomColor" type="Button" parent="PanelContainer/Modes"]
+layout_mode = 2
 offset_top = 288.0
 offset_right = 115.0
 offset_bottom = 319.0
 toggle_mode = true
 button_group = SubResource("ButtonGroup_pv7fp")
 text = "Room Color"
+script = SubResource("GDScript_tlx5u")
 
-[node name="Button7" type="Button" parent="PanelContainer/Modes"]
+[node name="RoomGroup" type="Button" parent="PanelContainer/Modes"]
+layout_mode = 2
 offset_top = 323.0
 offset_right = 115.0
 offset_bottom = 354.0
 toggle_mode = true
 button_group = SubResource("ButtonGroup_pv7fp")
 text = "Room Group"
+script = SubResource("GDScript_a80ln")
 
-[node name="Button3" type="Button" parent="PanelContainer/Modes"]
+[node name="BorderType" type="Button" parent="PanelContainer/Modes"]
+layout_mode = 2
 offset_top = 358.0
 offset_right = 115.0
 offset_bottom = 389.0
 toggle_mode = true
 button_group = SubResource("ButtonGroup_pv7fp")
 text = "Border Type"
+script = SubResource("GDScript_ilxbw")
 
-[node name="Button4" type="Button" parent="PanelContainer/Modes"]
+[node name="BorderColor" type="Button" parent="PanelContainer/Modes"]
+layout_mode = 2
 offset_top = 393.0
 offset_right = 115.0
 offset_bottom = 424.0
 toggle_mode = true
 button_group = SubResource("ButtonGroup_pv7fp")
 text = "Border Color"
+script = SubResource("GDScript_a3fsx")
 
-[node name="Button6" type="Button" parent="PanelContainer/Modes"]
+[node name="MapAssign" type="Button" parent="PanelContainer/Modes"]
+layout_mode = 2
 offset_top = 428.0
 offset_right = 115.0
 offset_bottom = 459.0
 toggle_mode = true
 button_group = SubResource("ButtonGroup_pv7fp")
 text = "Map Assign"
+script = SubResource("GDScript_ibl4j")
 
 [node name="EditControls" type="VBoxContainer" parent="PanelContainer"]
+layout_mode = 2
 offset_right = 115.0
 offset_bottom = 648.0
 mouse_filter = 2
@@ -96,11 +343,13 @@ alignment = 2
 [node name="Groups" type="VBoxContainer" parent="PanelContainer/EditControls"]
 unique_name_in_owner = true
 visible = false
+layout_mode = 2
 offset_top = 587.0
 offset_right = 115.0
 offset_bottom = 648.0
 
 [node name="Label" type="Label" parent="PanelContainer/EditControls/Groups"]
+layout_mode = 2
 offset_right = 115.0
 offset_bottom = 26.0
 text = "Group ID"
@@ -108,28 +357,32 @@ horizontal_alignment = 1
 
 [node name="CurrentGroup" type="SpinBox" parent="PanelContainer/EditControls/Groups"]
 unique_name_in_owner = true
+layout_mode = 2
 offset_top = 30.0
 offset_right = 115.0
 offset_bottom = 61.0
 
 [node name="Layer" type="VBoxContainer" parent="PanelContainer"]
+layout_mode = 2
 offset_right = 115.0
 offset_bottom = 648.0
 mouse_filter = 2
 
 [node name="Label" type="Label" parent="PanelContainer/Layer"]
+layout_mode = 2
 offset_right = 115.0
 offset_bottom = 26.0
 text = "Current Layer"
 horizontal_alignment = 1
 
 [node name="SpinBox" type="SpinBox" parent="PanelContainer/Layer"]
+layout_mode = 2
 offset_top = 30.0
 offset_right = 115.0
 offset_bottom = 61.0
 
 [node name="MapOverlay" type="Control" parent="."]
-layout_mode = 3
+layout_mode = 2
 anchors_preset = 0
 offset_left = 119.0
 offset_right = 1152.0
@@ -140,7 +393,7 @@ size_flags_horizontal = 3
 unique_name_in_owner = true
 show_behind_parent = true
 clip_contents = true
-layout_mode = 3
+layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -158,7 +411,8 @@ file_mode = 0
 filters = PackedStringArray("*.tscn")
 
 [connection signal="value_changed" from="PanelContainer/EditControls/Groups/CurrentGroup" to="MapOverlay" method="queue_redraw" unbinds=1]
+[connection signal="value_changed" from="PanelContainer/Layer/SpinBox" to="." method="layer_changed"]
 [connection signal="draw" from="MapOverlay" to="." method="_on_overlay_draw"]
 [connection signal="gui_input" from="MapOverlay" to="." method="_on_map_input"]
 [connection signal="draw" from="MapOverlay/Map" to="." method="_on_map_draw"]
-[connection signal="file_selected" from="FileDialog" to="." method="on_map_selected"]
+[connection signal="file_selected" from="FileDialog" to="PanelContainer/Modes/MapAssign" method="on_map_selected"]

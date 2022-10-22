@@ -114,7 +114,6 @@ script = SubResource("GDScript_u7odr")
 
 [node name="ColorRect" type="ColorRect" parent="UI/Minimal"]
 modulate = Color(1, 1, 1, 0.752941)
-layout_mode = 0
 offset_left = 32.0
 offset_top = 32.0
 offset_right = 64.0
