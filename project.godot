@@ -29,6 +29,11 @@ config/icon="res://icon.png"
 
 MetSys="*res://MetroidvaniaSystem/System/Singleton.tscn"
 
+[debug]
+
+gdscript/warnings/unassigned_variable=0
+gdscript/warnings/narrowing_conversion=0
+
 [rendering]
 
 environment/default_environment="res://default_env.tres"

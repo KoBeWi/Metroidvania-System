@@ -17,67 +17,116 @@ metadata/_edit_lock_ = true
 offset_right = 115.0
 offset_bottom = 648.0
 
-[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer"]
+[node name="Modes" type="VBoxContainer" parent="PanelContainer"]
 offset_right = 115.0
 offset_bottom = 648.0
 alignment = 1
 
-[node name="Label" type="Label" parent="PanelContainer/VBoxContainer"]
-offset_top = 206.0
+[node name="Label" type="Label" parent="PanelContainer/Modes"]
+offset_top = 188.0
 offset_right = 115.0
-offset_bottom = 232.0
+offset_bottom = 214.0
 text = "Mode"
 horizontal_alignment = 1
 
-[node name="ButtonLayout" type="Button" parent="PanelContainer/VBoxContainer"]
+[node name="ButtonLayout" type="Button" parent="PanelContainer/Modes"]
 unique_name_in_owner = true
-offset_top = 236.0
+offset_top = 218.0
 offset_right = 115.0
-offset_bottom = 267.0
+offset_bottom = 249.0
 toggle_mode = true
 button_pressed = true
 button_group = SubResource("ButtonGroup_pv7fp")
 text = "Room Layout"
 
-[node name="Button2" type="Button" parent="PanelContainer/VBoxContainer"]
-offset_top = 271.0
+[node name="Button2" type="Button" parent="PanelContainer/Modes"]
+offset_top = 253.0
 offset_right = 115.0
-offset_bottom = 302.0
+offset_bottom = 284.0
 toggle_mode = true
 button_group = SubResource("ButtonGroup_pv7fp")
 text = "Room Symbol"
 
-[node name="Button5" type="Button" parent="PanelContainer/VBoxContainer"]
-offset_top = 306.0
+[node name="Button5" type="Button" parent="PanelContainer/Modes"]
+offset_top = 288.0
 offset_right = 115.0
-offset_bottom = 337.0
+offset_bottom = 319.0
 toggle_mode = true
 button_group = SubResource("ButtonGroup_pv7fp")
 text = "Room Color"
 
-[node name="Button3" type="Button" parent="PanelContainer/VBoxContainer"]
-offset_top = 341.0
+[node name="Button7" type="Button" parent="PanelContainer/Modes"]
+offset_top = 323.0
 offset_right = 115.0
-offset_bottom = 372.0
+offset_bottom = 354.0
+toggle_mode = true
+button_group = SubResource("ButtonGroup_pv7fp")
+text = "Room Group"
+
+[node name="Button3" type="Button" parent="PanelContainer/Modes"]
+offset_top = 358.0
+offset_right = 115.0
+offset_bottom = 389.0
 toggle_mode = true
 button_group = SubResource("ButtonGroup_pv7fp")
 text = "Border Type"
 
-[node name="Button4" type="Button" parent="PanelContainer/VBoxContainer"]
-offset_top = 376.0
+[node name="Button4" type="Button" parent="PanelContainer/Modes"]
+offset_top = 393.0
 offset_right = 115.0
-offset_bottom = 407.0
+offset_bottom = 424.0
 toggle_mode = true
 button_group = SubResource("ButtonGroup_pv7fp")
 text = "Border Color"
 
-[node name="Button6" type="Button" parent="PanelContainer/VBoxContainer"]
-offset_top = 411.0
+[node name="Button6" type="Button" parent="PanelContainer/Modes"]
+offset_top = 428.0
 offset_right = 115.0
-offset_bottom = 442.0
+offset_bottom = 459.0
 toggle_mode = true
 button_group = SubResource("ButtonGroup_pv7fp")
 text = "Map Assign"
+
+[node name="EditControls" type="VBoxContainer" parent="PanelContainer"]
+offset_right = 115.0
+offset_bottom = 648.0
+mouse_filter = 2
+alignment = 2
+
+[node name="Groups" type="VBoxContainer" parent="PanelContainer/EditControls"]
+unique_name_in_owner = true
+visible = false
+offset_top = 587.0
+offset_right = 115.0
+offset_bottom = 648.0
+
+[node name="Label" type="Label" parent="PanelContainer/EditControls/Groups"]
+offset_right = 115.0
+offset_bottom = 26.0
+text = "Group ID"
+horizontal_alignment = 1
+
+[node name="CurrentGroup" type="SpinBox" parent="PanelContainer/EditControls/Groups"]
+unique_name_in_owner = true
+offset_top = 30.0
+offset_right = 115.0
+offset_bottom = 61.0
+
+[node name="Layer" type="VBoxContainer" parent="PanelContainer"]
+offset_right = 115.0
+offset_bottom = 648.0
+mouse_filter = 2
+
+[node name="Label" type="Label" parent="PanelContainer/Layer"]
+offset_right = 115.0
+offset_bottom = 26.0
+text = "Current Layer"
+horizontal_alignment = 1
+
+[node name="SpinBox" type="SpinBox" parent="PanelContainer/Layer"]
+offset_top = 30.0
+offset_right = 115.0
+offset_bottom = 61.0
 
 [node name="MapOverlay" type="Control" parent="."]
 layout_mode = 3
@@ -108,6 +157,7 @@ ok_button_text = "Open"
 file_mode = 0
 filters = PackedStringArray("*.tscn")
 
+[connection signal="value_changed" from="PanelContainer/EditControls/Groups/CurrentGroup" to="MapOverlay" method="queue_redraw" unbinds=1]
 [connection signal="draw" from="MapOverlay" to="." method="_on_overlay_draw"]
 [connection signal="gui_input" from="MapOverlay" to="." method="_on_map_input"]
 [connection signal="draw" from="MapOverlay/Map" to="." method="_on_map_draw"]

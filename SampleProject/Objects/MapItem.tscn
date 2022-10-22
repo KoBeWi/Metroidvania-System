@@ -1,0 +1,28 @@
+[gd_scene load_steps=4 format=3 uid="uid://d0hyimq1tkfa2"]
+
+[ext_resource type="Texture2D" uid="uid://l42te86waali" path="res://SampleProject/Sprites/MapItem.png" id="1_gov3o"]
+
+[sub_resource type="GDScript" id="GDScript_5wqrn"]
+script/source = "extends Area2D
+
+@export var room_group: int
+
+func collect(body: Node2D) -> void:
+	MetSys.discover_room_group(room_group)
+	## TODO: redraw minimap
+	queue_free()
+"
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_v5e3t"]
+size = Vector2(32, 32)
+
+[node name="MapItem" type="Area2D"]
+script = SubResource("GDScript_5wqrn")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_v5e3t")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_gov3o")
+
+[connection signal="body_entered" from="." to="." method="collect"]

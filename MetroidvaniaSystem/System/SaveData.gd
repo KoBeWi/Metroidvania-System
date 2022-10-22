@@ -3,12 +3,14 @@ extends RefCounted
 var discovered_rooms: Dictionary
 
 func discover_room(room: Vector3i):
-	discovered_rooms[room] = 1
+	if discovered_rooms.get(room, 0) < 1:
+		discovered_rooms[room] = 1
 
 func explore_room(room: Vector3i):
-	discovered_rooms[room] = 2
+	if discovered_rooms.get(room, 0) < 2:
+		discovered_rooms[room] = 2
 
-func is_room_discovered(room: Vector3i) -> bool:
+func is_room_discovered(room: Vector3i) -> int:
 	return discovered_rooms.get(room, 0)
 
 func get_data() -> Dictionary:

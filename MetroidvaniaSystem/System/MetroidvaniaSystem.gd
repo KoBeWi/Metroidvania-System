@@ -9,13 +9,13 @@ const MAP_HANDLER = preload("res://MetroidvaniaSystem/System/MapHandler.gd")
 const SAVE_DATA = preload("res://MetroidvaniaSystem/System/SaveData.gd")
 
 ## TODO: plugin - minimapa (dialog, z otwieraniem scen?), wyświetlacz krawędzie
-## TODO: przypisania scen do pomieszczeń i na tej podstawie krawędzie
 ## TODO: mapowanie: discovered level. 0 = nieodkryty, 1 = mapa (discovered), 2 = odkryty (explored)
 ## TODO: mapowanie: jak tylko mapowany, to opcje: wyświetlaj krawędzie, wyświetlaj symbole itp, kolor nieodkrytego
 ## TODO: shared borders - że są pośrodku między pomieszczeniami
 ## TODO: room groups - do map (itemów)
 ## TODO: sposób wyświetlania ścian w nieodkrytych (mapowanych) pomieszczeniach: brak, bez przejść, wszystko
 ## TODO: map root, żeby nie były takie długie nazwy / albo ID używać
+## TODO: przerobić room_data i groupy itp na klasę RoomData i cały kod wczytywania itp dać tam
 
 @export_dir var map_root_folder: String
 
@@ -24,6 +24,7 @@ const SAVE_DATA = preload("res://MetroidvaniaSystem/System/SaveData.gd")
 @export var display_exact_player_position: bool
 
 @export var default_room_fill_color = Color.BLUE
+@export var unexplored_room_fill_color = Color.GRAY
 @export var default_room_separator_color = Color.GRAY
 @export var default_room_wall_color = Color.WHITE
 
@@ -47,6 +48,7 @@ const SAVE_DATA = preload("res://MetroidvaniaSystem/System/SaveData.gd")
 
 var map_data: Dictionary
 var assigned_maps: Dictionary
+var room_groups: Dictionary
 
 var last_player_position := VECTOR2INF
 var current_map: MAP_HANDLER
@@ -68,9 +70,11 @@ func reload_data():
 	var data := file.get_as_text().split("\n")
 	var i: int
 	
+	var is_in_groups := true
 	while i < data.size():
 		var line := data[i]
 		if line.begins_with("["):
+			is_in_groups = false
 			line = line.trim_prefix("[").trim_suffix("]")
 			
 			var coords: Vector3i
@@ -91,6 +95,18 @@ func reload_data():
 				room_data.assigned_map = assigned_map
 			
 			map_data[coords] = room_data
+		elif is_in_groups:
+			var group_data := data[i].split(":")
+			var group_id := group_data[0].to_int()
+			var rooms: Array
+			for j in range(1, group_data.size()):
+				var coords: Vector3i
+				coords.x = group_data[j].get_slice(",", 0).to_int()
+				coords.y = group_data[j].get_slice(",", 1).to_int()
+				coords.z = group_data[j].get_slice(",", 2).to_int()
+				rooms.append(coords)
+			
+			room_groups[group_id] = rooms
 		
 		i += 1
 	
@@ -159,7 +175,7 @@ func draw_map_square(canvas_item: CanvasItem, offset: Vector2i, room: Vector3i, 
 	var ci := canvas_item.get_canvas_item()
 	
 	canvas_item.draw_set_transform_matrix(Transform2D())
-	room_fill_texture.draw(ci, offset * ROOM_SIZE, default_room_fill_color)
+	room_fill_texture.draw(ci, offset * ROOM_SIZE, default_room_fill_color if discovered == 2 else unexplored_room_fill_color)
 	
 	var borders: Array[int] = room_data["borders"]
 	for i in 4:
@@ -210,6 +226,12 @@ func _get_whole_room(at: Vector3i) -> Array[Vector3i]:
 						to_check.append(p2)
 	
 	return room
+
+func discover_room_group(group_id: int):
+	assert(group_id in room_groups)
+	
+	for room in room_groups[group_id]:
+		save_data.discover_room(room)
 
 func reset_save_data():
 	save_data = SAVE_DATA.new()

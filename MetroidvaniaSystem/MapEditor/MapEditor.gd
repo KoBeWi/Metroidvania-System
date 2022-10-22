@@ -1,6 +1,6 @@
 extends Control
 
-enum {MODE_LAYOUT = 1, MODE_SYMBOL, COLOR, MODE_BTYPE, MODE_BCOLOR, MODE_MAP}
+enum {MODE_LAYOUT = 1, MODE_ROOM_SYMBOL, MODE_ROOM_COLOR, MODE_ROOM_GROUP, MODE_BORDER_TYPE, MODE_BORDER_COLOR, MODE_MAP}
 
 @onready var map_overlay: Control = $MapOverlay
 @onready var map: Control = %Map
@@ -19,14 +19,23 @@ var mode: int = MODE_LAYOUT
 var current_layer: int
 
 func _ready() -> void:
-	%ButtonLayout.button_group.pressed.connect(func(button: BaseButton): mode = button.get_index())
+	%ButtonLayout.button_group.pressed.connect(func(button: BaseButton):
+		mode = button.get_index()
+		map_overlay.queue_redraw() ## TODO: naprawić kursor
+		
+		match mode:
+			MODE_ROOM_GROUP:
+				%Groups.show()
+			_:
+				%Groups.hide()
+	)
 
 func get_cursor_pos() -> Vector2i:
 	var room_size: Vector2 = MetSys.ROOM_SIZE
 	var pos := (map_overlay.get_local_mouse_position() - room_size / 2).snapped(room_size) / room_size as Vector2i
 	return pos - map_offset
 
-func get_coord(p: Vector2i, layer := current_layer) -> Vector3i:
+func get_coord(p: Vector2i, layer := current_layer) -> Vector3i: ## TODO: ma być coords
 	return Vector3i(p.x, p.y, layer)
 
 func get_rect_between(point1: Vector2, point2: Vector2) -> Rect2:
@@ -120,7 +129,9 @@ func _on_map_input(event: InputEvent) -> void:
 	match mode:
 		MODE_LAYOUT:
 			layout_input(event)
-		MODE_BTYPE:
+		MODE_ROOM_GROUP:
+			room_group_input(event)
+		MODE_BORDER_TYPE:
 			border_type_input(event)
 		MODE_MAP:
 			map_assign_input(event)
@@ -161,6 +172,37 @@ func layout_input(event: InputEvent) -> void:
 				view_drag.w = map_offset.y
 			else:
 				view_drag = Vector4()
+
+func room_group_input(event: InputEvent) -> void:
+	if event is InputEventMouseMotion:
+		map_overlay.queue_redraw()
+	
+	if event is InputEventMouseButton:
+		if event.pressed:
+			var coord := get_coord(get_cursor_pos())
+			var current_group: int = %CurrentGroup.value
+			
+			if event.button_index == MOUSE_BUTTON_LEFT:
+				var room_data: Dictionary = MetSys.map_data.get(coord, {})
+				if room_data.is_empty():
+					return
+				
+				if not current_group in MetSys.room_groups:
+					MetSys.room_groups[current_group] = []
+				
+				if not coord in MetSys.room_groups[current_group]:
+					MetSys.room_groups[current_group].append(coord)
+				map_overlay.queue_redraw()
+			elif event.button_index == MOUSE_BUTTON_RIGHT:
+				if not current_group in MetSys.room_groups:
+					return
+				
+				var room_data: Dictionary = MetSys.map_data.get(coord, {})
+				if room_data.is_empty():
+					return
+				
+				MetSys.room_groups[current_group].erase(coord)
+				map_overlay.queue_redraw()
 
 func border_type_input(event: InputEvent) -> void:
 	var room_data: Dictionary = MetSys.map_data.get(get_coord(get_cursor_pos()), {})
@@ -212,16 +254,20 @@ func map_assign_input(event: InputEvent) -> void:
 
 func _on_overlay_draw() -> void:
 	var room_size: Vector2 = MetSys.ROOM_SIZE
+	map_overlay.draw_set_transform(Vector2(map_offset) * room_size)
 	
 	for p in highlighted_room:
-		map_overlay.draw_rect(Rect2((Vector2(p.x, p.y) + Vector2(map_offset)) * room_size, room_size), Color(1, 1, 0, 0.25))
+		map_overlay.draw_rect(Rect2(Vector2(p.x, p.y) * room_size, room_size), Color(1, 1, 0, 0.25))
+	
+	if mode == MODE_ROOM_GROUP:
+		for p in MetSys.room_groups.get(%CurrentGroup.value as int, []):
+			map_overlay.draw_rect(Rect2(Vector2(p.x, p.y) * room_size, room_size), Color(Color.MEDIUM_PURPLE, 0.8))
 	
 	if drag_from == NULL_VECTOR2I:
-		if mode != MODE_MAP and mode != MODE_BTYPE:
-			map_overlay.draw_rect(Rect2(Vector2(get_cursor_pos() + map_offset) * room_size, room_size), Color.GREEN, false, 2)
+		if mode != MODE_MAP and mode != MODE_BORDER_TYPE:
+			map_overlay.draw_rect(Rect2(get_cursor_pos() as Vector2 * room_size, room_size), Color.GREEN, false, 2)
 	else:
 		var rect := get_rect_between(drag_from, get_cursor_pos())
-		rect.position += Vector2(map_offset)
 		rect.position *= room_size as Vector2
 		rect.size *= room_size as Vector2
 		map_overlay.draw_rect(rect, Color.RED if erase_mode else Color.GREEN, false, 2)
@@ -229,14 +275,15 @@ func _on_overlay_draw() -> void:
 	if highlighted_border > -1:
 		match highlighted_border:
 			0: # MetSys.R
-				map_overlay.draw_rect(Rect2(Vector2(get_cursor_pos() + map_offset) * room_size + Vector2(room_size.x * 0.667, 0), room_size * Vector2(0.333, 1)), Color(0, 1, 0, 0.5))
+				map_overlay.draw_rect(Rect2(get_cursor_pos() as Vector2 * room_size + Vector2(room_size.x * 0.667, 0), room_size * Vector2(0.333, 1)), Color(0, 1, 0, 0.5))
 			1: # MetSys.D
-				map_overlay.draw_rect(Rect2(Vector2(get_cursor_pos() + map_offset) * room_size + Vector2(0, room_size.y * 0.667), room_size * Vector2(1, 0.333)), Color(0, 1, 0, 0.5))
+				map_overlay.draw_rect(Rect2(get_cursor_pos() as Vector2 * room_size + Vector2(0, room_size.y * 0.667), room_size * Vector2(1, 0.333)), Color(0, 1, 0, 0.5))
 			2: # MetSys.L
-				map_overlay.draw_rect(Rect2(Vector2(get_cursor_pos() + map_offset) * room_size, room_size * Vector2(0.333, 1)), Color(0, 1, 0, 0.5))
+				map_overlay.draw_rect(Rect2(get_cursor_pos() as Vector2 * room_size, room_size * Vector2(0.333, 1)), Color(0, 1, 0, 0.5))
 			3: # MetSys.U
-				map_overlay.draw_rect(Rect2(Vector2(get_cursor_pos() + map_offset) * room_size, room_size * Vector2(1, 0.333)), Color(0, 1, 0, 0.5))
+				map_overlay.draw_rect(Rect2(get_cursor_pos() as Vector2 * room_size, room_size * Vector2(1, 0.333)), Color(0, 1, 0, 0.5))
 	
+	map_overlay.draw_set_transform_matrix(Transform2D())
 	map_overlay.draw_string(get_theme_font(&"font", &"Label"), Vector2(0, 20), str(get_cursor_pos()))
 
 func _on_map_draw() -> void:
@@ -249,6 +296,17 @@ func _exit_tree() -> void:
 
 func save_map_data():
 	var file := FileAccess.open(MetSys.map_root_folder.path_join("MapData.txt"), FileAccess.WRITE)
+	
+	for group in MetSys.room_groups:
+		if MetSys.room_groups[group].is_empty():
+			continue
+		
+		var line: PackedStringArray
+		line.append(str(group))
+		for coords in MetSys.room_groups[group]:
+			line.append("%s,%s,%s" % [coords.x, coords.y, coords.z])
+		
+		file.store_line(":".join(line))
 	
 	for coords in MetSys.map_data:
 		file.store_line("[%s,%s,%s]" % [coords.x, coords.y, coords.z])
