@@ -12,7 +12,7 @@
 
 [node name="MetroidvaniaSettings" type="Node"]
 script = ExtResource("1_y1fyl")
-map_root_folder = "res://MetroidvaniaSystem/Map"
+map_root_folder = "res://SampleProject/Maps/"
 display_exact_player_position = false
 default_room_separator_color = Color(0.745098, 0.745098, 0.745098, 0.501961)
 room_fill_texture = ExtResource("2_mjkl0")

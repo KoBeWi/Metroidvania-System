@@ -90,4 +90,6 @@ func save_map_data():
 		file.store_line("[%s,%s,%s]" % [coords.x, coords.y, coords.z])
 		
 		var room_data: Dictionary = MetSys.map_data[coords]
-		file.store_line("%s,%s,%s,%s|%s" % [room_data.borders[0], room_data.borders[1], room_data.borders[2], room_data.borders[3], room_data.get("assigned_map", "")])
+		file.store_line("%s,%s,%s,%s|%s" % [
+			room_data.borders[0], room_data.borders[1], room_data.borders[2], room_data.borders[3],
+			room_data.get("assigned_map", "").trim_prefix(MetSys.map_root_folder).trim_prefix("/")])

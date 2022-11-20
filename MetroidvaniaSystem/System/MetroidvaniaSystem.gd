@@ -11,10 +11,7 @@ const MAP_HANDLER = preload("res://MetroidvaniaSystem/System/MapHandler.gd")
 const SAVE_DATA = preload("res://MetroidvaniaSystem/System/SaveData.gd")
 
 ## TODO: plugin - minimapa (dialog, z otwieraniem scen?), wyświetlacz krawędzie
-## TODO: mapowanie: jak tylko mapowany, to opcje: wyświetlaj krawędzie, wyświetlaj symbole itp, kolor nieodkrytego
 ## TODO: shared borders - że są pośrodku między pomieszczeniami
-## TODO: sposób wyświetlania ścian w nieodkrytych (mapowanych) pomieszczeniach: brak, bez przejść, wszystko
-## TODO: map root, żeby nie były takie długie nazwy / albo ID używać
 ## TODO: przerobić room_data i groupy itp na klasę RoomData i cały kod wczytywania itp dać tam
 ## TODO: validator? do sprawdzania czy wszystkie pomieszczenia mają przypisaną mapę itp
 ## TODO: add_main_symbol() - dodaje symbol i zawsze ma index 0
@@ -185,7 +182,7 @@ func get_object_coords(object: Object) -> Vector3i:
 		object.set_meta(&"object_coords", coords)
 		return coords
 	elif object is Node:
-		var map_name: String = object.owner.scene_file_path#.get_file().get_basename()
+		var map_name: String = object.owner.scene_file_path.trim_prefix(MetSys.map_root_folder)
 		assert(map_name in assigned_maps)
 		var coords: Vector3i = assigned_maps[map_name].front()
 		for vec in assigned_maps[map_name]:
