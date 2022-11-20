@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://b12klbcyy2x2y"]
+[gd_scene load_steps=10 format=3 uid="uid://b12klbcyy2x2y"]
 
 [ext_resource type="Script" path="res://MetroidvaniaSystem/System/MetroidvaniaSystem.gd" id="1_y1fyl"]
 [ext_resource type="Texture2D" uid="uid://carvupndufcht" path="res://MetroidvaniaSystem/Textures/RoomFill.png" id="2_mjkl0"]
@@ -7,12 +7,12 @@
 [ext_resource type="Texture2D" uid="uid://b8mwdksvhmgf" path="res://MetroidvaniaSystem/Textures/RoomOuterCorner.png" id="4_3go5k"]
 [ext_resource type="Texture2D" uid="uid://61edyfnw5m8p" path="res://MetroidvaniaSystem/Textures/BorderPassage.png" id="4_g1ime"]
 [ext_resource type="Texture2D" uid="uid://ccsr7yljw6ph8" path="res://MetroidvaniaSystem/Textures/RoomInnerCorner.png" id="5_hkxje"]
+[ext_resource type="Texture2D" uid="uid://djlvnbqowyndx" path="res://MetroidvaniaSystem/Textures/Symbol1.png" id="8_tpdd6"]
+[ext_resource type="Texture2D" uid="uid://b8m8faqafkjp4" path="res://MetroidvaniaSystem/Textures/Symbol2.png" id="9_gcg7b"]
 
 [node name="MetroidvaniaSettings" type="Node"]
 script = ExtResource("1_y1fyl")
 map_root_folder = "res://MetroidvaniaSystem/Map"
-show_collected_items_on_map = false
-show_uncollected_items_on_map = false
 display_exact_player_position = false
 default_room_separator_color = Color(0.745098, 0.745098, 0.745098, 0.501961)
 room_fill_texture = ExtResource("2_mjkl0")
@@ -20,5 +20,7 @@ room_separator_texture = ExtResource("3_uqa6s")
 room_wall_texture = ExtResource("3_5eq0t")
 border_outer_corner_texture = ExtResource("4_3go5k")
 border_inner_corner_texture = ExtResource("5_hkxje")
+uncollected_item_symbol = 0
+collected_item_symbol = 1
 map_borders = [ExtResource("3_5eq0t"), ExtResource("4_g1ime")]
-map_symbols = []
+map_symbols = [ExtResource("8_tpdd6"), ExtResource("9_gcg7b")]

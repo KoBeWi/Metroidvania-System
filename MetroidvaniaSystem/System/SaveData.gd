@@ -25,6 +25,8 @@ func register_storable_object(object: Object) -> bool:
 
 func store_object(object: Object):
 	var id: String = MetSys.get_object_id(object)
+	assert(id in registered_objects)
+	assert(not id in stored_objects)
 	registered_objects.erase(id)
 	stored_objects[id] = true
 
@@ -44,6 +46,8 @@ func remove_room_symbol(coords: Vector3i, symbol: int):
 	var idx: int = room_symbols[coords].find(symbol)
 	assert(idx >= 0)
 	room_symbols[coords].remove_at(idx)
+	if room_symbols[coords].is_empty():
+		room_symbols.erase(coords)
 	MetSys.map_updated.emit()
 
 func get_data() -> Dictionary:

@@ -4,6 +4,7 @@ extends Node
 enum { R, D, L, U }
 const FWD = {R: Vector2i.RIGHT, D: Vector2i.DOWN, L: Vector2i.LEFT, U: Vector2i.UP}
 const VECTOR2INF = Vector2i(999999, 99999999)
+const DEFAULT_SYMBOL = -99
 
 const MAP_HANDLER = preload("res://MetroidvaniaSystem/System/MapHandler.gd")
 const SAVE_DATA = preload("res://MetroidvaniaSystem/System/SaveData.gd")
@@ -15,12 +16,10 @@ const SAVE_DATA = preload("res://MetroidvaniaSystem/System/SaveData.gd")
 ## TODO: map root, żeby nie były takie długie nazwy / albo ID używać
 ## TODO: przerobić room_data i groupy itp na klasę RoomData i cały kod wczytywania itp dać tam
 ## TODO: validator? do sprawdzania czy wszystkie pomieszczenia mają przypisaną mapę itp
-## TODO: wyświetlanie itemów na mapie: tylko niezebrane, tylko zebrane, oba
+## TODO: add_main_symbol() - dodaje symbol i zawsze ma index 0
 
 @export_dir var map_root_folder: String
 
-@export var show_collected_items_on_map: bool ## zamiast tego sprawdzać, czy jest tekstura
-@export var show_uncollected_items_on_map: bool
 @export var display_exact_player_position: bool
 
 @export var default_room_fill_color = Color.BLUE
@@ -37,8 +36,8 @@ const SAVE_DATA = preload("res://MetroidvaniaSystem/System/SaveData.gd")
 
 @export var player_location_symbol: Texture2D
 @export var player_location_scene: PackedScene ## tylko jedno ma się pokazywać
-@export var collected_item_symbol: Texture2D
-@export var uncollected_item_symbol: Texture2D
+@export var uncollected_item_symbol := -1
+@export var collected_item_symbol := -1
 @export var map_borders: Array[Texture2D] ## każda ściana może mieć teksturę
 @export var map_symbols: Array[Texture2D] ## można przypisywać 1 symbol do pomieszczeń
 
@@ -58,6 +57,10 @@ var save_data := SAVE_DATA.new()
 signal map_updated
 signal room_changed(new_room: Vector2i)
 signal map_changed(new_map: String)
+
+func _init() -> void:
+	assert(collected_item_symbol < map_symbols.size())
+	assert(uncollected_item_symbol < map_symbols.size())
 
 func _enter_tree() -> void:
 	reload_data()
@@ -130,7 +133,7 @@ func set_player_position(position: Vector2):
 	last_player_position = player_pos
 	## tutaj mapuje to na koordynaty mapy i automatycznie odkrywa, zmienia scenę (albo wysyła sygnał) itp
 
-func register_storable_object(object: Object, map_symbol := -1, stored_callback := Callable()):
+func register_storable_object(object: Object, map_symbol := DEFAULT_SYMBOL, stored_callback := Callable()):
 	if stored_callback.is_null():
 		if object is Node:
 			stored_callback = Callable(object, &"queue_free")
@@ -140,14 +143,23 @@ func register_storable_object(object: Object, map_symbol := -1, stored_callback 
 	if save_data.is_object_stored(object):
 		stored_callback.call()
 	else:
+		if map_symbol == DEFAULT_SYMBOL:
+			map_symbol = uncollected_item_symbol
+		
 		if save_data.register_storable_object(object) and map_symbol > -1:
 			object.set_meta(&"map_symbol", map_symbol)
 			save_data.add_room_symbol(get_object_coords(object), map_symbol)
 
-func store_object(object: Object):
+func store_object(object: Object, map_symbol := DEFAULT_SYMBOL):
 	save_data.store_object(object)
 	if object.has_meta(&"map_symbol"):
 		save_data.remove_room_symbol(get_object_coords(object), object.get_meta(&"map_symbol"))
+	
+	if map_symbol == DEFAULT_SYMBOL:
+		map_symbol = collected_item_symbol
+	
+	if map_symbol > -1:
+		save_data.add_room_symbol(get_object_coords(object), map_symbol)
 
 func get_object_id(object: Object) -> String:
 	if object.has_meta(&"object_id"):
@@ -170,9 +182,12 @@ func get_object_coords(object: Object) -> Vector3i:
 		object.set_meta(&"object_coords", coords)
 		return coords
 	elif object is Node:
-		var map_name: String = object.owner.scene_file_path.get_file().get_basename()
+		var map_name: String = object.owner.scene_file_path#.get_file().get_basename()
 		assert(map_name in assigned_maps)
 		var coords: Vector3i = assigned_maps[map_name].front()
+		for vec in assigned_maps[map_name]:
+			coords.x = mini(coords.x, vec.x)
+			coords.y = mini(coords.y, vec.y)
 		
 		if object is CanvasItem:
 			var position: Vector2 = object.position / in_game_room_size
@@ -243,6 +258,11 @@ func draw_map_square(canvas_item: CanvasItem, offset: Vector2i, room: Vector3i, 
 		border_outer_corner_texture.draw(ci, -ROOM_SIZE / 2)
 	
 	canvas_item.draw_set_transform_matrix(Transform2D())
+	
+	if room in save_data.room_symbols:
+		var symbol: int = save_data.room_symbols[room].back()
+		assert(symbol < map_symbols.size())
+		canvas_item.draw_texture(map_symbols[symbol], offset * ROOM_SIZE)
 
 func _get_whole_room(at: Vector3i) -> Array[Vector3i]:
 	var room: Array[Vector3i]
