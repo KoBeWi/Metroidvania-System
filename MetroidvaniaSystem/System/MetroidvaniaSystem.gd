@@ -9,13 +9,13 @@ const MAP_HANDLER = preload("res://MetroidvaniaSystem/System/MapHandler.gd")
 const SAVE_DATA = preload("res://MetroidvaniaSystem/System/SaveData.gd")
 
 ## TODO: plugin - minimapa (dialog, z otwieraniem scen?), wyświetlacz krawędzie
-## TODO: mapowanie: discovered level. 0 = nieodkryty, 1 = mapa (discovered), 2 = odkryty (explored)
 ## TODO: mapowanie: jak tylko mapowany, to opcje: wyświetlaj krawędzie, wyświetlaj symbole itp, kolor nieodkrytego
 ## TODO: shared borders - że są pośrodku między pomieszczeniami
-## TODO: room groups - do map (itemów)
 ## TODO: sposób wyświetlania ścian w nieodkrytych (mapowanych) pomieszczeniach: brak, bez przejść, wszystko
 ## TODO: map root, żeby nie były takie długie nazwy / albo ID używać
 ## TODO: przerobić room_data i groupy itp na klasę RoomData i cały kod wczytywania itp dać tam
+## TODO: validator? do sprawdzania czy wszystkie pomieszczenia mają przypisaną mapę itp
+## TODO: wyświetlanie itemów na mapie: tylko niezebrane, tylko zebrane, oba
 
 @export_dir var map_root_folder: String
 
@@ -55,6 +55,7 @@ var current_map: MAP_HANDLER
 
 var save_data := SAVE_DATA.new()
 
+signal map_updated
 signal room_changed(new_room: Vector2i)
 signal map_changed(new_map: String)
 
@@ -129,21 +130,58 @@ func set_player_position(position: Vector2):
 	last_player_position = player_pos
 	## tutaj mapuje to na koordynaty mapy i automatycznie odkrywa, zmienia scenę (albo wysyła sygnał) itp
 
-## format mapy: automatyczne wykrywanie całych pomieszczeń na podstawie ścian
-## przypisywanie scen do map
-
-func register_storable_object(object: Object, stored_callback := Callable()):
+func register_storable_object(object: Object, map_symbol := -1, stored_callback := Callable()):
 	if stored_callback.is_null():
 		if object is Node:
 			stored_callback = Callable(object, &"queue_free")
+		elif not object is RefCounted:
+			stored_callback = Callable(object, &"free")
 	
-	## stuff
-
-func mark_object_on_map(object: Object):
-	pass
+	if save_data.is_object_stored(object):
+		stored_callback.call()
+	else:
+		if save_data.register_storable_object(object) and map_symbol > -1:
+			object.set_meta(&"map_symbol", map_symbol)
+			save_data.add_room_symbol(get_object_coords(object), map_symbol)
 
 func store_object(object: Object):
-	pass ## zapisuje, że jest
+	save_data.store_object(object)
+	if object.has_meta(&"map_symbol"):
+		save_data.remove_room_symbol(get_object_coords(object), object.get_meta(&"map_symbol"))
+
+func get_object_id(object: Object) -> String:
+	if object.has_meta(&"object_id"):
+		return object.get_meta(&"object_id")
+	elif object.has_method(&"_get_object_id"):
+		var id: String = object._get_object_id()
+		object.set_meta(&"object_id", id)
+		return id
+	elif object is Node:
+		var id := str(object.owner.scene_file_path.get_file().get_basename(), "/", object.get_parent().name if object.get_parent() != object.owner else ".", "/", object.name)
+		object.set_meta(&"object_id", id)
+		return id
+	return ""
+
+func get_object_coords(object: Object) -> Vector3i:
+	if object.has_meta(&"object_coords"):
+		return object.get_meta(&"object_coords")
+	elif object.has_method(&"_get_object_coords"):
+		var coords: Vector3i = object._get_object_coords()
+		object.set_meta(&"object_coords", coords)
+		return coords
+	elif object is Node:
+		var map_name: String = object.owner.scene_file_path.get_file().get_basename()
+		assert(map_name in assigned_maps)
+		var coords: Vector3i = assigned_maps[map_name].front()
+		
+		if object is CanvasItem:
+			var position: Vector2 = object.position / in_game_room_size
+			coords.x += int(position.x)
+			coords.y += int(position.y)
+		
+		object.set_meta(&"object_coords", coords)
+		return coords
+	return Vector3i()
 
 func visit_room(room: Vector3i):
 	save_data.explore_room(room)
@@ -232,6 +270,8 @@ func discover_room_group(group_id: int):
 	
 	for room in room_groups[group_id]:
 		save_data.discover_room(room)
+	
+	MetSys.map_updated.emit()
 
 func reset_save_data():
 	save_data = SAVE_DATA.new()

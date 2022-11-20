@@ -1,14 +1,17 @@
-[gd_scene load_steps=4 format=3 uid="uid://d0hyimq1tkfa2"]
+[gd_scene load_steps=4 format=3 uid="uid://c8j6i3fx8p758"]
 
-[ext_resource type="Texture2D" uid="uid://l42te86waali" path="res://SampleProject/Sprites/MapItem.png" id="1_gov3o"]
+[ext_resource type="Texture2D" uid="uid://wiq0mic5m6is" path="res://SampleProject/Sprites/Collectible.png" id="1_hy2v6"]
 
 [sub_resource type="GDScript" id="GDScript_5wqrn"]
 script/source = "extends Area2D
 
 @export var room_group: int
 
+func _ready() -> void:
+	MetSys.register_storable_object(self)
+
 func collect(body: Node2D) -> void:
-	MetSys.discover_room_group(room_group)
+	MetSys.store_object(self)
 	queue_free()
 "
 
@@ -22,6 +25,6 @@ script = SubResource("GDScript_5wqrn")
 shape = SubResource("RectangleShape2D_v5e3t")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-texture = ExtResource("1_gov3o")
+texture = ExtResource("1_hy2v6")
 
 [connection signal="body_entered" from="." to="." method="collect"]

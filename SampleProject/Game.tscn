@@ -42,6 +42,7 @@ var current_room: Vector2i
 
 func _ready() -> void:
 	MetSys.room_changed.connect(on_room_changed)
+	MetSys.map_updated.connect(queue_redraw)
 
 func on_room_changed(new_room: Vector2i):
 	current_room = new_room
@@ -101,7 +102,7 @@ current = true
 
 [node name="UI" type="CanvasLayer" parent="."]
 
-[node name="Minimal" type="Panel" parent="UI"]
+[node name="Minimap" type="Panel" parent="UI"]
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
@@ -112,14 +113,15 @@ offset_bottom = 112.0
 grow_horizontal = 0
 script = SubResource("GDScript_u7odr")
 
-[node name="ColorRect" type="ColorRect" parent="UI/Minimal"]
+[node name="ColorRect" type="ColorRect" parent="UI/Minimap"]
 modulate = Color(1, 1, 1, 0.752941)
+layout_mode = 0
 offset_left = 32.0
 offset_top = 32.0
 offset_right = 64.0
 offset_bottom = 64.0
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="UI/Minimal/ColorRect"]
+[node name="AnimationPlayer" type="AnimationPlayer" parent="UI/Minimap/ColorRect"]
 autoplay = "Flash"
 libraries = {
 "": SubResource("AnimationLibrary_kkw8m")
