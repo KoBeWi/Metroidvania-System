@@ -9,12 +9,18 @@
 config_version=5
 
 _global_script_classes=[{
+"base": "Node",
+"class": &"CustomRunner",
+"language": &"GDScript",
+"path": "res://addons/CustomRunner/CustomRunner.gd"
+}, {
 "base": "Resource",
 "class": &"Room",
 "language": &"GDScript",
 "path": "res://Trash/Scripts/Room.gd"
 }]
 _global_script_class_icons={
+"CustomRunner": "",
 "Room": ""
 }
 
@@ -33,6 +39,10 @@ MetSys="*res://MetroidvaniaSystem/System/Singleton.tscn"
 
 gdscript/warnings/unassigned_variable=0
 gdscript/warnings/narrowing_conversion=0
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/CustomRunner/plugin.cfg")
 
 [rendering]
 

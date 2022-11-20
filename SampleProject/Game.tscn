@@ -5,12 +5,14 @@
 [sub_resource type="GDScript" id="GDScript_qo4m8"]
 script/source = "extends Node2D
 
+@export var starting_map: String
+
 @onready var player = $Player
 
 var map: Node2D
 
 func _ready() -> void:
-	goto_map(\"Corridor\")
+	goto_map(starting_map)
 	MetSys.map_changed.connect(on_map_changed)
 
 func goto_map(map_name: String):
@@ -93,6 +95,7 @@ _data = {
 
 [node name="Game" type="Node2D"]
 script = SubResource("GDScript_qo4m8")
+starting_map = "Corridor"
 
 [node name="Player" parent="." instance=ExtResource("2_bam1a")]
 position = Vector2(161, 468)
@@ -115,7 +118,6 @@ script = SubResource("GDScript_u7odr")
 
 [node name="ColorRect" type="ColorRect" parent="UI/Minimap"]
 modulate = Color(1, 1, 1, 0.752941)
-layout_mode = 0
 offset_left = 32.0
 offset_top = 32.0
 offset_right = 64.0

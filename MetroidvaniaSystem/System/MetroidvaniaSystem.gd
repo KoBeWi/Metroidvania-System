@@ -5,6 +5,7 @@ enum { R, D, L, U }
 const FWD = {R: Vector2i.RIGHT, D: Vector2i.DOWN, L: Vector2i.LEFT, U: Vector2i.UP}
 const VECTOR2INF = Vector2i(999999, 99999999)
 const DEFAULT_SYMBOL = -99
+enum { DISPLAY_CENTER = 1, DISPLAY_OUTLINE = 2, DISPLAY_BORDERS = 4, DISPLAY_SYMBOLS = 8 }
 
 const MAP_HANDLER = preload("res://MetroidvaniaSystem/System/MapHandler.gd")
 const SAVE_DATA = preload("res://MetroidvaniaSystem/System/SaveData.gd")
@@ -33,6 +34,8 @@ const SAVE_DATA = preload("res://MetroidvaniaSystem/System/SaveData.gd")
 @export var room_passage_texture: Texture2D
 @export var border_outer_corner_texture: Texture2D
 @export var border_inner_corner_texture: Texture2D
+
+@export_flags("Center", "Outline", "Borders", "Symbol") var unexplored_display := 3
 
 @export var player_location_symbol: Texture2D
 @export var player_location_scene: PackedScene ## tylko jedno ma się pokazywać
@@ -226,11 +229,21 @@ func draw_map_square(canvas_item: CanvasItem, offset: Vector2i, room: Vector3i, 
 		return
 	
 	var ci := canvas_item.get_canvas_item()
+	var display_flags := (int(discovered == 2) * 255) | unexplored_display
 	
-	canvas_item.draw_set_transform_matrix(Transform2D())
-	room_fill_texture.draw(ci, offset * ROOM_SIZE, default_room_fill_color if discovered == 2 else unexplored_room_fill_color)
+	if bool(display_flags & DISPLAY_CENTER):
+		room_fill_texture.draw(ci, offset * ROOM_SIZE, default_room_fill_color if discovered == 2 else unexplored_room_fill_color)
 	
 	var borders: Array[int] = room_data["borders"]
+	for i in 4:
+		var border: int = room_data["borders"][i]
+		if not bool(display_flags & DISPLAY_OUTLINE) and border == 0:
+			borders[i] = -1
+		elif not bool(display_flags & DISPLAY_BORDERS):
+			borders[i] = mini(border, 0)
+		else:
+			borders[i] = border
+	
 	for i in 4:
 		var texture: Texture2D
 		var color: Color
@@ -239,8 +252,13 @@ func draw_map_square(canvas_item: CanvasItem, offset: Vector2i, room: Vector3i, 
 			texture = room_separator_texture
 			color = default_room_separator_color
 		else:
+			var border: int = borders[i]
 			assert(borders[i] < map_borders.size())
-			texture = map_borders[borders[i]]
+			
+			if not bool(display_flags & DISPLAY_BORDERS):
+				border = 0
+			
+			texture = map_borders[border]
 			color = default_room_wall_color
 		
 		if not texture:
@@ -259,7 +277,7 @@ func draw_map_square(canvas_item: CanvasItem, offset: Vector2i, room: Vector3i, 
 	
 	canvas_item.draw_set_transform_matrix(Transform2D())
 	
-	if room in save_data.room_symbols:
+	if bool(display_flags & DISPLAY_SYMBOLS) and room in save_data.room_symbols:
 		var symbol: int = save_data.room_symbols[room].back()
 		assert(symbol < map_symbols.size())
 		canvas_item.draw_texture(map_symbols[symbol], offset * ROOM_SIZE)
