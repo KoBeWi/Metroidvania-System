@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://c3xqaietfgs7l"]
+[gd_scene load_steps=8 format=3 uid="uid://c3xqaietfgs7l"]
 
 [ext_resource type="PackedScene" uid="uid://xpbhai8nlgtx" path="res://SampleProject/Player.tscn" id="2_bam1a"]
 
@@ -36,7 +36,7 @@ func on_map_changed(target_map: String):
 	goto_map(target_map.get_file().get_basename())
 "
 
-[sub_resource type="GDScript" id="GDScript_u7odr"]
+[sub_resource type="GDScript" id="GDScript_4div8"]
 resource_name = "Minimap"
 script/source = "extends Panel
 
@@ -54,6 +54,12 @@ func _draw() -> void:
 	for x in range(-1, 2):
 		for y in range(-1, 2):
 			MetSys.draw_map_square(self, Vector2i(x + 1, y + 1), Vector3i(current_room.x + x, current_room.y + y, 0), true)
+
+func _input(event: InputEvent) -> void:
+	if event is InputEventKey:
+		if event.pressed:
+			if event.keycode == KEY_M:
+				visible = not visible
 "
 
 [sub_resource type="Animation" id="Animation_lgykt"]
@@ -93,6 +99,42 @@ _data = {
 "RESET": SubResource("Animation_0p0d4")
 }
 
+[sub_resource type="GDScript" id="GDScript_u7odr"]
+resource_name = "FullMap"
+script/source = "extends Panel
+
+const MIN_POS = Vector2i(-2, -2)
+const MAX_POS = MIN_POS + Vector2i(9, 9)
+
+@export var exact_player_location: bool
+
+var current_room: Vector2i
+
+func _ready() -> void:
+	if exact_player_location:
+		set_process(true)
+	else:
+		MetSys.map_updated.connect(queue_redraw)
+		MetSys.room_changed.connect(queue_redraw.unbind(1))
+
+func _process(delta: float) -> void:
+	if is_visible_in_tree():
+		queue_redraw()
+
+func _draw() -> void:
+	for x in range(MIN_POS.x, MAX_POS.x + 1):
+		for y in range(MIN_POS.y, MAX_POS.y + 1):
+			MetSys.draw_map_square(self, Vector2i(x, y) - MIN_POS, Vector3i(x, y, 0), true)
+	
+	MetSys.draw_player_location(self, -MIN_POS, exact_player_location)
+
+func _input(event: InputEvent) -> void:
+	if event is InputEventKey:
+		if event.pressed:
+			if event.keycode == KEY_M:
+				visible = not visible
+"
+
 [node name="Game" type="Node2D"]
 script = SubResource("GDScript_qo4m8")
 starting_map = "Corridor"
@@ -114,7 +156,7 @@ offset_top = 16.0
 offset_right = -16.0
 offset_bottom = 112.0
 grow_horizontal = 0
-script = SubResource("GDScript_u7odr")
+script = SubResource("GDScript_4div8")
 
 [node name="ColorRect" type="ColorRect" parent="UI/Minimap"]
 modulate = Color(1, 1, 1, 0.752941)
@@ -129,3 +171,18 @@ autoplay = "Flash"
 libraries = {
 "": SubResource("AnimationLibrary_kkw8m")
 }
+
+[node name="FullMap" type="Panel" parent="UI"]
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -160.0
+offset_top = -160.0
+offset_right = 160.0
+offset_bottom = 160.0
+grow_horizontal = 2
+grow_vertical = 2
+script = SubResource("GDScript_u7odr")

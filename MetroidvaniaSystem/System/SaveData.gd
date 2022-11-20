@@ -12,6 +12,7 @@ func discover_room(room: Vector3i):
 func explore_room(room: Vector3i):
 	if discovered_rooms.get(room, 0) < 2:
 		discovered_rooms[room] = 2
+		MetSys.map_updated.emit()
 
 func is_room_discovered(room: Vector3i) -> int:
 	return discovered_rooms.get(room, 0)

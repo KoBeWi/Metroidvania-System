@@ -18,8 +18,6 @@ const SAVE_DATA = preload("res://MetroidvaniaSystem/System/SaveData.gd")
 
 @export_dir var map_root_folder: String
 
-@export var display_exact_player_position: bool
-
 @export var default_room_fill_color = Color.BLUE
 @export var unexplored_room_fill_color = Color.GRAY
 @export var default_room_separator_color = Color.GRAY
@@ -28,7 +26,6 @@ const SAVE_DATA = preload("res://MetroidvaniaSystem/System/SaveData.gd")
 @export var room_fill_texture: Texture2D
 @export var room_separator_texture: Texture2D
 @export var room_wall_texture: Texture2D ## wersja wertykalna/horyzontalna? (dla prostokątnych pomieszczeń
-@export var room_passage_texture: Texture2D
 @export var border_outer_corner_texture: Texture2D
 @export var border_inner_corner_texture: Texture2D
 
@@ -50,6 +47,7 @@ var assigned_maps: Dictionary
 var room_groups: Dictionary
 
 var last_player_position := VECTOR2INF
+var exact_player_position: Vector2
 var current_map: MAP_HANDLER
 
 var save_data := SAVE_DATA.new()
@@ -125,13 +123,13 @@ func set_save_data(data: Dictionary):
 	pass ## do wczytywania
 
 func set_player_position(position: Vector2):
+	exact_player_position = position
+	
 	var player_pos := Vector2i((position / in_game_room_size).floor()) + current_map.min_room
 	if player_pos != last_player_position:
 		visit_room(Vector3i(player_pos.x, player_pos.y, 0))
 		room_changed.emit(player_pos)
-	
-	last_player_position = player_pos
-	## tutaj mapuje to na koordynaty mapy i automatycznie odkrywa, zmienia scenę (albo wysyła sygnał) itp
+		last_player_position = player_pos
 
 func register_storable_object(object: Object, map_symbol := DEFAULT_SYMBOL, stored_callback := Callable()):
 	if stored_callback.is_null():
@@ -278,6 +276,13 @@ func draw_map_square(canvas_item: CanvasItem, offset: Vector2i, room: Vector3i, 
 		var symbol: int = save_data.room_symbols[room].back()
 		assert(symbol < map_symbols.size())
 		canvas_item.draw_texture(map_symbols[symbol], offset * ROOM_SIZE)
+
+func draw_player_location(canvas_item: CanvasItem, offset: Vector2i, exact := false):
+	var player_position: Vector2 = (last_player_position + offset) * ROOM_SIZE
+	if exact:
+		player_position += (exact_player_position / in_game_room_size).posmod(1) * Vector2(ROOM_SIZE) - player_location_symbol.get_size() * 0.5
+	
+	canvas_item.draw_texture(player_location_symbol, player_position)
 
 func _get_whole_room(at: Vector3i) -> Array[Vector3i]:
 	var room: Array[Vector3i]
