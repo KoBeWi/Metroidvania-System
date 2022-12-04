@@ -33,7 +33,7 @@ func layer_changed(l: int):
 	map_overlay.queue_redraw()
 
 func get_current_sub_editor() -> Control:
-	return mode_group.get_pressed_button()
+	return mode_group.get_buttons()[mode - 1]
 
 func _on_map_input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion:

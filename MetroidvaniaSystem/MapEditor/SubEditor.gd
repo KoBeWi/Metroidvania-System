@@ -4,6 +4,7 @@ const EDITOR_SCRIPT = preload("res://MetroidvaniaSystem/MapEditor/MapEditor.gd")
 var editor: EDITOR_SCRIPT
 
 var use_cursor := true
+var room_only_cursor := false
 var cursor_color := Color.GREEN
 
 var drag_from: Vector2i = EDITOR_SCRIPT.NULL_VECTOR2I
@@ -29,7 +30,7 @@ func _editor_draw(map_overlay: CanvasItem):
 		map_overlay.draw_rect(Rect2(Vector2(p.x, p.y) * room_size, room_size), Color(1, 1, 0, 0.25))
 	
 	if drag_from == EDITOR_SCRIPT.NULL_VECTOR2I:
-		if use_cursor:
+		if use_cursor and (not room_only_cursor or not get_room_at_cursor().is_empty()):
 			map_overlay.draw_rect(Rect2(get_cursor_pos() as Vector2 * room_size, room_size), Color.GREEN, false, 2)
 	else:
 		var rect := get_rect_between(drag_from, get_cursor_pos())
@@ -81,3 +82,6 @@ func get_square_border_idx(rel: Vector2) -> int:
 		return MetSys.D
 	
 	return -1
+
+func get_room_at_cursor() -> Dictionary:
+	return MetSys.get_room_at(get_coords(get_cursor_pos()))

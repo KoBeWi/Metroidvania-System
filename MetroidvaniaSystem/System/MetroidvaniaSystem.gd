@@ -205,11 +205,10 @@ func visit_room(room: Vector3i):
 		map_changed.emit(map_data[room].assigned_map)
 	## tu odkrywanie i sygnał teleportacji
 
-## w edytorze map: można rysować prostokąty, trochę jak w trackmanii się łączą (że kwadraty obok siebie mają ściany, ale jak się przeciągnie prostokąt między nimi to są 1 pomieszczenie)
-## można klikać ściany, żeby edytować
-
 func discover_secret_passage(gdzie):
 	pass ## usuwa ścianę?
+	## nazwa: override border
+	## i druga taka metoda do symboli?
 
 func draw_map_square(canvas_item: CanvasItem, offset: Vector2i, room: Vector3i, use_save_data := false):
 	var room_data: Dictionary = map_data.get(room, {})
@@ -272,10 +271,18 @@ func draw_map_square(canvas_item: CanvasItem, offset: Vector2i, room: Vector3i, 
 	
 	canvas_item.draw_set_transform_matrix(Transform2D())
 	
-	if bool(display_flags & DISPLAY_SYMBOLS) and room in save_data.room_symbols:
-		var symbol: int = save_data.room_symbols[room].back()
-		assert(symbol < map_symbols.size())
-		canvas_item.draw_texture(map_symbols[symbol], offset * ROOM_SIZE)
+	if bool(display_flags & DISPLAY_SYMBOLS):
+		var symbol: int = -1
+		
+		if room in save_data.room_symbols:
+			symbol = save_data.room_symbols[room].back()
+		
+		if symbol == -1:
+			symbol = room_data.get("symbol", -1)
+		
+		if symbol > - 1:
+			assert(symbol < map_symbols.size())
+			canvas_item.draw_texture(map_symbols[symbol], offset * ROOM_SIZE)
 
 func draw_player_location(canvas_item: CanvasItem, offset: Vector2i, exact := false):
 	var player_position: Vector2 = (last_player_position + offset) * ROOM_SIZE
@@ -315,3 +322,7 @@ func discover_room_group(group_id: int):
 
 func reset_save_data():
 	save_data = SAVE_DATA.new()
+
+##mapdata
+func get_room_at(coords: Vector3i) -> Dictionary:
+	return map_data.get(coords, {})

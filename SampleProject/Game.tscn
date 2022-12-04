@@ -160,7 +160,6 @@ script = SubResource("GDScript_4div8")
 
 [node name="ColorRect" type="ColorRect" parent="UI/Minimap"]
 modulate = Color(1, 1, 1, 0.752941)
-layout_mode = 0
 offset_left = 32.0
 offset_top = 32.0
 offset_right = 64.0

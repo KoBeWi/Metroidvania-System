@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://b12klbcyy2x2y"]
+[gd_scene load_steps=13 format=3 uid="uid://b12klbcyy2x2y"]
 
 [ext_resource type="Script" path="res://MetroidvaniaSystem/System/MetroidvaniaSystem.gd" id="1_y1fyl"]
 [ext_resource type="Texture2D" uid="uid://carvupndufcht" path="res://MetroidvaniaSystem/Textures/RoomFill.png" id="2_mjkl0"]
@@ -10,6 +10,8 @@
 [ext_resource type="Texture2D" uid="uid://b050k4i01yhlw" path="res://MetroidvaniaSystem/Textures/PlayerMark.png" id="7_wu017"]
 [ext_resource type="Texture2D" uid="uid://djlvnbqowyndx" path="res://MetroidvaniaSystem/Textures/Symbol1.png" id="8_tpdd6"]
 [ext_resource type="Texture2D" uid="uid://b8m8faqafkjp4" path="res://MetroidvaniaSystem/Textures/Symbol2.png" id="9_gcg7b"]
+[ext_resource type="Texture2D" uid="uid://47sbhf0pecfu" path="res://MetroidvaniaSystem/Textures/Symbol3.png" id="11_nprjj"]
+[ext_resource type="Texture2D" uid="uid://bcuwpuvv6bpsf" path="res://MetroidvaniaSystem/Textures/Symbol4.png" id="12_6gduo"]
 
 [node name="MetroidvaniaSettings" type="Node"]
 script = ExtResource("1_y1fyl")
@@ -24,4 +26,4 @@ player_location_symbol = ExtResource("7_wu017")
 uncollected_item_symbol = 0
 collected_item_symbol = 1
 map_borders = [ExtResource("3_5eq0t"), ExtResource("4_g1ime")]
-map_symbols = [ExtResource("8_tpdd6"), ExtResource("9_gcg7b")]
+map_symbols = [ExtResource("8_tpdd6"), ExtResource("9_gcg7b"), ExtResource("11_nprjj"), ExtResource("12_6gduo")]
