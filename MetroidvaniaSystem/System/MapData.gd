@@ -1,12 +1,38 @@
 enum { R, D, L, U }
-const FWD = {R: Vector2i.RIGHT, D: Vector2i.DOWN, L: Vector2i.LEFT, U: Vector2i.UP}
+const FWD = { R: Vector2i.RIGHT, D: Vector2i.DOWN, L: Vector2i.LEFT, U: Vector2i.UP }
 
 class RoomData:
 	var borders: Array[int] = [-1, -1, -1, -1]
 	var symbol := -1
 	var assigned_map: String
-
-var NULL_ROOM := RoomData.new()
+	
+	var loading
+	
+	func _init(line: String) -> void:
+		if line.is_empty():
+			return
+		loading = [line, -1]
+		
+		var chunk := load_next_chunk()
+		for i in 4:
+			borders[i] = chunk.get_slice(",", i).to_int()
+		
+		chunk = load_next_chunk()
+		symbol = chunk.to_int()
+		
+		assigned_map = load_next_chunk()
+		loading = null
+	
+	func get_string() -> String:
+		var data: PackedStringArray
+		data.append("%s,%s,%s,%s" % borders)
+		data.append(str(symbol))
+		data.append(assigned_map.trim_prefix(MetSys.map_root_folder).trim_prefix("/"))
+		return "|".join(data)
+	
+	func load_next_chunk() -> String:
+		loading[1] += 1
+		return loading[0].get_slice("|", loading[1])
 
 var rooms: Dictionary#[Vector3i, RoomData]
 var assigned_maps: Dictionary#[String, Array[Vector3i]]
@@ -33,14 +59,9 @@ func load_data():
 			i += 1
 			line = data[i]
 			
-			var room_data := RoomData.new()
-			for j in 4:
-				room_data.borders[j] = line.get_slice(",", j).to_int()
-			
-			var assigned_map := line.get_slice("|", 1)
-			if not assigned_map.is_empty():
-				assigned_maps[assigned_map] = [coords]
-				room_data.assigned_map = assigned_map
+			var room_data := RoomData.new(line)
+			if not room_data.assigned_map.is_empty():
+				assigned_maps[room_data.assigned_map] = [coords]
 			
 			rooms[coords] = room_data
 		elif is_in_groups:
@@ -80,15 +101,13 @@ func save_data():
 		file.store_line("[%s,%s,%s]" % [coords.x, coords.y, coords.z])
 		
 		var room_data := get_room_at(coords)
-		file.store_line("%s,%s,%s,%s|%s" % [
-			room_data.borders[0], room_data.borders[1], room_data.borders[2], room_data.borders[3],
-			room_data.assigned_map.trim_prefix(MetSys.map_root_folder).trim_prefix("/")])
+		file.store_line(room_data.get_string())
 
 func get_room_at(coords: Vector3i) -> RoomData:
 	return rooms.get(coords)
 
 func create_room_at(coords: Vector3i) -> RoomData:
-	rooms[coords] = RoomData.new()
+	rooms[coords] = RoomData.new("")
 	return rooms[coords]
 
 func get_whole_room(at: Vector3i) -> Array[Vector3i]:
