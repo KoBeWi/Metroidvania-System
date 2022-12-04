@@ -18,7 +18,7 @@ func _enter_tree() -> void:
 		MetSys.current_map = self
 	
 	var owner_node := owner if owner != null else self
-	rooms = MetSys.assigned_maps.get(owner_node.scene_file_path.trim_prefix(MetSys.map_root_folder), [])
+	rooms = MetSys.map_data.get_rooms_assigned_to(owner_node.scene_file_path.trim_prefix(MetSys.map_root_folder))
 	if rooms.is_empty():
 		return
 	

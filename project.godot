@@ -14,6 +14,11 @@ _global_script_classes=[{
 "language": &"GDScript",
 "path": "res://addons/CustomRunner/CustomRunner.gd"
 }, {
+"base": "Node",
+"class": &"MetroidvaniaSystem",
+"language": &"GDScript",
+"path": "res://MetroidvaniaSystem/System/MetroidvaniaSystem.gd"
+}, {
 "base": "Resource",
 "class": &"Room",
 "language": &"GDScript",
@@ -21,6 +26,7 @@ _global_script_classes=[{
 }]
 _global_script_class_icons={
 "CustomRunner": "",
+"MetroidvaniaSystem": "",
 "Room": ""
 }
 
@@ -38,6 +44,11 @@ MetSys="*res://MetroidvaniaSystem/System/Singleton.tscn"
 [debug]
 
 gdscript/warnings/unassigned_variable=0
+gdscript/warnings/unassigned_variable_op_assign=0
+gdscript/warnings/unused_variable=0
+gdscript/warnings/unused_local_constant=0
+gdscript/warnings/unused_private_class_variable=0
+gdscript/warnings/unused_parameter=0
 gdscript/warnings/narrowing_conversion=0
 
 [editor_plugins]

@@ -70,26 +70,4 @@ func _on_map_draw() -> void:
 			MetSys.draw_map_square(map, Vector2i(x, y) + map_offset, Vector3i(x, y, current_layer))
 
 func _exit_tree() -> void:
-	save_map_data()
-
-func save_map_data():
-	var file := FileAccess.open(MetSys.map_root_folder.path_join("MapData.txt"), FileAccess.WRITE)
-	
-	for group in MetSys.room_groups:
-		if MetSys.room_groups[group].is_empty():
-			continue
-		
-		var line: PackedStringArray
-		line.append(str(group))
-		for coords in MetSys.room_groups[group]:
-			line.append("%s,%s,%s" % [coords.x, coords.y, coords.z])
-		
-		file.store_line(":".join(line))
-	
-	for coords in MetSys.map_data:
-		file.store_line("[%s,%s,%s]" % [coords.x, coords.y, coords.z])
-		
-		var room_data: Dictionary = MetSys.map_data[coords]
-		file.store_line("%s,%s,%s,%s|%s" % [
-			room_data.borders[0], room_data.borders[1], room_data.borders[2], room_data.borders[3],
-			room_data.get("assigned_map", "").trim_prefix(MetSys.map_root_folder).trim_prefix("/")])
+	MetSys.map_data.save_data()

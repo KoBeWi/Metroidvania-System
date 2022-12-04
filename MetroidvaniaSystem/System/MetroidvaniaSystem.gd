@@ -1,20 +1,20 @@
 @tool
-extends Node
+class_name MetroidvaniaSystem extends Node
 
-enum { R, D, L, U }
-const FWD = {R: Vector2i.RIGHT, D: Vector2i.DOWN, L: Vector2i.LEFT, U: Vector2i.UP}
 const VECTOR2INF = Vector2i(999999, 99999999)
 const DEFAULT_SYMBOL = -99
 enum { DISPLAY_CENTER = 1, DISPLAY_OUTLINE = 2, DISPLAY_BORDERS = 4, DISPLAY_SYMBOLS = 8 }
 
-const MAP_HANDLER = preload("res://MetroidvaniaSystem/System/MapHandler.gd")
-const SAVE_DATA = preload("res://MetroidvaniaSystem/System/SaveData.gd")
+const MapHandler = preload("res://MetroidvaniaSystem/System/MapHandler.gd")
+const SaveData = preload("res://MetroidvaniaSystem/System/SaveData.gd")
+const MapData = preload("res://MetroidvaniaSystem/System/MapData.gd")
 
 ## TODO: plugin - minimapa (dialog, z otwieraniem scen?), wyświetlacz krawędzie
 ## TODO: shared borders - że są pośrodku między pomieszczeniami
 ## TODO: przerobić room_data i groupy itp na klasę RoomData i cały kod wczytywania itp dać tam
 ## TODO: validator? do sprawdzania czy wszystkie pomieszczenia mają przypisaną mapę itp
-## TODO: add_main_symbol() - dodaje symbol i zawsze ma index 0
+## TODO: add_main_symbol() - dodaje symbol i zawsze ma index 0 / ???
+## TODO: ujednolicić coords (nazwy zmiennych)
 
 @export_dir var map_root_folder: String
 
@@ -42,15 +42,12 @@ const SAVE_DATA = preload("res://MetroidvaniaSystem/System/SaveData.gd")
 
 @onready var ROOM_SIZE: Vector2i = room_fill_texture.get_size()
 
-var map_data: Dictionary
-var assigned_maps: Dictionary
-var room_groups: Dictionary
+var map_data: MapData
+var save_data := SaveData.new() ## po co to new?
 
 var last_player_position := VECTOR2INF
 var exact_player_position: Vector2
-var current_map: MAP_HANDLER
-
-var save_data := SAVE_DATA.new()
+var current_map: MapHandler
 
 signal map_updated
 signal room_changed(new_room: Vector2i)
@@ -61,66 +58,20 @@ func _init() -> void:
 	assert(uncollected_item_symbol < map_symbols.size())
 
 func _enter_tree() -> void:
-	reload_data()
+	map_data = MapData.new()
+	map_data.load_data()
 
 func _ready() -> void:
 	set_physics_process(false)
-
-func reload_data():
-	var file := FileAccess.open(map_root_folder.path_join("MapData.txt"), FileAccess.READ)
-	
-	var data := file.get_as_text().split("\n")
-	var i: int
-	
-	var is_in_groups := true
-	while i < data.size():
-		var line := data[i]
-		if line.begins_with("["):
-			is_in_groups = false
-			line = line.trim_prefix("[").trim_suffix("]")
-			
-			var coords: Vector3i
-			coords.x = line.get_slice(",", 0).to_int()
-			coords.y = line.get_slice(",", 1).to_int()
-			coords.z = line.get_slice(",", 2).to_int()
-			
-			i += 1
-			line = data[i]
-			
-			var room_data := {borders = [-1, -1, -1, -1]}
-			for j in 4:
-				room_data.borders[j] = line.get_slice(",", j).to_int()
-			
-			var assigned_map := line.get_slice("|", 1)
-			if not assigned_map.is_empty():
-				assigned_maps[assigned_map] = [coords]
-				room_data.assigned_map = assigned_map
-			
-			map_data[coords] = room_data
-		elif is_in_groups:
-			var group_data := data[i].split(":")
-			var group_id := group_data[0].to_int()
-			var rooms: Array
-			for j in range(1, group_data.size()):
-				var coords: Vector3i
-				coords.x = group_data[j].get_slice(",", 0).to_int()
-				coords.y = group_data[j].get_slice(",", 1).to_int()
-				coords.z = group_data[j].get_slice(",", 2).to_int()
-				rooms.append(coords)
-			
-			room_groups[group_id] = rooms
-		
-		i += 1
-	
-	for map in assigned_maps.keys():
-		var rooms: Array[Vector3i] = assigned_maps[map]
-		assigned_maps[map] = _get_whole_room(rooms[0])
 
 func get_save_data() -> Dictionary:
 	return {} ## odkryte pokoje i umiejętności?
 
 func set_save_data(data: Dictionary):
 	pass ## do wczytywania
+
+func reset_save_data():
+	save_data = SaveData.new()
 
 func set_player_position(position: Vector2):
 	exact_player_position = position
@@ -131,7 +82,7 @@ func set_player_position(position: Vector2):
 		room_changed.emit(player_pos)
 		last_player_position = player_pos
 
-func register_storable_object(object: Object, map_symbol := DEFAULT_SYMBOL, stored_callback := Callable()):
+func register_storable_object(object: Object, stored_callback := Callable(), map_symbol := DEFAULT_SYMBOL):
 	if stored_callback.is_null():
 		if object is Node:
 			stored_callback = Callable(object, &"queue_free")
@@ -181,9 +132,9 @@ func get_object_coords(object: Object) -> Vector3i:
 		return coords
 	elif object is Node:
 		var map_name: String = object.owner.scene_file_path.trim_prefix(MetSys.map_root_folder)
-		assert(map_name in assigned_maps)
-		var coords: Vector3i = assigned_maps[map_name].front()
-		for vec in assigned_maps[map_name]:
+		assert(map_name in map_data.assigned_maps)
+		var coords: Vector3i = map_data.assigned_maps[map_name].front()
+		for vec in map_data.assigned_maps[map_name]:
 			coords.x = mini(coords.x, vec.x)
 			coords.y = mini(coords.y, vec.y)
 		
@@ -199,25 +150,24 @@ func get_object_coords(object: Object) -> Vector3i:
 func visit_room(room: Vector3i):
 	save_data.explore_room(room)
 	
-	var previous_map: String = map_data.get(Vector3i(last_player_position.x, last_player_position.y, 0), {}).get("assigned_map", "")
-	var current_map: String = map_data.get(room, {}).get("assigned_map", "")
-	if not current_map.is_empty() and not previous_map.is_empty() and current_map != previous_map:
-		map_changed.emit(map_data[room].assigned_map)
-	## tu odkrywanie i sygnał teleportacji
+	var previous_map := map_data.get_assigned_map_at(Vector3i(last_player_position.x, last_player_position.y, 0))
+	var new_map := map_data.get_assigned_map_at(room)
+	if not new_map.is_empty() and not previous_map.is_empty() and new_map != previous_map:
+		map_changed.emit(new_map)
 
 func discover_secret_passage(gdzie):
 	pass ## usuwa ścianę?
 	## nazwa: override border
 	## i druga taka metoda do symboli?
 
-func draw_map_square(canvas_item: CanvasItem, offset: Vector2i, room: Vector3i, use_save_data := false):
-	var room_data: Dictionary = map_data.get(room, {})
-	if room_data.is_empty():
+func draw_map_square(canvas_item: CanvasItem, offset: Vector2i, coords: Vector3i, use_save_data := false):
+	var room_data := map_data.get_room_at(coords)
+	if not room_data:
 		return
 	
 	var discovered := 2
 	if use_save_data:
-		discovered = save_data.is_room_discovered(room)
+		discovered = save_data.is_room_discovered(coords)
 	
 	if discovered == 0:
 		return
@@ -228,9 +178,9 @@ func draw_map_square(canvas_item: CanvasItem, offset: Vector2i, room: Vector3i, 
 	if bool(display_flags & DISPLAY_CENTER):
 		room_fill_texture.draw(ci, offset * ROOM_SIZE, default_room_fill_color if discovered == 2 else unexplored_room_fill_color)
 	
-	var borders: Array[int] = room_data["borders"]
+	var borders: Array[int] = [-1, -1, -1, -1]
 	for i in 4:
-		var border: int = room_data["borders"][i]
+		var border: int = room_data.borders[i]
 		if not bool(display_flags & DISPLAY_OUTLINE) and border == 0:
 			borders[i] = -1
 		elif not bool(display_flags & DISPLAY_BORDERS):
@@ -274,11 +224,11 @@ func draw_map_square(canvas_item: CanvasItem, offset: Vector2i, room: Vector3i, 
 	if bool(display_flags & DISPLAY_SYMBOLS):
 		var symbol: int = -1
 		
-		if room in save_data.room_symbols:
-			symbol = save_data.room_symbols[room].back()
+		if coords in save_data.room_symbols:
+			symbol = save_data.room_symbols[coords].back()
 		
 		if symbol == -1:
-			symbol = room_data.get("symbol", -1)
+			symbol = room_data.symbol
 		
 		if symbol > - 1:
 			assert(symbol < map_symbols.size())
@@ -291,38 +241,10 @@ func draw_player_location(canvas_item: CanvasItem, offset: Vector2i, exact := fa
 	
 	canvas_item.draw_texture(player_location_symbol, player_position)
 
-func _get_whole_room(at: Vector3i) -> Array[Vector3i]:
-	var room: Array[Vector3i]
-	
-	var to_check: Array[Vector2i] = [Vector2i(at.x, at.y)]
-	var checked: Array[Vector2i]
-	
-	while not to_check.is_empty():
-		var p: Vector2i = to_check.pop_back()
-		checked.append(p)
-		
-		var coord := Vector3i(p.x, p.y, at.z)
-		if coord in map_data:
-			room.append(coord)
-			for i in 4:
-				if map_data[coord].borders[i] == -1:
-					var p2: Vector2i = p + FWD[i]
-					if not p2 in to_check and not p2 in checked:
-						to_check.append(p2)
-	
-	return room
-
 func discover_room_group(group_id: int):
-	assert(group_id in room_groups)
+	assert(group_id in map_data.room_groups)
 	
-	for room in room_groups[group_id]:
+	for room in map_data.room_groups[group_id]:
 		save_data.discover_room(room)
 	
 	MetSys.map_updated.emit()
-
-func reset_save_data():
-	save_data = SAVE_DATA.new()
-
-##mapdata
-func get_room_at(coords: Vector3i) -> Dictionary:
-	return map_data.get(coords, {})
