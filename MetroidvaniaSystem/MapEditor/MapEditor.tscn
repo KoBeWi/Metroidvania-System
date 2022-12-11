@@ -146,6 +146,20 @@ func add_symbol(texture: Texture2D):
 
 [sub_resource type="GDScript" id="GDScript_tlx5u"]
 script/source = "extends \"res://MetroidvaniaSystem/MapEditor/SubEditor.gd\"
+
+func _editor_input(event: InputEvent):
+	if event is InputEventMouseButton:
+		if event.pressed:
+			var room_data := get_room_at_cursor()
+			if not room_data:
+				return
+			
+			if event.button_index == MOUSE_BUTTON_LEFT:
+				room_data.color = Color.RED
+				editor.map.queue_redraw()
+			elif event.button_index == MOUSE_BUTTON_RIGHT:
+				room_data.color = Color.TRANSPARENT
+				editor.map.queue_redraw()
 "
 
 [sub_resource type="GDScript" id="GDScript_a80ln"]
@@ -253,6 +267,41 @@ script/source = "extends \"res://MetroidvaniaSystem/MapEditor/SubEditor.gd\"
 func _ready() -> void:
 	super()
 	use_cursor = false
+
+func _editor_input(event: InputEvent):
+	var room_data := get_room_at_cursor()
+	
+	if event is InputEventMouseMotion:
+		if room_data:
+			var rel := editor.map_overlay.get_local_mouse_position().posmodv(MetSys.ROOM_SIZE)
+			var border := get_square_border_idx(rel)
+			
+			var new_border := -1
+			var borders: Array[int] = room_data.borders
+			
+			for i in 4:
+				if border == i and borders[i] > -1:
+					new_border = border
+					break
+			
+			if new_border != highlighted_border:
+				highlighted_border = new_border
+				editor.map_overlay.queue_redraw()
+		else:
+			highlighted_border = -1
+			editor.map_overlay.queue_redraw()
+	
+	if event is InputEventMouseButton:
+		if not room_data or highlighted_border == -1:
+			return
+		
+		if event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+			room_data.border_colors[highlighted_border] = Color.RED
+			editor.map.queue_redraw()
+		elif event.pressed and event.button_index == MOUSE_BUTTON_RIGHT:
+			room_data.border_colors[highlighted_border] = Color.TRANSPARENT
+			editor.map.queue_redraw()
+		
 "
 
 [sub_resource type="GDScript" id="GDScript_ibl4j"]
@@ -295,25 +344,19 @@ mode_group = SubResource("ButtonGroup_pv7fp")
 metadata/_edit_lock_ = true
 
 [node name="PanelContainer" type="PanelContainer" parent="."]
-offset_right = 115.0
-offset_bottom = 648.0
+layout_mode = 2
 
 [node name="Modes" type="VBoxContainer" parent="PanelContainer"]
-offset_right = 115.0
-offset_bottom = 648.0
+layout_mode = 2
 alignment = 1
 
 [node name="Label" type="Label" parent="PanelContainer/Modes"]
-offset_top = 188.0
-offset_right = 115.0
-offset_bottom = 214.0
+layout_mode = 2
 text = "Mode"
 horizontal_alignment = 1
 
 [node name="RoomLayout" type="Button" parent="PanelContainer/Modes"]
-offset_top = 218.0
-offset_right = 115.0
-offset_bottom = 249.0
+layout_mode = 2
 toggle_mode = true
 button_pressed = true
 button_group = SubResource("ButtonGroup_pv7fp")
@@ -321,62 +364,49 @@ text = "Room Layout"
 script = SubResource("GDScript_dsps8")
 
 [node name="RoomSymbol" type="Button" parent="PanelContainer/Modes"]
-offset_top = 253.0
-offset_right = 115.0
-offset_bottom = 284.0
+layout_mode = 2
 toggle_mode = true
 button_group = SubResource("ButtonGroup_pv7fp")
 text = "Room Symbol"
 script = SubResource("GDScript_ujwfx")
 
 [node name="RoomColor" type="Button" parent="PanelContainer/Modes"]
-offset_top = 288.0
-offset_right = 115.0
-offset_bottom = 319.0
+layout_mode = 2
 toggle_mode = true
 button_group = SubResource("ButtonGroup_pv7fp")
 text = "Room Color"
 script = SubResource("GDScript_tlx5u")
 
 [node name="RoomGroup" type="Button" parent="PanelContainer/Modes"]
-offset_top = 323.0
-offset_right = 115.0
-offset_bottom = 354.0
+layout_mode = 2
 toggle_mode = true
 button_group = SubResource("ButtonGroup_pv7fp")
 text = "Room Group"
 script = SubResource("GDScript_a80ln")
 
 [node name="BorderType" type="Button" parent="PanelContainer/Modes"]
-offset_top = 358.0
-offset_right = 115.0
-offset_bottom = 389.0
+layout_mode = 2
 toggle_mode = true
 button_group = SubResource("ButtonGroup_pv7fp")
 text = "Border Type"
 script = SubResource("GDScript_ilxbw")
 
 [node name="BorderColor" type="Button" parent="PanelContainer/Modes"]
-offset_top = 393.0
-offset_right = 115.0
-offset_bottom = 424.0
+layout_mode = 2
 toggle_mode = true
 button_group = SubResource("ButtonGroup_pv7fp")
 text = "Border Color"
 script = SubResource("GDScript_a3fsx")
 
 [node name="MapAssign" type="Button" parent="PanelContainer/Modes"]
-offset_top = 428.0
-offset_right = 115.0
-offset_bottom = 459.0
+layout_mode = 2
 toggle_mode = true
 button_group = SubResource("ButtonGroup_pv7fp")
 text = "Map Assign"
 script = SubResource("GDScript_ibl4j")
 
 [node name="EditControls" type="VBoxContainer" parent="PanelContainer"]
-offset_right = 115.0
-offset_bottom = 648.0
+layout_mode = 2
 mouse_filter = 2
 alignment = 2
 metadata/_edit_lock_ = true
@@ -384,51 +414,48 @@ metadata/_edit_lock_ = true
 [node name="Symbols" type="VBoxContainer" parent="PanelContainer/EditControls"]
 unique_name_in_owner = true
 visible = false
+layout_mode = 2
 
 [node name="SymbolContainer" type="HFlowContainer" parent="PanelContainer/EditControls/Symbols"]
 unique_name_in_owner = true
+layout_mode = 2
 
 [node name="Groups" type="VBoxContainer" parent="PanelContainer/EditControls"]
 unique_name_in_owner = true
 visible = false
+layout_mode = 2
 
 [node name="Label" type="Label" parent="PanelContainer/EditControls/Groups"]
+layout_mode = 2
 text = "Group ID"
 horizontal_alignment = 1
 
 [node name="CurrentGroup" type="SpinBox" parent="PanelContainer/EditControls/Groups"]
 unique_name_in_owner = true
+layout_mode = 2
 
 [node name="Layer" type="VBoxContainer" parent="PanelContainer"]
-offset_right = 115.0
-offset_bottom = 648.0
+layout_mode = 2
 mouse_filter = 2
 metadata/_edit_lock_ = true
 
 [node name="Label" type="Label" parent="PanelContainer/Layer"]
-offset_right = 115.0
-offset_bottom = 26.0
+layout_mode = 2
 text = "Current Layer"
 horizontal_alignment = 1
 
 [node name="SpinBox" type="SpinBox" parent="PanelContainer/Layer"]
-offset_top = 30.0
-offset_right = 115.0
-offset_bottom = 61.0
+layout_mode = 2
 
 [node name="MapOverlay" type="Control" parent="."]
-layout_mode = 3
-anchors_preset = 0
-offset_left = 119.0
-offset_right = 1152.0
-offset_bottom = 648.0
+layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="Map" type="Control" parent="MapOverlay"]
 unique_name_in_owner = true
 show_behind_parent = true
 clip_contents = true
-layout_mode = 3
+layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0

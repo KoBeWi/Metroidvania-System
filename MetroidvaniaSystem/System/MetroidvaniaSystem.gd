@@ -21,13 +21,13 @@ const MapData = preload("res://MetroidvaniaSystem/System/MapData.gd")
 @export var default_room_fill_color = Color.BLUE
 @export var unexplored_room_fill_color = Color.GRAY
 @export var default_room_separator_color = Color.GRAY
-@export var default_room_wall_color = Color.WHITE
+@export var default_border_color = Color.WHITE
 
 @export var room_fill_texture: Texture2D
 @export var room_separator_texture: Texture2D
 @export var room_wall_texture: Texture2D ## wersja wertykalna/horyzontalna? (dla prostokątnych pomieszczeń
 @export var border_outer_corner_texture: Texture2D
-@export var border_inner_corner_texture: Texture2D
+@export var border_inner_corner_texture: Texture2D ## TODO
 
 @export_flags("Center", "Outline", "Borders", "Symbol") var unexplored_display := 3
 
@@ -176,7 +176,8 @@ func draw_map_square(canvas_item: CanvasItem, offset: Vector2i, coords: Vector3i
 	var display_flags := (int(discovered == 2) * 255) | unexplored_display
 	
 	if bool(display_flags & DISPLAY_CENTER):
-		room_fill_texture.draw(ci, offset * ROOM_SIZE, default_room_fill_color if discovered == 2 else unexplored_room_fill_color)
+		var room_color = room_data.color if room_data.color.a > 0 else default_room_fill_color
+		room_fill_texture.draw(ci, offset * ROOM_SIZE, room_color if discovered == 2 else unexplored_room_fill_color)
 	
 	var borders: Array[int] = [-1, -1, -1, -1]
 	for i in 4:
@@ -203,7 +204,7 @@ func draw_map_square(canvas_item: CanvasItem, offset: Vector2i, coords: Vector3i
 				border = 0
 			
 			texture = map_borders[border]
-			color = default_room_wall_color
+			color = room_data.get_border_color(i)
 		
 		if not texture:
 			continue
@@ -216,8 +217,10 @@ func draw_map_square(canvas_item: CanvasItem, offset: Vector2i, coords: Vector3i
 		if borders[i] == -1 or borders[j] == -1:
 			continue
 		
+		var corner_color = room_data.get_border_color(i).lerp(room_data.get_border_color(j), 0.5)
+		
 		canvas_item.draw_set_transform(offset * ROOM_SIZE + ROOM_SIZE / 2, PI * 0.5 * i, Vector2.ONE)
-		border_outer_corner_texture.draw(ci, -ROOM_SIZE / 2)
+		border_outer_corner_texture.draw(ci, -ROOM_SIZE / 2, corner_color)
 	
 	canvas_item.draw_set_transform_matrix(Transform2D())
 	

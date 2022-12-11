@@ -3,6 +3,8 @@ const FWD = { R: Vector2i.RIGHT, D: Vector2i.DOWN, L: Vector2i.LEFT, U: Vector2i
 
 class RoomData:
 	var borders: Array[int] = [-1, -1, -1, -1]
+	var color: Color = Color.TRANSPARENT
+	var border_colors: Array[Color] = [Color.TRANSPARENT, Color.TRANSPARENT, Color.TRANSPARENT, Color.TRANSPARENT]
 	var symbol := -1
 	var assigned_map: String
 	
@@ -18,6 +20,12 @@ class RoomData:
 			borders[i] = chunk.get_slice(",", i).to_int()
 		
 		chunk = load_next_chunk()
+		if not chunk.is_empty():
+			color = Color(chunk.get_slice(",", 0))
+			for i in 4:
+				border_colors[i] = Color(chunk.get_slice(",", i + 1))
+		
+		chunk = load_next_chunk()
 		symbol = chunk.to_int()
 		
 		assigned_map = load_next_chunk()
@@ -26,6 +34,13 @@ class RoomData:
 	func get_string() -> String:
 		var data: PackedStringArray
 		data.append("%s,%s,%s,%s" % borders)
+		
+		var colors: Array[Color] = [color] + Array(border_colors)
+		if colors.any(func(color: Color): return color.a > 0):
+			data.append("%s,%s,%s,%s,%s" % colors.map(func(color: Color): return color.to_html()))
+		else:
+			data.append("")
+		
 		data.append(str(symbol))
 		data.append(assigned_map.trim_prefix(MetSys.map_root_folder).trim_prefix("/"))
 		return "|".join(data)
@@ -33,6 +48,11 @@ class RoomData:
 	func load_next_chunk() -> String:
 		loading[1] += 1
 		return loading[0].get_slice("|", loading[1])
+	
+	func get_border_color(idx: int):
+		if border_colors[idx].a > 0:
+			return border_colors[idx]
+		return MetSys.default_border_color
 
 var rooms: Dictionary#[Vector3i, RoomData]
 var assigned_maps: Dictionary#[String, Array[Vector3i]]
