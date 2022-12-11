@@ -145,7 +145,14 @@ func add_symbol(texture: Texture2D):
 "
 
 [sub_resource type="GDScript" id="GDScript_tlx5u"]
+resource_name = "RoomColor"
 script/source = "extends \"res://MetroidvaniaSystem/MapEditor/SubEditor.gd\"
+
+func _editor_enter():
+	%Colors.show()
+
+func _editor_exit():
+	%Colors.hide()
 
 func _editor_input(event: InputEvent):
 	if event is InputEventMouseButton:
@@ -155,8 +162,12 @@ func _editor_input(event: InputEvent):
 				return
 			
 			if event.button_index == MOUSE_BUTTON_LEFT:
-				room_data.color = Color.RED
-				editor.map.queue_redraw()
+				if event.is_command_or_control_pressed():
+					if room_data.color.a > 0:
+						%CurrentColor.color = room_data.color
+				else:
+					room_data.color = %CurrentColor.color
+					editor.map.queue_redraw()
 			elif event.button_index == MOUSE_BUTTON_RIGHT:
 				room_data.color = Color.TRANSPARENT
 				editor.map.queue_redraw()
@@ -268,6 +279,12 @@ func _ready() -> void:
 	super()
 	use_cursor = false
 
+func _editor_enter():
+	%Colors.show()
+
+func _editor_exit():
+	%Colors.hide()
+
 func _editor_input(event: InputEvent):
 	var room_data := get_room_at_cursor()
 	
@@ -296,8 +313,12 @@ func _editor_input(event: InputEvent):
 			return
 		
 		if event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-			room_data.border_colors[highlighted_border] = Color.RED
-			editor.map.queue_redraw()
+			if event.is_command_or_control_pressed():
+				if room_data.border_colors[highlighted_border].a > 0:
+					%CurrentColor.color = room_data.border_colors[highlighted_border]
+			else:
+				room_data.border_colors[highlighted_border] = %CurrentColor.color
+				editor.map.queue_redraw()
 		elif event.pressed and event.button_index == MOUSE_BUTTON_RIGHT:
 			room_data.border_colors[highlighted_border] = Color.TRANSPARENT
 			editor.map.queue_redraw()
@@ -433,6 +454,17 @@ horizontal_alignment = 1
 [node name="CurrentGroup" type="SpinBox" parent="PanelContainer/EditControls/Groups"]
 unique_name_in_owner = true
 layout_mode = 2
+
+[node name="Colors" type="VBoxContainer" parent="PanelContainer/EditControls"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="CurrentColor" type="ColorPickerButton" parent="PanelContainer/EditControls/Colors"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 30)
+layout_mode = 2
+edit_alpha = false
 
 [node name="Layer" type="VBoxContainer" parent="PanelContainer"]
 layout_mode = 2

@@ -21,12 +21,18 @@ class RoomData:
 		
 		chunk = load_next_chunk()
 		if not chunk.is_empty():
-			color = Color(chunk.get_slice(",", 0))
+			var color_slice := chunk.get_slice(",", 0)
+			if not color_slice.is_empty():
+				color = Color(color_slice)
+			
 			for i in 4:
-				border_colors[i] = Color(chunk.get_slice(",", i + 1))
+				color_slice = chunk.get_slice(",", i + 1)
+				if not color_slice.is_empty():
+					border_colors[i] = Color(color_slice)
 		
 		chunk = load_next_chunk()
-		symbol = chunk.to_int()
+		if not chunk.is_empty():
+			symbol = chunk.to_int()
 		
 		assigned_map = load_next_chunk()
 		loading = null
@@ -37,11 +43,14 @@ class RoomData:
 		
 		var colors: Array[Color] = [color] + Array(border_colors)
 		if colors.any(func(color: Color): return color.a > 0):
-			data.append("%s,%s,%s,%s,%s" % colors.map(func(color: Color): return color.to_html()))
+			data.append("%s,%s,%s,%s,%s" % colors.map(func(color: Color): return color.to_html(false) if color.a > 0 else ""))
 		else:
 			data.append("")
 		
-		data.append(str(symbol))
+		if symbol > -1:
+			data.append(str(symbol))
+		else:
+			data.append("")
 		data.append(assigned_map.trim_prefix(MetSys.map_root_folder).trim_prefix("/"))
 		return "|".join(data)
 	
