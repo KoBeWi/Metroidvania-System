@@ -195,7 +195,13 @@ func draw_map_square(canvas_item: CanvasItem, offset: Vector2i, coords: Vector3i
 			if not bool(display_flags & DISPLAY_BORDERS):
 				border = 0
 			
-			texture = map_borders[border]
+			if border == 0:
+				texture = theme.room_wall_texture
+			elif border == 1:
+				texture = theme.room_passage_texture
+			else:
+				texture = map_borders[border - 1]
+			
 			color = room_data.get_border_color(i)
 		
 		if not texture:
@@ -216,9 +222,14 @@ func draw_map_square(canvas_item: CanvasItem, offset: Vector2i, coords: Vector3i
 	
 	for i in 4:
 		var j: int = (i + 1) % 4
-		var neighbor: Vector2i = Vector2i(coords.x, coords.y) + map_data.FWD[i] + map_data.FWD[j]
-		if borders[i] != -1 or borders[j] != -1 or map_data.get_room_at(Vector3i(neighbor.x, neighbor.y, coords.z)):
+		if borders[i] != -1 or borders[j] != -1:
 			continue
+		
+		var neighbor: Vector2i = Vector2i(coords.x, coords.y) + map_data.FWD[i] + map_data.FWD[j]
+		var neighbor_room := map_data.get_room_at(Vector3i(neighbor.x, neighbor.y, coords.z))
+		if neighbor_room:
+			if neighbor_room.borders[(i + 2) % 4] == -1 and neighbor_room.borders[(j + 2) % 4] == -1:
+				continue
 		
 		var corner_color = room_data.get_border_color(i).lerp(room_data.get_border_color(j), 0.5)
 		
