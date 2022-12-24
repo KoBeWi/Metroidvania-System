@@ -11,6 +11,6 @@ class_name MapTheme
 @export var room_wall_texture: Texture2D ## wersja wertykalna/horyzontalna? (dla prostokątnych pomieszczeń
 @export var room_passage_texture: Texture2D
 @export var border_outer_corner_texture: Texture2D
-@export var border_inner_corner_texture: Texture2D ## TODO
+@export var border_inner_corner_texture: Texture2D
 
 @export var player_location_scene: PackedScene

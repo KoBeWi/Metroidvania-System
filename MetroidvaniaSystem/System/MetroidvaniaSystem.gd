@@ -214,6 +214,17 @@ func draw_map_square(canvas_item: CanvasItem, offset: Vector2i, coords: Vector3i
 		canvas_item.draw_set_transform(offset * ROOM_SIZE + ROOM_SIZE / 2, PI * 0.5 * i, Vector2.ONE)
 		theme.border_outer_corner_texture.draw(ci, -ROOM_SIZE / 2, corner_color)
 	
+	for i in 4:
+		var j: int = (i + 1) % 4
+		var neighbor: Vector2i = Vector2i(coords.x, coords.y) + map_data.FWD[i] + map_data.FWD[j]
+		if borders[i] != -1 or borders[j] != -1 or map_data.get_room_at(Vector3i(neighbor.x, neighbor.y, coords.z)):
+			continue
+		
+		var corner_color = room_data.get_border_color(i).lerp(room_data.get_border_color(j), 0.5)
+		
+		canvas_item.draw_set_transform(offset * ROOM_SIZE + ROOM_SIZE / 2, PI * 0.5 * i, Vector2.ONE)
+		theme.border_inner_corner_texture.draw(ci, -ROOM_SIZE / 2, corner_color)
+	
 	canvas_item.draw_set_transform_matrix(Transform2D())
 	
 	if bool(display_flags & DISPLAY_SYMBOLS):
