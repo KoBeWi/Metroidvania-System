@@ -61,7 +61,7 @@ class RoomData:
 	func get_border_color(idx: int):
 		if border_colors[idx].a > 0:
 			return border_colors[idx]
-		return MetSys.default_border_color
+		return MetSys.theme.default_border_color
 
 var rooms: Dictionary#[Vector3i, RoomData]
 var assigned_maps: Dictionary#[String, Array[Vector3i]]

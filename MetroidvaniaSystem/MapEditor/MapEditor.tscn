@@ -365,19 +365,25 @@ mode_group = SubResource("ButtonGroup_pv7fp")
 metadata/_edit_lock_ = true
 
 [node name="PanelContainer" type="PanelContainer" parent="."]
-layout_mode = 2
+offset_right = 115.0
+offset_bottom = 648.0
 
 [node name="Modes" type="VBoxContainer" parent="PanelContainer"]
-layout_mode = 2
+offset_right = 115.0
+offset_bottom = 648.0
 alignment = 1
 
 [node name="Label" type="Label" parent="PanelContainer/Modes"]
-layout_mode = 2
+offset_top = 188.0
+offset_right = 115.0
+offset_bottom = 214.0
 text = "Mode"
 horizontal_alignment = 1
 
 [node name="RoomLayout" type="Button" parent="PanelContainer/Modes"]
-layout_mode = 2
+offset_top = 218.0
+offset_right = 115.0
+offset_bottom = 249.0
 toggle_mode = true
 button_pressed = true
 button_group = SubResource("ButtonGroup_pv7fp")
@@ -385,49 +391,62 @@ text = "Room Layout"
 script = SubResource("GDScript_dsps8")
 
 [node name="RoomSymbol" type="Button" parent="PanelContainer/Modes"]
-layout_mode = 2
+offset_top = 253.0
+offset_right = 115.0
+offset_bottom = 284.0
 toggle_mode = true
 button_group = SubResource("ButtonGroup_pv7fp")
 text = "Room Symbol"
 script = SubResource("GDScript_ujwfx")
 
 [node name="RoomColor" type="Button" parent="PanelContainer/Modes"]
-layout_mode = 2
+offset_top = 288.0
+offset_right = 115.0
+offset_bottom = 319.0
 toggle_mode = true
 button_group = SubResource("ButtonGroup_pv7fp")
 text = "Room Color"
 script = SubResource("GDScript_tlx5u")
 
 [node name="RoomGroup" type="Button" parent="PanelContainer/Modes"]
-layout_mode = 2
+offset_top = 323.0
+offset_right = 115.0
+offset_bottom = 354.0
 toggle_mode = true
 button_group = SubResource("ButtonGroup_pv7fp")
 text = "Room Group"
 script = SubResource("GDScript_a80ln")
 
 [node name="BorderType" type="Button" parent="PanelContainer/Modes"]
-layout_mode = 2
+offset_top = 358.0
+offset_right = 115.0
+offset_bottom = 389.0
 toggle_mode = true
 button_group = SubResource("ButtonGroup_pv7fp")
 text = "Border Type"
 script = SubResource("GDScript_ilxbw")
 
 [node name="BorderColor" type="Button" parent="PanelContainer/Modes"]
-layout_mode = 2
+offset_top = 393.0
+offset_right = 115.0
+offset_bottom = 424.0
 toggle_mode = true
 button_group = SubResource("ButtonGroup_pv7fp")
 text = "Border Color"
 script = SubResource("GDScript_a3fsx")
 
 [node name="MapAssign" type="Button" parent="PanelContainer/Modes"]
-layout_mode = 2
+offset_top = 428.0
+offset_right = 115.0
+offset_bottom = 459.0
 toggle_mode = true
 button_group = SubResource("ButtonGroup_pv7fp")
 text = "Map Assign"
 script = SubResource("GDScript_ibl4j")
 
 [node name="EditControls" type="VBoxContainer" parent="PanelContainer"]
-layout_mode = 2
+offset_right = 115.0
+offset_bottom = 648.0
 mouse_filter = 2
 alignment = 2
 metadata/_edit_lock_ = true
@@ -435,59 +454,60 @@ metadata/_edit_lock_ = true
 [node name="Symbols" type="VBoxContainer" parent="PanelContainer/EditControls"]
 unique_name_in_owner = true
 visible = false
-layout_mode = 2
 
 [node name="SymbolContainer" type="HFlowContainer" parent="PanelContainer/EditControls/Symbols"]
 unique_name_in_owner = true
-layout_mode = 2
 
 [node name="Groups" type="VBoxContainer" parent="PanelContainer/EditControls"]
 unique_name_in_owner = true
 visible = false
-layout_mode = 2
 
 [node name="Label" type="Label" parent="PanelContainer/EditControls/Groups"]
-layout_mode = 2
 text = "Group ID"
 horizontal_alignment = 1
 
 [node name="CurrentGroup" type="SpinBox" parent="PanelContainer/EditControls/Groups"]
 unique_name_in_owner = true
-layout_mode = 2
 
 [node name="Colors" type="VBoxContainer" parent="PanelContainer/EditControls"]
 unique_name_in_owner = true
 visible = false
-layout_mode = 2
 
 [node name="CurrentColor" type="ColorPickerButton" parent="PanelContainer/EditControls/Colors"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 30)
-layout_mode = 2
 edit_alpha = false
 
 [node name="Layer" type="VBoxContainer" parent="PanelContainer"]
-layout_mode = 2
+offset_right = 115.0
+offset_bottom = 648.0
 mouse_filter = 2
 metadata/_edit_lock_ = true
 
 [node name="Label" type="Label" parent="PanelContainer/Layer"]
-layout_mode = 2
+offset_right = 115.0
+offset_bottom = 26.0
 text = "Current Layer"
 horizontal_alignment = 1
 
 [node name="SpinBox" type="SpinBox" parent="PanelContainer/Layer"]
-layout_mode = 2
+offset_top = 30.0
+offset_right = 115.0
+offset_bottom = 61.0
 
 [node name="MapOverlay" type="Control" parent="."]
-layout_mode = 2
+layout_mode = 3
+anchors_preset = 0
+offset_left = 119.0
+offset_right = 1152.0
+offset_bottom = 648.0
 size_flags_horizontal = 3
 
 [node name="Map" type="Control" parent="MapOverlay"]
 unique_name_in_owner = true
 show_behind_parent = true
 clip_contents = true
-layout_mode = 1
+layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0

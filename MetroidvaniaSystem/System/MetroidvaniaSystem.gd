@@ -15,24 +15,15 @@ const MapData = preload("res://MetroidvaniaSystem/System/MapData.gd")
 ## TODO: validator? do sprawdzania czy wszystkie pomieszczenia mają przypisaną mapę itp
 ## TODO: add_main_symbol() - dodaje symbol i zawsze ma index 0 / ???
 ## TODO: ujednolicić coords (nazwy zmiennych)
+## TODO: layout - wyświetlać rozmiar rysowanego pomieszczenia
+## TODO: metody do tworzenia pomieszczeń ze skryptu??
+## TODO: drag żeby utworzyć drzwi po drugiej stronie
 
+@export var theme: MapTheme
 @export_dir var map_root_folder: String
-
-@export var default_room_fill_color = Color.BLUE
-@export var unexplored_room_fill_color = Color.GRAY
-@export var default_room_separator_color = Color.GRAY
-@export var default_border_color = Color.WHITE
-
-@export var room_fill_texture: Texture2D
-@export var room_separator_texture: Texture2D
-@export var room_wall_texture: Texture2D ## wersja wertykalna/horyzontalna? (dla prostokątnych pomieszczeń
-@export var border_outer_corner_texture: Texture2D
-@export var border_inner_corner_texture: Texture2D ## TODO
 
 @export_flags("Center", "Outline", "Borders", "Symbol") var unexplored_display := 3
 
-@export var player_location_symbol: Texture2D
-@export var player_location_scene: PackedScene ## tylko jedno ma się pokazywać
 @export var uncollected_item_symbol := -1
 @export var collected_item_symbol := -1
 @export var map_borders: Array[Texture2D] ## każda ściana może mieć teksturę
@@ -40,13 +31,14 @@ const MapData = preload("res://MetroidvaniaSystem/System/MapData.gd")
 
 @export var in_game_room_size := Vector2(1152, 648)
 
-@onready var ROOM_SIZE: Vector2i = room_fill_texture.get_size()
+@onready var ROOM_SIZE: Vector2i = theme.room_fill_texture.get_size()
 
 var map_data: MapData
 var save_data := SaveData.new() ## po co to new?
 
 var last_player_position := VECTOR2INF
 var exact_player_position: Vector2
+var player_location_instance: Node2D
 var current_map: MapHandler
 
 signal map_updated
@@ -131,7 +123,7 @@ func get_object_coords(object: Object) -> Vector3i:
 		object.set_meta(&"object_coords", coords)
 		return coords
 	elif object is Node:
-		var map_name: String = object.owner.scene_file_path.trim_prefix(MetSys.map_root_folder)
+		var map_name: String = object.owner.scene_file_path.trim_prefix(map_root_folder)
 		assert(map_name in map_data.assigned_maps)
 		var coords: Vector3i = map_data.assigned_maps[map_name].front()
 		for vec in map_data.assigned_maps[map_name]:
@@ -176,8 +168,8 @@ func draw_map_square(canvas_item: CanvasItem, offset: Vector2i, coords: Vector3i
 	var display_flags := (int(discovered == 2) * 255) | unexplored_display
 	
 	if bool(display_flags & DISPLAY_CENTER):
-		var room_color = room_data.color if room_data.color.a > 0 else default_room_fill_color
-		room_fill_texture.draw(ci, offset * ROOM_SIZE, room_color if discovered == 2 else unexplored_room_fill_color)
+		var room_color = room_data.color if room_data.color.a > 0 else theme.default_room_fill_color
+		theme.room_fill_texture.draw(ci, offset * ROOM_SIZE, room_color if discovered == 2 else theme.unexplored_room_fill_color)
 	
 	var borders: Array[int] = [-1, -1, -1, -1]
 	for i in 4:
@@ -194,8 +186,8 @@ func draw_map_square(canvas_item: CanvasItem, offset: Vector2i, coords: Vector3i
 		var color: Color
 		
 		if borders[i] == -1:
-			texture = room_separator_texture
-			color = default_room_separator_color
+			texture = theme.room_separator_texture
+			color = theme.default_room_separator_color
 		else:
 			var border: int = borders[i]
 			assert(borders[i] < map_borders.size())
@@ -220,7 +212,7 @@ func draw_map_square(canvas_item: CanvasItem, offset: Vector2i, coords: Vector3i
 		var corner_color = room_data.get_border_color(i).lerp(room_data.get_border_color(j), 0.5)
 		
 		canvas_item.draw_set_transform(offset * ROOM_SIZE + ROOM_SIZE / 2, PI * 0.5 * i, Vector2.ONE)
-		border_outer_corner_texture.draw(ci, -ROOM_SIZE / 2, corner_color)
+		theme.border_outer_corner_texture.draw(ci, -ROOM_SIZE / 2, corner_color)
 	
 	canvas_item.draw_set_transform_matrix(Transform2D())
 	
@@ -238,11 +230,19 @@ func draw_map_square(canvas_item: CanvasItem, offset: Vector2i, coords: Vector3i
 			canvas_item.draw_texture(map_symbols[symbol], offset * ROOM_SIZE)
 
 func draw_player_location(canvas_item: CanvasItem, offset: Vector2i, exact := false):
-	var player_position: Vector2 = (last_player_position + offset) * ROOM_SIZE
+	var player_position: Vector2 = (last_player_position + offset) * ROOM_SIZE + ROOM_SIZE / 2
 	if exact:
-		player_position += (exact_player_position / in_game_room_size).posmod(1) * Vector2(ROOM_SIZE) - player_location_symbol.get_size() * 0.5
+		player_position += (exact_player_position / in_game_room_size).posmod(1) * Vector2(ROOM_SIZE) - ROOM_SIZE * 0.5
 	
-	canvas_item.draw_texture(player_location_symbol, player_position)
+	if not is_instance_valid(player_location_instance):
+		player_location_instance = theme.player_location_scene.instantiate()
+	
+	if player_location_instance.get_parent() != canvas_item:
+		if player_location_instance.get_parent():
+			player_location_instance.get_parent().remove_child(player_location_instance)
+		canvas_item.add_child(player_location_instance)
+	
+	player_location_instance.position = player_position
 
 func discover_room_group(group_id: int):
 	assert(group_id in map_data.room_groups)
@@ -250,4 +250,4 @@ func discover_room_group(group_id: int):
 	for room in map_data.room_groups[group_id]:
 		save_data.discover_room(room)
 	
-	MetSys.map_updated.emit()
+	map_updated.emit()

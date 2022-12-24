@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://carvupndufcht"
-path="res://.godot/imported/RoomFill.png-df7de5238ad900b3d3c94c8231bb0cde.ctex"
+uid="uid://b8mwdksvhmgf"
+path="res://.godot/imported/RoomOuterCorner.png-9286a52e92fbc64d14f333e8d7f5bb4f.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://MetroidvaniaSystem/Textures/RoomFill.png"
-dest_files=["res://.godot/imported/RoomFill.png-df7de5238ad900b3d3c94c8231bb0cde.ctex"]
+source_file="res://MetroidvaniaSystem/Themes/Modern/RoomOuterCorner.png"
+dest_files=["res://.godot/imported/RoomOuterCorner.png-9286a52e92fbc64d14f333e8d7f5bb4f.ctex"]
 
 [params]
 
