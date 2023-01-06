@@ -1,28 +1,22 @@
-[gd_scene load_steps=9 format=3 uid="uid://xpbhai8nlgtx"]
+[gd_scene load_steps=10 format=3 uid="uid://xpbhai8nlgtx"]
 
 [ext_resource type="Texture2D" uid="uid://c3v5jdyj2jl4e" path="res://SampleProject/Sprites/MC.png" id="1_qiynj"]
 
 [sub_resource type="GDScript" id="GDScript_weu6d"]
 script/source = "extends CharacterBody2D
 
-const SPEED = 700.0#300.0
+const SPEED = 300.0
 const JUMP_VELOCITY = -400.0
 
-# Get the gravity from the project settings to be synced with RigidDynamicBody nodes.
 var gravity: int = ProjectSettings.get_setting(\"physics/2d/default_gravity\")
 
-
 func _physics_process(delta: float) -> void:
-	# Add the gravity.
 	if not is_on_floor():
 		velocity.y += gravity * delta
-
-	# Handle Jump.
+	
 	if Input.is_action_just_pressed(\"ui_accept\") and is_on_floor():
 		velocity.y = JUMP_VELOCITY
-
-	# Get the input direction and handle the movement/deceleration.
-	# As good practice, you should replace UI actions with custom gameplay actions.
+	
 	var direction := Input.get_axis(\"ui_left\", \"ui_right\")
 	if direction:
 		velocity.x = direction * SPEED
@@ -30,10 +24,41 @@ func _physics_process(delta: float) -> void:
 		velocity.x = move_toward(velocity.x, 0, SPEED)
 
 	move_and_slide()
+	
+	if velocity.y < 0:
+		$AnimationPlayer.play(&\"Jump\")
+	elif velocity.y >= 0 and not is_on_floor():
+		$AnimationPlayer.play(&\"Fall\")
+	elif absf(velocity.x) > 1:
+		$AnimationPlayer.play(&\"Run\")
+	else:
+		$AnimationPlayer.play(&\"Idle\")
+	
+	if velocity.x > 1:
+		$Sprite2D.flip_h = false
+	elif velocity.x < -1:
+		$Sprite2D.flip_h = true
 "
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_yj7bn"]
-size = Vector2(32, 56)
+size = Vector2(15, 42)
+
+[sub_resource type="Animation" id="Animation_mul1d"]
+resource_name = "Fall"
+length = 0.3
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [10, 11, 12]
+}
 
 [sub_resource type="Animation" id="Animation_76fpo"]
 resource_name = "Idle"
@@ -52,6 +77,7 @@ tracks/0/keys = {
 
 [sub_resource type="Animation" id="Animation_58w5b"]
 resource_name = "Jump"
+length = 0.3
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -59,10 +85,10 @@ tracks/0/path = NodePath("Sprite2D:frame")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
+"times": PackedFloat32Array(0, 0.1, 0.2),
+"transitions": PackedFloat32Array(1, 1, 1),
 "update": 1,
-"values": [6]
+"values": [6, 7, 8]
 }
 
 [sub_resource type="Animation" id="Animation_owew4"]
@@ -82,6 +108,7 @@ tracks/0/keys = {
 
 [sub_resource type="Animation" id="Animation_l0tvd"]
 resource_name = "Run"
+length = 0.6
 loop_mode = 1
 tracks/0/type = "value"
 tracks/0/imported = false
@@ -90,14 +117,15 @@ tracks/0/path = NodePath("Sprite2D:frame")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4, 0.5),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
 "update": 1,
-"values": [1, 2, 3, 4, 5, 7, 8, 9, 10, 11]
+"values": [1, 2, 3, 4, 5, 6]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_rqeoy"]
 _data = {
+"Fall": SubResource("Animation_mul1d"),
 "Idle": SubResource("Animation_76fpo"),
 "Jump": SubResource("Animation_58w5b"),
 "RESET": SubResource("Animation_owew4"),
@@ -108,12 +136,12 @@ _data = {
 script = SubResource("GDScript_weu6d")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(2, 4)
+position = Vector2(1.5, 10)
 shape = SubResource("RectangleShape2D_yj7bn")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = ExtResource("1_qiynj")
-hframes = 6
+hframes = 7
 vframes = 2
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]

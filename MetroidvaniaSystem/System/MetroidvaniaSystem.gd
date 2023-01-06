@@ -1,5 +1,5 @@
-@tool
 class_name MetroidvaniaSystem extends Node
+@tool
 
 const VECTOR2INF = Vector2i(999999, 99999999)
 const DEFAULT_SYMBOL = -99
@@ -16,8 +16,9 @@ const MapData = preload("res://MetroidvaniaSystem/System/MapData.gd")
 ## TODO: add_main_symbol() - dodaje symbol i zawsze ma index 0 / ???
 ## TODO: ujednolicić coords (nazwy zmiennych)
 ## TODO: layout - wyświetlać rozmiar rysowanego pomieszczenia
-## TODO: metody do tworzenia pomieszczeń ze skryptu??
+## TODO: metody do tworzenia pomieszczeń ze skryptu?? -> MapBuilder, który tworzy nowy room i zapisuje się oddzielnie
 ## TODO: drag żeby utworzyć drzwi po drugiej stronie
+## TODO: RoomOverride
 
 @export var theme: MapTheme
 @export_dir var map_root_folder: String

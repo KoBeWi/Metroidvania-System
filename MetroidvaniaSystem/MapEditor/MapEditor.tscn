@@ -519,8 +519,8 @@ mouse_filter = 2
 [node name="FileDialog" type="FileDialog" parent="."]
 unique_name_in_owner = true
 title = "Open a File"
-size = Vector2i(312, 160)
-ok_button_text = "Open"
+size = Vector2i(345, 160)
+ok_button_text = "Otwórz"
 file_mode = 0
 filters = PackedStringArray("*.tscn")
 

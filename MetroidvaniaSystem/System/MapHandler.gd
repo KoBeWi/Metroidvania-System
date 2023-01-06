@@ -13,7 +13,8 @@ func _enter_tree() -> void:
 	initialized = true
 	
 	if Engine.is_editor_hint():
-		MetSys.reload_data()
+		pass
+#		MetSys.reload_data()
 	else:
 		MetSys.current_map = self
 	

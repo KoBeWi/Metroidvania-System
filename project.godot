@@ -57,6 +57,12 @@ gdscript/warnings/unused_private_class_variable=0
 gdscript/warnings/unused_parameter=0
 gdscript/warnings/narrowing_conversion=0
 
+[display]
+
+window/size/viewport_width=854
+window/size/viewport_height=480
+window/per_pixel_transparency/allowed=true
+
 [editor_plugins]
 
 enabled=PackedStringArray("res://addons/CustomRunner/plugin.cfg")
