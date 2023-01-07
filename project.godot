@@ -60,7 +60,7 @@ gdscript/warnings/integer_division=0
 
 [display]
 
-window/size/viewport_width=854
+window/size/viewport_width=864
 window/size/viewport_height=480
 window/per_pixel_transparency/allowed=true
 

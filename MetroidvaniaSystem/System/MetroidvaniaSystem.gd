@@ -22,6 +22,9 @@ enum { R, D, L, U }
 ## TODO: layout - wyświetlać rozmiar rysowanego pomieszczenia
 ## TODO: metody do tworzenia pomieszczeń ze skryptu?? -> MapBuilder, który tworzy nowy room i zapisuje się oddzielnie
 ## TODO: drag żeby utworzyć drzwi po drugiej stronie
+## TODO: get_coordinate_for_object(Node2D, layer = current_layer)
+## TODO: pos to map (do rysowania po mapie, x,y pomieszczenia, ratio wewnątrz np (32, 4, 0.1, 0.1))
+## TODO: set current layer
 
 @export var theme: MapTheme
 @export_dir var map_root_folder: String
