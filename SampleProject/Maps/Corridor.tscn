@@ -1,20 +1,24 @@
-[gd_scene load_steps=6 format=3 uid="uid://dwqs5lvv8bxci"]
+[gd_scene load_steps=8 format=3 uid="uid://dwqs5lvv8bxci"]
 
 [ext_resource type="TileSet" uid="uid://bwpcg2opya34n" path="res://SampleProject/Resources/Tileset.tres" id="1_wwhja"]
 [ext_resource type="PackedScene" uid="uid://dytoyiqyvm4r2" path="res://MetroidvaniaSystem/System/MapHandler.tscn" id="3_c4wo3"]
 [ext_resource type="PackedScene" uid="uid://c8j6i3fx8p758" path="res://SampleProject/Objects/Collectible.tscn" id="3_pgq1d"]
+[ext_resource type="Script" path="res://SampleProject/Scripts/SavePoint.gd" id="4_3sij8"]
 
 [sub_resource type="GDScript" id="GDScript_mgsjh"]
 script/source = "extends Area2D
 
 func on_body_entered(body: Node2D) -> void:
-	print(\"test\")
 	var override := MetSys.add_room_override(Vector3i(MetSys.last_player_position.x, MetSys.last_player_position.y, 0))
-	override.borders[MetSys.L] = -1
+	override.borders[MetSys.L] = 1
 	override.commit()
 "
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_pbbyg"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_u42dw"]
+size = Vector2(20, 44)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_n78yq"]
+radius = 32.0
 
 [node name="Map" type="Node2D"]
 
@@ -29,10 +33,35 @@ layer_0/tile_data = PackedInt32Array(720896, 524289, 6, 786432, 524289, 7, 85196
 position = Vector2(375, 337)
 
 [node name="Area2D" type="Area2D" parent="."]
-position = Vector2(43, 335)
+position = Vector2(5, 327)
 script = SubResource("GDScript_mgsjh")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
-shape = SubResource("CircleShape2D_pbbyg")
+shape = SubResource("RectangleShape2D_u42dw")
+
+[node name="SavePoint" type="Area2D" parent="."]
+position = Vector2(1256, 282)
+script = ExtResource("4_3sij8")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="SavePoint"]
+shape = SubResource("CircleShape2D_n78yq")
+
+[node name="Label" type="Label" parent="SavePoint"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -29.0
+offset_top = -25.0
+offset_right = 29.0
+offset_bottom = 25.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 40
+text = "S"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [connection signal="body_entered" from="Area2D" to="Area2D" method="on_body_entered"]
+[connection signal="body_entered" from="SavePoint" to="SavePoint" method="on_body_entered"]

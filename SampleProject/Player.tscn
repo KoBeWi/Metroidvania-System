@@ -133,6 +133,7 @@ _data = {
 }
 
 [node name="Player" type="CharacterBody2D"]
+z_index = 1
 script = SubResource("GDScript_weu6d")
 metadata/player = true
 

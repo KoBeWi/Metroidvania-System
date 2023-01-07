@@ -9,7 +9,7 @@ class RoomData:
 	
 	var loading
 	
-	func _init(line := "") -> void:
+	func _init(line: String) -> void:
 		if line.is_empty():
 			return
 		loading = [line, -1]
@@ -79,6 +79,7 @@ class RoomOverride extends RoomData:
 		MetSys.map_updated.emit()
 
 var rooms: Dictionary#[Vector3i, RoomData]
+var custom_rooms: Dictionary#[Vector3i, RoomData]
 var assigned_maps: Dictionary#[String, Array[Vector3i]]
 var room_groups: Dictionary#[int, Array[Vector3i]]
 
@@ -155,6 +156,12 @@ func get_room_at(coords: Vector3i) -> RoomData:
 func create_room_at(coords: Vector3i) -> RoomData:
 	rooms[coords] = RoomData.new("")
 	return rooms[coords]
+
+func create_custom_room(coords: Vector3i) -> RoomData:
+	assert(not coords in rooms, "A room already exists at this position")
+	var room := create_room_at(coords)
+	custom_rooms[coords] = room
+	return room
 
 func get_whole_room(at: Vector3i) -> Array[Vector3i]:
 	var room: Array[Vector3i]

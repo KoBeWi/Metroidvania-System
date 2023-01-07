@@ -5,9 +5,10 @@ const VECTOR2INF = Vector2i(999999, 99999999)
 const DEFAULT_SYMBOL = -99
 enum { DISPLAY_CENTER = 1, DISPLAY_OUTLINE = 2, DISPLAY_BORDERS = 4, DISPLAY_SYMBOLS = 8 }
 
-const MapHandler = preload("res://MetroidvaniaSystem/System/MapHandler.gd")
 const SaveData = preload("res://MetroidvaniaSystem/System/SaveData.gd")
 const MapData = preload("res://MetroidvaniaSystem/System/MapData.gd")
+const MapBuilder = preload("res://MetroidvaniaSystem/System/MapBuilder.gd")
+const MapHandler = preload("res://MetroidvaniaSystem/System/MapHandler.gd")
 
 enum { R, D, L, U }
 
@@ -60,10 +61,10 @@ func _ready() -> void:
 	set_physics_process(false)
 
 func get_save_data() -> Dictionary:
-	return {} ## odkryte pokoje i umiejętności?
+	return save_data.get_data()
 
 func set_save_data(data: Dictionary):
-	pass ## do wczytywania
+	save_data.set_data(data)
 
 func reset_save_data():
 	save_data = SaveData.new()
@@ -282,3 +283,6 @@ func discover_room_group(group_id: int):
 		save_data.discover_room(room)
 	
 	map_updated.emit()
+
+func get_map_builder() -> MapBuilder:
+	return MapBuilder.new()

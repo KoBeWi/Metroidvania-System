@@ -1,5 +1,7 @@
 extends RefCounted
 
+const SIMPLE_STORABLE_PROPERTIES: Array[StringName] = [&"discovered_rooms", &"registered_objects", &"stored_objects", &"room_markers"]
+
 var discovered_rooms: Dictionary
 var registered_objects: Dictionary
 var stored_objects: Dictionary
@@ -64,7 +66,14 @@ func remove_room_marker(coords: Vector3i, symbol: int):
 	MetSys.map_updated.emit()
 
 func get_data() -> Dictionary:
-	return {discovered_rooms = discovered_rooms}
+	var data: Dictionary
+	
+	for property in SIMPLE_STORABLE_PROPERTIES:
+		data[property] = get(property)
+	
+	return data
 
 func set_data(data: Dictionary):
-	discovered_rooms = data.get("discovered_rooms", {})
+	for property in SIMPLE_STORABLE_PROPERTIES:
+		if property in data:
+			set(property, data[property])

@@ -12,6 +12,9 @@ script/source = "extends Node2D
 var map: Node2D
 
 func _ready() -> void:
+	if FileAccess.file_exists(\"user://save_data.sav\"):
+		MetSys.set_save_data(FileAccess.open(\"user://save_data.sav\", FileAccess.READ).get_var())
+	
 	goto_map(starting_map)
 	MetSys.map_changed.connect(on_map_changed)
 
@@ -160,7 +163,6 @@ script = SubResource("GDScript_4div8")
 
 [node name="ColorRect" type="ColorRect" parent="UI/Minimap"]
 modulate = Color(1, 1, 1, 0.752941)
-layout_mode = 0
 offset_left = 32.0
 offset_top = 32.0
 offset_right = 64.0

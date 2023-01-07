@@ -40,13 +40,13 @@ func _editor_draw(map_overlay: CanvasItem):
 	
 	if highlighted_border > -1:
 		match highlighted_border:
-			0: # MetSys.R
+			MetSys.R:
 				map_overlay.draw_rect(Rect2(get_cursor_pos() as Vector2 * room_size + Vector2(room_size.x * 0.667, 0), room_size * Vector2(0.333, 1)), Color(0, 1, 0, 0.5))
-			1: # MetSys.D
+			MetSys.D:
 				map_overlay.draw_rect(Rect2(get_cursor_pos() as Vector2 * room_size + Vector2(0, room_size.y * 0.667), room_size * Vector2(1, 0.333)), Color(0, 1, 0, 0.5))
-			2: # MetSys.L
+			MetSys.L:
 				map_overlay.draw_rect(Rect2(get_cursor_pos() as Vector2 * room_size, room_size * Vector2(0.333, 1)), Color(0, 1, 0, 0.5))
-			3: # MetSys.U
+			MetSys.U:
 				map_overlay.draw_rect(Rect2(get_cursor_pos() as Vector2 * room_size, room_size * Vector2(1, 0.333)), Color(0, 1, 0, 0.5))
 
 func get_cursor_pos() -> Vector2i:
@@ -70,16 +70,16 @@ func get_rect_between(point1: Vector2, point2: Vector2) -> Rect2:
 
 func get_square_border_idx(rel: Vector2) -> int:
 	if rel.x < MetSys.ROOM_SIZE.x / 3:
-		return MetSys.map_data.L
+		return MetSys.L
 	
 	if rel.x > MetSys.ROOM_SIZE.x - MetSys.ROOM_SIZE.x / 3:
-		return MetSys.map_data.R
+		return MetSys.R
 	
 	if rel.y < MetSys.ROOM_SIZE.y / 3:
-		return MetSys.map_data.U
+		return MetSys.U
 	
 	if rel.y > MetSys.ROOM_SIZE.y - MetSys.ROOM_SIZE.y / 3:
-		return MetSys.map_data.D
+		return MetSys.D
 	
 	return -1
 

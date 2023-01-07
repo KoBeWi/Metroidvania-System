@@ -1,7 +1,7 @@
 [gd_scene load_steps=9 format=3 uid="uid://cbi3c8vm2ieux"]
 
 [ext_resource type="Script" path="res://MetroidvaniaSystem/System/MetroidvaniaSystem.gd" id="1_y1fyl"]
-[ext_resource type="Resource" uid="uid://ddoj71mmr1m1t" path="res://MetroidvaniaSystem/Themes/Fancy/Fancy.tres" id="2_e8yvp"]
+[ext_resource type="Resource" uid="uid://8vehbsiuxbc" path="res://MetroidvaniaSystem/Themes/Modern/Modern.tres" id="2_r7oaw"]
 [ext_resource type="Texture2D" uid="uid://cbk62vedgdwdy" path="res://MetroidvaniaSystem/Themes/Modern/BorderWall.png" id="3_5eq0t"]
 [ext_resource type="Texture2D" uid="uid://61edyfnw5m8p" path="res://MetroidvaniaSystem/Themes/Modern/BorderPassage.png" id="4_g1ime"]
 [ext_resource type="Texture2D" uid="uid://djlvnbqowyndx" path="res://MetroidvaniaSystem/Symbols/Symbol1.png" id="8_tpdd6"]
@@ -11,7 +11,7 @@
 
 [node name="MetroidvaniaSettings" type="Node"]
 script = ExtResource("1_y1fyl")
-theme = ExtResource("2_e8yvp")
+theme = ExtResource("2_r7oaw")
 map_root_folder = "res://SampleProject/Maps/"
 uncollected_item_symbol = 0
 collected_item_symbol = 1
