@@ -134,6 +134,7 @@ _data = {
 
 [node name="Player" type="CharacterBody2D"]
 script = SubResource("GDScript_weu6d")
+metadata/player = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(1.5, 10)

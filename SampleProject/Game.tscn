@@ -140,7 +140,7 @@ script = SubResource("GDScript_qo4m8")
 starting_map = "Corridor"
 
 [node name="Player" parent="." instance=ExtResource("2_bam1a")]
-position = Vector2(232, 203)
+position = Vector2(159, 205)
 
 [node name="Camera2D" type="Camera2D" parent="Player"]
 current = true
@@ -160,6 +160,7 @@ script = SubResource("GDScript_4div8")
 
 [node name="ColorRect" type="ColorRect" parent="UI/Minimap"]
 modulate = Color(1, 1, 1, 0.752941)
+layout_mode = 0
 offset_left = 32.0
 offset_top = 32.0
 offset_right = 64.0

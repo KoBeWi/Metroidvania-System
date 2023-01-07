@@ -1,5 +1,4 @@
-enum { R, D, L, U }
-const FWD = { R: Vector2i.RIGHT, D: Vector2i.DOWN, L: Vector2i.LEFT, U: Vector2i.UP }
+const FWD = { MetroidvaniaSystem.R: Vector2i.RIGHT, MetroidvaniaSystem.D: Vector2i.DOWN, MetroidvaniaSystem.L: Vector2i.LEFT, MetroidvaniaSystem.U: Vector2i.UP }
 
 class RoomData:
 	var borders: Array[int] = [-1, -1, -1, -1]
@@ -10,7 +9,7 @@ class RoomData:
 	
 	var loading
 	
-	func _init(line: String) -> void:
+	func _init(line := "") -> void:
 		if line.is_empty():
 			return
 		loading = [line, -1]
@@ -58,14 +57,32 @@ class RoomData:
 		loading[1] += 1
 		return loading[0].get_slice("|", loading[1])
 	
-	func get_border_color(idx: int):
+	func get_border(idx: int) -> int: # TODO: reszta
+		var override = MetSys.save_data.room_overrides.get(self)
+		if override and override.borders[idx] != -2:
+			return override.borders[idx]
+		return borders[idx]
+	
+	func get_border_color(idx: int) -> Color:
 		if border_colors[idx].a > 0:
 			return border_colors[idx]
 		return MetSys.theme.default_border_color
 
+class RoomOverride extends RoomData:
+	# TODO: metody pomocnicze
+	func _init() -> void:
+		borders = [-2, -2, -2, -2]
+		symbol = -2
+		assigned_map = "/"
+	
+	func commit():
+		MetSys.map_updated.emit()
+
 var rooms: Dictionary#[Vector3i, RoomData]
 var assigned_maps: Dictionary#[String, Array[Vector3i]]
 var room_groups: Dictionary#[int, Array[Vector3i]]
+
+var room_overrides: Dictionary#[Vector3i, RoomOverride]
 
 func load_data():
 	var file := FileAccess.open(MetSys.map_root_folder.path_join("MapData.txt"), FileAccess.READ)

@@ -11,6 +11,9 @@ func _ready() -> void:
 	MetSys.register_storable_object(self)
 
 func collect(body: Node2D) -> void:
+	if not body.get_meta(&\"player\", false):
+		return
+	
 	MetSys.store_object(self)
 	queue_free()
 "

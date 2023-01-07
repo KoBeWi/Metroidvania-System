@@ -1,9 +1,11 @@
 extends RefCounted
 
 var discovered_rooms: Dictionary
-var room_symbols: Dictionary
 var registered_objects: Dictionary
 var stored_objects: Dictionary
+
+var room_markers: Dictionary
+var room_overrides: Dictionary
 
 func discover_room(room: Vector3i):
 	if discovered_rooms.get(room, 0) < 1:
@@ -35,20 +37,30 @@ func is_object_stored(object: Object) -> bool:
 	var id: String = MetSys.get_object_id(object)
 	return id in stored_objects
 
-func add_room_symbol(coords: Vector3i, symbol: int):
-	if not coords in room_symbols:
-		room_symbols[coords] = []
+func add_room_override(room: MetroidvaniaSystem.MapData.RoomData) -> MetroidvaniaSystem.MapData.RoomOverride:
+	if not room in room_overrides:
+		room_overrides[room] = MetroidvaniaSystem.MapData.RoomOverride.new()
+	return room_overrides[room]
+
+func remove_room_override(room: MetroidvaniaSystem.MapData.RoomData) -> bool:
+	var had := room_overrides.has(room)
+	room_overrides.erase(room)
+	return had
+
+func add_room_marker(coords: Vector3i, symbol: int):
+	if not coords in room_markers:
+		room_markers[coords] = []
 	
-	room_symbols[coords].append(symbol)
+	room_markers[coords].append(symbol)
 	MetSys.map_updated.emit()
 
-func remove_room_symbol(coords: Vector3i, symbol: int):
-	assert(coords in room_symbols)
-	var idx: int = room_symbols[coords].find(symbol)
+func remove_room_marker(coords: Vector3i, symbol: int):
+	assert(coords in room_markers)
+	var idx: int = room_markers[coords].find(symbol)
 	assert(idx >= 0)
-	room_symbols[coords].remove_at(idx)
-	if room_symbols[coords].is_empty():
-		room_symbols.erase(coords)
+	room_markers[coords].remove_at(idx)
+	if room_markers[coords].is_empty():
+		room_markers.erase(coords)
 	MetSys.map_updated.emit()
 
 func get_data() -> Dictionary:

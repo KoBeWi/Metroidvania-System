@@ -366,24 +366,24 @@ metadata/_edit_lock_ = true
 
 [node name="PanelContainer" type="PanelContainer" parent="."]
 offset_right = 115.0
-offset_bottom = 648.0
+offset_bottom = 480.0
 
 [node name="Modes" type="VBoxContainer" parent="PanelContainer"]
 offset_right = 115.0
-offset_bottom = 648.0
+offset_bottom = 480.0
 alignment = 1
 
 [node name="Label" type="Label" parent="PanelContainer/Modes"]
-offset_top = 188.0
+offset_top = 104.0
 offset_right = 115.0
-offset_bottom = 214.0
+offset_bottom = 130.0
 text = "Mode"
 horizontal_alignment = 1
 
 [node name="RoomLayout" type="Button" parent="PanelContainer/Modes"]
-offset_top = 218.0
+offset_top = 134.0
 offset_right = 115.0
-offset_bottom = 249.0
+offset_bottom = 165.0
 toggle_mode = true
 button_pressed = true
 button_group = SubResource("ButtonGroup_pv7fp")
@@ -391,54 +391,54 @@ text = "Room Layout"
 script = SubResource("GDScript_dsps8")
 
 [node name="RoomSymbol" type="Button" parent="PanelContainer/Modes"]
-offset_top = 253.0
+offset_top = 169.0
 offset_right = 115.0
-offset_bottom = 284.0
+offset_bottom = 200.0
 toggle_mode = true
 button_group = SubResource("ButtonGroup_pv7fp")
 text = "Room Symbol"
 script = SubResource("GDScript_ujwfx")
 
 [node name="RoomColor" type="Button" parent="PanelContainer/Modes"]
-offset_top = 288.0
+offset_top = 204.0
 offset_right = 115.0
-offset_bottom = 319.0
+offset_bottom = 235.0
 toggle_mode = true
 button_group = SubResource("ButtonGroup_pv7fp")
 text = "Room Color"
 script = SubResource("GDScript_tlx5u")
 
 [node name="RoomGroup" type="Button" parent="PanelContainer/Modes"]
-offset_top = 323.0
+offset_top = 239.0
 offset_right = 115.0
-offset_bottom = 354.0
+offset_bottom = 270.0
 toggle_mode = true
 button_group = SubResource("ButtonGroup_pv7fp")
 text = "Room Group"
 script = SubResource("GDScript_a80ln")
 
 [node name="BorderType" type="Button" parent="PanelContainer/Modes"]
-offset_top = 358.0
+offset_top = 274.0
 offset_right = 115.0
-offset_bottom = 389.0
+offset_bottom = 305.0
 toggle_mode = true
 button_group = SubResource("ButtonGroup_pv7fp")
 text = "Border Type"
 script = SubResource("GDScript_ilxbw")
 
 [node name="BorderColor" type="Button" parent="PanelContainer/Modes"]
-offset_top = 393.0
+offset_top = 309.0
 offset_right = 115.0
-offset_bottom = 424.0
+offset_bottom = 340.0
 toggle_mode = true
 button_group = SubResource("ButtonGroup_pv7fp")
 text = "Border Color"
 script = SubResource("GDScript_a3fsx")
 
 [node name="MapAssign" type="Button" parent="PanelContainer/Modes"]
-offset_top = 428.0
+offset_top = 344.0
 offset_right = 115.0
-offset_bottom = 459.0
+offset_bottom = 375.0
 toggle_mode = true
 button_group = SubResource("ButtonGroup_pv7fp")
 text = "Map Assign"
@@ -446,7 +446,7 @@ script = SubResource("GDScript_ibl4j")
 
 [node name="EditControls" type="VBoxContainer" parent="PanelContainer"]
 offset_right = 115.0
-offset_bottom = 648.0
+offset_bottom = 480.0
 mouse_filter = 2
 alignment = 2
 metadata/_edit_lock_ = true
@@ -480,7 +480,7 @@ edit_alpha = false
 
 [node name="Layer" type="VBoxContainer" parent="PanelContainer"]
 offset_right = 115.0
-offset_bottom = 648.0
+offset_bottom = 480.0
 mouse_filter = 2
 metadata/_edit_lock_ = true
 
@@ -499,8 +499,8 @@ offset_bottom = 61.0
 layout_mode = 3
 anchors_preset = 0
 offset_left = 119.0
-offset_right = 1152.0
-offset_bottom = 648.0
+offset_right = 854.0
+offset_bottom = 480.0
 size_flags_horizontal = 3
 
 [node name="Map" type="Control" parent="MapOverlay"]

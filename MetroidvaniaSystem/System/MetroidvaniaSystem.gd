@@ -9,6 +9,9 @@ const MapHandler = preload("res://MetroidvaniaSystem/System/MapHandler.gd")
 const SaveData = preload("res://MetroidvaniaSystem/System/SaveData.gd")
 const MapData = preload("res://MetroidvaniaSystem/System/MapData.gd")
 
+enum { R, D, L, U }
+
+## TODO: plugin - minimapa (dialog, z otwieraniem scen?), wyświetlacz krawędzie
 ## TODO: plugin - minimapa (dialog, z otwieraniem scen?), wyświetlacz krawędzie
 ## TODO: shared borders - że są pośrodku między pomieszczeniami
 ## TODO: przerobić room_data i groupy itp na klasę RoomData i cały kod wczytywania itp dać tam
@@ -18,7 +21,6 @@ const MapData = preload("res://MetroidvaniaSystem/System/MapData.gd")
 ## TODO: layout - wyświetlać rozmiar rysowanego pomieszczenia
 ## TODO: metody do tworzenia pomieszczeń ze skryptu?? -> MapBuilder, który tworzy nowy room i zapisuje się oddzielnie
 ## TODO: drag żeby utworzyć drzwi po drugiej stronie
-## TODO: RoomOverride
 
 @export var theme: MapTheme
 @export_dir var map_root_folder: String
@@ -75,7 +77,7 @@ func set_player_position(position: Vector2):
 		room_changed.emit(player_pos)
 		last_player_position = player_pos
 
-func register_storable_object(object: Object, stored_callback := Callable(), map_symbol := DEFAULT_SYMBOL):
+func register_storable_object(object: Object, stored_callback := Callable(), map_marker := DEFAULT_SYMBOL):
 	if stored_callback.is_null():
 		if object is Node:
 			stored_callback = Callable(object, &"queue_free")
@@ -85,23 +87,23 @@ func register_storable_object(object: Object, stored_callback := Callable(), map
 	if save_data.is_object_stored(object):
 		stored_callback.call()
 	else:
-		if map_symbol == DEFAULT_SYMBOL:
-			map_symbol = uncollected_item_symbol
+		if map_marker == DEFAULT_SYMBOL:
+			map_marker = uncollected_item_symbol
 		
-		if save_data.register_storable_object(object) and map_symbol > -1:
-			object.set_meta(&"map_symbol", map_symbol)
-			save_data.add_room_symbol(get_object_coords(object), map_symbol)
+		if save_data.register_storable_object(object) and map_marker > -1:
+			object.set_meta(&"map_marker", map_marker)
+			save_data.add_room_marker(get_object_coords(object), map_marker)
 
-func store_object(object: Object, map_symbol := DEFAULT_SYMBOL):
+func store_object(object: Object, map_marker := DEFAULT_SYMBOL):
 	save_data.store_object(object)
-	if object.has_meta(&"map_symbol"):
-		save_data.remove_room_symbol(get_object_coords(object), object.get_meta(&"map_symbol"))
+	if object.has_meta(&"map_marker"):
+		save_data.remove_room_marker(get_object_coords(object), object.get_meta(&"map_marker"))
 	
-	if map_symbol == DEFAULT_SYMBOL:
-		map_symbol = collected_item_symbol
+	if map_marker == DEFAULT_SYMBOL:
+		map_marker = collected_item_symbol
 	
-	if map_symbol > -1:
-		save_data.add_room_symbol(get_object_coords(object), map_symbol)
+	if map_marker > -1:
+		save_data.add_room_marker(get_object_coords(object), map_marker)
 
 func get_object_id(object: Object) -> String:
 	if object.has_meta(&"object_id"):
@@ -148,10 +150,16 @@ func visit_room(room: Vector3i):
 	if not new_map.is_empty() and not previous_map.is_empty() and new_map != previous_map:
 		map_changed.emit(new_map)
 
-func discover_secret_passage(gdzie):
-	pass ## usuwa ścianę?
-	## nazwa: override border
-	## i druga taka metoda do symboli?
+func add_room_override(coords: Vector3i) -> MapData.RoomOverride:
+	var room := map_data.get_room_at(coords)
+	assert(room, "Can't override non-existent room")
+	return save_data.add_room_override(room)
+
+func remove_room_override(coords: Vector3i):
+	var room = MetSys.map_data.get_room_at(coords)
+	assert(room, "Can't remove override of non-existent room")
+	if save_data.remove_room_override(room):
+		map_updated.emit()
 
 func draw_map_square(canvas_item: CanvasItem, offset: Vector2i, coords: Vector3i, use_save_data := false):
 	var room_data := map_data.get_room_at(coords)
@@ -174,7 +182,7 @@ func draw_map_square(canvas_item: CanvasItem, offset: Vector2i, coords: Vector3i
 	
 	var borders: Array[int] = [-1, -1, -1, -1]
 	for i in 4:
-		var border: int = room_data.borders[i]
+		var border: int = room_data.get_border(i)
 		if not bool(display_flags & DISPLAY_OUTLINE) and border == 0:
 			borders[i] = -1
 		elif not bool(display_flags & DISPLAY_BORDERS):
@@ -242,8 +250,8 @@ func draw_map_square(canvas_item: CanvasItem, offset: Vector2i, coords: Vector3i
 	if bool(display_flags & DISPLAY_SYMBOLS):
 		var symbol: int = -1
 		
-		if coords in save_data.room_symbols:
-			symbol = save_data.room_symbols[coords].back()
+		if coords in save_data.room_markers:
+			symbol = save_data.room_markers[coords].back()
 		
 		if symbol == -1:
 			symbol = room_data.symbol

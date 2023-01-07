@@ -1,8 +1,20 @@
-[gd_scene load_steps=4 format=3 uid="uid://dwqs5lvv8bxci"]
+[gd_scene load_steps=6 format=3 uid="uid://dwqs5lvv8bxci"]
 
 [ext_resource type="TileSet" uid="uid://bwpcg2opya34n" path="res://SampleProject/Resources/Tileset.tres" id="1_wwhja"]
 [ext_resource type="PackedScene" uid="uid://dytoyiqyvm4r2" path="res://MetroidvaniaSystem/System/MapHandler.tscn" id="3_c4wo3"]
 [ext_resource type="PackedScene" uid="uid://c8j6i3fx8p758" path="res://SampleProject/Objects/Collectible.tscn" id="3_pgq1d"]
+
+[sub_resource type="GDScript" id="GDScript_mgsjh"]
+script/source = "extends Area2D
+
+func on_body_entered(body: Node2D) -> void:
+	print(\"test\")
+	var override := MetSys.add_room_override(Vector3i(MetSys.last_player_position.x, MetSys.last_player_position.y, 0))
+	override.borders[MetSys.L] = -1
+	override.commit()
+"
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_pbbyg"]
 
 [node name="Map" type="Node2D"]
 
@@ -15,3 +27,12 @@ layer_0/tile_data = PackedInt32Array(720896, 524289, 6, 786432, 524289, 7, 85196
 
 [node name="MapItem" parent="." instance=ExtResource("3_pgq1d")]
 position = Vector2(375, 337)
+
+[node name="Area2D" type="Area2D" parent="."]
+position = Vector2(43, 335)
+script = SubResource("GDScript_mgsjh")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+shape = SubResource("CircleShape2D_pbbyg")
+
+[connection signal="body_entered" from="Area2D" to="Area2D" method="on_body_entered"]
