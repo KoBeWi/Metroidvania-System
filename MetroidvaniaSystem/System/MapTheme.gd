@@ -1,6 +1,8 @@
 extends Resource
 class_name MapTheme
 
+@export var use_shared_borders: bool
+
 @export var default_room_fill_color: Color
 @export var unexplored_room_fill_color: Color
 @export var default_room_separator_color: Color

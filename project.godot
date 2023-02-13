@@ -8,34 +8,6 @@
 
 config_version=5
 
-_global_script_classes=[{
-"base": "Node",
-"class": &"CustomRunner",
-"language": &"GDScript",
-"path": "res://addons/CustomRunner/CustomRunner.gd"
-}, {
-"base": "Resource",
-"class": &"MapTheme",
-"language": &"GDScript",
-"path": "res://MetroidvaniaSystem/System/MapTheme.gd"
-}, {
-"base": "Node",
-"class": &"MetroidvaniaSystem",
-"language": &"GDScript",
-"path": "res://MetroidvaniaSystem/System/MetroidvaniaSystem.gd"
-}, {
-"base": "Resource",
-"class": &"Room",
-"language": &"GDScript",
-"path": "res://Trash/Scripts/Room.gd"
-}]
-_global_script_class_icons={
-"CustomRunner": "",
-"MapTheme": "",
-"MetroidvaniaSystem": "",
-"Room": ""
-}
-
 [application]
 
 config/name="Metroidvania System"

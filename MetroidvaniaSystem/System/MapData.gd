@@ -40,9 +40,10 @@ class RoomData:
 		var data: PackedStringArray
 		data.append("%s,%s,%s,%s" % borders)
 		
-		var colors: Array[Color] = [color] + Array(border_colors)
-		if colors.any(func(color: Color): return color.a > 0):
-			data.append("%s,%s,%s,%s,%s" % colors.map(func(color: Color): return color.to_html(false) if color.a > 0 else ""))
+		var colors: Array[Color]
+		colors.assign([color] + Array(border_colors))
+		if colors.any(func(col: Color): return col.a > 0):
+			data.append("%s,%s,%s,%s,%s" % colors.map(func(col: Color): return col.to_html(false) if col.a > 0 else ""))
 		else:
 			data.append("")
 		
@@ -127,7 +128,8 @@ func load_data():
 		i += 1
 	
 	for map in assigned_maps.keys():
-		var assigned_rooms: Array[Vector3i] = assigned_maps[map]
+		var assigned_rooms: Array[Vector3i]
+		assigned_rooms.assign(assigned_maps[map])
 		assigned_maps[map] = get_whole_room(assigned_rooms[0])
 
 func save_data():

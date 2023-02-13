@@ -1,5 +1,5 @@
-class_name MetroidvaniaSystem extends Node
 @tool
+class_name MetroidvaniaSystem extends Node
 
 const VECTOR2INF = Vector2i(999999, 99999999)
 const DEFAULT_SYMBOL = -99
@@ -13,10 +13,10 @@ const MapHandler = preload("res://MetroidvaniaSystem/System/MapHandler.gd")
 enum { R, D, L, U }
 
 ## TODO: plugin - minimapa (dialog, z otwieraniem scen?), wyświetlacz krawędzie
-## TODO: plugin - minimapa (dialog, z otwieraniem scen?), wyświetlacz krawędzie
 ## TODO: shared borders - że są pośrodku między pomieszczeniami
 ## TODO: przerobić room_data i groupy itp na klasę RoomData i cały kod wczytywania itp dać tam
 ## TODO: validator? do sprawdzania czy wszystkie pomieszczenia mają przypisaną mapę itp
+## TODO: walidator motywów (czy rozmiary się zgadzają itp
 ## TODO: add_main_symbol() - dodaje symbol i zawsze ma index 0 / ???
 ## TODO: ujednolicić coords (nazwy zmiennych)
 ## TODO: layout - wyświetlać rozmiar rysowanego pomieszczenia
@@ -24,7 +24,13 @@ enum { R, D, L, U }
 ## TODO: drag żeby utworzyć drzwi po drugiej stronie
 ## TODO: get_coordinate_for_object(Node2D, layer = current_layer)
 ## TODO: pos to map (do rysowania po mapie, x,y pomieszczenia, ratio wewnątrz np (32, 4, 0.1, 0.1))
-## TODO: set current layer
+## TODO: set current layer (jako setter)
+## EXAMPLE TODO: warstwy, jakiś obszar z losowymi mapami, może override na assigned map gdzieś? (np że dźwignia zmienia pokój)
+## TODO: zaawansowane statystyki znajdziek, np. jakiś rejestr i zliczać w scenach itp
+## TODO: methoda add_custom_element(name, callable), potrzeba customowy skrypt dziedziczący jakiś typ, wstawić go w pole w MetSys i jest robiona instancja i wywoływane metody. Callback: element_callback(canvas_item, coords, top_left), np. add_custom_element(:"elevator", draw_elevator); func draw_elevator(...): canvas_item.draw_rect(top_left)
+## TODO: motywy: AoS, SotN, MF, VoF, Zeric
+## TODO: ROOM_SIZE chyba Vector2
+## TODO: symbole dopasowywać rozmiarem do pokoju??
 
 @export var theme: MapTheme
 @export_dir var map_root_folder: String
@@ -220,8 +226,12 @@ func draw_map_square(canvas_item: CanvasItem, offset: Vector2i, coords: Vector3i
 		if not texture:
 			continue
 		
-		canvas_item.draw_set_transform(offset * ROOM_SIZE + ROOM_SIZE / 2, PI * 0.5 * i, Vector2.ONE)
-		texture.draw(ci, -ROOM_SIZE / 2, color)
+		if theme.use_shared_borders:
+			canvas_item.draw_set_transform(Vector2(offset * ROOM_SIZE + ROOM_SIZE / 2) + Vector2.from_angle(PI * 0.5 * i) * texture.get_height() / 2, PI * 0.5 * i, Vector2.ONE)
+			texture.draw(ci, -texture.get_size() / 2, color)
+		else:
+			canvas_item.draw_set_transform(offset * ROOM_SIZE + ROOM_SIZE / 2, PI * 0.5 * i, Vector2.ONE)
+			texture.draw(ci, -ROOM_SIZE / 2, color)
 	
 	for i in 4:
 		var j: int = (i + 1) % 4
@@ -230,8 +240,12 @@ func draw_map_square(canvas_item: CanvasItem, offset: Vector2i, coords: Vector3i
 		
 		var corner_color = room_data.get_border_color(i).lerp(room_data.get_border_color(j), 0.5)
 		
-		canvas_item.draw_set_transform(offset * ROOM_SIZE + ROOM_SIZE / 2, PI * 0.5 * i, Vector2.ONE)
-		theme.border_outer_corner_texture.draw(ci, -ROOM_SIZE / 2, corner_color)
+		if theme.use_shared_borders:
+			canvas_item.draw_set_transform(Vector2(offset * ROOM_SIZE + ROOM_SIZE / 2) + Vector2.ONE.rotated(PI * 0.5 * i) * theme.room_wall_texture.get_height() / 2, PI * 0.5 * i, Vector2.ONE)
+			theme.border_outer_corner_texture.draw(ci, -Vector2.ONE * (theme.room_wall_texture.get_width() / 2), corner_color)
+		else:
+			canvas_item.draw_set_transform(offset * ROOM_SIZE + ROOM_SIZE / 2, PI * 0.5 * i, Vector2.ONE)
+			theme.border_outer_corner_texture.draw(ci, -ROOM_SIZE / 2, corner_color)
 	
 	for i in 4:
 		var j: int = (i + 1) % 4
@@ -246,8 +260,12 @@ func draw_map_square(canvas_item: CanvasItem, offset: Vector2i, coords: Vector3i
 		
 		var corner_color = room_data.get_border_color(i).lerp(room_data.get_border_color(j), 0.5)
 		
-		canvas_item.draw_set_transform(offset * ROOM_SIZE + ROOM_SIZE / 2, PI * 0.5 * i, Vector2.ONE)
-		theme.border_inner_corner_texture.draw(ci, -ROOM_SIZE / 2, corner_color)
+		if theme.use_shared_borders:
+			canvas_item.draw_set_transform(Vector2(offset * ROOM_SIZE + ROOM_SIZE / 2) + Vector2.ONE.rotated(PI * 0.5 * i) * theme.room_wall_texture.get_height() / 2, PI * 0.5 * i, Vector2.ONE)
+			theme.border_inner_corner_texture.draw(ci, -Vector2.ONE * (theme.room_wall_texture.get_width() / 2), corner_color)
+		else:
+			canvas_item.draw_set_transform(offset * ROOM_SIZE + ROOM_SIZE / 2, PI * 0.5 * i, Vector2.ONE)
+			theme.border_inner_corner_texture.draw(ci, -ROOM_SIZE / 2, corner_color)
 	
 	canvas_item.draw_set_transform_matrix(Transform2D())
 	
