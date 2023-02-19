@@ -13,8 +13,6 @@ const MapHandler = preload("res://MetroidvaniaSystem/System/MapHandler.gd")
 enum { R, D, L, U }
 
 ## TODO: plugin - minimapa (dialog, z otwieraniem scen?), wyświetlacz krawędzie
-## TODO: shared borders - że są pośrodku między pomieszczeniami
-## TODO: przerobić room_data i groupy itp na klasę RoomData i cały kod wczytywania itp dać tam
 ## TODO: validator? do sprawdzania czy wszystkie pomieszczenia mają przypisaną mapę itp
 ## TODO: walidator motywów (czy rozmiary się zgadzają itp
 ## TODO: add_main_symbol() - dodaje symbol i zawsze ma index 0 / ???

@@ -171,6 +171,19 @@ func _editor_input(event: InputEvent):
 			elif event.button_index == MOUSE_BUTTON_RIGHT:
 				room_data.color = Color.TRANSPARENT
 				editor.map.queue_redraw()
+	elif event is InputEventMouseMotion:
+		if event.button_mask & (MOUSE_BUTTON_MASK_LEFT | MOUSE_BUTTON_MASK_RIGHT):
+			var room_data := get_room_at_cursor()
+			if not room_data:
+				return
+			
+			var target_color := Color.TRANSPARENT
+			if event.button_mask & MOUSE_BUTTON_MASK_LEFT:
+				target_color = %CurrentColor.color
+			
+			if room_data.color != target_color:
+				room_data.color = target_color
+				editor.map.queue_redraw()
 "
 
 [sub_resource type="GDScript" id="GDScript_a80ln"]
@@ -262,6 +275,7 @@ func _editor_input(event: InputEvent):
 			editor.map_overlay.queue_redraw()
 	
 	if event is InputEventMouseButton:
+		## TODO: continuous
 		if not room_data or highlighted_border == -1:
 			return
 		
@@ -309,6 +323,7 @@ func _editor_input(event: InputEvent):
 			editor.map_overlay.queue_redraw()
 	
 	if event is InputEventMouseButton:
+		## TODO: continuous
 		if not room_data or highlighted_border == -1:
 			return
 		
@@ -349,6 +364,12 @@ func _editor_input(event: InputEvent):
 		elif event.button_index == MOUSE_BUTTON_RIGHT:
 			for p in highlighted_room:
 				MetSys.map_data.get_room_at(p).assigned_map = \"\"
+
+func _editor_draw(map_overlay: CanvasItem):
+	if not highlighted_room.is_empty():
+		map_overlay.draw_set_transform_matrix(Transform2D())
+		map_overlay.draw_string(get_theme_font(&\"font\", &\"Label\"), Vector2(0, 40),
+		MetSys.map_data.get_room_at(highlighted_room.front()).assigned_map)
 
 func on_map_selected(path: String) -> void:
 	for coords in highlighted_room:
