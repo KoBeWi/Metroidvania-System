@@ -1,0 +1,18 @@
+[gd_scene load_steps=3 format=3 uid="uid://c7d6cess066kj"]
+
+[ext_resource type="PackedScene" uid="uid://c7vrinbv3cs6m" path="res://addons/MetroidvaniaSystem/MapEditor/MapEditor.tscn" id="1_1xj7g"]
+
+[sub_resource type="ButtonGroup" id="ButtonGroup_71uga"]
+
+[node name="Main" type="TabContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Map Editor" parent="." instance=ExtResource("1_1xj7g")]
+layout_mode = 2
+mode_group = SubResource("ButtonGroup_71uga")

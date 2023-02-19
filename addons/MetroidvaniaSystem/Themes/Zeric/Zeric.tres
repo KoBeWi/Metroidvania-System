@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="MapTheme" load_steps=7 format=3]
+
+[ext_resource type="Texture2D" uid="uid://dijxm76dgesma" path="res://addons/MetroidvaniaSystem/Themes/Zeric/RoomFill.png" id="1_1tk12"]
+[ext_resource type="Texture2D" uid="uid://djdgo7kixxhpj" path="res://addons/MetroidvaniaSystem/Themes/Zeric/RoomInnerCorner.png" id="1_fm50s"]
+[ext_resource type="Script" path="res://addons/MetroidvaniaSystem/System/MapTheme.gd" id="1_ofdj8"]
+[ext_resource type="Texture2D" uid="uid://dqgc82vybc0cy" path="res://addons/MetroidvaniaSystem/Themes/Zeric/BorderPassage.png" id="2_4sxax"]
+[ext_resource type="Texture2D" uid="uid://cu2f7csv8gt7c" path="res://addons/MetroidvaniaSystem/Themes/Zeric/BorderWall.png" id="2_7jy75"]
+[ext_resource type="Texture2D" uid="uid://de16oiuosilpu" path="res://addons/MetroidvaniaSystem/Themes/Zeric/RoomOuterCorner.png" id="2_cc3y0"]
+
+[resource]
+script = ExtResource("1_ofdj8")
+use_shared_borders = true
+default_room_fill_color = Color(0.129412, 0.0627451, 0.352941, 1)
+unexplored_room_fill_color = Color(0.258824, 0.258824, 0.192157, 1)
+default_room_separator_color = Color(0, 0, 0, 1)
+default_border_color = Color(0.870588, 0.807843, 0.807843, 1)
+room_fill_texture = ExtResource("1_1tk12")
+room_wall_texture = ExtResource("2_7jy75")
+room_passage_texture = ExtResource("2_4sxax")
+border_outer_corner_texture = ExtResource("2_cc3y0")
+border_inner_corner_texture = ExtResource("1_fm50s")

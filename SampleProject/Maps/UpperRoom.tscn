@@ -1,6 +1,6 @@
-[gd_scene load_steps=3 format=3 uid="uid://blxdyy1u60k5u"]
+[gd_scene load_steps=3 format=3]
 
-[ext_resource type="PackedScene" uid="uid://dytoyiqyvm4r2" path="res://MetroidvaniaSystem/System/MapHandler.tscn" id="1_kdxru"]
+[ext_resource type="PackedScene" path="res://addons/MetroidvaniaSystem/System/MapHandler.tscn" id="1_kdxru"]
 [ext_resource type="TileSet" uid="uid://bwpcg2opya34n" path="res://SampleProject/Resources/Tileset.tres" id="2_s0ssd"]
 
 [node name="Map" type="Node2D"]

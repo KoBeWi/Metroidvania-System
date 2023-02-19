@@ -17,7 +17,7 @@ config/icon="res://icon.png"
 
 [autoload]
 
-MetSys="*res://MetroidvaniaSystem/System/Singleton.tscn"
+MetSys="*res://addons/MetroidvaniaSystem/System/Singleton.tscn"
 
 [debug]
 
@@ -38,7 +38,7 @@ window/per_pixel_transparency/allowed=true
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/CustomRunner/plugin.cfg")
+enabled=PackedStringArray("res://addons/CustomRunner/plugin.cfg", "res://addons/PluginRefresher/plugin.cfg", "res://addons/MetroidvaniaSystem/plugin.cfg")
 
 [rendering]
 
