@@ -204,9 +204,9 @@ func _editor_exit():
 	%Groups.hide()
 
 func _editor_draw(map_overlay: CanvasItem):
-	var room_size: Vector2 = MetSys.ROOM_SIZE
 	super(map_overlay)
 	
+	var room_size: Vector2 = MetSys.ROOM_SIZE
 	for p in room_groups.get(%CurrentGroup.value as int, []):
 		map_overlay.draw_rect(Rect2(Vector2(p.x, p.y) * room_size, room_size), Color(Color.MEDIUM_PURPLE, 0.8))
 
@@ -270,12 +270,15 @@ func _editor_input(event: InputEvent):
 			if new_border != highlighted_border:
 				highlighted_border = new_border
 				editor.map_overlay.queue_redraw()
+				
+				if highlighted_border != -1 and event.button_mask & MOUSE_BUTTON_MASK_LEFT:
+					room_data.borders[highlighted_border] = (borders[highlighted_border] + 1) % 2
+					editor.map.queue_redraw()
 		else:
 			highlighted_border = -1
 			editor.map_overlay.queue_redraw()
 	
 	if event is InputEventMouseButton:
-		## TODO: continuous
 		if not room_data or highlighted_border == -1:
 			return
 		
@@ -318,12 +321,18 @@ func _editor_input(event: InputEvent):
 			if new_border != highlighted_border:
 				highlighted_border = new_border
 				editor.map_overlay.queue_redraw()
+				
+				if highlighted_border != -1 and event.button_mask & MOUSE_BUTTON_MASK_LEFT:
+					room_data.border_colors[highlighted_border] = %CurrentColor.color
+					editor.map.queue_redraw()
+				elif highlighted_border != -1 and event.button_mask & MOUSE_BUTTON_MASK_RIGHT:
+					room_data.border_colors[highlighted_border] = Color.TRANSPARENT
+					editor.map.queue_redraw()
 		else:
 			highlighted_border = -1
 			editor.map_overlay.queue_redraw()
 	
 	if event is InputEventMouseButton:
-		## TODO: continuous
 		if not room_data or highlighted_border == -1:
 			return
 		
@@ -366,10 +375,17 @@ func _editor_input(event: InputEvent):
 				MetSys.map_data.get_room_at(p).assigned_map = \"\"
 
 func _editor_draw(map_overlay: CanvasItem):
+	super(map_overlay)
+	
+	var room_size: Vector2 = MetSys.ROOM_SIZE
+	for room in MetSys.map_data.assigned_maps.values():
+		for p in room:
+			map_overlay.draw_rect(Rect2(Vector2(p.x, p.y) * room_size, room_size), Color(Color.MEDIUM_SEA_GREEN, 0.8))
+	
 	if not highlighted_room.is_empty():
 		map_overlay.draw_set_transform_matrix(Transform2D())
 		map_overlay.draw_string(get_theme_font(&\"font\", &\"Label\"), Vector2(0, 40),
-		MetSys.map_data.get_room_at(highlighted_room.front()).assigned_map)
+				MetSys.map_data.get_room_at(highlighted_room.front()).assigned_map)
 
 func on_map_selected(path: String) -> void:
 	for coords in highlighted_room:

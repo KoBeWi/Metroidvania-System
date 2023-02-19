@@ -37,8 +37,8 @@ enum { R, D, L, U }
 
 @export var uncollected_item_symbol := -1
 @export var collected_item_symbol := -1
-@export var map_borders: Array[Texture2D] ## każda ściana może mieć teksturę
-@export var map_symbols: Array[Texture2D] ## można przypisywać 1 symbol do pomieszczeń
+@export var map_borders: Array[Texture2D]
+@export var map_symbols: Array[Texture2D]
 
 @export var in_game_room_size := Vector2(1152, 648)
 
