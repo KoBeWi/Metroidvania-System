@@ -12,7 +12,8 @@ const MapHandler = preload("res://addons/MetroidvaniaSystem/System/MapHandler.gd
 
 enum { R, D, L, U }
 
-## TODO: plugin - minimapa (dialog, z otwieraniem scen?), wyświetlacz krawędzie
+## TODO: plugin - minimapa z otwieraniem scen, zaawansowane statystyki znajdziek, np. jakiś rejestr i zliczać w scenach itp
+## TODO: przenieść @expory stąd do zasobu MetroidvaniaSettings
 ## TODO: validator? do sprawdzania czy wszystkie pomieszczenia mają przypisaną mapę itp
 ## TODO: walidator motywów (czy rozmiary się zgadzają itp
 ## TODO: add_main_symbol() - dodaje symbol i zawsze ma index 0 / ???
@@ -24,7 +25,6 @@ enum { R, D, L, U }
 ## TODO: pos to map (do rysowania po mapie, x,y pomieszczenia, ratio wewnątrz np (32, 4, 0.1, 0.1))
 ## TODO: set current layer (jako setter)
 ## EXAMPLE TODO: warstwy, jakiś obszar z losowymi mapami, może override na assigned map gdzieś? (np że dźwignia zmienia pokój)
-## TODO: zaawansowane statystyki znajdziek, np. jakiś rejestr i zliczać w scenach itp
 ## TODO: methoda add_custom_element(name, callable), potrzeba customowy skrypt dziedziczący jakiś typ, wstawić go w pole w MetSys i jest robiona instancja i wywoływane metody. Callback: element_callback(canvas_item, coords, top_left), np. add_custom_element(:"elevator", draw_elevator); func draw_elevator(...): canvas_item.draw_rect(top_left)
 ## TODO: motywy: AoS, SotN, MF, VoF, Zeric, BS
 ## TODO: ROOM_SIZE chyba Vector2

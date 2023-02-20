@@ -1,0 +1,28 @@
+[gd_scene load_steps=2 format=3 uid="uid://he12yvtcmf87"]
+
+[sub_resource type="GDScript" id="GDScript_kxd0b"]
+script/source = "@tool
+extends Control
+
+signal edit_settings
+
+func edit_settings_pressed():
+	edit_settings.emit()
+"
+
+[node name="Manage" type="MarginContainer"]
+offset_top = 35.0
+offset_right = 147.0
+offset_bottom = 35.0
+theme_override_constants/margin_top = 32
+script = SubResource("GDScript_kxd0b")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="Button" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "Singleton Settings"
+
+[connection signal="pressed" from="VBoxContainer/Button" to="." method="edit_settings_pressed"]

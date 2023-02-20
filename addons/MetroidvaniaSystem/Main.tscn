@@ -1,10 +1,21 @@
-[gd_scene load_steps=3 format=3 uid="uid://c7d6cess066kj"]
+[gd_scene load_steps=6 format=3 uid="uid://c7d6cess066kj"]
 
 [ext_resource type="PackedScene" uid="uid://c7vrinbv3cs6m" path="res://addons/MetroidvaniaSystem/MapEditor/MapEditor.tscn" id="1_1xj7g"]
+[ext_resource type="PackedScene" uid="uid://he12yvtcmf87" path="res://addons/MetroidvaniaSystem/Tools/Manage.tscn" id="2_1dme8"]
 
-[sub_resource type="ButtonGroup" id="ButtonGroup_71uga"]
+[sub_resource type="GDScript" id="GDScript_ov8k3"]
+script/source = "@tool
+extends VBoxContainer
 
-[node name="Main" type="TabContainer"]
+@onready var tabs = $TabContainer
+"
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0ndnc"]
+bg_color = Color(0, 0, 0, 0.501961)
+
+[sub_resource type="ButtonGroup" id="ButtonGroup_334fx"]
+
+[node name="Main" type="VBoxContainer"]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -12,7 +23,25 @@ grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
+script = SubResource("GDScript_ov8k3")
 
-[node name="Map Editor" parent="." instance=ExtResource("1_1xj7g")]
+[node name="Label" type="Label" parent="."]
 layout_mode = 2
-mode_group = SubResource("ButtonGroup_71uga")
+theme_type_variation = &"HeaderSmall"
+text = "Metroidvania System Database"
+horizontal_alignment = 1
+
+[node name="TabContainer" type="TabContainer" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_0ndnc")
+tab_alignment = 1
+
+[node name="Map Editor" parent="TabContainer" instance=ExtResource("1_1xj7g")]
+layout_mode = 2
+mode_group = SubResource("ButtonGroup_334fx")
+
+[node name="Manage" parent="TabContainer" instance=ExtResource("2_1dme8")]
+visible = false
+layout_mode = 2

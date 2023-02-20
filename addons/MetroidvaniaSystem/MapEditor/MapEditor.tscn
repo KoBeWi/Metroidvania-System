@@ -478,7 +478,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="ColorRect" type="ColorRect" parent="MapOverlay"]
-modulate = Color(0, 0, 0, 0.501961)
+modulate = Color(0, 0, 0, 0.12549)
 show_behind_parent = true
 layout_mode = 1
 anchors_preset = 15
