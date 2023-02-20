@@ -51,7 +51,7 @@ class RoomData:
 			data.append(str(symbol))
 		else:
 			data.append("")
-		data.append(assigned_map.trim_prefix(MetSys.map_root_folder).trim_prefix("/"))
+		data.append(assigned_map.trim_prefix(MetSys.settings.map_root_folder).trim_prefix("/"))
 		return "|".join(data)
 	
 	func load_next_chunk() -> String:
@@ -67,7 +67,7 @@ class RoomData:
 	func get_border_color(idx: int) -> Color:
 		if border_colors[idx].a > 0:
 			return border_colors[idx]
-		return MetSys.theme.default_border_color
+		return MetSys.settings.theme.default_border_color
 
 class RoomOverride extends RoomData:
 	# TODO: metody pomocnicze
@@ -87,7 +87,7 @@ var room_groups: Dictionary#[int, Array[Vector3i]]
 var room_overrides: Dictionary#[Vector3i, RoomOverride]
 
 func load_data():
-	var file := FileAccess.open(MetSys.map_root_folder.path_join("MapData.txt"), FileAccess.READ)
+	var file := FileAccess.open(MetSys.settings.map_root_folder.path_join("MapData.txt"), FileAccess.READ)
 	
 	var data := file.get_as_text().split("\n")
 	var i: int
@@ -133,7 +133,7 @@ func load_data():
 		assigned_maps[map] = get_whole_room(assigned_rooms[0])
 
 func save_data():
-	var file := FileAccess.open(MetSys.map_root_folder.path_join("MapData.txt"), FileAccess.WRITE)
+	var file := FileAccess.open(MetSys.settings.map_root_folder.path_join("MapData.txt"), FileAccess.WRITE)
 	
 	for group in room_groups:
 		if room_groups[group].is_empty():

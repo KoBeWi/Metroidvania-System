@@ -19,7 +19,7 @@ func _enter_tree() -> void:
 		MetSys.current_map = self
 	
 	var owner_node := owner if owner != null else self
-	rooms = MetSys.map_data.get_rooms_assigned_to(owner_node.scene_file_path.trim_prefix(MetSys.map_root_folder))
+	rooms = MetSys.map_data.get_rooms_assigned_to(owner_node.scene_file_path.trim_prefix(MetSys.settings.map_root_folder))
 	if rooms.is_empty():
 		return
 	
@@ -32,8 +32,8 @@ func _enter_tree() -> void:
 func adjust_camera(camera: Camera2D):
 	camera.limit_left = 0
 	camera.limit_top = 0
-	camera.limit_right = (max_room.x - min_room.x + 1) * MetSys.in_game_room_size.x
-	camera.limit_bottom = (max_room.y - min_room.y + 1) * MetSys.in_game_room_size.y
+	camera.limit_right = (max_room.x - min_room.x + 1) * MetSys.settings.in_game_room_size.x
+	camera.limit_bottom = (max_room.y - min_room.y + 1) * MetSys.settings.in_game_room_size.y
 
 func _draw() -> void:
 	if not Engine.is_editor_hint() or rooms.is_empty():
@@ -41,4 +41,4 @@ func _draw() -> void:
 	
 	for p in rooms:
 		var coord := Vector2(p.x - min_room.x, p.y - min_room.y)
-		draw_rect(Rect2(coord * MetSys.in_game_room_size, MetSys.in_game_room_size), Color.WHITE, false, 2)
+		draw_rect(Rect2(coord * MetSys.settings.in_game_room_size, MetSys.settings.in_game_room_size), Color.WHITE, false, 2)

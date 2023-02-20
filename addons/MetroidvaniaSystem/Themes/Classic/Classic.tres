@@ -2,11 +2,11 @@
 
 [ext_resource type="Texture2D" uid="uid://d3y675hl43867" path="res://addons/MetroidvaniaSystem/Themes/Classic/RoomInnerCorner.png" id="1_apayp"]
 [ext_resource type="Texture2D" uid="uid://dh6ay2l6ekfdl" path="res://addons/MetroidvaniaSystem/Themes/Classic/RoomOuterCorner.png" id="2_q6ce8"]
-[ext_resource type="PackedScene" uid="uid://cnndtngj8hs3v" path="res://addons/MetroidvaniaSystem/Themes/Classic/PlayerLocation.tscn" id="3_2f15x"]
+[ext_resource type="PackedScene" path="res://addons/MetroidvaniaSystem/Themes/Classic/PlayerLocation.tscn" id="3_2f15x"]
 [ext_resource type="Texture2D" uid="uid://clh0pii0pgujw" path="res://addons/MetroidvaniaSystem/Themes/Classic/RoomFill.png" id="4_8jnw0"]
 [ext_resource type="Texture2D" uid="uid://cp6kv08lhtc8f" path="res://addons/MetroidvaniaSystem/Themes/Classic/BorderPassage.png" id="5_tk2uy"]
 [ext_resource type="Texture2D" uid="uid://bqm8k4oqjq8q3" path="res://addons/MetroidvaniaSystem/Themes/Classic/BorderWall.png" id="6_p68ff"]
-[ext_resource type="Script" path="res://addons/MetroidvaniaSystem/System/MapTheme.gd" id="7_hynsb"]
+[ext_resource type="Script" path="res://addons/MetroidvaniaSystem/Scripts/MapTheme.gd" id="7_hynsb"]
 
 [resource]
 script = ExtResource("7_hynsb")

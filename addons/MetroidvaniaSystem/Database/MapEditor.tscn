@@ -1,13 +1,13 @@
-[gd_scene load_steps=9 format=3 uid="uid://c7vrinbv3cs6m"]
+[gd_scene load_steps=9 format=3 uid="uid://dfbykrvyqnqr5"]
 
-[ext_resource type="Script" path="res://addons/MetroidvaniaSystem/MapEditor/MapEditor.gd" id="1_2yjg2"]
+[ext_resource type="Script" path="res://addons/MetroidvaniaSystem/Database/MapEditor.gd" id="1_i7yda"]
 
 [sub_resource type="ButtonGroup" id="ButtonGroup_pv7fp"]
 
 [sub_resource type="GDScript" id="GDScript_dsps8"]
 resource_name = "RoomLayout"
 script/source = "@tool
-extends \"res://addons/MetroidvaniaSystem/MapEditor/SubEditor.gd\"
+extends \"res://addons/MetroidvaniaSystem/Database/SubEditor.gd\"
 
 var erase_mode: bool
 
@@ -102,7 +102,7 @@ func close_border(pos: Vector2i, border: int):
 [sub_resource type="GDScript" id="GDScript_ujwfx"]
 resource_name = "RoomSymbol"
 script/source = "@tool
-extends \"res://addons/MetroidvaniaSystem/MapEditor/SubEditor.gd\"
+extends \"res://addons/MetroidvaniaSystem/Database/SubEditor.gd\"
 
 var symbol_group: ButtonGroup
 
@@ -111,7 +111,7 @@ func _ready() -> void:
 	room_only_cursor = true
 	symbol_group = ButtonGroup.new()
 	
-	for symbol in MetSys.map_symbols:
+	for symbol in MetSys.settings.map_symbols:
 		add_symbol(symbol)
 
 func _editor_enter():
@@ -149,7 +149,7 @@ func add_symbol(texture: Texture2D):
 [sub_resource type="GDScript" id="GDScript_tlx5u"]
 resource_name = "RoomColor"
 script/source = "@tool
-extends \"res://addons/MetroidvaniaSystem/MapEditor/SubEditor.gd\"
+extends \"res://addons/MetroidvaniaSystem/Database/SubEditor.gd\"
 
 func _editor_enter():
 	%Colors.show()
@@ -192,7 +192,7 @@ func _editor_input(event: InputEvent):
 [sub_resource type="GDScript" id="GDScript_a80ln"]
 resource_name = "RoomGroup"
 script/source = "@tool
-extends \"res://addons/MetroidvaniaSystem/MapEditor/SubEditor.gd\"
+extends \"res://addons/MetroidvaniaSystem/Database/SubEditor.gd\"
 
 var room_groups: Dictionary
 
@@ -250,7 +250,7 @@ func _editor_input(event: InputEvent):
 [sub_resource type="GDScript" id="GDScript_ilxbw"]
 resource_name = "BorderType"
 script/source = "@tool
-extends \"res://addons/MetroidvaniaSystem/MapEditor/SubEditor.gd\"
+extends \"res://addons/MetroidvaniaSystem/Database/SubEditor.gd\"
 
 func _ready() -> void:
 	super()
@@ -296,7 +296,7 @@ func _editor_input(event: InputEvent):
 [sub_resource type="GDScript" id="GDScript_a3fsx"]
 resource_name = "BorderColor"
 script/source = "@tool
-extends \"res://addons/MetroidvaniaSystem/MapEditor/SubEditor.gd\"
+extends \"res://addons/MetroidvaniaSystem/Database/SubEditor.gd\"
 
 func _ready() -> void:
 	super()
@@ -361,7 +361,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_2yjg2")
+script = ExtResource("1_i7yda")
 mode_group = SubResource("ButtonGroup_pv7fp")
 metadata/_edit_lock_ = true
 

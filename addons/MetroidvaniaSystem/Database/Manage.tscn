@@ -23,6 +23,6 @@ size_flags_horizontal = 4
 
 [node name="Button" type="Button" parent="VBoxContainer"]
 layout_mode = 2
-text = "Singleton Settings"
+text = "General Settings"
 
 [connection signal="pressed" from="VBoxContainer/Button" to="." method="edit_settings_pressed"]

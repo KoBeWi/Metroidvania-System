@@ -17,7 +17,7 @@ config/icon="res://icon.png"
 
 [autoload]
 
-MetSys="*res://addons/MetroidvaniaSystem/System/Singleton.tscn"
+MetSys="*res://addons/MetroidvaniaSystem/Nodes/Singleton.tscn"
 
 [debug]
 

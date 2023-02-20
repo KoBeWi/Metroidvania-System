@@ -1,6 +1,6 @@
 extends Control
 
-const EDITOR_SCRIPT = preload("res://addons/MetroidvaniaSystem/MapEditor/MapEditor.gd")
+const EDITOR_SCRIPT = preload("res://addons/MetroidvaniaSystem/Database/MapEditor.gd")
 var editor: EDITOR_SCRIPT
 
 var use_cursor := true

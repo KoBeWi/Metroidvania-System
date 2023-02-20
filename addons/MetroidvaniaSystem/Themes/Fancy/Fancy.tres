@@ -2,12 +2,12 @@
 
 [ext_resource type="Texture2D" uid="uid://rgchhbw4jh7f" path="res://addons/MetroidvaniaSystem/Themes/Fancy/RoomInnerCorner.png" id="1_h73j2"]
 [ext_resource type="Texture2D" uid="uid://dihccrjj2ehi4" path="res://addons/MetroidvaniaSystem/Themes/Fancy/RoomOuterCorner.png" id="2_jdm1i"]
-[ext_resource type="PackedScene" uid="uid://ct74lcghbh1br" path="res://addons/MetroidvaniaSystem/Themes/Fancy/PlayerLocation.tscn" id="3_mk7eh"]
+[ext_resource type="PackedScene" path="res://addons/MetroidvaniaSystem/Themes/Fancy/PlayerLocation.tscn" id="3_mk7eh"]
 [ext_resource type="Texture2D" uid="uid://bxs8cn6khov7j" path="res://addons/MetroidvaniaSystem/Themes/Fancy/RoomFill.png" id="4_2clky"]
 [ext_resource type="Texture2D" uid="uid://b8ccoibsf323o" path="res://addons/MetroidvaniaSystem/Themes/Fancy/BorderPassage.png" id="5_sn1if"]
 [ext_resource type="Texture2D" uid="uid://b1hy1w1k1asap" path="res://addons/MetroidvaniaSystem/Themes/Fancy/RoomSeparator.png" id="6_f6pnw"]
 [ext_resource type="Texture2D" uid="uid://xn6gipdberdc" path="res://addons/MetroidvaniaSystem/Themes/Fancy/BorderWall.png" id="7_eifkn"]
-[ext_resource type="Script" path="res://addons/MetroidvaniaSystem/System/MapTheme.gd" id="8_gh637"]
+[ext_resource type="Script" path="res://addons/MetroidvaniaSystem/Scripts/MapTheme.gd" id="8_gh637"]
 
 [resource]
 script = ExtResource("8_gh637")

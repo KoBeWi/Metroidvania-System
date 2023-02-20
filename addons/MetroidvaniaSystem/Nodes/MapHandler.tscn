@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://bsg0351mx3b4u"]
+
+[ext_resource type="Script" path="res://addons/MetroidvaniaSystem/Scripts/MapHandler.gd" id="1_oi7y8"]
+
+[node name="MapHandler" type="Node2D"]
+script = ExtResource("1_oi7y8")

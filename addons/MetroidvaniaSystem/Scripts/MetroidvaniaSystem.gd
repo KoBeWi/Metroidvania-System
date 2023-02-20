@@ -5,15 +5,15 @@ const VECTOR2INF = Vector2i(999999, 99999999)
 const DEFAULT_SYMBOL = -99
 enum { DISPLAY_CENTER = 1, DISPLAY_OUTLINE = 2, DISPLAY_BORDERS = 4, DISPLAY_SYMBOLS = 8 }
 
-const SaveData = preload("res://addons/MetroidvaniaSystem/System/SaveData.gd")
-const MapData = preload("res://addons/MetroidvaniaSystem/System/MapData.gd")
-const MapBuilder = preload("res://addons/MetroidvaniaSystem/System/MapBuilder.gd")
-const MapHandler = preload("res://addons/MetroidvaniaSystem/System/MapHandler.gd")
+const Settings = preload("res://addons/MetroidvaniaSystem/Scripts/Settings.gd")
+const SaveData = preload("res://addons/MetroidvaniaSystem/Scripts/SaveData.gd")
+const MapData = preload("res://addons/MetroidvaniaSystem/Scripts/MapData.gd")
+const MapBuilder = preload("res://addons/MetroidvaniaSystem/Scripts/MapBuilder.gd")
+const MapHandler = preload("res://addons/MetroidvaniaSystem/Scripts/MapHandler.gd")
 
 enum { R, D, L, U }
 
 ## TODO: plugin - minimapa z otwieraniem scen, zaawansowane statystyki znajdziek, np. jakiś rejestr i zliczać w scenach itp
-## TODO: przenieść @expory stąd do zasobu MetroidvaniaSettings
 ## TODO: validator? do sprawdzania czy wszystkie pomieszczenia mają przypisaną mapę itp
 ## TODO: walidator motywów (czy rozmiary się zgadzają itp
 ## TODO: add_main_symbol() - dodaje symbol i zawsze ma index 0 / ???
@@ -30,19 +30,10 @@ enum { R, D, L, U }
 ## TODO: ROOM_SIZE chyba Vector2
 ## TODO: symbole dopasowywać rozmiarem do pokoju??
 
-@export var theme: MapTheme
-@export_dir var map_root_folder: String
+@export var exported_settings: Resource
 
-@export_flags("Center", "Outline", "Borders", "Symbol") var unexplored_display := 3
-
-@export var uncollected_item_symbol := -1
-@export var collected_item_symbol := -1
-@export var map_borders: Array[Texture2D]
-@export var map_symbols: Array[Texture2D]
-
-@export var in_game_room_size := Vector2(1152, 648)
-
-@onready var ROOM_SIZE: Vector2i = theme.room_fill_texture.get_size()
+var settings: Settings
+var ROOM_SIZE: Vector2i
 
 var map_data: MapData
 var save_data := SaveData.new() ## po co to new?
@@ -56,11 +47,10 @@ signal map_updated
 signal room_changed(new_room: Vector2i)
 signal map_changed(new_map: String)
 
-func _init() -> void:
-	assert(collected_item_symbol < map_symbols.size())
-	assert(uncollected_item_symbol < map_symbols.size())
-
 func _enter_tree() -> void:
+	settings = exported_settings
+	ROOM_SIZE = settings.theme.room_fill_texture.get_size()
+	
 	map_data = MapData.new()
 	map_data.load_data()
 
@@ -79,7 +69,7 @@ func reset_save_data():
 func set_player_position(position: Vector2):
 	exact_player_position = position
 	
-	var player_pos := Vector2i((position / in_game_room_size).floor()) + current_map.min_room
+	var player_pos := Vector2i((position / settings.in_game_room_size).floor()) + current_map.min_room
 	if player_pos != last_player_position:
 		visit_room(Vector3i(player_pos.x, player_pos.y, 0))
 		room_changed.emit(player_pos)
@@ -96,7 +86,7 @@ func register_storable_object(object: Object, stored_callback := Callable(), map
 		stored_callback.call()
 	else:
 		if map_marker == DEFAULT_SYMBOL:
-			map_marker = uncollected_item_symbol
+			map_marker = settings.uncollected_item_symbol
 		
 		if save_data.register_storable_object(object) and map_marker > -1:
 			object.set_meta(&"map_marker", map_marker)
@@ -108,7 +98,7 @@ func store_object(object: Object, map_marker := DEFAULT_SYMBOL):
 		save_data.remove_room_marker(get_object_coords(object), object.get_meta(&"map_marker"))
 	
 	if map_marker == DEFAULT_SYMBOL:
-		map_marker = collected_item_symbol
+		map_marker = settings.collected_item_symbol
 	
 	if map_marker > -1:
 		save_data.add_room_marker(get_object_coords(object), map_marker)
@@ -134,7 +124,7 @@ func get_object_coords(object: Object) -> Vector3i:
 		object.set_meta(&"object_coords", coords)
 		return coords
 	elif object is Node:
-		var map_name: String = object.owner.scene_file_path.trim_prefix(map_root_folder)
+		var map_name: String = object.owner.scene_file_path.trim_prefix(settings.map_root_folder)
 		assert(map_name in map_data.assigned_maps)
 		var coords: Vector3i = map_data.assigned_maps[map_name].front()
 		for vec in map_data.assigned_maps[map_name]:
@@ -142,7 +132,7 @@ func get_object_coords(object: Object) -> Vector3i:
 			coords.y = mini(coords.y, vec.y)
 		
 		if object is CanvasItem:
-			var position: Vector2 = object.position / in_game_room_size
+			var position: Vector2 = object.position / settings.in_game_room_size
 			coords.x += int(position.x)
 			coords.y += int(position.y)
 		
@@ -182,11 +172,11 @@ func draw_map_square(canvas_item: CanvasItem, offset: Vector2i, coords: Vector3i
 		return
 	
 	var ci := canvas_item.get_canvas_item()
-	var display_flags := (int(discovered == 2) * 255) | unexplored_display
+	var display_flags := (int(discovered == 2) * 255) | settings.unexplored_display
 	
 	if bool(display_flags & DISPLAY_CENTER):
-		var room_color = room_data.color if room_data.color.a > 0 else theme.default_room_fill_color
-		theme.room_fill_texture.draw(ci, offset * ROOM_SIZE, room_color if discovered == 2 else theme.unexplored_room_fill_color)
+		var room_color = room_data.color if room_data.color.a > 0 else settings.theme.default_room_fill_color
+		settings.theme.room_fill_texture.draw(ci, offset * ROOM_SIZE, room_color if discovered == 2 else settings.theme.unexplored_room_fill_color)
 	
 	var borders: Array[int] = [-1, -1, -1, -1]
 	for i in 4:
@@ -203,28 +193,28 @@ func draw_map_square(canvas_item: CanvasItem, offset: Vector2i, coords: Vector3i
 		var color: Color
 		
 		if borders[i] == -1:
-			texture = theme.room_separator_texture
-			color = theme.default_room_separator_color
+			texture = settings.theme.room_separator_texture
+			color = settings.theme.default_room_separator_color
 		else:
 			var border: int = borders[i]
-			assert(borders[i] < map_borders.size())
+			assert(borders[i] < settings.map_borders.size())
 			
 			if not bool(display_flags & DISPLAY_BORDERS):
 				border = 0
 			
 			if border == 0:
-				texture = theme.room_wall_texture
+				texture = settings.theme.room_wall_texture
 			elif border == 1:
-				texture = theme.room_passage_texture
+				texture = settings.theme.room_passage_texture
 			else:
-				texture = map_borders[border - 1]
+				texture = settings.map_borders[border - 1]
 			
 			color = room_data.get_border_color(i)
 		
 		if not texture:
 			continue
 		
-		if theme.use_shared_borders:
+		if settings.theme.use_shared_borders:
 			canvas_item.draw_set_transform(Vector2(offset * ROOM_SIZE + ROOM_SIZE / 2) + Vector2.from_angle(PI * 0.5 * i) * texture.get_height() / 2, PI * 0.5 * i, Vector2.ONE)
 			texture.draw(ci, -texture.get_size() / 2, color)
 		else:
@@ -238,12 +228,12 @@ func draw_map_square(canvas_item: CanvasItem, offset: Vector2i, coords: Vector3i
 		
 		var corner_color = room_data.get_border_color(i).lerp(room_data.get_border_color(j), 0.5)
 		
-		if theme.use_shared_borders:
-			canvas_item.draw_set_transform(Vector2(offset * ROOM_SIZE + ROOM_SIZE / 2) + Vector2.ONE.rotated(PI * 0.5 * i) * theme.room_wall_texture.get_height() / 2, PI * 0.5 * i, Vector2.ONE)
-			theme.border_outer_corner_texture.draw(ci, -Vector2.ONE * (theme.room_wall_texture.get_width() / 2), corner_color)
+		if settings.theme.use_shared_borders:
+			canvas_item.draw_set_transform(Vector2(offset * ROOM_SIZE + ROOM_SIZE / 2) + Vector2.ONE.rotated(PI * 0.5 * i) * settings.theme.room_wall_texture.get_height() / 2, PI * 0.5 * i, Vector2.ONE)
+			settings.theme.border_outer_corner_texture.draw(ci, -Vector2.ONE * (settings.theme.room_wall_texture.get_width() / 2), corner_color)
 		else:
 			canvas_item.draw_set_transform(offset * ROOM_SIZE + ROOM_SIZE / 2, PI * 0.5 * i, Vector2.ONE)
-			theme.border_outer_corner_texture.draw(ci, -ROOM_SIZE / 2, corner_color)
+			settings.theme.border_outer_corner_texture.draw(ci, -ROOM_SIZE / 2, corner_color)
 	
 	for i in 4:
 		var j: int = (i + 1) % 4
@@ -258,12 +248,12 @@ func draw_map_square(canvas_item: CanvasItem, offset: Vector2i, coords: Vector3i
 		
 		var corner_color = room_data.get_border_color(i).lerp(room_data.get_border_color(j), 0.5)
 		
-		if theme.use_shared_borders:
-			canvas_item.draw_set_transform(Vector2(offset * ROOM_SIZE + ROOM_SIZE / 2) + Vector2.ONE.rotated(PI * 0.5 * i) * theme.room_wall_texture.get_height() / 2, PI * 0.5 * i, Vector2.ONE)
-			theme.border_inner_corner_texture.draw(ci, -Vector2.ONE * (theme.room_wall_texture.get_width() / 2), corner_color)
+		if settings.theme.use_shared_borders:
+			canvas_item.draw_set_transform(Vector2(offset * ROOM_SIZE + ROOM_SIZE / 2) + Vector2.ONE.rotated(PI * 0.5 * i) * settings.theme.room_wall_texture.get_height() / 2, PI * 0.5 * i, Vector2.ONE)
+			settings.theme.border_inner_corner_texture.draw(ci, -Vector2.ONE * (settings.theme.room_wall_texture.get_width() / 2), corner_color)
 		else:
 			canvas_item.draw_set_transform(offset * ROOM_SIZE + ROOM_SIZE / 2, PI * 0.5 * i, Vector2.ONE)
-			theme.border_inner_corner_texture.draw(ci, -ROOM_SIZE / 2, corner_color)
+			settings.theme.border_inner_corner_texture.draw(ci, -ROOM_SIZE / 2, corner_color)
 	
 	canvas_item.draw_set_transform_matrix(Transform2D())
 	
@@ -277,16 +267,16 @@ func draw_map_square(canvas_item: CanvasItem, offset: Vector2i, coords: Vector3i
 			symbol = room_data.symbol
 		
 		if symbol > - 1:
-			assert(symbol < map_symbols.size())
-			canvas_item.draw_texture(map_symbols[symbol], offset * ROOM_SIZE)
+			assert(symbol < settings.map_symbols.size())
+			canvas_item.draw_texture(settings.map_symbols[symbol], offset * ROOM_SIZE)
 
 func draw_player_location(canvas_item: CanvasItem, offset: Vector2i, exact := false):
 	var player_position: Vector2 = (last_player_position + offset) * ROOM_SIZE + ROOM_SIZE / 2
 	if exact:
-		player_position += (exact_player_position / in_game_room_size).posmod(1) * Vector2(ROOM_SIZE) - ROOM_SIZE * 0.5
+		player_position += (exact_player_position / settings.in_game_room_size).posmod(1) * Vector2(ROOM_SIZE) - ROOM_SIZE * 0.5
 	
 	if not is_instance_valid(player_location_instance):
-		player_location_instance = theme.player_location_scene.instantiate()
+		player_location_instance = settings.theme.player_location_scene.instantiate()
 	
 	if player_location_instance.get_parent() != canvas_item:
 		if player_location_instance.get_parent():
