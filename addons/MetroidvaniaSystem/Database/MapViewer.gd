@@ -5,44 +5,22 @@ enum {MODE_LAYOUT = 1, MODE_ROOM_SYMBOL, MODE_ROOM_COLOR, MODE_ROOM_GROUP, MODE_
 
 @onready var map_overlay: Control = $MapOverlay
 @onready var map: Control = %Map
+@onready var panel: PanelContainer = $Panel
 
 @export var mode_group: ButtonGroup
 
 const NULL_VECTOR2I = Vector2i(-9999999, -9999999)
-var plugin: EditorPlugin
 
 var drag_from: Vector2i = NULL_VECTOR2I
 var view_drag: Vector4
 var map_offset := Vector2i(10, 10)
 
-var mode: int = MODE_LAYOUT
 var current_layer: int
-
-func _enter_tree() -> void:
-	if owner:
-		plugin = owner.plugin
-
-func _ready() -> void:
-	if not plugin:
-		return
-	
-	mode_group.pressed.connect(mode_pressed)
-	get_current_sub_editor()._editor_enter()
-
-func mode_pressed(button: BaseButton):
-	get_current_sub_editor()._editor_exit()
-	mode = button.get_index()
-	get_current_sub_editor()._editor_enter()
-	
-	map_overlay.queue_redraw()
 
 func layer_changed(l: int):
 	current_layer = l
 	map.queue_redraw()
 	map_overlay.queue_redraw()
-
-func get_current_sub_editor() -> Control:
-	return mode_group.get_buttons()[mode - 1]
 
 func _on_map_input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion:
@@ -62,19 +40,22 @@ func _on_map_input(event: InputEvent) -> void:
 				view_drag.w = map_offset.y
 			else:
 				view_drag = Vector4()
-	
-	get_current_sub_editor()._editor_input(event)
 
 func _on_overlay_draw() -> void:
+	var mouse := get_cursor_pos()
+	
+	var font := get_theme_font(&"font", &"Label")
+	map_overlay.draw_string(font, Vector2(0, panel.size.y + font.get_height()), str(mouse))
+	
 	var room_size: Vector2 = MetSys.ROOM_SIZE
-	map_overlay.draw_set_transform(Vector2(map_offset) * room_size)
-	
-	get_current_sub_editor()._editor_draw(map_overlay)
-	
-	map_overlay.draw_set_transform_matrix(Transform2D())
-	map_overlay.draw_string(get_theme_font(&"font", &"Label"), Vector2(0, 20), str(get_current_sub_editor().get_cursor_pos()))
+	map_overlay.draw_rect(Rect2(get_cursor_pos() as Vector2 * room_size, room_size), Color.GREEN, false, 2)
 
 func _on_map_draw() -> void:
 	for x in range(-100, 100):
 		for y in range(-100, 100):
 			MetSys.draw_map_square(map, Vector2i(x, y) + map_offset, Vector3i(x, y, current_layer))
+
+func get_cursor_pos() -> Vector2i:
+	var room_size: Vector2 = MetSys.ROOM_SIZE
+	var pos := (map_overlay.get_local_mouse_position() - room_size / 2).snapped(room_size) / room_size as Vector2i
+	return pos

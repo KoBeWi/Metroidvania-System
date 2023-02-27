@@ -2,6 +2,7 @@ extends Control
 
 const EDITOR_SCRIPT = preload("res://addons/MetroidvaniaSystem/Database/MapEditor.gd")
 var editor: EDITOR_SCRIPT
+var plugin: EditorPlugin
 
 var use_cursor := true
 var room_only_cursor := true
@@ -11,7 +12,13 @@ var drag_from: Vector2i = EDITOR_SCRIPT.NULL_VECTOR2I
 var highlighted_room: Array[Vector3i]
 var highlighted_border := -1
 
+func _enter_tree() -> void:
+	plugin = owner.plugin
+
 func _ready() -> void:
+	if not plugin:
+		return
+	
 	editor = owner
 
 func _editor_enter():

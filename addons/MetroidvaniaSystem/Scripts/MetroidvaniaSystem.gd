@@ -28,7 +28,6 @@ enum { R, D, L, U }
 ## TODO: methoda add_custom_element(name, callable), potrzeba customowy skrypt dziedziczący jakiś typ, wstawić go w pole w MetSys i jest robiona instancja i wywoływane metody. Callback: element_callback(canvas_item, coords, top_left), np. add_custom_element(:"elevator", draw_elevator); func draw_elevator(...): canvas_item.draw_rect(top_left)
 ## TODO: motywy: AoS, SotN, MF, VoF, Zeric, BS
 ## TODO: ROOM_SIZE chyba Vector2
-## TODO: symbole dopasowywać rozmiarem do pokoju??
 
 @export var exported_settings: Resource
 
@@ -268,7 +267,7 @@ func draw_map_square(canvas_item: CanvasItem, offset: Vector2i, coords: Vector3i
 		
 		if symbol > - 1:
 			assert(symbol < settings.map_symbols.size())
-			canvas_item.draw_texture(settings.map_symbols[symbol], offset * ROOM_SIZE)
+			canvas_item.draw_texture(settings.map_symbols[symbol], offset * ROOM_SIZE + ROOM_SIZE / 2 - Vector2i(settings.map_symbols[symbol].get_size()) / 2)
 
 func draw_player_location(canvas_item: CanvasItem, offset: Vector2i, exact := false):
 	var player_position: Vector2 = (last_player_position + offset) * ROOM_SIZE + ROOM_SIZE / 2

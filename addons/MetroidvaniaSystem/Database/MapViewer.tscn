@@ -1,0 +1,76 @@
+[gd_scene load_steps=3 format=3 uid="uid://df5fuj4vjr11p"]
+
+[ext_resource type="Script" path="res://addons/MetroidvaniaSystem/Database/MapViewer.gd" id="1_s16ok"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ejg0f"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+draw_center = false
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(1, 1, 1, 1)
+
+[node name="MapViewer" type="MarginContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_s16ok")
+metadata/_edit_lock_ = true
+
+[node name="MapOverlay" type="Control" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ColorRect" type="ColorRect" parent="MapOverlay"]
+modulate = Color(0, 0, 0, 0.12549)
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Map" type="Control" parent="MapOverlay"]
+unique_name_in_owner = true
+show_behind_parent = true
+clip_contents = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+
+[node name="Panel" type="PanelContainer" parent="."]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_ejg0f")
+
+[node name="Layer" type="VBoxContainer" parent="Panel"]
+layout_mode = 2
+mouse_filter = 2
+metadata/_edit_lock_ = true
+
+[node name="Label" type="Label" parent="Panel/Layer"]
+layout_mode = 2
+text = "Current Layer"
+horizontal_alignment = 1
+
+[node name="SpinBox" type="SpinBox" parent="Panel/Layer"]
+layout_mode = 2
+
+[connection signal="draw" from="MapOverlay" to="." method="_on_overlay_draw"]
+[connection signal="gui_input" from="MapOverlay" to="." method="_on_map_input"]
+[connection signal="draw" from="MapOverlay/Map" to="." method="_on_map_draw"]
+[connection signal="value_changed" from="Panel/Layer/SpinBox" to="." method="layer_changed"]

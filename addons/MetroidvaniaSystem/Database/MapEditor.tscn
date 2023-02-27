@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://dfbykrvyqnqr5"]
+[gd_scene load_steps=10 format=3 uid="uid://dfbykrvyqnqr5"]
 
 [ext_resource type="Script" path="res://addons/MetroidvaniaSystem/Database/MapEditor.gd" id="1_i7yda"]
 
@@ -12,6 +12,9 @@ extends \"res://addons/MetroidvaniaSystem/Database/SubEditor.gd\"
 var erase_mode: bool
 
 func _ready() -> void:
+	if not plugin:
+		return
+	
 	super()
 	room_only_cursor = false
 
@@ -107,6 +110,9 @@ extends \"res://addons/MetroidvaniaSystem/Database/SubEditor.gd\"
 var symbol_group: ButtonGroup
 
 func _ready() -> void:
+	if not plugin:
+		return
+	
 	super()
 	room_only_cursor = true
 	symbol_group = ButtonGroup.new()
@@ -197,6 +203,9 @@ extends \"res://addons/MetroidvaniaSystem/Database/SubEditor.gd\"
 var room_groups: Dictionary
 
 func _ready() -> void:
+	if not plugin:
+		return
+	
 	super()
 	room_only_cursor = true
 	room_groups = MetSys.map_data.room_groups
@@ -253,6 +262,9 @@ script/source = "@tool
 extends \"res://addons/MetroidvaniaSystem/Database/SubEditor.gd\"
 
 func _ready() -> void:
+	if not plugin:
+		return
+	
 	super()
 	use_cursor = false
 
@@ -299,6 +311,9 @@ script/source = "@tool
 extends \"res://addons/MetroidvaniaSystem/Database/SubEditor.gd\"
 
 func _ready() -> void:
+	if not plugin:
+		return
+	
 	super()
 	use_cursor = false
 
@@ -353,6 +368,53 @@ func _editor_input(event: InputEvent):
 			room_data.border_colors[highlighted_border] = Color.TRANSPARENT
 			editor.map.queue_redraw()
 		
+"
+
+[sub_resource type="GDScript" id="GDScript_p75ne"]
+resource_name = "MapAssign"
+script/source = "@tool
+extends \"res://addons/MetroidvaniaSystem/Database/SubEditor.gd\"
+
+func _ready() -> void:
+	if not plugin:
+		return
+	
+	super()
+	use_cursor = false
+	%FileDialog.root_subfolder = MetSys.settings.map_root_folder.trim_prefix(\"res://\")
+
+func _editor_input(event: InputEvent):
+	if event is InputEventMouseMotion:
+		var hr := highlighted_room
+		highlighted_room = MetSys.map_data.get_whole_room(get_coords(get_cursor_pos()))
+		if highlighted_room != hr:
+			editor.map_overlay.queue_redraw()
+
+	if event is InputEventMouseButton:
+		if event.button_index == MOUSE_BUTTON_LEFT:
+			if event.pressed:
+				if not highlighted_room.is_empty():
+					%FileDialog.popup_centered_ratio(0.6)
+		elif event.button_index == MOUSE_BUTTON_RIGHT:
+			for p in highlighted_room:
+				MetSys.map_data.get_room_at(p).assigned_map = \"\"
+
+func _editor_draw(map_overlay: CanvasItem):
+	super(map_overlay)
+
+	var room_size: Vector2 = MetSys.ROOM_SIZE
+	for room in MetSys.map_data.assigned_maps.values():
+		for p in room:
+			map_overlay.draw_rect(Rect2(Vector2(p.x, p.y) * room_size, room_size), Color(Color.MEDIUM_SEA_GREEN, 0.8))
+
+	if not highlighted_room.is_empty():
+		map_overlay.draw_set_transform_matrix(Transform2D())
+		map_overlay.draw_string(get_theme_font(&\"font\", &\"Label\"), Vector2(0, 40),
+				MetSys.map_data.get_room_at(highlighted_room.front()).assigned_map)
+
+func on_map_selected(path: String) -> void:
+	for coords in highlighted_room:
+		MetSys.map_data.get_room_at(coords).assigned_map = path
 "
 
 [node name="MapEditor" type="HBoxContainer"]
@@ -419,6 +481,13 @@ toggle_mode = true
 button_group = SubResource("ButtonGroup_pv7fp")
 text = "Border Color"
 script = SubResource("GDScript_a3fsx")
+
+[node name="MapAssign" type="Button" parent="PanelContainer/Modes"]
+layout_mode = 2
+toggle_mode = true
+button_group = SubResource("ButtonGroup_pv7fp")
+text = "Map Assign"
+script = SubResource("GDScript_p75ne")
 
 [node name="EditControls" type="VBoxContainer" parent="PanelContainer"]
 layout_mode = 2
@@ -504,7 +573,7 @@ mouse_filter = 2
 [node name="FileDialog" type="FileDialog" parent="."]
 unique_name_in_owner = true
 title = "Open a File"
-size = Vector2i(345, 160)
+size = Vector2i(345, 162)
 ok_button_text = "Otwórz"
 file_mode = 0
 filters = PackedStringArray("*.tscn")

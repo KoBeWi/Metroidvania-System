@@ -1,7 +1,7 @@
 @tool
 extends EditorPlugin
 
-enum {TAB_EDITOR, TAB_MANAGE}
+enum {TAB_EDITOR, TAB_OVERVIEW, TAB_MANAGE}
 
 var main: Control
 
@@ -16,6 +16,7 @@ func _get_plugin_icon() -> Texture2D:
 
 func _enter_tree() -> void:
 	main = preload("res://addons/MetroidvaniaSystem/Database/Main.tscn").instantiate()
+	main.plugin = self
 	main.ready.connect(setup_main)
 	get_editor_interface().get_editor_main_screen().add_child(main)
 	main.hide()
