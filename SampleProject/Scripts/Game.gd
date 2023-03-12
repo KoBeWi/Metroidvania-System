@@ -25,7 +25,7 @@ func goto_map(map_name: String):
 	map.get_node(^"MapHandler").adjust_camera($Player/Camera2D)
 	
 	if prev_map_position != MetSys.VECTOR2INF:
-		player.position -= Vector2(map.get_node(^"MapHandler").min_room - prev_map_position) * MetSys.in_game_room_size
+		player.position -= Vector2(map.get_node(^"MapHandler").min_room - prev_map_position) * MetSys.settings.in_game_room_size
 
 func _physics_process(delta: float) -> void:
 	MetSys.set_player_position(player.position)

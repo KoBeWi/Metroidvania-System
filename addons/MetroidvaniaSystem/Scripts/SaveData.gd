@@ -41,7 +41,7 @@ func is_object_stored(object: Object) -> bool:
 
 func add_room_override(room: MetroidvaniaSystem.MapData.RoomData) -> MetroidvaniaSystem.MapData.RoomOverride:
 	if not room in room_overrides:
-		room_overrides[room] = MetroidvaniaSystem.MapData.RoomOverride.new()
+		room_overrides[room] = MetroidvaniaSystem.MapData.RoomOverride.new(room)
 	return room_overrides[room]
 
 func remove_room_override(room: MetroidvaniaSystem.MapData.RoomData) -> bool:

@@ -68,13 +68,30 @@ class RoomData:
 		if border_colors[idx].a > 0:
 			return border_colors[idx]
 		return MetSys.settings.theme.default_border_color
+	
+	func get_assigned_map() -> String:
+		var override = MetSys.save_data.room_overrides.get(self)
+		if override and override.assigned_map != "/":
+			return override.assigned_map
+		return assigned_map
 
 class RoomOverride extends RoomData:
 	# TODO: metody pomocnicze
-	func _init() -> void:
+	var original_room: RoomData
+	
+	func _init(from: RoomData) -> void:
+		original_room = from
 		borders = [-2, -2, -2, -2]
 		symbol = -2
 		assigned_map = "/"
+	
+	func set_assigned_map(map := "/"):
+		if map == "/":
+			MetSys.map_data.map_overrides.erase(map)
+		else:
+			MetSys.map_data.map_overrides[map] = original_room.assigned_map
+		# TODO: na wszystkie pomieszczenia
+		assigned_map = map
 	
 	func commit():
 		MetSys.map_updated.emit()
@@ -85,6 +102,7 @@ var assigned_maps: Dictionary#[String, Array[Vector3i]]
 var room_groups: Dictionary#[int, Array[Vector3i]]
 
 var room_overrides: Dictionary#[Vector3i, RoomOverride]
+var map_overrides: Dictionary
 
 func load_data():
 	var file := FileAccess.open(MetSys.settings.map_root_folder.path_join("MapData.txt"), FileAccess.READ)
@@ -187,11 +205,16 @@ func get_whole_room(at: Vector3i) -> Array[Vector3i]:
 	return room
 
 func get_rooms_assigned_to(map: String) -> Array[Vector3i]:
-	return assigned_maps.get(map, [])
+	if map in map_overrides:
+		map = map_overrides[map]
+	
+	var ret: Array[Vector3i]
+	ret.assign(assigned_maps.get(map, []))
+	return ret
 
 func get_assigned_map_at(coords: Vector3i) -> String:
 	var room := get_room_at(coords)
 	if room:
-		return room.assigned_map
+		return room.get_assigned_map()
 	else:
 		return ""
