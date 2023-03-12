@@ -36,6 +36,10 @@ window/size/viewport_width=864
 window/size/viewport_height=480
 window/per_pixel_transparency/allowed=true
 
+[editor]
+
+script/search_in_file_extensions=PackedStringArray("gd", "gdshader", "tscn")
+
 [editor_plugins]
 
 enabled=PackedStringArray("res://addons/CustomRunner/plugin.cfg", "res://addons/PluginRefresher/plugin.cfg", "res://addons/MetroidvaniaSystem/plugin.cfg")

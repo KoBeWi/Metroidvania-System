@@ -175,11 +175,11 @@ func get_whole_room(at: Vector3i) -> Array[Vector3i]:
 		var p: Vector2i = to_check.pop_back()
 		checked.append(p)
 		
-		var coord := Vector3i(p.x, p.y, at.z)
-		if coord in rooms:
-			room.append(coord)
+		var coords := Vector3i(p.x, p.y, at.z)
+		if coords in rooms:
+			room.append(coords)
 			for i in 4:
-				if rooms[coord].borders[i] == -1:
+				if rooms[coords].borders[i] == -1:
 					var p2: Vector2i = p + FWD[i]
 					if not p2 in to_check and not p2 in checked:
 						to_check.append(p2)

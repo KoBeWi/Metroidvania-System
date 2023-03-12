@@ -11,12 +11,15 @@ extends VBoxContainer
 @onready var tabs = $TabContainer
 
 var plugin: EditorPlugin
+
+func _ready() -> void:
+	%\"Map Viewer\".plugin = plugin
 "
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0ndnc"]
 bg_color = Color(0, 0, 0, 0.501961)
 
-[sub_resource type="ButtonGroup" id="ButtonGroup_wkqev"]
+[sub_resource type="ButtonGroup" id="ButtonGroup_0fc3v"]
 
 [node name="Main" type="VBoxContainer"]
 anchors_preset = 15
@@ -43,9 +46,10 @@ tab_alignment = 1
 
 [node name="Map Editor" parent="TabContainer" instance=ExtResource("1_lpqq2")]
 layout_mode = 2
-mode_group = SubResource("ButtonGroup_wkqev")
+mode_group = SubResource("ButtonGroup_0fc3v")
 
 [node name="Map Viewer" parent="TabContainer" instance=ExtResource("2_0tuq7")]
+unique_name_in_owner = true
 visible = false
 layout_mode = 2
 

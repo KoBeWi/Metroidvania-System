@@ -230,29 +230,29 @@ func _editor_input(event: InputEvent):
 	
 	if event is InputEventMouseButton:
 		if event.pressed:
-			var coord := get_coords(get_cursor_pos())
+			var coords := get_coords(get_cursor_pos())
 			var current_group: int = %CurrentGroup.value
 			
 			if event.button_index == MOUSE_BUTTON_LEFT:
-				var room_data: MetroidvaniaSystem.MapData.RoomData = MetSys.map_data.get_room_at(coord)
+				var room_data: MetroidvaniaSystem.MapData.RoomData = MetSys.map_data.get_room_at(coords)
 				if not room_data:
 					return
 				
 				if not current_group in room_groups:
 					room_groups[current_group] = []
 				
-				if not coord in room_groups[current_group]:
-					room_groups[current_group].append(coord)
+				if not coords in room_groups[current_group]:
+					room_groups[current_group].append(coords)
 				editor.map_overlay.queue_redraw()
 			elif event.button_index == MOUSE_BUTTON_RIGHT:
 				if not current_group in room_groups:
 					return
 				
-				var room_data: MetroidvaniaSystem.MapData.RoomData = MetSys.map_data.get_room_at(coord)
+				var room_data: MetroidvaniaSystem.MapData.RoomData = MetSys.map_data.get_room_at(coords)
 				if not room_data:
 					return
 				
-				room_groups[current_group].erase(coord)
+				room_groups[current_group].erase(coords)
 				editor.map_overlay.queue_redraw()
 "
 

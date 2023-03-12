@@ -13,14 +13,12 @@ const MapHandler = preload("res://addons/MetroidvaniaSystem/Scripts/MapHandler.g
 
 enum { R, D, L, U }
 
-## TODO: plugin - minimapa z otwieraniem scen, zaawansowane statystyki znajdziek, np. jakiś rejestr i zliczać w scenach itp
+## TODO: plugin - zaawansowane statystyki znajdziek, np. jakiś rejestr i zliczać w scenach itp
 ## TODO: validator? do sprawdzania czy wszystkie pomieszczenia mają przypisaną mapę itp
 ## TODO: walidator motywów (czy rozmiary się zgadzają itp
 ## TODO: add_main_symbol() - dodaje symbol i zawsze ma index 0 / ???
-## TODO: ujednolicić coords (nazwy zmiennych)
 ## TODO: layout - wyświetlać rozmiar rysowanego pomieszczenia
 ## TODO: metody do tworzenia pomieszczeń ze skryptu?? -> MapBuilder, który tworzy nowy room i zapisuje się oddzielnie
-## TODO: drag żeby utworzyć drzwi po drugiej stronie
 ## TODO: get_coordinate_for_object(Node2D, layer = current_layer)
 ## TODO: pos to map (do rysowania po mapie, x,y pomieszczenia, ratio wewnątrz np (32, 4, 0.1, 0.1))
 ## TODO: set current layer (jako setter)

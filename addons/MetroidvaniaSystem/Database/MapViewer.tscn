@@ -24,6 +24,7 @@ script = ExtResource("1_s16ok")
 metadata/_edit_lock_ = true
 
 [node name="MapOverlay" type="Control" parent="."]
+clip_contents = true
 layout_mode = 2
 size_flags_horizontal = 3
 

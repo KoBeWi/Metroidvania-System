@@ -40,5 +40,5 @@ func _draw() -> void:
 		return
 	
 	for p in rooms:
-		var coord := Vector2(p.x - min_room.x, p.y - min_room.y)
-		draw_rect(Rect2(coord * MetSys.settings.in_game_room_size, MetSys.settings.in_game_room_size), Color.WHITE, false, 2)
+		var coords := Vector2(p.x - min_room.x, p.y - min_room.y)
+		draw_rect(Rect2(coords * MetSys.settings.in_game_room_size, MetSys.settings.in_game_room_size), Color.WHITE, false, 2)
