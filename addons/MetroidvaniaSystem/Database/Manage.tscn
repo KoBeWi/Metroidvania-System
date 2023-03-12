@@ -8,6 +8,18 @@ signal edit_settings
 
 func edit_settings_pressed():
 	edit_settings.emit()
+
+func force_reload() -> void:
+	MetSys.map_data = MetSys.MapData.new()
+	MetSys.map_data.load_data()
+	
+	for group in MetSys.map_data.room_groups.values():
+		var i: int
+		while i < group.size():
+			if MetSys.map_data.get_room_at(group[i]):
+				i += 1
+			else:
+				group.remove_at(i)
 "
 
 [node name="Manage" type="MarginContainer"]
@@ -25,4 +37,9 @@ size_flags_horizontal = 4
 layout_mode = 2
 text = "General Settings"
 
+[node name="Button2" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "Reload and Cleanup Map Data"
+
 [connection signal="pressed" from="VBoxContainer/Button" to="." method="edit_settings_pressed"]
+[connection signal="pressed" from="VBoxContainer/Button2" to="." method="force_reload"]
