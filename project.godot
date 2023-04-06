@@ -14,6 +14,7 @@ config/name="Metroidvania System"
 run/main_scene="res://SampleProject/Game.tscn"
 config/features=PackedStringArray("4.0")
 config/icon="res://icon.png"
+config/tags=PackedStringArray("addon")
 
 [autoload]
 

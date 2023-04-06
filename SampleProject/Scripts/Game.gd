@@ -2,7 +2,7 @@ extends Node2D
 
 @export var starting_map: String
 
-@onready var player = $Player
+@onready var player: CharacterBody2D = $Player
 
 var map: Node2D
 
@@ -11,6 +11,7 @@ func _ready() -> void:
 		MetSys.set_save_data(FileAccess.open("user://save_data.sav", FileAccess.READ).get_var())
 	
 	goto_map(starting_map)
+	player.position = map.get_node(^"StartPoint").position
 	MetSys.map_changed.connect(on_map_changed, CONNECT_DEFERRED)
 
 func goto_map(map_name: String):

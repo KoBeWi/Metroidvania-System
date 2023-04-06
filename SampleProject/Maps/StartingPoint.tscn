@@ -1,0 +1,53 @@
+[gd_scene load_steps=5 format=3 uid="uid://cv55nv1c2sbiq"]
+
+[ext_resource type="TileSet" uid="uid://bwpcg2opya34n" path="res://SampleProject/Resources/Tileset.tres" id="1_0svtx"]
+[ext_resource type="PackedScene" uid="uid://bsg0351mx3b4u" path="res://addons/MetroidvaniaSystem/Nodes/MapHandler.tscn" id="1_45cto"]
+[ext_resource type="Script" path="res://SampleProject/Scripts/SavePoint.gd" id="3_7p5jr"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_4rbcf"]
+radius = 32.0
+
+[node name="StartingPoint" type="Node2D"]
+
+[node name="TileMap" type="TileMap" parent="."]
+tile_set = ExtResource("1_0svtx")
+format = 2
+layer_0/tile_data = PackedInt32Array(786459, 524289, 6, 786460, 524289, 6, 786461, 524289, 6, 786462, 524289, 6, 786463, 524289, 6, 786464, 524289, 6, 786465, 524289, 6, 786466, 524289, 6, 786467, 524289, 6, 786468, 524289, 6, 786469, 524289, 6, 786470, 524289, 6, 786471, 524289, 6, 786472, 524289, 6, 786473, 524289, 6, 786474, 524289, 6, 786475, 524289, 6, 786476, 524289, 6, 786477, 524289, 6, 786478, 524289, 6, 786479, 524289, 6, 786480, 524289, 6, 786481, 524289, 6, 786482, 524289, 6, 786483, 524289, 6, 786484, 524289, 6, 786485, 524289, 6, 851995, 524289, 7, 917531, 524289, 7, 983067, 524289, 7, 851996, 524289, 7, 917532, 524289, 7, 983068, 524289, 7, 851997, 524289, 7, 917533, 524289, 7, 983069, 524289, 7, 851998, 524289, 7, 917534, 524289, 7, 983070, 524289, 7, 851999, 524289, 7, 917535, 524289, 7, 983071, 524289, 7, 852000, 524289, 7, 917536, 524289, 7, 983072, 524289, 7, 852001, 524289, 7, 917537, 524289, 7, 983073, 524289, 7, 852002, 524289, 7, 917538, 524289, 7, 983074, 524289, 7, 852003, 524289, 7, 917539, 524289, 7, 983075, 524289, 7, 852004, 524289, 7, 917540, 524289, 7, 983076, 524289, 7, 852005, 524289, 7, 917541, 524289, 7, 983077, 524289, 7, 852006, 524289, 7, 917542, 524289, 7, 983078, 524289, 7, 852007, 524289, 7, 917543, 524289, 7, 983079, 524289, 7, 852008, 524289, 7, 917544, 524289, 7, 983080, 524289, 7, 852009, 524289, 7, 917545, 524289, 7, 983081, 524289, 7, 852010, 524289, 7, 917546, 524289, 7, 983082, 524289, 7, 852011, 524289, 7, 917547, 524289, 7, 983083, 524289, 7, 852012, 524289, 7, 917548, 524289, 7, 983084, 524289, 7, 852013, 524289, 7, 917549, 524289, 7, 983085, 524289, 7, 852014, 524289, 7, 917550, 524289, 7, 983086, 524289, 7, 852015, 524289, 7, 917551, 524289, 7, 983087, 524289, 7, 852016, 524289, 7, 917552, 524289, 7, 983088, 524289, 7, 852017, 524289, 7, 917553, 524289, 7, 983089, 524289, 7, 852018, 524289, 7, 917554, 524289, 7, 983090, 524289, 7, 852019, 524289, 7, 917555, 524289, 7, 983091, 524289, 7, 852020, 524289, 7, 917556, 524289, 7, 983092, 524289, 7, 852021, 524289, 7, 917557, 524289, 7, 983093, 524289, 7, 655398, 65537, 4, 655399, 131073, 4, 720935, 131073, 5, 655400, 196609, 4, 720936, 196609, 5, 655401, 262145, 4, 720937, 262145, 5, 655402, 327681, 4)
+layer_1/name = ""
+layer_1/enabled = true
+layer_1/modulate = Color(1, 1, 1, 1)
+layer_1/y_sort_enabled = false
+layer_1/y_sort_origin = 0
+layer_1/z_index = 0
+layer_1/tile_data = PackedInt32Array()
+
+[node name="MapHandler" parent="." instance=ExtResource("1_45cto")]
+
+[node name="SavePoint" type="Area2D" parent="."]
+position = Vector2(1296, 288)
+script = ExtResource("3_7p5jr")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="SavePoint"]
+shape = SubResource("CircleShape2D_4rbcf")
+
+[node name="Label" type="Label" parent="SavePoint"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -29.0
+offset_top = -25.0
+offset_right = 29.0
+offset_bottom = 25.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 40
+text = "S"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="StartPoint" type="Marker2D" parent="."]
+position = Vector2(1296, 288)
+
+[connection signal="body_entered" from="SavePoint" to="SavePoint" method="on_body_entered"]

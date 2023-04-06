@@ -104,7 +104,7 @@ func _input(event: InputEvent) -> void:
 
 [node name="Game" type="Node2D"]
 script = ExtResource("1_xdpfu")
-starting_map = "Corridor"
+starting_map = "StartingPoint"
 
 [node name="Player" parent="." instance=ExtResource("2_bam1a")]
 position = Vector2(368, 248)

@@ -26,6 +26,7 @@ func _ready() -> void:
 	if not plugin:
 		return
 	
+	MetSys.map_updated.connect(map.queue_redraw)
 	mode_group.pressed.connect(mode_pressed)
 	get_current_sub_editor()._editor_enter()
 
@@ -66,15 +67,26 @@ func _on_map_input(event: InputEvent) -> void:
 	get_current_sub_editor()._editor_input(event)
 
 func _on_overlay_draw() -> void:
+	if not plugin:
+		return
+	
 	var room_size: Vector2 = MetSys.ROOM_SIZE
 	map_overlay.draw_set_transform(Vector2(map_offset) * room_size)
 	
-	get_current_sub_editor()._editor_draw(map_overlay)
+	var sub := get_current_sub_editor()
+	sub.top_draw = Callable()
+	sub._editor_draw(map_overlay)
 	
 	map_overlay.draw_set_transform_matrix(Transform2D())
 	map_overlay.draw_string(get_theme_font(&"font", &"Label"), Vector2(0, 20), str(get_current_sub_editor().get_cursor_pos()))
+	
+	if sub.top_draw.is_valid():
+		sub.top_draw.call(map_overlay)
 
 func _on_map_draw() -> void:
+	if not plugin:
+		return
+	
 	for x in range(-100, 100):
 		for y in range(-100, 100):
 			MetSys.draw_map_square(map, Vector2i(x, y) + map_offset, Vector3i(x, y, current_layer))
