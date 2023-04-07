@@ -15,7 +15,7 @@ static func draw(canvas_item: CanvasItem, offset: Vector2i, coords: Vector3i, ma
 	var theme := MetSys.settings.theme
 	
 	var ci := canvas_item.get_canvas_item()
-	var display_flags := (int(discovered == 2) * 255) | MetSys.settings.unexplored_display
+	var display_flags: int = (int(discovered == 2) * 255) | MetSys.settings.unexplored_display
 	
 	# center
 	if bool(display_flags & MetroidvaniaSystem.DISPLAY_CENTER):
@@ -53,62 +53,63 @@ static func draw(canvas_item: CanvasItem, offset: Vector2i, coords: Vector3i, ma
 		if not texture:
 			continue
 		
+		var forward_offset := -texture.get_width() / 2
 		if theme.use_shared_borders:
-#			canvas_item.draw_set_transform(Vector2(offset * ROOM_SIZE + ROOM_SIZE / 2) + Vector2.from_angle(PI * 0.5 * i) * texture.get_height() / 2, PI * 0.5 * i, Vector2.ONE)
-			texture.draw(ci, -texture.get_size() / 2, color)
-		else:
-			canvas_item.draw_set_transform(offset * MetSys.ROOM_SIZE + MetSys.ROOM_SIZE / 2, rotation, Vector2.ONE)
-			match i:
-				MetroidvaniaSystem.R, MetroidvaniaSystem.L:
-					texture.draw(ci, -texture.get_size() / 2 + Vector2.RIGHT * (MetSys.ROOM_SIZE.x / 2 - texture.get_width() / 2), color)
-				MetroidvaniaSystem.D, MetroidvaniaSystem.U:
-					texture.draw(ci, -texture.get_size() / 2 + Vector2.RIGHT * (MetSys.ROOM_SIZE.y / 2 - texture.get_width() / 2), color)
+			forward_offset = 0
+		
+		canvas_item.draw_set_transform(offset * MetSys.ROOM_SIZE + MetSys.ROOM_SIZE / 2, rotation, Vector2.ONE)
+		match i:
+			MetroidvaniaSystem.R, MetroidvaniaSystem.L:
+				texture.draw(ci, -texture.get_size() / 2 + Vector2.RIGHT * (MetSys.ROOM_SIZE.x / 2 + forward_offset), color)
+			MetroidvaniaSystem.D, MetroidvaniaSystem.U:
+				texture.draw(ci, -texture.get_size() / 2 + Vector2.RIGHT * (MetSys.ROOM_SIZE.y / 2 + forward_offset), color)
 	
 	# outer corner
 	for i in 4:
-		var j: int = (i + 1) % 4
+		var j := rotate(i)
 		if borders[i] == -1 or borders[j] == -1:
 			continue
 		
+		var texture: Texture2D = theme.outer_corner
 		var corner_color = room_data.get_border_color(i).lerp(room_data.get_border_color(j), 0.5)
 		
+		canvas_item.draw_set_transform(offset * MetSys.ROOM_SIZE + MetSys.ROOM_SIZE / 2, PI * 0.5 * i, Vector2.ONE)
+		
+		var corner_offset := -texture.get_size()
 		if theme.use_shared_borders:
-#			canvas_item.draw_set_transform(Vector2(offset * ROOM_SIZE + ROOM_SIZE / 2) + Vector2.ONE.rotated(PI * 0.5 * i) * theme.room_wall_texture.get_height() / 2, PI * 0.5 * i, Vector2.ONE)
-			theme.border_outer_corner_texture.draw(ci, -Vector2.ONE * (theme.room_wall_texture.get_width() / 2), corner_color)
-		else:
-			canvas_item.draw_set_transform(offset * MetSys.ROOM_SIZE + MetSys.ROOM_SIZE / 2, PI * 0.5 * i, Vector2.ONE)
-			
-			match i:
-				MetroidvaniaSystem.R, MetroidvaniaSystem.L:
-					theme.outer_corner.draw(ci, Vector2(MetSys.ROOM_SIZE) / 2 - theme.outer_corner.get_size(), corner_color)
-				MetroidvaniaSystem.D, MetroidvaniaSystem.U:
-					theme.outer_corner.draw(ci, Vector2(MetSys.ROOM_SIZE.y, MetSys.ROOM_SIZE.x) / 2 - theme.outer_corner.get_size(), corner_color)
+			corner_offset /= 2
+		
+		match i:
+			MetroidvaniaSystem.R, MetroidvaniaSystem.L:
+				texture.draw(ci, Vector2(MetSys.ROOM_SIZE) / 2 + corner_offset, corner_color)
+			MetroidvaniaSystem.D, MetroidvaniaSystem.U:
+				texture.draw(ci, Vector2(MetSys.ROOM_SIZE.y, MetSys.ROOM_SIZE.x) / 2 + corner_offset, corner_color)
 	
 	# inner corner
 	for i in 4:
-		var j: int = (i + 1) % 4
+		var j := rotate(i)
 		if borders[i] != -1 or borders[j] != -1:
 			continue
 		
-		var neighbor: Vector2i = Vector2i(coords.x, coords.y) + map_data.FWD[i] + map_data.FWD[j]
-		var neighbor_room := map_data.get_room_at(Vector3i(neighbor.x, neighbor.y, coords.z))
+		var neighbor_room := get_neighbor(map_data, coords, map_data.FWD[i] + map_data.FWD[j])
 		if neighbor_room:
-			if neighbor_room.borders[(i + 2) % 4] == -1 and neighbor_room.borders[(j + 2) % 4] == -1:
+			if neighbor_room.borders[opposite(i)] == -1 and neighbor_room.borders[opposite(j)] == -1:
 				continue
 		
+		var texture: Texture2D = theme.inner_corner
 		var corner_color = room_data.get_border_color(i).lerp(room_data.get_border_color(j), 0.5)
 		
+		canvas_item.draw_set_transform(offset * MetSys.ROOM_SIZE + MetSys.ROOM_SIZE / 2, PI * 0.5 * i, Vector2.ONE)
+		
+		var corner_offset := -texture.get_size()
 		if theme.use_shared_borders:
-#			canvas_item.draw_set_transform(Vector2(offset * ROOM_SIZE + ROOM_SIZE / 2) + Vector2.ONE.rotated(PI * 0.5 * i) * theme.room_wall_texture.get_height() / 2, PI * 0.5 * i, Vector2.ONE)
-			theme.border_inner_corner_texture.draw(ci, -Vector2.ONE * (theme.room_wall_texture.get_width() / 2), corner_color)
-		else:
-			canvas_item.draw_set_transform(offset * MetSys.ROOM_SIZE + MetSys.ROOM_SIZE / 2, PI * 0.5 * i, Vector2.ONE)
-			
-			match i:
-				MetroidvaniaSystem.R, MetroidvaniaSystem.L:
-					theme.inner_corner.draw(ci, Vector2(MetSys.ROOM_SIZE) / 2 - theme.inner_corner.get_size(), corner_color)
-				MetroidvaniaSystem.D, MetroidvaniaSystem.U:
-					theme.inner_corner.draw(ci, Vector2(MetSys.ROOM_SIZE.y, MetSys.ROOM_SIZE.x) / 2 - theme.inner_corner.get_size(), corner_color)
+			corner_offset /= 2
+		
+		match i:
+			MetroidvaniaSystem.R, MetroidvaniaSystem.L:
+				theme.inner_corner.draw(ci, Vector2(MetSys.ROOM_SIZE) / 2 + corner_offset, corner_color)
+			MetroidvaniaSystem.D, MetroidvaniaSystem.U:
+				theme.inner_corner.draw(ci, Vector2(MetSys.ROOM_SIZE.y, MetSys.ROOM_SIZE.x) / 2 + corner_offset, corner_color)
 	
 	canvas_item.draw_set_transform_matrix(Transform2D())
 	
@@ -165,3 +166,13 @@ static func get_border_texture(theme: MapTheme, idx: int, direction: int) -> Tex
 		return theme.get(texture_name)[idx - 2]
 	else:
 		return theme.get(texture_name)
+
+static func get_neighbor(map_data: MetroidvaniaSystem.MapData, coords: Vector3i, offset: Vector2i) -> MetroidvaniaSystem.MapData.RoomData:
+	var neighbor: Vector2i = Vector2i(coords.x, coords.y) + offset
+	return map_data.get_room_at(Vector3i(neighbor.x, neighbor.y, coords.z))
+
+static func rotate(i: int) -> int:
+	return (i + 1) % 4
+
+static func opposite(i: int) -> int:
+	return (i + 2) % 4
