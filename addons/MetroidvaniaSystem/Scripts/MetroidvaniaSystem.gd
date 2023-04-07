@@ -10,6 +10,7 @@ const SaveData = preload("res://addons/MetroidvaniaSystem/Scripts/SaveData.gd")
 const MapData = preload("res://addons/MetroidvaniaSystem/Scripts/MapData.gd")
 const MapBuilder = preload("res://addons/MetroidvaniaSystem/Scripts/MapBuilder.gd")
 const MapHandler = preload("res://addons/MetroidvaniaSystem/Scripts/MapHandler.gd")
+const RoomDrawer = preload("res://addons/MetroidvaniaSystem/Scripts/RoomDrawer.gd")
 
 enum { R, D, L, U }
 
@@ -166,115 +167,7 @@ func remove_room_override(coords: Vector3i):
 		map_updated.emit()
 
 func draw_map_square(canvas_item: CanvasItem, offset: Vector2i, coords: Vector3i, use_save_data := false):
-	var room_data := map_data.get_room_at(coords)
-	if not room_data:
-		return
-	
-	var discovered := 2
-	if use_save_data:
-		discovered = save_data.is_room_discovered(coords)
-	
-	if discovered == 0:
-		return
-	
-	var ci := canvas_item.get_canvas_item()
-	var display_flags := (int(discovered == 2) * 255) | settings.unexplored_display
-	
-	if bool(display_flags & DISPLAY_CENTER):
-		var room_color = room_data.color if room_data.color.a > 0 else settings.theme.default_room_fill_color
-		settings.theme.room_fill_texture.draw(ci, offset * ROOM_SIZE, room_color if discovered == 2 else settings.theme.unexplored_room_fill_color)
-	
-	var borders: Array[int] = [-1, -1, -1, -1]
-	for i in 4:
-		var border: int = room_data.get_border(i)
-		if not bool(display_flags & DISPLAY_OUTLINE) and border == 0:
-			borders[i] = -1
-		elif not bool(display_flags & DISPLAY_BORDERS):
-			borders[i] = mini(border, 0)
-		else:
-			borders[i] = border
-	
-	for i in 4:
-		var texture: Texture2D
-		var color: Color
-		
-		if borders[i] == -1:
-			texture = settings.theme.room_separator_texture
-			color = settings.theme.room_separator_color
-		else:
-			var border: int = borders[i]
-			assert(borders[i] < settings.map_borders.size())
-			
-			if not bool(display_flags & DISPLAY_BORDERS):
-				border = 0
-			
-			if border == 0:
-				texture = settings.theme.room_wall_texture
-			elif border == 1:
-				texture = settings.theme.room_passage_texture
-			else:
-				texture = settings.map_borders[border - 1]
-			
-			color = room_data.get_border_color(i)
-		
-		if not texture:
-			continue
-		
-		if settings.theme.use_shared_borders:
-			canvas_item.draw_set_transform(Vector2(offset * ROOM_SIZE + ROOM_SIZE / 2) + Vector2.from_angle(PI * 0.5 * i) * texture.get_height() / 2, PI * 0.5 * i, Vector2.ONE)
-			texture.draw(ci, -texture.get_size() / 2, color)
-		else:
-			canvas_item.draw_set_transform(offset * ROOM_SIZE + ROOM_SIZE / 2, PI * 0.5 * i, Vector2.ONE)
-			texture.draw(ci, -ROOM_SIZE / 2, color)
-	
-	for i in 4:
-		var j: int = (i + 1) % 4
-		if borders[i] == -1 or borders[j] == -1:
-			continue
-		
-		var corner_color = room_data.get_border_color(i).lerp(room_data.get_border_color(j), 0.5)
-		
-		if settings.theme.use_shared_borders:
-			canvas_item.draw_set_transform(Vector2(offset * ROOM_SIZE + ROOM_SIZE / 2) + Vector2.ONE.rotated(PI * 0.5 * i) * settings.theme.room_wall_texture.get_height() / 2, PI * 0.5 * i, Vector2.ONE)
-			settings.theme.border_outer_corner_texture.draw(ci, -Vector2.ONE * (settings.theme.room_wall_texture.get_width() / 2), corner_color)
-		else:
-			canvas_item.draw_set_transform(offset * ROOM_SIZE + ROOM_SIZE / 2, PI * 0.5 * i, Vector2.ONE)
-			settings.theme.border_outer_corner_texture.draw(ci, -ROOM_SIZE / 2, corner_color)
-	
-	for i in 4:
-		var j: int = (i + 1) % 4
-		if borders[i] != -1 or borders[j] != -1:
-			continue
-		
-		var neighbor: Vector2i = Vector2i(coords.x, coords.y) + map_data.FWD[i] + map_data.FWD[j]
-		var neighbor_room := map_data.get_room_at(Vector3i(neighbor.x, neighbor.y, coords.z))
-		if neighbor_room:
-			if neighbor_room.borders[(i + 2) % 4] == -1 and neighbor_room.borders[(j + 2) % 4] == -1:
-				continue
-		
-		var corner_color = room_data.get_border_color(i).lerp(room_data.get_border_color(j), 0.5)
-		
-		if settings.theme.use_shared_borders:
-			canvas_item.draw_set_transform(Vector2(offset * ROOM_SIZE + ROOM_SIZE / 2) + Vector2.ONE.rotated(PI * 0.5 * i) * settings.theme.room_wall_texture.get_height() / 2, PI * 0.5 * i, Vector2.ONE)
-			settings.theme.border_inner_corner_texture.draw(ci, -Vector2.ONE * (settings.theme.room_wall_texture.get_width() / 2), corner_color)
-		else:
-			canvas_item.draw_set_transform(offset * ROOM_SIZE + ROOM_SIZE / 2, PI * 0.5 * i, Vector2.ONE)
-			settings.theme.border_inner_corner_texture.draw(ci, -ROOM_SIZE / 2, corner_color)
-	
-	canvas_item.draw_set_transform_matrix(Transform2D())
-	
-	if bool(display_flags & DISPLAY_SYMBOLS):
-		var symbol: int = -1
-		
-		if coords in save_data.room_markers:
-			symbol = save_data.room_markers[coords].back()
-		
-		if symbol == -1:
-			symbol = room_data.symbol
-		
-		if symbol > - 1:
-			assert(symbol < settings.map_symbols.size())
-			canvas_item.draw_texture(settings.map_symbols[symbol], offset * ROOM_SIZE + ROOM_SIZE / 2 - Vector2i(settings.map_symbols[symbol].get_size()) / 2)
+	RoomDrawer.draw(canvas_item, offset, coords, map_data, save_data if use_save_data else null)
 
 func draw_player_location(canvas_item: CanvasItem, offset: Vector2i, exact := false):
 	var player_position: Vector2 = (last_player_position + offset) * ROOM_SIZE + ROOM_SIZE / 2

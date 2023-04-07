@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://djdgo7kixxhpj"
-path="res://.godot/imported/RoomInnerCorner.png-a1a6bf0780724b14f4c1657c573a99e9.ctex"
+uid="uid://bixscdbqbbnqm"
+path="res://.godot/imported/BorderWallHorizontal.png-8a03585c3fec3e27ec36d9209e60ddb0.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/MetroidvaniaSystem/Themes/Zeric/RoomInnerCorner.png"
-dest_files=["res://.godot/imported/RoomInnerCorner.png-a1a6bf0780724b14f4c1657c573a99e9.ctex"]
+source_file="res://addons/MetroidvaniaSystem/Themes/BS/BorderWallHorizontal.png"
+dest_files=["res://.godot/imported/BorderWallHorizontal.png-8a03585c3fec3e27ec36d9209e60ddb0.ctex"]
 
 [params]
 

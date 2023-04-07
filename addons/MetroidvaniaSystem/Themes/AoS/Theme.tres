@@ -1,8 +1,7 @@
-[gd_resource type="Resource" script_class="MapTheme" load_steps=8 format=3 uid="uid://cxpf7cx4wjvpa"]
+[gd_resource type="Resource" script_class="MapTheme" load_steps=7 format=3 uid="uid://bnbbd2mcri1tv"]
 
-[ext_resource type="Texture2D" uid="uid://gumwhy8sgmcu" path="res://addons/MetroidvaniaSystem/Themes/AoS/RoomInnerCorner.png" id="1_rydj6"]
-[ext_resource type="Texture2D" uid="uid://b3lj4lbrjtghx" path="res://addons/MetroidvaniaSystem/Themes/AoS/RoomOuterCorner.png" id="2_0ebg4"]
-[ext_resource type="PackedScene" path="res://addons/MetroidvaniaSystem/Themes/AoS/PlayerLocation.tscn" id="3_bjiwt"]
+[ext_resource type="Texture2D" uid="uid://gumwhy8sgmcu" path="res://addons/MetroidvaniaSystem/Themes/AoS/Corner.png" id="1_1n1yf"]
+[ext_resource type="PackedScene" uid="uid://b1hnpnqaqqcds" path="res://addons/MetroidvaniaSystem/Themes/AoS/PlayerLocation.tscn" id="3_bjiwt"]
 [ext_resource type="Texture2D" uid="uid://da3bit4f5alc4" path="res://addons/MetroidvaniaSystem/Themes/AoS/RoomFill.png" id="4_0del7"]
 [ext_resource type="Texture2D" uid="uid://q4al3ip12dm1" path="res://addons/MetroidvaniaSystem/Themes/AoS/BorderPassage.png" id="5_n3yba"]
 [ext_resource type="Texture2D" uid="uid://citg7br0tcbix" path="res://addons/MetroidvaniaSystem/Themes/AoS/BorderWall.png" id="6_dpo7t"]
@@ -10,15 +9,15 @@
 
 [resource]
 script = ExtResource("7_hynsb")
-use_shared_borders = false
 default_room_fill_color = Color(0, 0, 0.878431, 1)
 unexplored_room_fill_color = Color(0.25098, 0.25098, 0.25098, 1)
 room_separator_color = Color(0, 0, 0, 1)
 default_border_color = Color(1, 1, 1, 1)
 unexplored_border_color = Color(0.533333, 0.533333, 0.533333, 1)
 room_fill_texture = ExtResource("4_0del7")
-room_wall_texture = ExtResource("6_dpo7t")
-room_passage_texture = ExtResource("5_n3yba")
-border_outer_corner_texture = ExtResource("2_0ebg4")
-border_inner_corner_texture = ExtResource("1_rydj6")
 player_location_scene = ExtResource("3_bjiwt")
+use_shared_borders = false
+wall = ExtResource("6_dpo7t")
+passage = ExtResource("5_n3yba")
+inner_corner = ExtResource("1_1n1yf")
+outer_corner = ExtResource("1_1n1yf")

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://gumwhy8sgmcu"
-path="res://.godot/imported/RoomInnerCorner.png-3a7b0306c1bdfe50a35f0da243e8e34a.ctex"
+uid="uid://de16oiuosilpu"
+path="res://.godot/imported/CornerOuter.png-50ff32ff516d24f398c9fe65c747dce5.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/MetroidvaniaSystem/Themes/AoS/RoomInnerCorner.png"
-dest_files=["res://.godot/imported/RoomInnerCorner.png-3a7b0306c1bdfe50a35f0da243e8e34a.ctex"]
+source_file="res://addons/MetroidvaniaSystem/Themes/Zeric/CornerOuter.png"
+dest_files=["res://.godot/imported/CornerOuter.png-50ff32ff516d24f398c9fe65c747dce5.ctex"]
 
 [params]
 
