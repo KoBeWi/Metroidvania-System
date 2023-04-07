@@ -10,7 +10,10 @@ enum {MODE_LAYOUT = 1, MODE_ROOM_SYMBOL, MODE_ROOM_COLOR, MODE_ROOM_GROUP, MODE_
 @export var mode_group: ButtonGroup
 
 const NULL_VECTOR2I = Vector2i(-9999999, -9999999)
-var plugin: EditorPlugin
+var plugin: EditorPlugin:
+	set(p):
+		plugin = p
+		plugin.scene_changed.connect(map_overlay.queue_redraw.unbind(1))
 
 var drag_from: Vector2i = NULL_VECTOR2I
 var view_drag: Vector4
@@ -60,6 +63,15 @@ func _on_overlay_draw() -> void:
 	
 	var room_size: Vector2 = MetSys.ROOM_SIZE
 	map_overlay.draw_rect(Rect2((mouse + map_offset) as Vector2 * room_size, room_size), Color.GREEN, false, 2)
+	
+	if get_tree().edited_scene_root.scene_file_path.begins_with(MetSys.settings.map_root_folder):
+		var current_scene := get_tree().edited_scene_root.scene_file_path.trim_prefix(MetSys.settings.map_root_folder)
+		
+		for coords in MetSys.map_data.get_rooms_assigned_to(current_scene):
+			if coords.z != current_layer:
+				break
+			
+			map_overlay.draw_rect(Rect2(Vector2(coords.x + map_offset.x, coords.y + map_offset.y) * Vector2(MetSys.ROOM_SIZE), MetSys.ROOM_SIZE), Color(Color.RED, 0.5))
 
 func _on_map_draw() -> void:
 	for x in range(-100, 100):
