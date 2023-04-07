@@ -33,6 +33,7 @@ enum { R, D, L, U }
 ## TODO: przerysowaywać scenę jak się zmieni assign
 ## TODO: create_override -> get_override(coords, create_if_not_exists)
 ## TODO: RoomOverride.apply_to_group()
+## TODO: wybór bordera z listy
 
 @export var exported_settings: Resource
 
@@ -94,7 +95,7 @@ func register_storable_object(object: Object, stored_callback := Callable(), map
 		stored_callback.call()
 	else:
 		if map_marker == DEFAULT_SYMBOL:
-			map_marker = settings.uncollected_item_symbol
+			map_marker = settings.theme.uncollected_item_symbol
 		
 		if save_data.register_storable_object(object) and map_marker > -1:
 			object.set_meta(&"map_marker", map_marker)
@@ -106,7 +107,7 @@ func store_object(object: Object, map_marker := DEFAULT_SYMBOL):
 		save_data.remove_room_marker(get_object_coords(object), object.get_meta(&"map_marker"))
 	
 	if map_marker == DEFAULT_SYMBOL:
-		map_marker = settings.collected_item_symbol
+		map_marker = settings.theme.collected_item_symbol
 	
 	if map_marker > -1:
 		save_data.add_room_marker(get_object_coords(object), map_marker)

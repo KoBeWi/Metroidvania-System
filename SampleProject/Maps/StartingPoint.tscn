@@ -1,8 +1,9 @@
-[gd_scene load_steps=5 format=3 uid="uid://cv55nv1c2sbiq"]
+[gd_scene load_steps=6 format=3 uid="uid://cv55nv1c2sbiq"]
 
 [ext_resource type="TileSet" uid="uid://bwpcg2opya34n" path="res://SampleProject/Resources/Tileset.tres" id="1_0svtx"]
 [ext_resource type="PackedScene" uid="uid://bsg0351mx3b4u" path="res://addons/MetroidvaniaSystem/Nodes/MapHandler.tscn" id="1_45cto"]
 [ext_resource type="Script" path="res://SampleProject/Scripts/SavePoint.gd" id="3_7p5jr"]
+[ext_resource type="PackedScene" uid="uid://c8j6i3fx8p758" path="res://SampleProject/Objects/Collectible.tscn" id="4_ljvb3"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_4rbcf"]
 radius = 32.0
@@ -49,5 +50,8 @@ vertical_alignment = 1
 
 [node name="StartPoint" type="Marker2D" parent="."]
 position = Vector2(1296, 288)
+
+[node name="MapItem" parent="." instance=ExtResource("4_ljvb3")]
+position = Vector2(1872, 336)
 
 [connection signal="body_entered" from="SavePoint" to="SavePoint" method="on_body_entered"]

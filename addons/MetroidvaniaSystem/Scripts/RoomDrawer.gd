@@ -12,7 +12,7 @@ static func draw(canvas_item: CanvasItem, offset: Vector2i, coords: Vector3i, ma
 	if discovered == 0:
 		return
 	
-	var theme := MetSys.settings.theme
+	var theme: MapTheme = MetSys.settings.theme
 	
 	var ci := canvas_item.get_canvas_item()
 	var display_flags: int = (int(discovered == 2) * 255) | MetSys.settings.unexplored_display
@@ -123,9 +123,8 @@ static func draw(canvas_item: CanvasItem, offset: Vector2i, coords: Vector3i, ma
 			symbol = room_data.symbol
 		
 		if symbol > - 1:
-			pass
-#			assert(symbol < settings.map_symbols.size())
-#			canvas_item.draw_texture(settings.map_symbols[symbol], offset * ROOM_SIZE + ROOM_SIZE / 2 - Vector2i(settings.map_symbols[symbol].get_size()) / 2)
+			assert(symbol < theme.symbols.size())
+			canvas_item.draw_texture(theme.symbols[symbol], offset * MetSys.ROOM_SIZE + MetSys.ROOM_SIZE / 2 - Vector2i(theme.symbols[symbol].get_size()) / 2)
 
 static func get_border_texture(theme: MapTheme, idx: int, direction: int) -> Texture2D:
 	var texture_name: StringName
@@ -149,7 +148,7 @@ static func get_border_texture(theme: MapTheme, idx: int, direction: int) -> Tex
 					texture_name = &"horizontal_wall"
 				1:
 					texture_name = &"horizontal_passage"
-				2:
+				_:
 					texture_name = &"vertical_borders"
 	else:
 		match idx:
@@ -159,7 +158,7 @@ static func get_border_texture(theme: MapTheme, idx: int, direction: int) -> Tex
 				texture_name = &"wall"
 			1:
 				texture_name = &"passage"
-			2:
+			_:
 				texture_name = &"borders"
 	
 	if idx >= 2:

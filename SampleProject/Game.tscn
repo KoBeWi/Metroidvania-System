@@ -152,4 +152,3 @@ offset_bottom = 160.0
 grow_horizontal = 2
 grow_vertical = 2
 script = SubResource("GDScript_u7odr")
-exact_player_location = true

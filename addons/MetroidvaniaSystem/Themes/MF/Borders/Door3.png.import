@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://jgmxoadxbcu3"
-path="res://.godot/imported/PlayerMark.png-ddee73a8c959ae8d6de57b0d60923081.ctex"
+uid="uid://cebl0efe2kt0t"
+path="res://.godot/imported/Door3.png-924d56b4d9b2633e731ac99de58ac625.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/MetroidvaniaSystem/Themes/MF/PlayerMark.png"
-dest_files=["res://.godot/imported/PlayerMark.png-ddee73a8c959ae8d6de57b0d60923081.ctex"]
+source_file="res://addons/MetroidvaniaSystem/Themes/MF/Borders/Door3.png"
+dest_files=["res://.godot/imported/Door3.png-924d56b4d9b2633e731ac99de58ac625.ctex"]
 
 [params]
 

@@ -79,3 +79,9 @@ func _get_texture_property(property: StringName) -> Dictionary:
 
 func _get_texture_array_property(property: StringName) -> Dictionary:
 	return {name = property, type = TYPE_ARRAY, hint = PROPERTY_HINT_ARRAY_TYPE, hint_string = str(TYPE_OBJECT, "/" , PROPERTY_HINT_RESOURCE_TYPE, ":Texture2D")}
+
+func get_border_count() -> int:
+	if rectangle:
+		return get(&"vertical_borders").size() + 2
+	else:
+		return get(&"borders").size() + 2

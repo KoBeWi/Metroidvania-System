@@ -1,6 +1,60 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=4 format=3 uid="uid://jm00e7eg4gpc"]
 
-[ext_resource type="Texture2D" uid="uid://b050k4i01yhlw" path="res://addons/MetroidvaniaSystem/Themes/VoF/PlayerMark.png" id="1_leswq"]
+[sub_resource type="Animation" id="Animation_og8hk"]
+resource_name = "new_animation"
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("ColorRect:visible")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [true, false]
+}
 
-[node name="PlayerLocation" type="Sprite2D"]
-texture = ExtResource("1_leswq")
+[sub_resource type="Animation" id="Animation_l8bj1"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("ColorRect:visible")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_d6kwd"]
+_data = {
+"RESET": SubResource("Animation_l8bj1"),
+"new_animation": SubResource("Animation_og8hk")
+}
+
+[node name="PlayerLocation" type="Node2D"]
+
+[node name="ColorRect" type="ColorRect" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -16.0
+offset_top = -16.0
+offset_right = 16.0
+offset_bottom = 16.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+autoplay = "new_animation"
+speed_scale = 4.0
+libraries = {
+"": SubResource("AnimationLibrary_d6kwd")
+}
