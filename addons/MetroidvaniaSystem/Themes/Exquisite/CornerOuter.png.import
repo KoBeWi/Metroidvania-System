@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://u3h7efr7bfkv"
-path="res://.godot/imported/PlayerMark.png-70a8c55ab319da25c0aba94bce309c79.ctex"
+uid="uid://dihccrjj2ehi4"
+path="res://.godot/imported/CornerOuter.png-aadab3438335cc00d2d7825b4169097e.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/MetroidvaniaSystem/Themes/Fancy/PlayerMark.png"
-dest_files=["res://.godot/imported/PlayerMark.png-70a8c55ab319da25c0aba94bce309c79.ctex"]
+source_file="res://addons/MetroidvaniaSystem/Themes/Exquisite/CornerOuter.png"
+dest_files=["res://.godot/imported/CornerOuter.png-aadab3438335cc00d2d7825b4169097e.ctex"]
 
 [params]
 

@@ -1,0 +1,31 @@
+[gd_resource type="Resource" script_class="MapTheme" load_steps=11 format=3]
+
+[ext_resource type="Texture2D" uid="uid://6lyqjfj3vsy7" path="res://addons/MetroidvaniaSystem/Themes/Exquisite/BorderPassageHorizontal.png" id="1_hth3y"]
+[ext_resource type="Texture2D" uid="uid://c5wg3is8k5pux" path="res://addons/MetroidvaniaSystem/Themes/Exquisite/BorderWallHorizontal.png" id="2_tawyw"]
+[ext_resource type="Texture2D" uid="uid://rgchhbw4jh7f" path="res://addons/MetroidvaniaSystem/Themes/Exquisite/CornerInner.png" id="3_4qbbp"]
+[ext_resource type="PackedScene" path="res://addons/MetroidvaniaSystem/Themes/Exquisite/PlayerLocation.tscn" id="3_mk7eh"]
+[ext_resource type="Texture2D" uid="uid://bxs8cn6khov7j" path="res://addons/MetroidvaniaSystem/Themes/Exquisite/RoomFill.png" id="4_2clky"]
+[ext_resource type="Texture2D" uid="uid://dihccrjj2ehi4" path="res://addons/MetroidvaniaSystem/Themes/Exquisite/CornerOuter.png" id="4_xtd8s"]
+[ext_resource type="Texture2D" uid="uid://b8ccoibsf323o" path="res://addons/MetroidvaniaSystem/Themes/Exquisite/BorderPassage.png" id="5_sn1if"]
+[ext_resource type="Texture2D" uid="uid://b1hy1w1k1asap" path="res://addons/MetroidvaniaSystem/Themes/Exquisite/RoomSeparator.png" id="6_f6pnw"]
+[ext_resource type="Texture2D" uid="uid://xn6gipdberdc" path="res://addons/MetroidvaniaSystem/Themes/Exquisite/BorderWall.png" id="7_eifkn"]
+[ext_resource type="Script" path="res://addons/MetroidvaniaSystem/Scripts/MapTheme.gd" id="8_gh637"]
+
+[resource]
+script = ExtResource("8_gh637")
+default_room_fill_color = Color(0.5, 0.25, 0.25, 1)
+unexplored_room_fill_color = Color(0.745098, 0.745098, 0.745098, 1)
+room_separator_color = Color(1, 1, 1, 0.13)
+default_border_color = Color(1, 0.741176, 0.580392, 1)
+unexplored_border_color = Color(1, 1, 1, 1)
+room_fill_texture = ExtResource("4_2clky")
+player_location_scene = ExtResource("3_mk7eh")
+use_shared_borders = false
+vertical_wall = ExtResource("7_eifkn")
+horizontal_wall = ExtResource("2_tawyw")
+vertical_passage = ExtResource("5_sn1if")
+horizontal_passage = ExtResource("1_hth3y")
+vertical_separator = ExtResource("6_f6pnw")
+horizontal_separator = ExtResource("6_f6pnw")
+inner_corner = ExtResource("3_4qbbp")
+outer_corner = ExtResource("4_xtd8s")

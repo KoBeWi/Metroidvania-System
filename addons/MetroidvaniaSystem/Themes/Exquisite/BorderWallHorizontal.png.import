@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://xn6gipdberdc"
-path="res://.godot/imported/BorderWall.png-c31349694aa69515525e36df3e5eb826.ctex"
+uid="uid://c5wg3is8k5pux"
+path="res://.godot/imported/BorderWallHorizontal.png-a151ba4bbdf139b3a508f2d33464c8be.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/MetroidvaniaSystem/Themes/Fancy/BorderWall.png"
-dest_files=["res://.godot/imported/BorderWall.png-c31349694aa69515525e36df3e5eb826.ctex"]
+source_file="res://addons/MetroidvaniaSystem/Themes/Exquisite/BorderWallHorizontal.png"
+dest_files=["res://.godot/imported/BorderWallHorizontal.png-a151ba4bbdf139b3a508f2d33464c8be.ctex"]
 
 [params]
 

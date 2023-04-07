@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bxs8cn6khov7j"
-path="res://.godot/imported/RoomFill.png-0ec39fad8a09d63deee0d376081a8eb8.ctex"
+uid="uid://xn6gipdberdc"
+path="res://.godot/imported/BorderWall.png-62cc1a22fdc4f3da3329cb0764e89558.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/MetroidvaniaSystem/Themes/Fancy/RoomFill.png"
-dest_files=["res://.godot/imported/RoomFill.png-0ec39fad8a09d63deee0d376081a8eb8.ctex"]
+source_file="res://addons/MetroidvaniaSystem/Themes/Exquisite/BorderWall.png"
+dest_files=["res://.godot/imported/BorderWall.png-62cc1a22fdc4f3da3329cb0764e89558.ctex"]
 
 [params]
 

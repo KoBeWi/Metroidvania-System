@@ -1,0 +1,24 @@
+[gd_resource type="Resource" script_class="MapTheme" load_steps=8 format=3 uid="uid://clhjwcspi4mv"]
+
+[ext_resource type="Texture2D" uid="uid://cmsf2ftu1nxv5" path="res://addons/MetroidvaniaSystem/Themes/RR/CornerInner.png" id="1_uvvyp"]
+[ext_resource type="Texture2D" uid="uid://bma4gpyfwxyol" path="res://addons/MetroidvaniaSystem/Themes/RR/CornerOuter.png" id="2_xnnlu"]
+[ext_resource type="Texture2D" uid="uid://binqbgqxhnx7j" path="res://addons/MetroidvaniaSystem/Themes/RR/BorderPassage.png" id="3_6c7r1"]
+[ext_resource type="PackedScene" path="res://addons/MetroidvaniaSystem/Themes/VoF/PlayerLocation.tscn" id="3_8m765"]
+[ext_resource type="Script" path="res://addons/MetroidvaniaSystem/Scripts/MapTheme.gd" id="5_bgi7a"]
+[ext_resource type="Texture2D" uid="uid://8ehs32p4uca2" path="res://addons/MetroidvaniaSystem/Themes/RR/RoomFill.png" id="5_lncyc"]
+[ext_resource type="Texture2D" uid="uid://duscmhfefarl7" path="res://addons/MetroidvaniaSystem/Themes/RR/BorderWall.png" id="7_s5fc5"]
+
+[resource]
+script = ExtResource("5_bgi7a")
+default_room_fill_color = Color(0.513726, 0.670588, 0.462745, 1)
+unexplored_room_fill_color = Color(0.45098, 0.443137, 0.45098, 1)
+room_separator_color = Color(0, 0, 0, 1)
+default_border_color = Color(0.180392, 0.298039, 0.156863, 1)
+unexplored_border_color = Color(1, 1, 1, 1)
+room_fill_texture = ExtResource("5_lncyc")
+player_location_scene = ExtResource("3_8m765")
+use_shared_borders = false
+wall = ExtResource("7_s5fc5")
+passage = ExtResource("3_6c7r1")
+inner_corner = ExtResource("1_uvvyp")
+outer_corner = ExtResource("2_xnnlu")

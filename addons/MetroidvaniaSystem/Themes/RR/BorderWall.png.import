@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://6lyqjfj3vsy7"
-path="res://.godot/imported/BorderPassageHorizontal.png-801a77630dbedc9333fa900f121527eb.ctex"
+uid="uid://duscmhfefarl7"
+path="res://.godot/imported/BorderWall.png-b03026f7026f47a1068c12f17af9a31c.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/MetroidvaniaSystem/Themes/Fancy/BorderPassageHorizontal.png"
-dest_files=["res://.godot/imported/BorderPassageHorizontal.png-801a77630dbedc9333fa900f121527eb.ctex"]
+source_file="res://addons/MetroidvaniaSystem/Themes/RR/BorderWall.png"
+dest_files=["res://.godot/imported/BorderWall.png-b03026f7026f47a1068c12f17af9a31c.ctex"]
 
 [params]
 

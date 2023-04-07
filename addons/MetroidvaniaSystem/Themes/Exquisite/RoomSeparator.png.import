@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://rgchhbw4jh7f"
-path="res://.godot/imported/CornerInner.png-cd5618854bddedb2fe1ec20746a78a40.ctex"
+uid="uid://b1hy1w1k1asap"
+path="res://.godot/imported/RoomSeparator.png-fba7149bc653105012a4b989a09fd2c7.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/MetroidvaniaSystem/Themes/Fancy/CornerInner.png"
-dest_files=["res://.godot/imported/CornerInner.png-cd5618854bddedb2fe1ec20746a78a40.ctex"]
+source_file="res://addons/MetroidvaniaSystem/Themes/Exquisite/RoomSeparator.png"
+dest_files=["res://.godot/imported/RoomSeparator.png-fba7149bc653105012a4b989a09fd2c7.ctex"]
 
 [params]
 
