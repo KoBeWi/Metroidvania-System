@@ -127,7 +127,7 @@ func _ready() -> void:
 	room_only_cursor = true
 	symbol_group = ButtonGroup.new()
 	
-	for symbol in MetSys.settings.map_symbols:
+	for symbol in MetSys.settings.theme.symbols:
 		add_symbol(symbol)
 
 func _editor_enter():

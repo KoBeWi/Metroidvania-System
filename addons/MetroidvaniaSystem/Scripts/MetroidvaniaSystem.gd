@@ -27,6 +27,7 @@ enum { R, D, L, U }
 ## TODO: methoda add_custom_element(name, callable), potrzeba customowy skrypt dziedziczący jakiś typ, wstawić go w pole w MetSys i jest robiona instancja i wywoływane metody. Callback: element_callback(canvas_item, coords, top_left), np. add_custom_element(:"elevator", draw_elevator); func draw_elevator(...): canvas_item.draw_rect(top_left)
 ## TODO: ROOM_SIZE chyba Vector2
 ## TODO: onion layers
+## TODO: w motywach pododawać player sceny, symbole i granice
 ## TODO: symbole zależne od motywu / usunąć bordery z settings głównego
 ## TODO: przycisk reset view albo goto nearest room
 ## TODO: przerysowaywać scenę jak się zmieni assign
@@ -58,7 +59,7 @@ func _enter_tree() -> void:
 	map_data.load_data()
 
 func _update_theme():
-	ROOM_SIZE = settings.theme.room_fill_texture.get_size()
+	ROOM_SIZE = settings.theme.center_texture.get_size()
 	map_updated.emit()
 
 func _ready() -> void:
