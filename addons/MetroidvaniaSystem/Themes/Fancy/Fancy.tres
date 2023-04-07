@@ -1,4 +1,4 @@
-[gd_resource type="Resource" load_steps=9 format=3]
+[gd_resource type="Resource" script_class="MapTheme" load_steps=9 format=3 uid="uid://4pj8emtgboxi"]
 
 [ext_resource type="Texture2D" uid="uid://rgchhbw4jh7f" path="res://addons/MetroidvaniaSystem/Themes/Fancy/RoomInnerCorner.png" id="1_h73j2"]
 [ext_resource type="Texture2D" uid="uid://dihccrjj2ehi4" path="res://addons/MetroidvaniaSystem/Themes/Fancy/RoomOuterCorner.png" id="2_jdm1i"]
@@ -11,10 +11,12 @@
 
 [resource]
 script = ExtResource("8_gh637")
+use_shared_borders = false
 default_room_fill_color = Color(0.5, 0.25, 0.25, 1)
 unexplored_room_fill_color = Color(0.745098, 0.745098, 0.745098, 1)
-default_room_separator_color = Color(0, 0, 0, 0.12549)
+room_separator_color = Color(1, 1, 1, 0.13)
 default_border_color = Color(1, 1, 1, 1)
+unexplored_border_color = Color(1, 1, 1, 1)
 room_fill_texture = ExtResource("4_2clky")
 room_separator_texture = ExtResource("6_f6pnw")
 room_wall_texture = ExtResource("7_eifkn")

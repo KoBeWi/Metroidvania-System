@@ -22,6 +22,12 @@ var map_offset := Vector2i(10, 10)
 var current_layer: int
 var room_under_cursor: MetroidvaniaSystem.MapData.RoomData
 
+func _ready() -> void:
+	if not plugin:
+		return
+	
+	MetSys.map_updated.connect(map.queue_redraw)
+
 func layer_changed(l: int):
 	current_layer = l
 	map.queue_redraw()

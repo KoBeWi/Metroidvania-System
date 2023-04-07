@@ -1,9 +1,9 @@
-[gd_resource type="Resource" load_steps=9 format=3 uid="uid://b34i6e3ywyubg"]
+[gd_resource type="Resource" load_steps=9 format=3 uid="uid://cbldf4b7shkvd"]
 
+[ext_resource type="Texture2D" uid="uid://cbk62vedgdwdy" path="res://addons/MetroidvaniaSystem/Themes/VoF/BorderWall.png" id="1_fpady"]
 [ext_resource type="Script" path="res://addons/MetroidvaniaSystem/Scripts/Settings.gd" id="1_yi1rc"]
-[ext_resource type="Resource" path="res://addons/MetroidvaniaSystem/Themes/Modern/Modern.tres" id="2_r7oaw"]
-[ext_resource type="Texture2D" uid="uid://cbk62vedgdwdy" path="res://addons/MetroidvaniaSystem/Themes/Modern/BorderWall.png" id="3_5eq0t"]
-[ext_resource type="Texture2D" uid="uid://61edyfnw5m8p" path="res://addons/MetroidvaniaSystem/Themes/Modern/BorderPassage.png" id="4_g1ime"]
+[ext_resource type="Texture2D" uid="uid://61edyfnw5m8p" path="res://addons/MetroidvaniaSystem/Themes/VoF/BorderPassage.png" id="2_dwvar"]
+[ext_resource type="Resource" uid="uid://4pj8emtgboxi" path="res://addons/MetroidvaniaSystem/Themes/Fancy/Fancy.tres" id="8_rc0m0"]
 [ext_resource type="Texture2D" uid="uid://djlvnbqowyndx" path="res://addons/MetroidvaniaSystem/Symbols/Symbol1.png" id="8_tpdd6"]
 [ext_resource type="Texture2D" uid="uid://b8m8faqafkjp4" path="res://addons/MetroidvaniaSystem/Symbols/Symbol2.png" id="9_gcg7b"]
 [ext_resource type="Texture2D" uid="uid://47sbhf0pecfu" path="res://addons/MetroidvaniaSystem/Symbols/Symbol3.png" id="11_nprjj"]
@@ -11,11 +11,11 @@
 
 [resource]
 script = ExtResource("1_yi1rc")
-theme = ExtResource("2_r7oaw")
+theme = ExtResource("8_rc0m0")
 map_root_folder = "res://SampleProject/Maps/"
 unexplored_display = 3
 uncollected_item_symbol = 0
 collected_item_symbol = 1
-map_borders = Array[Texture2D]([ExtResource("3_5eq0t"), ExtResource("4_g1ime")])
+map_borders = Array[Texture2D]([ExtResource("1_fpady"), ExtResource("2_dwvar")])
 map_symbols = Array[Texture2D]([ExtResource("8_tpdd6"), ExtResource("9_gcg7b"), ExtResource("11_nprjj"), ExtResource("12_6gduo")])
 in_game_room_size = Vector2(864, 480)

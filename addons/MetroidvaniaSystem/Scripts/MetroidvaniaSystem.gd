@@ -24,9 +24,10 @@ enum { R, D, L, U }
 ## TODO: set current layer (jako setter)
 ## EXAMPLE TODO: warstwy, jakiś obszar z losowymi mapami, override na assigned map: lawa zamienia się w kamień
 ## TODO: methoda add_custom_element(name, callable), potrzeba customowy skrypt dziedziczący jakiś typ, wstawić go w pole w MetSys i jest robiona instancja i wywoływane metody. Callback: element_callback(canvas_item, coords, top_left), np. add_custom_element(:"elevator", draw_elevator); func draw_elevator(...): canvas_item.draw_rect(top_left)
-## TODO: motywy: AoS, SotN, MF, VoF, Zeric, BS
 ## TODO: ROOM_SIZE chyba Vector2
 ## TODO: onion layers
+## TODO: symbole zależne od motywu / usunąć bordery z settings głównego
+## TODO: przycisk reset view albo goto nearest room
 ## TODO: przerysowaywać scenę jak się zmieni assign
 ## TODO: create_override -> get_override(coords, create_if_not_exists)
 ## TODO: RoomOverride.apply_to_group()
@@ -50,10 +51,14 @@ signal map_changed(new_map: String)
 
 func _enter_tree() -> void:
 	settings = exported_settings
-	ROOM_SIZE = settings.theme.room_fill_texture.get_size()
+	_update_theme()
 	
 	map_data = MapData.new()
 	map_data.load_data()
+
+func _update_theme():
+	ROOM_SIZE = settings.theme.room_fill_texture.get_size()
+	map_updated.emit()
 
 func _ready() -> void:
 	set_physics_process(false)
@@ -195,7 +200,7 @@ func draw_map_square(canvas_item: CanvasItem, offset: Vector2i, coords: Vector3i
 		
 		if borders[i] == -1:
 			texture = settings.theme.room_separator_texture
-			color = settings.theme.default_room_separator_color
+			color = settings.theme.room_separator_color
 		else:
 			var border: int = borders[i]
 			assert(borders[i] < settings.map_borders.size())
