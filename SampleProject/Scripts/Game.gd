@@ -11,7 +11,9 @@ func _ready() -> void:
 		MetSys.set_save_data(FileAccess.open("user://save_data.sav", FileAccess.READ).get_var())
 	
 	goto_map(starting_map)
-	player.position = map.get_node(^"StartPoint").position
+	var start := map.get_node_or_null(^"StartPoint")
+	if start:
+		player.position = start.position
 	MetSys.map_changed.connect(on_map_changed, CONNECT_DEFERRED)
 
 func goto_map(map_name: String):
@@ -27,6 +29,7 @@ func goto_map(map_name: String):
 	
 	if prev_map_position != MetSys.VECTOR2INF:
 		player.position -= Vector2(map.get_node(^"MapHandler").min_room - prev_map_position) * MetSys.settings.in_game_room_size
+		player.on_enter()
 
 func _physics_process(delta: float) -> void:
 	MetSys.set_player_position(player.position)

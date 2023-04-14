@@ -391,7 +391,6 @@ func _ready() -> void:
 	
 	super()
 	use_cursor = false
-	%FileDialog.root_subfolder = MetSys.settings.map_root_folder.trim_prefix(\"res://\")
 
 func _editor_input(event: InputEvent):
 	if event is InputEventMouseMotion:
@@ -404,6 +403,8 @@ func _editor_input(event: InputEvent):
 		if event.button_index == MOUSE_BUTTON_LEFT:
 			if event.pressed:
 				if not highlighted_room.is_empty():
+					if %FileDialog.root_subfolder.is_empty():
+						%FileDialog.root_subfolder = MetSys.settings.map_root_folder.trim_prefix(\"res://\")
 					%FileDialog.popup_centered_ratio(0.6)
 		elif event.button_index == MOUSE_BUTTON_RIGHT:
 			var first := true
@@ -592,7 +593,6 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-scale = Vector2(2, 2)
 size_flags_horizontal = 3
 mouse_filter = 2
 

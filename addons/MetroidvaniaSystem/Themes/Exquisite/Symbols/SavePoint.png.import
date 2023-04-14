@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://47sbhf0pecfu"
-path="res://.godot/imported/Symbol3.png-95110bfe50ef3d5f4d1f2fe7dfb5c255.ctex"
+uid="uid://bc0o6ot1koste"
+path="res://.godot/imported/SavePoint.png-53aaa4b8fecd10ed02eae491b3e91f86.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/MetroidvaniaSystem/Symbols/Symbol3.png"
-dest_files=["res://.godot/imported/Symbol3.png-95110bfe50ef3d5f4d1f2fe7dfb5c255.ctex"]
+source_file="res://addons/MetroidvaniaSystem/Themes/Exquisite/Symbols/SavePoint.png"
+dest_files=["res://.godot/imported/SavePoint.png-53aaa4b8fecd10ed02eae491b3e91f86.ctex"]
 
 [params]
 

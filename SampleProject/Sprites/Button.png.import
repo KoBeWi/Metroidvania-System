@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bcuwpuvv6bpsf"
-path="res://.godot/imported/Symbol4.png-3458a7519e46ccfb3e394c0295f5e6a9.ctex"
+uid="uid://dagy3gny0c0cg"
+path="res://.godot/imported/Button.png-45c0115d9bd0546fcf2aabd7b3e90fff.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/MetroidvaniaSystem/Symbols/Symbol4.png"
-dest_files=["res://.godot/imported/Symbol4.png-3458a7519e46ccfb3e394c0295f5e6a9.ctex"]
+source_file="res://SampleProject/Sprites/Button.png"
+dest_files=["res://.godot/imported/Button.png-45c0115d9bd0546fcf2aabd7b3e90fff.ctex"]
 
 [params]
 

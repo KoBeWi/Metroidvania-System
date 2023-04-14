@@ -106,7 +106,7 @@ func _input(event: InputEvent) -> void:
 script = ExtResource("1_xdpfu")
 starting_map = "StartingPoint"
 
-[node name="Player" parent="." instance=ExtResource("2_bam1a")]
+[node name="Player" parent="." groups=["player"] instance=ExtResource("2_bam1a")]
 position = Vector2(368, 248)
 
 [node name="Camera2D" type="Camera2D" parent="Player"]

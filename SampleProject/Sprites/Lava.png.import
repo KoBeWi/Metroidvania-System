@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b8m8faqafkjp4"
-path="res://.godot/imported/Symbol2.png-f68efe588bcb6bb5e5a0f5e9970db358.ctex"
+uid="uid://2pmbr0eamtud"
+path="res://.godot/imported/Lava.png-0b59095508deb157194f73de61e0ebbb.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/MetroidvaniaSystem/Symbols/Symbol2.png"
-dest_files=["res://.godot/imported/Symbol2.png-f68efe588bcb6bb5e5a0f5e9970db358.ctex"]
+source_file="res://SampleProject/Sprites/Lava.png"
+dest_files=["res://.godot/imported/Lava.png-0b59095508deb157194f73de61e0ebbb.ctex"]
 
 [params]
 

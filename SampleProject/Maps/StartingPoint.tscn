@@ -8,7 +8,7 @@
 [sub_resource type="CircleShape2D" id="CircleShape2D_4rbcf"]
 radius = 32.0
 
-[node name="StartingPoint" type="Node2D"]
+[node name="Map" type="Node2D"]
 
 [node name="TileMap" type="TileMap" parent="."]
 tile_set = ExtResource("1_0svtx")

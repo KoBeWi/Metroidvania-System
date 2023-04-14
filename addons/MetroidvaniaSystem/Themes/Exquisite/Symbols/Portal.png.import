@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://djlvnbqowyndx"
-path="res://.godot/imported/Symbol1.png-94db4782e153953245a1281c6c817549.ctex"
+uid="uid://dvp5dov6wsh2m"
+path="res://.godot/imported/Portal.png-bff52835ac3177f5a3115b1a5554c998.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/MetroidvaniaSystem/Symbols/Symbol1.png"
-dest_files=["res://.godot/imported/Symbol1.png-94db4782e153953245a1281c6c817549.ctex"]
+source_file="res://addons/MetroidvaniaSystem/Themes/Exquisite/Symbols/Portal.png"
+dest_files=["res://.godot/imported/Portal.png-bff52835ac3177f5a3115b1a5554c998.ctex"]
 
 [params]
 

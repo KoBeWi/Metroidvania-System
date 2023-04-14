@@ -123,7 +123,7 @@ static func draw(canvas_item: CanvasItem, offset: Vector2i, coords: Vector3i, ma
 			symbol = room_data.symbol
 		
 		if symbol > - 1:
-			assert(symbol < theme.symbols.size())
+			assert(symbol < theme.symbols.size(), "Bad symbol '%s' at '%s'" % [symbol, coords])
 			canvas_item.draw_texture(theme.symbols[symbol], offset * MetSys.ROOM_SIZE + MetSys.ROOM_SIZE / 2 - Vector2i(theme.symbols[symbol].get_size()) / 2)
 
 static func get_border_texture(theme: MapTheme, idx: int, direction: int) -> Texture2D:
