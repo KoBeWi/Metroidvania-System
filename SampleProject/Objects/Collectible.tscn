@@ -11,9 +11,10 @@ func _ready() -> void:
 	MetSys.register_storable_object(self)
 
 func collect(body: Node2D) -> void:
-	if not body.get_meta(&\"player\", false):
+	if not body.is_in_group(&\"player\"):
 		return
 	
+	Game.get_singleton().collectibles += 1
 	MetSys.store_object(self)
 	queue_free()
 "
@@ -21,7 +22,7 @@ func collect(body: Node2D) -> void:
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_v5e3t"]
 size = Vector2(32, 32)
 
-[node name="MapItem" type="Area2D"]
+[node name="Collectible" type="Area2D"]
 script = SubResource("GDScript_5wqrn")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]

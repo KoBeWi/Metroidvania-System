@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bc0o6ot1koste"
-path="res://.godot/imported/SavePoint.png-53aaa4b8fecd10ed02eae491b3e91f86.ctex"
+uid="uid://cki7wjbeux672"
+path="res://.godot/imported/DarkTiles.png-9392759dac34aab30657687bcc6a41bd.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/MetroidvaniaSystem/Themes/Exquisite/Symbols/SavePoint.png"
-dest_files=["res://.godot/imported/SavePoint.png-53aaa4b8fecd10ed02eae491b3e91f86.ctex"]
+source_file="res://SampleProject/Sprites/DarkTiles.png"
+dest_files=["res://.godot/imported/DarkTiles.png-9392759dac34aab30657687bcc6a41bd.ctex"]
 
 [params]
 

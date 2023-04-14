@@ -1,4 +1,5 @@
 extends Node2D
+class_name Game
 
 @export var starting_map: String
 
@@ -6,15 +7,24 @@ extends Node2D
 
 var map: Node2D
 
+var collectibles: int:
+	set(count):
+		collectibles = count
+		%CollectibleCount.text = str(count)
+
 func _ready() -> void:
 	if FileAccess.file_exists("user://save_data.sav"):
-		MetSys.set_save_data(FileAccess.open("user://save_data.sav", FileAccess.READ).get_var())
+		var save_data: Dictionary = FileAccess.open("user://save_data.sav", FileAccess.READ).get_var()
+		MetSys.set_save_data(save_data)
+		collectibles = save_data.collectible_count
 	
 	goto_map(starting_map)
 	var start := map.get_node_or_null(^"StartPoint")
 	if start:
 		player.position = start.position
 	MetSys.map_changed.connect(on_map_changed, CONNECT_DEFERRED)
+	
+	get_script().set_meta(&"singleton", self)
 
 func goto_map(map_name: String):
 	var prev_map_position: Vector2i = MetSys.VECTOR2INF
@@ -27,6 +37,8 @@ func goto_map(map_name: String):
 	add_child(map)
 	map.get_node(^"MapHandler").adjust_camera($Player/Camera2D)
 	
+	MetSys.current_layer = map.get_node(^"MapHandler").layer
+	
 	if prev_map_position != MetSys.VECTOR2INF:
 		player.position -= Vector2(map.get_node(^"MapHandler").min_room - prev_map_position) * MetSys.settings.in_game_room_size
 		player.on_enter()
@@ -36,3 +48,6 @@ func _physics_process(delta: float) -> void:
 
 func on_map_changed(target_map: String):
 	goto_map(target_map.get_file().get_basename())
+
+static func get_singleton() -> Game:
+	return (Game as Script).get_meta(&"singleton") as Game

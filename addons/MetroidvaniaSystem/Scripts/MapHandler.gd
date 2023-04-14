@@ -6,6 +6,7 @@ var initialized: bool
 
 var min_room := Vector2i(999999, 999999)
 var max_room := Vector2i(-999999, -999999)
+var layer: int
 
 func _enter_tree() -> void:
 	if initialized:
@@ -23,6 +24,7 @@ func _enter_tree() -> void:
 	if rooms.is_empty():
 		return
 	
+	layer = rooms[0].z
 	for p in rooms:
 		min_room.x = mini(min_room.x, p.x)
 		min_room.y = mini(min_room.y, p.y)

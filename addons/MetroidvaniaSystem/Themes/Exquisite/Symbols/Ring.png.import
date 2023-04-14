@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://wiq0mic5m6is"
-path="res://.godot/imported/Collectible.png-4e69904edf25dbf4a42a69ed0494d4f8.ctex"
+uid="uid://bc0o6ot1koste"
+path="res://.godot/imported/Ring.png-531ccf1f93cfc7df1edda7c73e3f0897.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://SampleProject/Sprites/Collectible.png"
-dest_files=["res://.godot/imported/Collectible.png-4e69904edf25dbf4a42a69ed0494d4f8.ctex"]
+source_file="res://addons/MetroidvaniaSystem/Themes/Exquisite/Symbols/Ring.png"
+dest_files=["res://.godot/imported/Ring.png-531ccf1f93cfc7df1edda7c73e3f0897.ctex"]
 
 [params]
 

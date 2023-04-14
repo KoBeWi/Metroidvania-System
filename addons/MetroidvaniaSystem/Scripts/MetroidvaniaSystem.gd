@@ -2,6 +2,7 @@
 class_name MetroidvaniaSystem extends Node
 
 const VECTOR2INF = Vector2i(999999, 99999999)
+const VECTOR3INF = Vector3i(999999, 99999999, 99999999)
 const DEFAULT_SYMBOL = -99
 enum { DISPLAY_CENTER = 1, DISPLAY_OUTLINE = 2, DISPLAY_BORDERS = 4, DISPLAY_SYMBOLS = 8 }
 
@@ -23,7 +24,7 @@ enum { R, D, L, U }
 ## TODO: get_coordinate_for_object(Node2D, layer = current_layer)
 ## TODO: pos to map (do rysowania po mapie, x,y pomieszczenia, ratio wewnątrz np (32, 4, 0.1, 0.1))
 ## TODO: set current layer (jako setter)
-## EXAMPLE TODO: warstwy, jakiś obszar z losowymi mapami, override na assigned map: lawa zamienia się w kamień
+## EXAMPLE TODO: jakiś obszar z losowymi mapami, override na assigned map: lawa zamienia się w kamień
 ## TODO: methoda add_custom_element(name, callable), potrzeba customowy skrypt dziedziczący jakiś typ, wstawić go w pole w MetSys i jest robiona instancja i wywoływane metody. Callback: element_callback(canvas_item, coords, top_left), np. add_custom_element(:"elevator", draw_elevator); func draw_elevator(...): canvas_item.draw_rect(top_left)
 ## TODO: ROOM_SIZE chyba Vector2
 ## TODO: onion layers
@@ -44,10 +45,18 @@ var ROOM_SIZE: Vector2i
 var map_data: MapData
 var save_data := SaveData.new() ## po co to new?
 
-var last_player_position := VECTOR2INF
+var last_player_position := VECTOR3INF
 var exact_player_position: Vector2
 var player_location_instance: Node2D
 var current_map: MapHandler
+
+var current_layer: int:
+	set(layer):
+		if layer == current_layer:
+			return
+		
+		current_layer = layer
+		map_updated.emit()
 
 signal map_updated
 signal room_changed(new_room: Vector2i)
@@ -80,10 +89,11 @@ func set_player_position(position: Vector2):
 	exact_player_position = position
 	
 	var player_pos := Vector2i((position / settings.in_game_room_size).floor()) + current_map.min_room
-	if player_pos != last_player_position:
-		visit_room(Vector3i(player_pos.x, player_pos.y, 0))
+	var player_pos_3d := Vector3i(player_pos.x, player_pos.y, current_layer)
+	if player_pos_3d != last_player_position:
+		visit_room(Vector3i(player_pos.x, player_pos.y, current_layer))
 		room_changed.emit(player_pos)
-		last_player_position = player_pos
+		last_player_position = player_pos_3d
 
 func register_storable_object(object: Object, stored_callback := Callable(), map_marker := DEFAULT_SYMBOL):
 	if stored_callback.is_null():
@@ -98,8 +108,10 @@ func register_storable_object(object: Object, stored_callback := Callable(), map
 		if map_marker == DEFAULT_SYMBOL:
 			map_marker = settings.theme.uncollected_item_symbol
 		
-		if save_data.register_storable_object(object) and map_marker > -1:
+		if map_marker > -1:
 			object.set_meta(&"map_marker", map_marker)
+		
+		if save_data.register_storable_object(object):
 			save_data.add_room_marker(get_object_coords(object), map_marker)
 
 func store_object(object: Object, map_marker := DEFAULT_SYMBOL):
@@ -173,7 +185,8 @@ func draw_map_square(canvas_item: CanvasItem, offset: Vector2i, coords: Vector3i
 	RoomDrawer.draw(canvas_item, offset, coords, map_data, save_data if use_save_data else null)
 
 func draw_player_location(canvas_item: CanvasItem, offset: Vector2i, exact := false):
-	var player_position: Vector2 = (last_player_position + offset) * ROOM_SIZE + ROOM_SIZE / 2
+	var last_player_position_2d := Vector2i(last_player_position.x, last_player_position.y)
+	var player_position: Vector2 = (last_player_position_2d + offset) * ROOM_SIZE + ROOM_SIZE / 2
 	if exact:
 		player_position += (exact_player_position / settings.in_game_room_size).posmod(1) * Vector2(ROOM_SIZE) - ROOM_SIZE * 0.5
 	

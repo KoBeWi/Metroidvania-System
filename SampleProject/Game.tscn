@@ -1,7 +1,8 @@
-[gd_scene load_steps=8 format=3 uid="uid://c3xqaietfgs7l"]
+[gd_scene load_steps=9 format=3 uid="uid://c3xqaietfgs7l"]
 
 [ext_resource type="Script" path="res://SampleProject/Scripts/Game.gd" id="1_xdpfu"]
 [ext_resource type="PackedScene" uid="uid://xpbhai8nlgtx" path="res://SampleProject/Player.tscn" id="2_bam1a"]
+[ext_resource type="Texture2D" uid="uid://wiq0mic5m6is" path="res://SampleProject/Sprites/Collectible.png" id="3_kng3d"]
 
 [sub_resource type="GDScript" id="GDScript_4div8"]
 resource_name = "Minimap"
@@ -10,6 +11,9 @@ script/source = "extends Panel
 var current_room: Vector2i
 
 func _ready() -> void:
+	custom_minimum_size = MetSys.ROOM_SIZE * 3
+	$ColorRect.custom_minimum_size = MetSys.ROOM_SIZE
+	
 	MetSys.room_changed.connect(on_room_changed)
 	MetSys.map_updated.connect(queue_redraw)
 
@@ -20,7 +24,7 @@ func on_room_changed(new_room: Vector2i):
 func _draw() -> void:
 	for x in range(-1, 2):
 		for y in range(-1, 2):
-			MetSys.draw_map_square(self, Vector2i(x + 1, y + 1), Vector3i(current_room.x + x, current_room.y + y, 0), true)
+			MetSys.draw_map_square(self, Vector2i(x + 1, y + 1), Vector3i(current_room.x + x, current_room.y + y, MetSys.current_layer), true)
 
 func _input(event: InputEvent) -> void:
 	if event is InputEventKey:
@@ -126,11 +130,18 @@ script = SubResource("GDScript_4div8")
 
 [node name="ColorRect" type="ColorRect" parent="UI/Minimap"]
 modulate = Color(1, 1, 1, 0.752941)
-layout_mode = 0
-offset_left = 32.0
-offset_top = 32.0
-offset_right = 64.0
-offset_bottom = 64.0
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -16.0
+offset_top = -16.0
+offset_right = 16.0
+offset_bottom = 16.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="UI/Minimap/ColorRect"]
 autoplay = "Flash"
@@ -152,3 +163,19 @@ offset_bottom = 160.0
 grow_horizontal = 2
 grow_vertical = 2
 script = SubResource("GDScript_u7odr")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="UI"]
+offset_right = 40.0
+offset_bottom = 26.0
+
+[node name="TextureRect" type="TextureRect" parent="UI/HBoxContainer"]
+layout_mode = 2
+texture = ExtResource("3_kng3d")
+expand_mode = 2
+stretch_mode = 5
+
+[node name="CollectibleCount" type="Label" parent="UI/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "0"
+vertical_alignment = 1

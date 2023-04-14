@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="MapTheme" load_steps=14 format=3 uid="uid://d254sd6mbla5i"]
+[gd_resource type="Resource" script_class="MapTheme" load_steps=14 format=3]
 
 [ext_resource type="Texture2D" uid="uid://6lyqjfj3vsy7" path="res://addons/MetroidvaniaSystem/Themes/Exquisite/BorderPassageHorizontal.png" id="1_hth3y"]
 [ext_resource type="Texture2D" uid="uid://c5wg3is8k5pux" path="res://addons/MetroidvaniaSystem/Themes/Exquisite/BorderWallHorizontal.png" id="2_tawyw"]
@@ -11,7 +11,7 @@
 [ext_resource type="Texture2D" uid="uid://xn6gipdberdc" path="res://addons/MetroidvaniaSystem/Themes/Exquisite/BorderWall.png" id="7_eifkn"]
 [ext_resource type="Script" path="res://addons/MetroidvaniaSystem/Scripts/MapTheme.gd" id="8_gh637"]
 [ext_resource type="Texture2D" uid="uid://dvp5dov6wsh2m" path="res://addons/MetroidvaniaSystem/Themes/Exquisite/Symbols/Portal.png" id="9_3gfe5"]
-[ext_resource type="Texture2D" uid="uid://bc0o6ot1koste" path="res://addons/MetroidvaniaSystem/Themes/Exquisite/Symbols/SavePoint.png" id="9_c11cy"]
+[ext_resource type="Texture2D" uid="uid://bc0o6ot1koste" path="res://addons/MetroidvaniaSystem/Themes/Exquisite/Symbols/Ring.png" id="9_c11cy"]
 [ext_resource type="Texture2D" uid="uid://bcuwpuvv6bpsf" path="res://addons/MetroidvaniaSystem/Themes/Exquisite/Symbols/Collectible.png" id="11_o6efd"]
 
 [resource]

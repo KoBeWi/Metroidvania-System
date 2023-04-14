@@ -23,7 +23,7 @@ func is_room_discovered(room: Vector3i) -> int:
 
 func register_storable_object(object: Object) -> bool:
 	var id: String = MetSys.get_object_id(object)
-	if not object in registered_objects:
+	if not id in registered_objects:
 		registered_objects[id] = true
 		return true
 	return false

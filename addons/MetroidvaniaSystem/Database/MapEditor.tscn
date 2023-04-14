@@ -423,6 +423,9 @@ func _editor_draw(map_overlay: CanvasItem):
 
 	var room_size: Vector2 = MetSys.ROOM_SIZE
 	for room in MetSys.map_data.assigned_maps.values():
+		if room[0].z != editor.current_layer:
+			continue
+		
 		for p in room:
 			map_overlay.draw_rect(Rect2(Vector2(p.x, p.y) * room_size, room_size), Color(Color.MEDIUM_SEA_GREEN, 0.8))
 

@@ -1,7 +1,7 @@
 [gd_resource type="Resource" load_steps=3 format=3 uid="uid://po1yy1ihchuv"]
 
 [ext_resource type="Script" path="res://addons/MetroidvaniaSystem/Scripts/Settings.gd" id="1_yi1rc"]
-[ext_resource type="Resource" uid="uid://d254sd6mbla5i" path="res://addons/MetroidvaniaSystem/Themes/Exquisite/Theme.tres" id="2_ckqly"]
+[ext_resource type="Resource" path="res://addons/MetroidvaniaSystem/Themes/Exquisite/Theme.tres" id="2_ckqly"]
 
 [resource]
 script = ExtResource("1_yi1rc")
