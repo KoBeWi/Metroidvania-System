@@ -1,6 +1,6 @@
 extends RefCounted
 
-static func draw(canvas_item: CanvasItem, offset: Vector2i, coords: Vector3i, map_data: MetroidvaniaSystem.MapData, save_data: MetroidvaniaSystem.SaveData):
+static func draw(canvas_item: CanvasItem, offset: Vector2, coords: Vector3i, map_data: MetroidvaniaSystem.MapData, save_data: MetroidvaniaSystem.SaveData):
 	var room_data := map_data.get_room_at(coords)
 	if not room_data:
 		return
@@ -81,7 +81,7 @@ static func draw(canvas_item: CanvasItem, offset: Vector2i, coords: Vector3i, ma
 		
 		match i:
 			MetroidvaniaSystem.R, MetroidvaniaSystem.L:
-				texture.draw(ci, Vector2(MetSys.ROOM_SIZE) / 2 + corner_offset, corner_color)
+				texture.draw(ci, MetSys.ROOM_SIZE / 2 + corner_offset, corner_color)
 			MetroidvaniaSystem.D, MetroidvaniaSystem.U:
 				texture.draw(ci, Vector2(MetSys.ROOM_SIZE.y, MetSys.ROOM_SIZE.x) / 2 + corner_offset, corner_color)
 	
@@ -107,7 +107,7 @@ static func draw(canvas_item: CanvasItem, offset: Vector2i, coords: Vector3i, ma
 		
 		match i:
 			MetroidvaniaSystem.R, MetroidvaniaSystem.L:
-				theme.inner_corner.draw(ci, Vector2(MetSys.ROOM_SIZE) / 2 + corner_offset, corner_color)
+				theme.inner_corner.draw(ci, MetSys.ROOM_SIZE / 2 + corner_offset, corner_color)
 			MetroidvaniaSystem.D, MetroidvaniaSystem.U:
 				theme.inner_corner.draw(ci, Vector2(MetSys.ROOM_SIZE.y, MetSys.ROOM_SIZE.x) / 2 + corner_offset, corner_color)
 	
@@ -124,7 +124,7 @@ static func draw(canvas_item: CanvasItem, offset: Vector2i, coords: Vector3i, ma
 		
 		if symbol > - 1:
 			assert(symbol < theme.symbols.size(), "Bad symbol '%s' at '%s'" % [symbol, coords])
-			canvas_item.draw_texture(theme.symbols[symbol], offset * MetSys.ROOM_SIZE + MetSys.ROOM_SIZE / 2 - Vector2i(theme.symbols[symbol].get_size()) / 2)
+			canvas_item.draw_texture(theme.symbols[symbol], offset * MetSys.ROOM_SIZE + MetSys.ROOM_SIZE / 2 - theme.symbols[symbol].get_size() / 2)
 
 static func get_border_texture(theme: MapTheme, idx: int, direction: int) -> Texture2D:
 	var texture_name: StringName

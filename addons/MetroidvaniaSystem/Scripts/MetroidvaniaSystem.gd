@@ -19,14 +19,12 @@ enum { R, D, L, U }
 ## TODO: validator? do sprawdzania czy wszystkie pomieszczenia mają przypisaną mapę itp
 ## TODO: walidator motywów (czy rozmiary się zgadzają itp
 ## TODO: add_main_symbol() - dodaje symbol i zawsze ma index 0 / ???
-## TODO: nie działa dobrze clipowanie (np. rysowanych prostokątów)
+## TODO: nie działa dobrze clipowanie (np. rysowanych prostokątów, wychodzą poza obszar edytora)
 ## TODO: metody do tworzenia pomieszczeń ze skryptu?? -> MapBuilder, który tworzy nowy room i zapisuje się oddzielnie
 ## TODO: get_coordinate_for_object(Node2D, layer = current_layer)
 ## TODO: pos to map (do rysowania po mapie, x,y pomieszczenia, ratio wewnątrz np (32, 4, 0.1, 0.1))
-## TODO: set current layer (jako setter)
 ## EXAMPLE TODO: jakiś obszar z losowymi mapami, override na assigned map: lawa zamienia się w kamień
 ## TODO: methoda add_custom_element(name, callable), potrzeba customowy skrypt dziedziczący jakiś typ, wstawić go w pole w MetSys i jest robiona instancja i wywoływane metody. Callback: element_callback(canvas_item, coords, top_left), np. add_custom_element(:"elevator", draw_elevator); func draw_elevator(...): canvas_item.draw_rect(top_left)
-## TODO: ROOM_SIZE chyba Vector2
 ## TODO: onion layers
 ## TODO: w motywach pododawać player sceny, symbole i granice
 ## TODO: symbole zależne od motywu / usunąć bordery z settings głównego
@@ -40,7 +38,7 @@ enum { R, D, L, U }
 @export var exported_settings: Resource
 
 var settings: Settings
-var ROOM_SIZE: Vector2i
+var ROOM_SIZE: Vector2
 
 var map_data: MapData
 var save_data := SaveData.new() ## po co to new?
@@ -181,14 +179,14 @@ func remove_room_override(coords: Vector3i):
 	if save_data.remove_room_override(room):
 		map_updated.emit()
 
-func draw_map_square(canvas_item: CanvasItem, offset: Vector2i, coords: Vector3i, use_save_data := false):
+func draw_map_square(canvas_item: CanvasItem, offset: Vector2, coords: Vector3i, use_save_data := false):
 	RoomDrawer.draw(canvas_item, offset, coords, map_data, save_data if use_save_data else null)
 
-func draw_player_location(canvas_item: CanvasItem, offset: Vector2i, exact := false):
-	var last_player_position_2d := Vector2i(last_player_position.x, last_player_position.y)
-	var player_position: Vector2 = (last_player_position_2d + offset) * ROOM_SIZE + ROOM_SIZE / 2
+func draw_player_location(canvas_item: CanvasItem, offset: Vector2, exact := false):
+	var last_player_position_2d := Vector2(last_player_position.x, last_player_position.y)
+	var player_position := (last_player_position_2d + offset) * ROOM_SIZE + ROOM_SIZE / 2
 	if exact:
-		player_position += (exact_player_position / settings.in_game_room_size).posmod(1) * Vector2(ROOM_SIZE) - ROOM_SIZE * 0.5
+		player_position += (exact_player_position / settings.in_game_room_size).posmod(1) * ROOM_SIZE - ROOM_SIZE * 0.5
 	
 	if not is_instance_valid(player_location_instance):
 		player_location_instance = settings.theme.player_location_scene.instantiate()

@@ -36,7 +36,7 @@ func layer_changed(l: int):
 func _on_map_input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion:
 		if view_drag != Vector4():
-			map_offset = (Vector2i(view_drag.z, view_drag.w) + Vector2i(map_overlay.get_local_mouse_position() - Vector2(view_drag.x, view_drag.y)) / MetSys.ROOM_SIZE)
+			map_offset = (Vector2(view_drag.z, view_drag.w) + map_overlay.get_local_mouse_position() - Vector2(view_drag.x, view_drag.y) / MetSys.ROOM_SIZE)
 			map.queue_redraw()
 			map_overlay.queue_redraw()
 		else:
@@ -67,8 +67,7 @@ func _on_overlay_draw() -> void:
 	else:
 		map_overlay.draw_string(font, Vector2(0, panel.size.y + font.get_height()), str(mouse), HORIZONTAL_ALIGNMENT_LEFT, -1, 16, Color.RED if room_under_cursor else Color.WHITE)
 	
-	var room_size: Vector2 = MetSys.ROOM_SIZE
-	map_overlay.draw_rect(Rect2((mouse + map_offset) as Vector2 * room_size, room_size), Color.GREEN, false, 2)
+	map_overlay.draw_rect(Rect2(Vector2(mouse + map_offset) * MetSys.ROOM_SIZE, MetSys.ROOM_SIZE), Color.GREEN, false, 2)
 	
 	if get_tree().edited_scene_root.scene_file_path.begins_with(MetSys.settings.map_root_folder):
 		var current_scene := get_tree().edited_scene_root.scene_file_path.trim_prefix(MetSys.settings.map_root_folder)
@@ -77,7 +76,7 @@ func _on_overlay_draw() -> void:
 			if coords.z != current_layer:
 				break
 			
-			map_overlay.draw_rect(Rect2(Vector2(coords.x + map_offset.x, coords.y + map_offset.y) * Vector2(MetSys.ROOM_SIZE), MetSys.ROOM_SIZE), Color(Color.RED, 0.5))
+			map_overlay.draw_rect(Rect2(Vector2(coords.x + map_offset.x, coords.y + map_offset.y) * MetSys.ROOM_SIZE, MetSys.ROOM_SIZE), Color(Color.RED, 0.5))
 
 func _on_map_draw() -> void:
 	for x in range(-100, 100):
@@ -85,6 +84,5 @@ func _on_map_draw() -> void:
 			MetSys.draw_map_square(map, Vector2i(x, y) + map_offset, Vector3i(x, y, current_layer))
 
 func get_cursor_pos() -> Vector2i:
-	var room_size: Vector2 = MetSys.ROOM_SIZE
-	var pos := (map_overlay.get_local_mouse_position() - room_size / 2).snapped(room_size) / room_size as Vector2i - map_offset
+	var pos := (map_overlay.get_local_mouse_position() - MetSys.ROOM_SIZE / 2).snapped(MetSys.ROOM_SIZE) / MetSys.ROOM_SIZE as Vector2i - map_offset
 	return pos

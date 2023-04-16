@@ -48,7 +48,7 @@ func get_current_sub_editor() -> Control:
 func _on_map_input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion:
 		if view_drag != Vector4():
-			map_offset = (Vector2i(view_drag.z, view_drag.w) + Vector2i(map_overlay.get_local_mouse_position() - Vector2(view_drag.x, view_drag.y)) / MetSys.ROOM_SIZE)
+			map_offset = Vector2(view_drag.z, view_drag.w) + (map_overlay.get_local_mouse_position() - Vector2(view_drag.x, view_drag.y)) / MetSys.ROOM_SIZE
 			map.queue_redraw()
 			map_overlay.queue_redraw()
 		else:
@@ -70,8 +70,7 @@ func _on_overlay_draw() -> void:
 	if not plugin:
 		return
 	
-	var room_size: Vector2 = MetSys.ROOM_SIZE
-	map_overlay.draw_set_transform(Vector2(map_offset) * room_size)
+	map_overlay.draw_set_transform(Vector2(map_offset) * MetSys.ROOM_SIZE)
 	
 	var sub := get_current_sub_editor()
 	sub.top_draw = Callable()

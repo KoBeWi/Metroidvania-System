@@ -33,36 +33,33 @@ func _editor_input(event: InputEvent):
 	pass
 
 func _editor_draw(map_overlay: CanvasItem):
-	var room_size: Vector2 = MetSys.ROOM_SIZE
-	
 	for p in highlighted_room:
-		map_overlay.draw_rect(Rect2(Vector2(p.x, p.y) * room_size, room_size), Color(1, 1, 0, 0.25))
+		map_overlay.draw_rect(Rect2(Vector2(p.x, p.y) * MetSys.ROOM_SIZE, MetSys.ROOM_SIZE), Color(1, 1, 0, 0.25))
 	
 	if drag_from == EDITOR_SCRIPT.NULL_VECTOR2I:
 		if use_cursor and (not room_only_cursor or get_room_at_cursor()) and map_overlay.get_local_mouse_position().x >= 0 and map_overlay.get_local_mouse_position().y >= 0:
-			map_overlay.draw_rect(Rect2(get_cursor_pos() as Vector2 * room_size, room_size), Color.GREEN, false, 2)
+			map_overlay.draw_rect(Rect2(get_cursor_pos() as Vector2 * MetSys.ROOM_SIZE, MetSys.ROOM_SIZE), Color.GREEN, false, 2)
 	else:
 		var rect := get_rect_between(drag_from, get_cursor_pos())
 		top_draw = func(map_overlay: CanvasItem): map_overlay.draw_string(get_theme_font(&"font", &"Label"), Vector2(0, 40), "%d x %d" % [rect.size.x, rect.size.y])
 		
-		rect.position *= room_size as Vector2
-		rect.size *= room_size as Vector2
+		rect.position *= MetSys.ROOM_SIZE
+		rect.size *= MetSys.ROOM_SIZE
 		map_overlay.draw_rect(rect, cursor_color, false, 2)
 	
 	if highlighted_border > -1:
 		match highlighted_border:
 			MetSys.R:
-				map_overlay.draw_rect(Rect2(get_cursor_pos() as Vector2 * room_size + Vector2(room_size.x * 0.667, 0), room_size * Vector2(0.333, 1)), Color(0, 1, 0, 0.5))
+				map_overlay.draw_rect(Rect2(get_cursor_pos() as Vector2 * MetSys.ROOM_SIZE + Vector2(MetSys.ROOM_SIZE.x * 0.667, 0), MetSys.ROOM_SIZE * Vector2(0.333, 1)), Color(0, 1, 0, 0.5))
 			MetSys.D:
-				map_overlay.draw_rect(Rect2(get_cursor_pos() as Vector2 * room_size + Vector2(0, room_size.y * 0.667), room_size * Vector2(1, 0.333)), Color(0, 1, 0, 0.5))
+				map_overlay.draw_rect(Rect2(get_cursor_pos() as Vector2 * MetSys.ROOM_SIZE + Vector2(0, MetSys.ROOM_SIZE.y * 0.667), MetSys.ROOM_SIZE * Vector2(1, 0.333)), Color(0, 1, 0, 0.5))
 			MetSys.L:
-				map_overlay.draw_rect(Rect2(get_cursor_pos() as Vector2 * room_size, room_size * Vector2(0.333, 1)), Color(0, 1, 0, 0.5))
+				map_overlay.draw_rect(Rect2(get_cursor_pos() as Vector2 * MetSys.ROOM_SIZE, MetSys.ROOM_SIZE * Vector2(0.333, 1)), Color(0, 1, 0, 0.5))
 			MetSys.U:
-				map_overlay.draw_rect(Rect2(get_cursor_pos() as Vector2 * room_size, room_size * Vector2(1, 0.333)), Color(0, 1, 0, 0.5))
+				map_overlay.draw_rect(Rect2(get_cursor_pos() as Vector2 * MetSys.ROOM_SIZE, MetSys.ROOM_SIZE * Vector2(1, 0.333)), Color(0, 1, 0, 0.5))
 
 func get_cursor_pos() -> Vector2i:
-	var room_size: Vector2 = MetSys.ROOM_SIZE
-	var pos := (editor.map_overlay.get_local_mouse_position() - room_size / 2).snapped(room_size) / room_size as Vector2i
+	var pos := (editor.map_overlay.get_local_mouse_position() - MetSys.ROOM_SIZE / 2).snapped(MetSys.ROOM_SIZE) / MetSys.ROOM_SIZE as Vector2i
 	return pos - editor.map_offset
 
 func get_coords(p: Vector2i, layer := editor.current_layer) -> Vector3i:
