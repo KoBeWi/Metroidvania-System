@@ -1,7 +1,8 @@
-[gd_scene load_steps=9 format=3 uid="uid://c3xqaietfgs7l"]
+[gd_scene load_steps=10 format=3 uid="uid://c3xqaietfgs7l"]
 
 [ext_resource type="Script" path="res://SampleProject/Scripts/Game.gd" id="1_xdpfu"]
 [ext_resource type="PackedScene" uid="uid://xpbhai8nlgtx" path="res://SampleProject/Player.tscn" id="2_bam1a"]
+[ext_resource type="Script" path="res://SampleProject/Scripts/Player.gd" id="3_dvkop"]
 [ext_resource type="Texture2D" uid="uid://wiq0mic5m6is" path="res://SampleProject/Sprites/Collectible.png" id="3_kng3d"]
 
 [sub_resource type="GDScript" id="GDScript_4div8"]
@@ -112,6 +113,7 @@ starting_map = "StartingPoint"
 
 [node name="Player" parent="." groups=["player"] instance=ExtResource("2_bam1a")]
 position = Vector2(368, 248)
+script = ExtResource("3_dvkop")
 
 [node name="Camera2D" type="Camera2D" parent="Player"]
 
@@ -165,8 +167,10 @@ grow_vertical = 2
 script = SubResource("GDScript_u7odr")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="UI"]
-offset_right = 40.0
-offset_bottom = 26.0
+offset_left = 8.0
+offset_top = 8.0
+offset_right = 48.0
+offset_bottom = 34.0
 
 [node name="TextureRect" type="TextureRect" parent="UI/HBoxContainer"]
 layout_mode = 2

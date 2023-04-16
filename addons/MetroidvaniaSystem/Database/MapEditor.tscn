@@ -411,7 +411,7 @@ func _editor_input(event: InputEvent):
 			for p in highlighted_room:
 				if first:
 					var assigned_map: String = MetSys.map_data.get_room_at(p).assigned_map
-					MetSys.map_data.assigned_maps[assigned_map] = []
+					MetSys.map_data.assigned_maps.erase(assigned_map)
 					first = false
 				
 				MetSys.map_data.get_room_at(p).assigned_map = \"\"
