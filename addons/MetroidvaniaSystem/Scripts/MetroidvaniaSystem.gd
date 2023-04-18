@@ -25,7 +25,6 @@ enum { R, D, L, U }
 ## TODO: pos to map (do rysowania po mapie, x,y pomieszczenia, ratio wewnątrz np (32, 4, 0.1, 0.1))
 ## EXAMPLE TODO: jakiś obszar z losowymi mapami, override na assigned map: lawa zamienia się w kamień
 ## TODO: methoda add_custom_element(name, callable), potrzeba customowy skrypt dziedziczący jakiś typ, wstawić go w pole w MetSys i jest robiona instancja i wywoływane metody. Callback: element_callback(canvas_item, coords, top_left), np. add_custom_element(:"elevator", draw_elevator); func draw_elevator(...): canvas_item.draw_rect(top_left)
-## TODO: onion layers
 ## TODO: w motywach pododawać player sceny, symbole i granice
 ## TODO: symbole zależne od motywu / usunąć bordery z settings głównego
 ## TODO: przycisk reset view albo goto nearest room

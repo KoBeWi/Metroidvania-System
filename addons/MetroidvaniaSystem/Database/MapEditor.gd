@@ -5,6 +5,7 @@ enum {MODE_LAYOUT = 1, MODE_ROOM_SYMBOL, MODE_ROOM_COLOR, MODE_ROOM_GROUP, MODE_
 
 @onready var map_overlay: Control = $MapOverlay
 @onready var map: Control = %Map
+@onready var ghost_map: Control = %GhostMap
 
 @export var mode_group: ButtonGroup
 
@@ -17,6 +18,7 @@ var map_offset := Vector2i(10, 10)
 
 var mode: int = MODE_LAYOUT
 var current_layer: int
+var preview_layer := -1
 
 func _enter_tree() -> void:
 	if owner:
@@ -40,7 +42,12 @@ func mode_pressed(button: BaseButton):
 func layer_changed(l: int):
 	current_layer = l
 	map.queue_redraw()
+	ghost_map.queue_redraw()
 	map_overlay.queue_redraw()
+
+func preview_layer_changed(value: float) -> void:
+	preview_layer = value
+	ghost_map.queue_redraw()
 
 func get_current_sub_editor() -> Control:
 	return mode_group.get_buttons()[mode - 1]
@@ -50,6 +57,7 @@ func _on_map_input(event: InputEvent) -> void:
 		if view_drag != Vector4():
 			map_offset = Vector2(view_drag.z, view_drag.w) + (map_overlay.get_local_mouse_position() - Vector2(view_drag.x, view_drag.y)) / MetSys.ROOM_SIZE
 			map.queue_redraw()
+			ghost_map.queue_redraw()
 			map_overlay.queue_redraw()
 		else:
 			map_overlay.queue_redraw()
@@ -89,3 +97,14 @@ func _on_map_draw() -> void:
 	for x in range(-100, 100):
 		for y in range(-100, 100):
 			MetSys.draw_map_square(map, Vector2i(x, y) + map_offset, Vector3i(x, y, current_layer))
+
+func _on_ghost_map_draw() -> void:
+	if not plugin:
+		return
+	
+	if preview_layer == -1 or preview_layer == current_layer:
+		return
+	
+	for x in range(-100, 100):
+		for y in range(-100, 100):
+			MetSys.draw_map_square(ghost_map, Vector2i(x, y) + map_offset, Vector3i(x, y, preview_layer))

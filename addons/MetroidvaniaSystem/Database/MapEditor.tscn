@@ -568,6 +568,16 @@ horizontal_alignment = 1
 [node name="SpinBox" type="SpinBox" parent="PanelContainer/Layer"]
 layout_mode = 2
 
+[node name="Label2" type="Label" parent="PanelContainer/Layer"]
+layout_mode = 2
+text = "Preview Layer"
+horizontal_alignment = 1
+
+[node name="SpinBox2" type="SpinBox" parent="PanelContainer/Layer"]
+layout_mode = 2
+min_value = -1.0
+value = -1.0
+
 [node name="MapOverlay" type="Control" parent="."]
 texture_filter = 1
 layout_mode = 2
@@ -597,6 +607,20 @@ grow_vertical = 2
 size_flags_horizontal = 3
 mouse_filter = 2
 
+[node name="GhostMap" type="Control" parent="MapOverlay"]
+unique_name_in_owner = true
+modulate = Color(1, 1, 1, 0.12549)
+show_behind_parent = true
+clip_contents = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+
 [node name="FileDialog" type="FileDialog" parent="."]
 unique_name_in_owner = true
 title = "Open a File"
@@ -607,7 +631,9 @@ filters = PackedStringArray("*.tscn")
 
 [connection signal="value_changed" from="PanelContainer/EditControls/Groups/CurrentGroup" to="MapOverlay" method="queue_redraw" unbinds=1]
 [connection signal="value_changed" from="PanelContainer/Layer/SpinBox" to="." method="layer_changed"]
+[connection signal="value_changed" from="PanelContainer/Layer/SpinBox2" to="." method="preview_layer_changed"]
 [connection signal="draw" from="MapOverlay" to="." method="_on_overlay_draw"]
 [connection signal="gui_input" from="MapOverlay" to="." method="_on_map_input"]
 [connection signal="draw" from="MapOverlay/Map" to="." method="_on_map_draw"]
+[connection signal="draw" from="MapOverlay/GhostMap" to="." method="_on_ghost_map_draw"]
 [connection signal="file_selected" from="FileDialog" to="PanelContainer/Modes/MapAssign" method="on_map_selected"]
