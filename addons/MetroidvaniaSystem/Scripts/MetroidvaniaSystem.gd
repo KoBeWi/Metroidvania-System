@@ -33,7 +33,6 @@ enum { R, D, L, U }
 ## TODO: create_override -> get_override(coords, create_if_not_exists)
 ## TODO: RoomOverride.apply_to_group()
 ## TODO: wybór bordera z listy
-## TODO: inaczej kolorować granice w handlerze jak jest przejście?
 
 @export var exported_settings: Resource
 

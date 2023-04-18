@@ -1,6 +1,9 @@
 @tool
 extends Node2D
 
+const GRID_COLOR = Color(1, 1, 1, 0.333)
+const GRID_PASSAGE_COLOR = Color(1, 0, 1, 0.666)
+
 var rooms: Array[Vector3i]
 var initialized: bool
 
@@ -43,4 +46,19 @@ func _draw() -> void:
 	
 	for p in rooms:
 		var coords := Vector2(p.x - min_room.x, p.y - min_room.y)
-		draw_rect(Rect2(coords * MetSys.settings.in_game_room_size, MetSys.settings.in_game_room_size), Color.WHITE, false, 2)
+		for i in 4:
+			var width := 1
+			var color := GRID_COLOR
+			if MetSys.map_data.rooms[p].get_border(i) > 0:
+				width = 2
+				color = GRID_PASSAGE_COLOR
+			
+			match i:
+				MetroidvaniaSystem.R:
+					draw_rect(Rect2((coords + Vector2.RIGHT) * MetSys.settings.in_game_room_size + Vector2(-width, 0), Vector2(width, MetSys.settings.in_game_room_size.y)), color)
+				MetroidvaniaSystem.D:
+					draw_rect(Rect2((coords + Vector2.DOWN) * MetSys.settings.in_game_room_size + Vector2(0, -width), Vector2(MetSys.settings.in_game_room_size.x, width)), color)
+				MetroidvaniaSystem.L:
+					draw_rect(Rect2(coords * MetSys.settings.in_game_room_size, Vector2(width, MetSys.settings.in_game_room_size.y)), color)
+				MetroidvaniaSystem.U:
+					draw_rect(Rect2(coords * MetSys.settings.in_game_room_size, Vector2(MetSys.settings.in_game_room_size.x, width)), color)
