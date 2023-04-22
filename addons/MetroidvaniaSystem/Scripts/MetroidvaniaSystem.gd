@@ -161,7 +161,7 @@ func get_object_coords(object: Object) -> Vector3i:
 func visit_room(room: Vector3i):
 	save_data.explore_room(room)
 	
-	var previous_map := map_data.get_assigned_map_at(Vector3i(last_player_position.x, last_player_position.y, 0))
+	var previous_map := map_data.get_assigned_map_at(Vector3i(last_player_position.x, last_player_position.y, current_layer))
 	var new_map := map_data.get_assigned_map_at(room)
 	if not new_map.is_empty() and not previous_map.is_empty() and new_map != previous_map:
 		map_changed.emit(new_map)

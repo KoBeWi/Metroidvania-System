@@ -47,7 +47,7 @@ func _physics_process(delta: float) -> void:
 	MetSys.set_player_position(player.position)
 
 func on_map_changed(target_map: String):
-	goto_map(target_map.get_file().get_basename())
+	goto_map(target_map.get_basename().trim_prefix(MetSys.settings.map_root_folder))
 
 static func get_singleton() -> Game:
 	return (Game as Script).get_meta(&"singleton") as Game

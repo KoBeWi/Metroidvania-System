@@ -108,3 +108,15 @@ func _on_ghost_map_draw() -> void:
 	for x in range(-100, 100):
 		for y in range(-100, 100):
 			MetSys.draw_map_square(ghost_map, Vector2i(x, y) + map_offset, Vector3i(x, y, preview_layer))
+
+func _unhandled_key_input(event: InputEvent) -> void:
+	if not visible:
+		return
+	
+	if event is InputEventKey and event.pressed:
+		if event.keycode == KEY_Q:
+			%CurrentLayer.value -= 1
+			accept_event()
+		elif event.keycode == KEY_E:
+			%CurrentLayer.value += 1
+			accept_event()

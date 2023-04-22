@@ -78,6 +78,7 @@ class RoomData:
 class RoomOverride extends RoomData:
 	# TODO: metody pomocnicze
 	var original_room: RoomData
+	var custom_room_coords := MetroidvaniaSystem.VECTOR3INF
 	
 	func _init(from: RoomData) -> void:
 		original_room = from
@@ -89,7 +90,13 @@ class RoomOverride extends RoomData:
 		if map == "/":
 			MetSys.map_data.map_overrides.erase(map)
 		else:
-			MetSys.map_data.map_overrides[map] = original_room.assigned_map
+			if custom_room_coords != MetroidvaniaSystem.VECTOR3INF:
+				if not map in MetSys.map_data.assigned_maps:
+					MetSys.map_data.assigned_maps[map] = []
+				MetSys.map_data.assigned_maps[map].append(custom_room_coords)
+			else:
+				MetSys.map_data.map_overrides[map] = original_room.assigned_map
+		
 		# TODO: na wszystkie pomieszczenia
 		assigned_map = map
 	
@@ -177,11 +184,14 @@ func create_room_at(coords: Vector3i) -> RoomData:
 	rooms[coords] = RoomData.new("")
 	return rooms[coords]
 
-func create_custom_room(coords: Vector3i) -> RoomData:
+func create_custom_room(coords: Vector3i) -> RoomOverride:
 	assert(not coords in rooms, "A room already exists at this position")
 	var room := create_room_at(coords)
 	custom_rooms[coords] = room
-	return room
+	
+	var override: RoomOverride = MetSys.save_data.add_room_override(room)
+	override.custom_room_coords = coords
+	return override
 
 func get_whole_room(at: Vector3i) -> Array[Vector3i]:
 	var room: Array[Vector3i]

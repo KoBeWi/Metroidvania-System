@@ -565,7 +565,8 @@ layout_mode = 2
 text = "Current Layer"
 horizontal_alignment = 1
 
-[node name="SpinBox" type="SpinBox" parent="PanelContainer/Layer"]
+[node name="CurrentLayer" type="SpinBox" parent="PanelContainer/Layer"]
+unique_name_in_owner = true
 layout_mode = 2
 
 [node name="Label2" type="Label" parent="PanelContainer/Layer"]
@@ -630,7 +631,7 @@ file_mode = 0
 filters = PackedStringArray("*.tscn")
 
 [connection signal="value_changed" from="PanelContainer/EditControls/Groups/CurrentGroup" to="MapOverlay" method="queue_redraw" unbinds=1]
-[connection signal="value_changed" from="PanelContainer/Layer/SpinBox" to="." method="layer_changed"]
+[connection signal="value_changed" from="PanelContainer/Layer/CurrentLayer" to="." method="layer_changed"]
 [connection signal="value_changed" from="PanelContainer/Layer/SpinBox2" to="." method="preview_layer_changed"]
 [connection signal="draw" from="MapOverlay" to="." method="_on_overlay_draw"]
 [connection signal="gui_input" from="MapOverlay" to="." method="_on_map_input"]

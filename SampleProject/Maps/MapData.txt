@@ -21,7 +21,7 @@
 [1,-1,0]
 1,0,-1,0|||LavaCorridor.tscn
 [-1,-1,0]
-1,0,1,0||1|ElevatorRoom.tscn
+1,0,1,0|||ElevatorRoom.tscn
 [-4,1,0]
 -1,0,1,0|||Corridor.tscn
 [-3,1,0]
@@ -42,5 +42,7 @@
 -1,0,-1,0|e646ff,,e68bff,,e68bff||EndingPoint.tscn
 [1,1,1]
 0,0,-1,0|e646ff,e68bff,e68bff,,e68bff||EndingPoint.tscn
-[-1,-1,2]
-0,0,0,0|8ba1ff,8befff,8befff,8befff,8befff||
+[-1,-7,0]
+0,0,0,0||1|
+[-1,-7,2]
+1,0,0,0|8ba1ff,4bbbff,4bbbff,4bbbff,4bbbff||DiceRoom.tscn
