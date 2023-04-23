@@ -33,7 +33,7 @@ func _enter_tree() -> void:
 		max_room.x = maxi(max_room.x, p.x)
 		max_room.y = maxi(max_room.y, p.y)
 
-func adjust_camera(camera: Camera2D):
+func adjust_camera_limits(camera: Camera2D):
 	camera.limit_left = 0
 	camera.limit_top = 0
 	camera.limit_right = (max_room.x - min_room.x + 1) * MetSys.settings.in_game_room_size.x

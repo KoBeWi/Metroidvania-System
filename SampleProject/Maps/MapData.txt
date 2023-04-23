@@ -45,4 +45,4 @@
 [-1,-7,0]
 0,0,0,0||1|
 [-1,-7,2]
-1,0,0,0|8ba1ff,4bbbff,4bbbff,4bbbff,4bbbff||DiceRoom.tscn
+1,0,0,0|8ca1ff,3d4e99,3d4e99,3d4e99,3d4e99||DiceRoom.tscn

@@ -58,6 +58,18 @@ class RoomData:
 		loading[1] += 1
 		return loading[0].get_slice("|", loading[1])
 	
+	func get_color() -> Color:
+		var c: Color
+		var override = MetSys.save_data.room_overrides.get(self)
+		if override and override.color.a > 0:
+			c = override.color
+		else:
+			c = color
+		
+		if c.a > 0:
+			return c
+		return MetSys.settings.theme.default_center_color
+	
 	func get_border(idx: int) -> int: # TODO: reszta
 		var override = MetSys.save_data.room_overrides.get(self)
 		if override and override.borders[idx] != -2:
@@ -65,8 +77,15 @@ class RoomData:
 		return borders[idx]
 	
 	func get_border_color(idx: int) -> Color:
-		if border_colors[idx].a > 0:
-			return border_colors[idx]
+		var c: Color
+		var override = MetSys.save_data.room_overrides.get(self)
+		if override and override.border_colors[idx].a > 0:
+			c = override.border_colors[idx]
+		else:
+			c = border_colors[idx]
+		
+		if c.a > 0:
+			return c
 		return MetSys.settings.theme.default_border_color
 	
 	func get_assigned_map() -> String:

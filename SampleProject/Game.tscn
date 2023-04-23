@@ -75,7 +75,7 @@ _data = {
 resource_name = "FullMap"
 script/source = "extends Panel
 
-const MIN_POS = Vector2i(-2, -2)
+const MIN_POS = Vector2i(-2, -10)
 const MAX_POS = MIN_POS + Vector2i(9, 9)
 
 @export var exact_player_location: bool
@@ -91,12 +91,12 @@ func _ready() -> void:
 
 func _process(delta: float) -> void:
 	if is_visible_in_tree():
-		queue_redraw()
+		queue_redraw() ## TODO: optimize ;_;
 
 func _draw() -> void:
 	for x in range(MIN_POS.x, MAX_POS.x + 1):
 		for y in range(MIN_POS.y, MAX_POS.y + 1):
-			MetSys.draw_map_square(self, Vector2i(x, y) - MIN_POS, Vector3i(x, y, 0), true)
+			MetSys.draw_map_square(self, Vector2i(x, y) - MIN_POS, Vector3i(x, y, MetSys.current_layer), true)
 	
 	MetSys.draw_player_location(self, -MIN_POS, exact_player_location)
 

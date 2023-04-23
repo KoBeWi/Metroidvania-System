@@ -35,7 +35,7 @@ func goto_map(map_path: String):
 	
 	map = load(map_path).instantiate()
 	add_child(map)
-	map.get_node(^"MapHandler").adjust_camera($Player/Camera2D)
+	map.get_node(^"MapHandler").adjust_camera_limits($Player/Camera2D)
 	
 	MetSys.current_layer = map.get_node(^"MapHandler").layer
 	

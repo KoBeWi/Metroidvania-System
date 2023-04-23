@@ -8,11 +8,12 @@
 script/source = "extends Area2D
 
 const GENERATED_MAPS_PATH = \"user://Generated\"
+const FWD = { MetroidvaniaSystem.R: Vector2i.RIGHT, MetroidvaniaSystem.D: Vector2i.DOWN, MetroidvaniaSystem.L: Vector2i.LEFT, MetroidvaniaSystem.U: Vector2i.UP }
 
 var generating: bool
 
 func _ready() -> void:
-	DirAccess.make_dir_absolute(GENERATED_MAPS_PATH)
+	DirAccess.make_dir_absolute(GENERATED_MAPS_PATH) ## TODO: czyścić to
 
 func _on_body_entered(body: Node2D) -> void:
 	if generating:
@@ -28,19 +29,46 @@ func _on_body_entered(body: Node2D) -> void:
 	
 #	await tween.finished
 	
+	var grid: Dictionary#[Vector2i, int]
+	grid[Vector2i()] = 4
+	
+	while grid.size() < 10:
+		var pos: Vector2i = grid.keys().pick_random()
+		var go = randi() % 4
+		var next: Vector2i = pos + FWD[go]
+		
+		if next.x < 0:
+			continue
+		
+		if next in grid:
+			continue
+		
+		if grid[pos] & 1 << go:
+			continue
+		
+		grid[pos] |= 1 << go
+		grid[next] = 1 << ((go + 2) % 4)
+	
+	var dice_room_data := MetSys.map_data.get_room_at(Vector3i(-1, -7, 2))
 	var builder := MetSys.get_map_builder()
 	
-	var start := builder.create_room(Vector3i(0, -7, 2))
-	start.set_assigned_map(generate_room(\"Junction.tscn\"))
-	start = builder.create_room(Vector3i(1, -7, 2)) # test
-	start.set_assigned_map(generate_room(\"Junction.tscn\"))
+	for pos in grid:
+		var room := builder.create_room(Vector3i(0 + pos.x, -7 + pos.y, 2))
+		room.color = dice_room_data.color
+		for i in 4:
+			room.borders[i] = 1 if grid[pos] & 1 << i else 0
+			room.border_colors[i] = dice_room_data.border_colors[i]
+		room.set_assigned_map(generate_room(\"Junction.tscn\", grid[pos]))
 	
 	builder.update_map()
 	generating = false
 	%TileMap.set_layer_enabled(2, false)
 
-func generate_room(from_map: String):
+func generate_room(from_map: String, exits: int):
 	var map: Node2D = load(\"res://SampleProject/Maps/%s\" % from_map).instantiate()
+	
+	var config := map.get_node(^\"Config\")
+	config.exits = exits
 	
 	from_map = from_map.get_basename()
 	var new_map := from_map + \"1.tscn\"
