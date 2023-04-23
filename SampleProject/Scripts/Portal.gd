@@ -10,6 +10,6 @@ func _on_body_entered(body: Node2D) -> void:
 		var tween := create_tween()
 		tween.tween_property(body, ^"position", position, 0.5).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_SINE)
 		await tween.finished
-		Game.get_singleton().goto_map(target_map)
+		Game.get_singleton().goto_map(MetSys.settings.map_root_folder.path_join(target_map))
 		get_tree().create_timer(0.05).timeout.connect(body.set.bind(&"event", false))
 		

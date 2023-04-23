@@ -7,7 +7,12 @@
 [sub_resource type="GDScript" id="GDScript_2fold"]
 script/source = "extends Area2D
 
+const GENERATED_MAPS_PATH = \"user://Generated\"
+
 var generating: bool
+
+func _ready() -> void:
+	DirAccess.make_dir_absolute(GENERATED_MAPS_PATH)
 
 func _on_body_entered(body: Node2D) -> void:
 	if generating:
@@ -26,27 +31,31 @@ func _on_body_entered(body: Node2D) -> void:
 	var builder := MetSys.get_map_builder()
 	
 	var start := builder.create_room(Vector3i(0, -7, 2))
-	start.set_assigned_map(\"Procedural/Generated\".path_join(generate_room(\"Junction.tscn\")))
+	start.set_assigned_map(generate_room(\"Junction.tscn\"))
 	start = builder.create_room(Vector3i(1, -7, 2)) # test
-	start.set_assigned_map(\"Procedural/Generated\".path_join(generate_room(\"Junction.tscn\")))
+	start.set_assigned_map(generate_room(\"Junction.tscn\"))
 	
 	builder.update_map()
 	generating = false
 	%TileMap.set_layer_enabled(2, false)
 
 func generate_room(from_map: String):
+	var map: Node2D = load(\"res://SampleProject/Maps/%s\" % from_map).instantiate()
+	
 	from_map = from_map.get_basename()
 	var new_map := from_map + \"1.tscn\"
-	var files := DirAccess.get_files_at(\"res://SampleProject/Maps/Procedural/Generated\")
+	var files := DirAccess.get_files_at(GENERATED_MAPS_PATH)
 	
 	var i := 1
 	while new_map in files:
 		i += 1
 		new_map = str(from_map, i, \".tscn\")
 	
-	DirAccess.copy_absolute(
-		MetSys.settings.map_root_folder.path_join(\"Procedural\").path_join(from_map) + \".tscn\",
-		MetSys.settings.map_root_folder.path_join(\"Procedural/Generated\").path_join(new_map))
+	new_map = GENERATED_MAPS_PATH.path_join(new_map)
+	
+	var ps := PackedScene.new()
+	ps.pack(map)
+	ResourceSaver.save(ps, new_map)
 	
 	return new_map
 "

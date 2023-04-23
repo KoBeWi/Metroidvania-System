@@ -8,6 +8,21 @@
 [sub_resource type="CircleShape2D" id="CircleShape2D_5ifhl"]
 radius = 100.0
 
+[sub_resource type="Animation" id="Animation_bkyt7"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+
 [sub_resource type="Animation" id="Animation_g3r3d"]
 resource_name = "Rotat"
 length = 2.0
@@ -23,21 +38,6 @@ tracks/0/keys = {
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [0.0, 6.28319]
-}
-
-[sub_resource type="Animation" id="Animation_bkyt7"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:rotation")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [0.0]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_0plid"]
@@ -66,7 +66,7 @@ layer_1/tile_data = PackedInt32Array(589827, 524289, 1, 655363, 524289, 1, 72089
 [node name="Portal" type="Area2D" parent="."]
 position = Vector2(304, 263)
 script = ExtResource("3_5l7d4")
-target_map = "DarkPortalRoom"
+target_map = "DarkPortalRoom.tscn"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Portal"]
 shape = SubResource("CircleShape2D_5ifhl")
