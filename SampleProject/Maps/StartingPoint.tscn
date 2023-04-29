@@ -54,5 +54,3 @@ position = Vector2(1296, 288)
 
 [node name="MapItem" parent="." instance=ExtResource("4_ljvb3")]
 position = Vector2(2064, 160)
-
-[connection signal="body_entered" from="SavePoint" to="SavePoint" method="on_body_entered"]

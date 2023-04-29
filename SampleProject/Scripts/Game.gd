@@ -12,11 +12,16 @@ var collectibles: int:
 		collectibles = count
 		%CollectibleCount.text = str(count)
 
+var generated_rooms: Array[Vector3i]
+
 func _ready() -> void:
 	if FileAccess.file_exists("user://save_data.sav"):
 		var save_data: Dictionary = FileAccess.open("user://save_data.sav", FileAccess.READ).get_var()
 		MetSys.set_save_data(save_data)
 		collectibles = save_data.collectible_count
+		generated_rooms.assign(save_data.generated_rooms)
+	else:
+		MetSys.set_save_data()
 	
 	goto_map(starting_map)
 	var start := map.get_node_or_null(^"StartPoint")
@@ -54,3 +59,6 @@ func on_map_changed(target_map: String):
 
 static func get_singleton() -> Game:
 	return (Game as Script).get_meta(&"singleton") as Game
+
+func get_save_data() -> Dictionary:
+	return {"collectible_count": collectibles, "generated_rooms": generated_rooms}

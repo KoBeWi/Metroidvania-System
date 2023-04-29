@@ -1,7 +1,8 @@
-[gd_scene load_steps=4 format=3 uid="uid://bikgu4uxf7vxt"]
+[gd_scene load_steps=5 format=3 uid="uid://bikgu4uxf7vxt"]
 
 [ext_resource type="TileSet" uid="uid://bwpcg2opya34n" path="res://SampleProject/Resources/Tileset.tres" id="1_oj4y1"]
 [ext_resource type="PackedScene" uid="uid://bsg0351mx3b4u" path="res://addons/MetroidvaniaSystem/Nodes/MapHandler.tscn" id="2_mlr6y"]
+[ext_resource type="PackedScene" uid="uid://c8j6i3fx8p758" path="res://SampleProject/Objects/Collectible.tscn" id="3_whicd"]
 
 [sub_resource type="GDScript" id="GDScript_taojh"]
 script/source = "extends Node
@@ -61,3 +62,7 @@ layer_5/tile_data = PackedInt32Array(196619, 524291, 8, 196620, 524291, 8, 19662
 
 [node name="Config" type="Node" parent="."]
 script = SubResource("GDScript_taojh")
+
+[node name="Collectible" parent="." instance=ExtResource("3_whicd")]
+position = Vector2(432, 232)
+metadata/object_id = "random_collectible"

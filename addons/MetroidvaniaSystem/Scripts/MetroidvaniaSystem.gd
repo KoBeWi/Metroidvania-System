@@ -20,10 +20,9 @@ enum { R, D, L, U }
 ## TODO: walidator motywów (czy rozmiary się zgadzają itp
 ## TODO: add_main_symbol() - dodaje symbol i zawsze ma index 0 / ???
 ## TODO: nie działa dobrze clipowanie (np. rysowanych prostokątów, wychodzą poza obszar edytora)
-## TODO: metody do tworzenia pomieszczeń ze skryptu?? -> MapBuilder, który tworzy nowy room i zapisuje się oddzielnie
 ## TODO: get_coordinate_for_object(Node2D, layer = current_layer)
 ## TODO: pos to map (do rysowania po mapie, x,y pomieszczenia, ratio wewnątrz np (32, 4, 0.1, 0.1))
-## EXAMPLE TODO: jakiś obszar z losowymi mapami, override na assigned map: lawa zamienia się w kamień
+## EXAMPLE TODO: override na assigned map: lawa zamienia się w kamień
 ## TODO: methoda add_custom_element(name, callable), potrzeba customowy skrypt dziedziczący jakiś typ, wstawić go w pole w MetSys i jest robiona instancja i wywoływane metody. Callback: element_callback(canvas_item, coords, top_left), np. add_custom_element(:"elevator", draw_elevator); func draw_elevator(...): canvas_item.draw_rect(top_left)
 ## TODO: w motywach pododawać player sceny, symbole i granice
 ## TODO: symbole zależne od motywu / usunąć bordery z settings głównego
@@ -39,7 +38,7 @@ var settings: Settings
 var ROOM_SIZE: Vector2
 
 var map_data: MapData
-var save_data := SaveData.new() ## po co to new?
+var save_data: SaveData
 
 var last_player_position := VECTOR3INF
 var exact_player_position: Vector2
@@ -75,7 +74,8 @@ func _ready() -> void:
 func get_save_data() -> Dictionary:
 	return save_data.get_data()
 
-func set_save_data(data: Dictionary):
+func set_save_data(data := {}):
+	save_data = SaveData.new()
 	save_data.set_data(data)
 
 func reset_save_data():

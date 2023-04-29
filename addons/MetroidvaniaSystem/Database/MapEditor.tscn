@@ -81,7 +81,7 @@ func erase_rooms(rect: Rect2i):
 	for x in range(rect.position.x, rect.end.x):
 		for y in range(rect.position.y, rect.end.y):
 			var coords := Vector3i(x, y, editor.current_layer)
-			var room_data := MetSys.map_data.get_room_at(coords)
+			var room_data := map_data.get_room_at(coords)
 			
 			if not room_data:
 				continue
@@ -95,13 +95,7 @@ func erase_rooms(rect: Rect2i):
 			if y == rect.position.y:
 				close_border(Vector2i(x, y - 1), 1)
 			
-			var assigned_map: String = room_data.assigned_map
-			MetSys.map_data.assigned_maps[assigned_map] = []
-			
-			map_data.rooms.erase(coords)
-			
-			for group in MetSys.map_data.room_groups.values():
-				group.erase(coords)
+			map_data.erase_room(coords)
 	
 	editor.map.queue_redraw()
 

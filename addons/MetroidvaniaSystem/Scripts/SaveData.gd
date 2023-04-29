@@ -2,12 +2,12 @@ extends RefCounted
 
 const SIMPLE_STORABLE_PROPERTIES: Array[StringName] = [&"discovered_rooms", &"registered_objects", &"stored_objects", &"room_markers"]
 
-var discovered_rooms: Dictionary
-var registered_objects: Dictionary
-var stored_objects: Dictionary
+var discovered_rooms: Dictionary#[Vector3i, int]
+var registered_objects: Dictionary#[String, bool]
+var stored_objects: Dictionary#[String, bool]
 
-var room_markers: Dictionary
-var room_overrides: Dictionary
+var room_markers: Dictionary#[Vector3i, Array]
+var room_overrides: Dictionary#[RoomData, RoomOverride]
 
 func discover_room(room: Vector3i):
 	if discovered_rooms.get(room, 0) < 1:
@@ -71,9 +71,20 @@ func get_data() -> Dictionary:
 	for property in SIMPLE_STORABLE_PROPERTIES:
 		data[property] = get(property)
 	
+	data[&"room_overrides"] = room_overrides.keys().map(func(room):
+		var coords: Vector3i = MetSys.map_data.rooms.find_key(room)
+		return room_overrides[room].get_override_string(coords))
+	
 	return data
 
 func set_data(data: Dictionary):
+	if data.is_empty():
+		return
+	
 	for property in SIMPLE_STORABLE_PROPERTIES:
 		if property in data:
 			set(property, data[property])
+	
+	for override_string in data.room_overrides:
+		var override: MetroidvaniaSystem.MapData.RoomOverride = MetroidvaniaSystem.MapData.RoomOverride.load_from_line(override_string)
+		room_overrides[override.original_room] = override

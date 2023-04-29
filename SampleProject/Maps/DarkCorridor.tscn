@@ -47,5 +47,3 @@ theme_override_font_sizes/font_size = 40
 text = "S"
 horizontal_alignment = 1
 vertical_alignment = 1
-
-[connection signal="body_entered" from="SavePoint" to="SavePoint" method="on_body_entered"]

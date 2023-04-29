@@ -1,8 +1,9 @@
-[gd_scene load_steps=9 format=3 uid="uid://cjk52vjugqh5"]
+[gd_scene load_steps=11 format=3 uid="uid://cjk52vjugqh5"]
 
 [ext_resource type="TileSet" uid="uid://bwpcg2opya34n" path="res://SampleProject/Resources/Tileset.tres" id="1_l63o1"]
 [ext_resource type="PackedScene" uid="uid://bsg0351mx3b4u" path="res://addons/MetroidvaniaSystem/Nodes/MapHandler.tscn" id="2_b0ayl"]
 [ext_resource type="PackedScene" uid="uid://ke056546dq4j" path="res://SampleProject/Objects/Dice.glb" id="3_a62rx"]
+[ext_resource type="Script" path="res://SampleProject/Scripts/SavePoint.gd" id="4_umnrh"]
 
 [sub_resource type="GDScript" id="GDScript_2fold"]
 script/source = "extends Area2D
@@ -13,13 +14,20 @@ const FWD = { MetroidvaniaSystem.R: Vector2i.RIGHT, MetroidvaniaSystem.D: Vector
 var generating: bool
 
 func _ready() -> void:
+	await get_tree().process_frame ## do usunięcia
 	DirAccess.make_dir_absolute(GENERATED_MAPS_PATH) ## TODO: czyścić to
+	if not Game.get_singleton().generated_rooms.is_empty():
+		%TileMap.set_layer_enabled(2, false)
 
 func _on_body_entered(body: Node2D) -> void:
 	if generating:
 		return
 	generating = true
 	%TileMap.set_layer_enabled(2, true)
+	
+	for coords in Game.get_singleton().generated_rooms:
+		MetSys.add_room_override(coords).destroy()
+	Game.get_singleton().generated_rooms.clear()
 	
 	%DiceAnimator.play(&\"Spin\")
 	var tween := create_tween()
@@ -30,7 +38,9 @@ func _on_body_entered(body: Node2D) -> void:
 #	await tween.finished
 	
 	var grid: Dictionary#[Vector2i, int]
+	var distance_grid: Dictionary#[Vector2i, int]
 	grid[Vector2i()] = 4
+	distance_grid[Vector2i()] = 0
 	
 	while grid.size() < 10:
 		var pos: Vector2i = grid.keys().pick_random()
@@ -48,27 +58,41 @@ func _on_body_entered(body: Node2D) -> void:
 		
 		grid[pos] |= 1 << go
 		grid[next] = 1 << ((go + 2) % 4)
+		distance_grid[next] = distance_grid[pos] + 1
 	
 	var dice_room_data := MetSys.map_data.get_room_at(Vector3i(-1, -7, 2))
 	var builder := MetSys.get_map_builder()
 	
+	var collectible_pos: Vector2i = distance_grid.keys().reduce(func(accum: Vector2i, pos: Vector2i):
+		if distance_grid[pos] > distance_grid[accum]:
+			return pos
+		else:
+			return accum
+		, Vector2i())
+	
 	for pos in grid:
-		var room := builder.create_room(Vector3i(0 + pos.x, -7 + pos.y, 2))
+		var coords := Vector3i(0 + pos.x, -7 + pos.y, 2)
+		Game.get_singleton().generated_rooms.append(coords)
+		
+		var room := builder.create_room(coords)
 		room.color = dice_room_data.color
 		for i in 4:
 			room.borders[i] = 1 if grid[pos] & 1 << i else 0
 			room.border_colors[i] = dice_room_data.border_colors[i]
-		room.set_assigned_map(generate_room(\"Junction.tscn\", grid[pos]))
+		room.set_assigned_map(generate_room(\"Junction.tscn\", grid[pos], pos == collectible_pos))
 	
 	builder.update_map()
 	generating = false
 	%TileMap.set_layer_enabled(2, false)
 
-func generate_room(from_map: String, exits: int):
+func generate_room(from_map: String, exits: int, place_collectible: bool):
 	var map: Node2D = load(\"res://SampleProject/Maps/%s\" % from_map).instantiate()
 	
 	var config := map.get_node(^\"Config\")
 	config.exits = exits
+	
+	if not place_collectible:
+		map.get_node(^\"Collectible\").free()
 	
 	from_map = from_map.get_basename()
 	var new_map := from_map + \"1.tscn\"
@@ -128,6 +152,8 @@ _data = {
 "RESET": SubResource("Animation_g16o2"),
 "Spin": SubResource("Animation_7j2ql")
 }
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_k827u"]
 
 [node name="Map" type="Node2D"]
 
@@ -197,5 +223,12 @@ offset_right = 192.0
 offset_bottom = 202.0
 text = "Touch the Dice to randomize rooms"
 horizontal_alignment = 1
+
+[node name="SavePoint" type="Area2D" parent="."]
+position = Vector2(104, 376)
+script = ExtResource("4_umnrh")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="SavePoint"]
+shape = SubResource("RectangleShape2D_k827u")
 
 [connection signal="body_entered" from="Dice" to="Dice" method="_on_body_entered"]
