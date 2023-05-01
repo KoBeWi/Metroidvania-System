@@ -36,7 +36,7 @@ func layer_changed(l: int):
 func _on_map_input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion:
 		if view_drag != Vector4():
-			map_offset = (Vector2(view_drag.z, view_drag.w) + map_overlay.get_local_mouse_position() - Vector2(view_drag.x, view_drag.y) / MetSys.ROOM_SIZE)
+			map_offset = Vector2(view_drag.z, view_drag.w) + (map_overlay.get_local_mouse_position() - Vector2(view_drag.x, view_drag.y)) / MetSys.ROOM_SIZE
 			map.queue_redraw()
 			map_overlay.queue_redraw()
 		else:
@@ -59,6 +59,9 @@ func _on_map_input(event: InputEvent) -> void:
 				view_drag = Vector4()
 
 func _on_overlay_draw() -> void:
+	if not plugin:
+		return
+	
 	var mouse := get_cursor_pos()
 	
 	var font := get_theme_font(&"font", &"Label")
@@ -79,6 +82,9 @@ func _on_overlay_draw() -> void:
 			map_overlay.draw_rect(Rect2(Vector2(coords.x + map_offset.x, coords.y + map_offset.y) * MetSys.ROOM_SIZE, MetSys.ROOM_SIZE), Color(Color.RED, 0.5))
 
 func _on_map_draw() -> void:
+	if not plugin:
+		return
+	
 	for x in range(-100, 100):
 		for y in range(-100, 100):
 			MetSys.draw_map_square(map, Vector2i(x, y) + map_offset, Vector3i(x, y, current_layer))

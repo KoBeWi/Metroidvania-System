@@ -62,7 +62,7 @@ class RoomData:
 	
 	func get_color() -> Color:
 		var c: Color
-		var override = MetSys.save_data.room_overrides.get(self)
+		var override := get_override()
 		if override and override.color.a > 0:
 			c = override.color
 		else:
@@ -73,14 +73,14 @@ class RoomData:
 		return MetSys.settings.theme.default_center_color
 	
 	func get_border(idx: int) -> int: # TODO: reszta
-		var override = MetSys.save_data.room_overrides.get(self)
+		var override := get_override()
 		if override and override.borders[idx] != -2:
 			return override.borders[idx]
 		return borders[idx]
 	
 	func get_border_color(idx: int) -> Color:
 		var c: Color
-		var override = MetSys.save_data.room_overrides.get(self)
+		var override := get_override()
 		if override and override.border_colors[idx].a > 0:
 			c = override.border_colors[idx]
 		else:
@@ -91,10 +91,15 @@ class RoomData:
 		return MetSys.settings.theme.default_border_color
 	
 	func get_assigned_map() -> String:
-		var override = MetSys.save_data.room_overrides.get(self)
+		var override := get_override()
 		if override and override.assigned_map != "/":
 			return override.assigned_map
 		return assigned_map
+	
+	func get_override() -> RoomOverride:
+		if not MetSys.save_data:
+			return null
+		return MetSys.save_data.room_overrides.get(self)
 
 class RoomOverride extends RoomData:
 	# TODO: metody pomocnicze
