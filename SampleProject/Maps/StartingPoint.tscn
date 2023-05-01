@@ -52,5 +52,5 @@ vertical_alignment = 1
 [node name="StartPoint" type="Marker2D" parent="."]
 position = Vector2(1296, 288)
 
-[node name="MapItem" parent="." instance=ExtResource("4_ljvb3")]
+[node name="Collectible" parent="." instance=ExtResource("4_ljvb3")]
 position = Vector2(2064, 160)

@@ -1,6 +1,7 @@
-[gd_scene load_steps=3 format=3 uid="uid://df5fuj4vjr11p"]
+[gd_scene load_steps=5 format=3 uid="uid://df5fuj4vjr11p"]
 
 [ext_resource type="Script" path="res://addons/MetroidvaniaSystem/Database/MapViewer.gd" id="1_s16ok"]
+[ext_resource type="Script" path="res://addons/MetroidvaniaSystem/Scripts/EditorIconButton.gd" id="2_tjngl"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ejg0f"]
 content_margin_left = 4.0
@@ -13,6 +14,86 @@ border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
 border_color = Color(1, 1, 1, 1)
+
+[sub_resource type="GDScript" id="GDScript_i8h0q"]
+resource_name = "Stats"
+script/source = "@tool
+extends VBoxContainer
+
+@onready var scan_progress: ProgressBar = %ScanProgress
+@onready var summary: VBoxContainer = %Summary
+
+var plugin: EditorPlugin:
+	set(p):
+		plugin = p
+		hide()
+		%Settings.hide()
+		%ScanProgress.hide()
+
+var thread: Thread
+
+func add_collectible() -> void:
+	var collectible := preload(\"res://addons/MetroidvaniaSystem/Nodes/CollectibleElement.tscn\").instantiate()
+	%CollectibleList.add_child(collectible)
+	super_deferred_redraw()
+
+func super_deferred_redraw():
+	get_tree().create_timer(0.1).timeout.connect(owner.map_overlay.queue_redraw)
+
+func start_scan() -> void:
+	summary.hide()
+	%ScanButton.disabled = true
+	
+	var collectible_list: Array[String]
+	for item in %CollectibleList.get_children():
+		collectible_list.append(item.get_element())
+	
+	for item in summary.get_children():
+		item.free()
+	
+	thread = Thread.new()
+	thread.start(scan_maps.bind(collectible_list))
+	set_process(true)
+
+func _process(delta: float) -> void:
+	if not thread:
+		set_process(false)
+		return
+	
+	if not thread.is_alive():
+		thread.wait_to_finish()
+		thread = null
+
+func scan_maps(element_list: Array[String]):
+	var maps: Array[String]
+	var folders: Array[String]
+	folders.append(MetSys.settings.map_root_folder)
+	
+	while not folders.is_empty():
+		var folder := folders.pop_back()
+		folders.append_array(Array(DirAccess.get_directories_at(folder)).map(func(subfolder: String) -> String: return folder.path_join(subfolder)))
+		maps.append_array(Array(DirAccess.get_files_at(folder)).map(func(file: String) -> String: return folder.path_join(file)))
+	
+	scan_progress.max_value = maps.size()
+	scan_progress.value = 0
+	scan_progress.show()
+	
+	for map in maps:
+		var lines := FileAccess.open(map, FileAccess.READ).get_as_text().split(\"\\n\")
+		for line in lines:
+			for element in element_list:
+				if line.begins_with(\"[node name=\\\"%s\" % element):
+					var label := Label.new()
+					label.text = \"%s @ %s\" % [element, map.trim_prefix(MetSys.settings.map_root_folder)]
+					summary.add_child.call_deferred(label)
+		
+		scan_progress.value += 1
+
+	scan_progress.hide()
+	summary.show()
+	%ScanButton.disabled = false
+	super_deferred_redraw()
+"
 
 [node name="MapViewer" type="MarginContainer"]
 anchors_preset = 15
@@ -53,25 +134,88 @@ size_flags_horizontal = 3
 mouse_filter = 2
 
 [node name="Panel" type="PanelContainer" parent="."]
+custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
 theme_override_styles/panel = SubResource("StyleBoxFlat_ejg0f")
 
-[node name="Layer" type="VBoxContainer" parent="Panel"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel"]
+layout_mode = 2
+
+[node name="Layer" type="VBoxContainer" parent="Panel/VBoxContainer"]
 layout_mode = 2
 mouse_filter = 2
-metadata/_edit_lock_ = true
 
-[node name="Label" type="Label" parent="Panel/Layer"]
+[node name="Label" type="Label" parent="Panel/VBoxContainer/Layer"]
 layout_mode = 2
 text = "Current Layer"
 horizontal_alignment = 1
 
-[node name="SpinBox" type="SpinBox" parent="Panel/Layer"]
+[node name="SpinBox" type="SpinBox" parent="Panel/VBoxContainer/Layer"]
+layout_mode = 2
+
+[node name="HSeparator" type="HSeparator" parent="Panel/VBoxContainer"]
+layout_mode = 2
+
+[node name="Button" type="Button" parent="Panel/VBoxContainer"]
+layout_mode = 2
+toggle_mode = true
+text = "Collectible Stats"
+
+[node name="Stats" type="VBoxContainer" parent="Panel/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+script = SubResource("GDScript_i8h0q")
+
+[node name="Button" type="Button" parent="Panel/VBoxContainer/Stats"]
+layout_mode = 2
+toggle_mode = true
+text = "Edit Settings"
+
+[node name="Settings" type="VBoxContainer" parent="Panel/VBoxContainer/Stats"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Panel/VBoxContainer/Stats/Settings"]
+custom_minimum_size = Vector2(0, 160)
+layout_mode = 2
+vertical_scroll_mode = 2
+
+[node name="CollectibleList" type="VBoxContainer" parent="Panel/VBoxContainer/Stats/Settings/ScrollContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Button" type="Button" parent="Panel/VBoxContainer/Stats/Settings"]
+layout_mode = 2
+icon_alignment = 1
+script = ExtResource("2_tjngl")
+icon_name = "Add"
+
+[node name="HSeparator" type="HSeparator" parent="Panel/VBoxContainer/Stats"]
+layout_mode = 2
+
+[node name="ScanButton" type="Button" parent="Panel/VBoxContainer/Stats"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Scan Maps"
+
+[node name="ScanProgress" type="ProgressBar" parent="Panel/VBoxContainer/Stats"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Summary" type="VBoxContainer" parent="Panel/VBoxContainer/Stats"]
+unique_name_in_owner = true
 layout_mode = 2
 
 [connection signal="draw" from="MapOverlay" to="." method="_on_overlay_draw"]
 [connection signal="gui_input" from="MapOverlay" to="." method="_on_map_input"]
 [connection signal="draw" from="MapOverlay/Map" to="." method="_on_map_draw"]
-[connection signal="value_changed" from="Panel/Layer/SpinBox" to="." method="layer_changed"]
+[connection signal="value_changed" from="Panel/VBoxContainer/Layer/SpinBox" to="." method="layer_changed"]
+[connection signal="toggled" from="Panel/VBoxContainer/Button" to="Panel/VBoxContainer/Stats" method="set_visible"]
+[connection signal="toggled" from="Panel/VBoxContainer/Button" to="Panel/VBoxContainer/Stats" method="super_deferred_redraw" unbinds=1]
+[connection signal="toggled" from="Panel/VBoxContainer/Stats/Button" to="Panel/VBoxContainer/Stats/Settings" method="set_visible"]
+[connection signal="toggled" from="Panel/VBoxContainer/Stats/Button" to="Panel/VBoxContainer/Stats" method="super_deferred_redraw" flags=3 unbinds=1]
+[connection signal="pressed" from="Panel/VBoxContainer/Stats/Settings/Button" to="Panel/VBoxContainer/Stats" method="add_collectible"]
+[connection signal="pressed" from="Panel/VBoxContainer/Stats/ScanButton" to="Panel/VBoxContainer/Stats" method="start_scan"]
