@@ -26,27 +26,44 @@ extends VBoxContainer
 var plugin: EditorPlugin:
 	set(p):
 		plugin = p
-		hide()
-		%Settings.hide()
-		%ScanProgress.hide()
+		init()
 
 var thread: Thread
 
-func add_collectible() -> void:
+func init():
+	hide()
+	%Settings.hide()
+	%ScanProgress.hide()
+	
+	for data in MetSys.settings.collectible_list:
+		var collectible := add_collectible()
+		collectible.set_data(data)
+
+func save_collectible_list():
+	var list: Array[Dictionary]
+	for collectible in %CollectibleList.get_children():
+		if not collectible.is_queued_for_deletion():
+			list.append(collectible.get_data())
+	MetSys.settings.collectible_list = list
+	ResourceSaver.save(MetSys.settings.collectible_list)
+
+func add_collectible() -> Control:
 	var collectible := preload(\"res://addons/MetroidvaniaSystem/Nodes/CollectibleElement.tscn\").instantiate()
 	%CollectibleList.add_child(collectible)
+	collectible.save_request.connect(save_collectible_list)
+	return collectible
 	super_deferred_redraw()
 
 func super_deferred_redraw():
 	get_tree().create_timer(0.1).timeout.connect(owner.map_overlay.queue_redraw)
 
 func start_scan() -> void:
-	summary.hide()
+	summary.get_parent().hide()
 	%ScanButton.disabled = true
 	
-	var collectible_list: Array[String]
+	var collectible_list: Array[Dictionary]
 	for item in %CollectibleList.get_children():
-		collectible_list.append(item.get_element())
+		collectible_list.append(item.get_data2())
 	
 	for item in summary.get_children():
 		item.free()
@@ -64,7 +81,7 @@ func _process(delta: float) -> void:
 		thread.wait_to_finish()
 		thread = null
 
-func scan_maps(element_list: Array[String]):
+func scan_maps(element_list: Array[Dictionary]):
 	var maps: Array[String]
 	var folders: Array[String]
 	folders.append(MetSys.settings.map_root_folder)
@@ -82,15 +99,15 @@ func scan_maps(element_list: Array[String]):
 		var lines := FileAccess.open(map, FileAccess.READ).get_as_text().split(\"\\n\")
 		for line in lines:
 			for element in element_list:
-				if line.begins_with(\"[node name=\\\"%s\" % element):
-					var label := Label.new()
-					label.text = \"%s @ %s\" % [element, map.trim_prefix(MetSys.settings.map_root_folder)]
-					summary.add_child.call_deferred(label)
+				if line.begins_with(\"[node name=\\\"%s\" % element.element):
+					var found := preload(\"res://addons/MetroidvaniaSystem/Nodes/CollectibleFoundItem.tscn\").instantiate()
+					found.set_element(element.element, element.get(\"icon\"), map, Vector3i())
+					summary.add_child.call_deferred(found)
 		
 		scan_progress.value += 1
-
+	
 	scan_progress.hide()
-	summary.show()
+	summary.get_parent().show()
 	%ScanButton.disabled = false
 	super_deferred_redraw()
 "
@@ -205,9 +222,17 @@ text = "Scan Maps"
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="Summary" type="VBoxContainer" parent="Panel/VBoxContainer/Stats"]
+[node name="ScrollContainer" type="ScrollContainer" parent="Panel/VBoxContainer/Stats"]
+custom_minimum_size = Vector2(0, 200)
+layout_mode = 2
+horizontal_scroll_mode = 3
+vertical_scroll_mode = 2
+
+[node name="Summary" type="VBoxContainer" parent="Panel/VBoxContainer/Stats/ScrollContainer"]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 0
 
 [connection signal="draw" from="MapOverlay" to="." method="_on_overlay_draw"]
 [connection signal="gui_input" from="MapOverlay" to="." method="_on_map_input"]
