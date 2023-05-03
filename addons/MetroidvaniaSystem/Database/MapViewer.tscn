@@ -45,7 +45,7 @@ func save_collectible_list():
 		if not collectible.is_queued_for_deletion():
 			list.append(collectible.get_data())
 	MetSys.settings.collectible_list = list
-	ResourceSaver.save(MetSys.settings.collectible_list)
+	ResourceSaver.save(MetSys.settings)
 
 func add_collectible() -> Control:
 	var collectible := preload(\"res://addons/MetroidvaniaSystem/Nodes/CollectibleElement.tscn\").instantiate()
@@ -97,12 +97,26 @@ func scan_maps(element_list: Array[Dictionary]):
 	
 	for map in maps:
 		var lines := FileAccess.open(map, FileAccess.READ).get_as_text().split(\"\\n\")
+		
+		var current_element: Dictionary
 		for line in lines:
+			if not current_element.is_empty():
+				if line.begins_with(\"[node name=\") or line.begins_with(\"[connection\"):
+					complete_element(current_element)
+					current_element = {}
+				elif line.begins_with(\"position =\"):
+					current_element.position = str_to_var(line.get_slice(\"=\", 1))
+				else:
+					continue
+			
 			for element in element_list:
 				if line.begins_with(\"[node name=\\\"%s\" % element.element):
-					var found := preload(\"res://addons/MetroidvaniaSystem/Nodes/CollectibleFoundItem.tscn\").instantiate()
-					found.set_element(element.element, element.get(\"icon\"), map, Vector3i())
-					summary.add_child.call_deferred(found)
+					current_element = element.duplicate()
+					current_element.map = map
+					break
+		
+		if not current_element.is_empty():
+			complete_element(current_element)
 		
 		scan_progress.value += 1
 	
@@ -110,6 +124,12 @@ func scan_maps(element_list: Array[Dictionary]):
 	summary.get_parent().show()
 	%ScanButton.disabled = false
 	super_deferred_redraw()
+
+func complete_element(element: Dictionary):
+	var found := preload(\"res://addons/MetroidvaniaSystem/Nodes/CollectibleFoundItem.tscn\").instantiate()
+	found.set_element(element)
+	found.hovered.connect(owner._on_item_hover.bind(found))
+	summary.add_child.call_deferred(found)
 "
 
 [node name="MapViewer" type="MarginContainer"]
@@ -169,7 +189,8 @@ layout_mode = 2
 text = "Current Layer"
 horizontal_alignment = 1
 
-[node name="SpinBox" type="SpinBox" parent="Panel/VBoxContainer/Layer"]
+[node name="CurrentLayer" type="SpinBox" parent="Panel/VBoxContainer/Layer"]
+unique_name_in_owner = true
 layout_mode = 2
 
 [node name="HSeparator" type="HSeparator" parent="Panel/VBoxContainer"]
@@ -237,7 +258,7 @@ size_flags_vertical = 0
 [connection signal="draw" from="MapOverlay" to="." method="_on_overlay_draw"]
 [connection signal="gui_input" from="MapOverlay" to="." method="_on_map_input"]
 [connection signal="draw" from="MapOverlay/Map" to="." method="_on_map_draw"]
-[connection signal="value_changed" from="Panel/VBoxContainer/Layer/SpinBox" to="." method="layer_changed"]
+[connection signal="value_changed" from="Panel/VBoxContainer/Layer/CurrentLayer" to="." method="layer_changed"]
 [connection signal="toggled" from="Panel/VBoxContainer/Button" to="Panel/VBoxContainer/Stats" method="set_visible"]
 [connection signal="toggled" from="Panel/VBoxContainer/Button" to="Panel/VBoxContainer/Stats" method="super_deferred_redraw" unbinds=1]
 [connection signal="toggled" from="Panel/VBoxContainer/Stats/Button" to="Panel/VBoxContainer/Stats/Settings" method="set_visible"]

@@ -15,7 +15,6 @@ const RoomDrawer = preload("res://addons/MetroidvaniaSystem/Scripts/RoomDrawer.g
 
 enum { R, D, L, U }
 
-## TODO: plugin - zaawansowane statystyki znajdziek, np. jakiś rejestr i zliczać w scenach itp
 ## TODO: validator? do sprawdzania czy wszystkie pomieszczenia mają przypisaną mapę itp
 ## TODO: walidator motywów (czy rozmiary się zgadzają itp
 ## TODO: add_main_symbol() - dodaje symbol i zawsze ma index 0 / ???
@@ -25,13 +24,16 @@ enum { R, D, L, U }
 ## EXAMPLE TODO: override na assigned map: lawa zamienia się w kamień
 ## TODO: methoda add_custom_element(name, callable), potrzeba customowy skrypt dziedziczący jakiś typ, wstawić go w pole w MetSys i jest robiona instancja i wywoływane metody. Callback: element_callback(canvas_item, coords, top_left), np. add_custom_element(:"elevator", draw_elevator); func draw_elevator(...): canvas_item.draw_rect(top_left)
 ## TODO: w motywach pododawać player sceny, symbole i granice
-## TODO: symbole zależne od motywu / usunąć bordery z settings głównego
 ## TODO: przycisk reset view albo goto nearest room
 ## TODO: przerysowaywać scenę jak się zmieni assign
 ## TODO: create_override -> get_override(coords, create_if_not_exists)
 ## TODO: RoomOverride.apply_to_group()
 ## TODO: wybór bordera z listy
-## TODO: przycisk resetu widoku
+## TODO: onion wyświetlanie hovered itemów (opcja)
+## TODO: viewer nie inicjalizuje się po uruchomieni
+## TODO: do szukania: wymyślić jakoś jak wyświetlać różne ikonki w zależności od danych
+## TODO: summary: wypisywać ilość dla każdego rodzaju
+## TODO: handler może się rejestrować dla aktualnej scene (owner.set_meta(&"handler"))
 
 @export var exported_settings: Resource
 

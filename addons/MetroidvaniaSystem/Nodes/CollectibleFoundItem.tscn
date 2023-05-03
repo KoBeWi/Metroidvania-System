@@ -8,6 +8,7 @@ metadata/is_collectible = true
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 layout_mode = 2
+mouse_filter = 2
 
 [node name="Icon" type="TextureRect" parent="HBoxContainer"]
 unique_name_in_owner = true
@@ -24,3 +25,6 @@ text = "Name"
 unique_name_in_owner = true
 layout_mode = 2
 flat = true
+
+[connection signal="mouse_entered" from="Button" to="." method="on_hover"]
+[connection signal="mouse_exited" from="Button" to="." method="on_unhover"]

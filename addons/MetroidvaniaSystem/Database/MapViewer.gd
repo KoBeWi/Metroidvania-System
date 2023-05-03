@@ -23,11 +23,23 @@ var map_offset := Vector2i(10, 10)
 
 var current_layer: int
 var room_under_cursor: MetroidvaniaSystem.MapData.RoomData
+var current_hovered_item: Control
 
 func layer_changed(l: int):
 	current_layer = l
 	map.queue_redraw()
 	map_overlay.queue_redraw()
+
+func _on_item_hover(item: Control):
+	item.unhovered.connect(_on_item_unhover.bind(item))
+	current_hovered_item = item
+	map_overlay.queue_redraw()
+
+func _on_item_unhover(item: Control):
+	item.unhovered.disconnect(_on_item_unhover)
+	if item == current_hovered_item:
+		current_hovered_item = null
+		map_overlay.queue_redraw()
 
 func _on_map_input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion:
@@ -66,7 +78,8 @@ func _on_overlay_draw() -> void:
 	else:
 		map_overlay.draw_string(font, Vector2(0, panel.size.y + font.get_height()), str(mouse), HORIZONTAL_ALIGNMENT_LEFT, -1, 16, Color.RED if room_under_cursor else Color.WHITE)
 	
-	map_overlay.draw_rect(Rect2(Vector2(mouse + map_offset) * MetSys.ROOM_SIZE, MetSys.ROOM_SIZE), Color.GREEN, false, 2)
+	if not $Panel.get_global_rect().has_point(get_global_mouse_position()):
+		map_overlay.draw_rect(Rect2(Vector2(mouse + map_offset) * MetSys.ROOM_SIZE, MetSys.ROOM_SIZE), Color.GREEN, false, 2)
 	
 	if get_tree().edited_scene_root.scene_file_path.begins_with(MetSys.settings.map_root_folder):
 		var current_scene := get_tree().edited_scene_root.scene_file_path.trim_prefix(MetSys.settings.map_root_folder)
@@ -76,6 +89,18 @@ func _on_overlay_draw() -> void:
 				break
 			
 			map_overlay.draw_rect(Rect2(Vector2(coords.x + map_offset.x, coords.y + map_offset.y) * MetSys.ROOM_SIZE, MetSys.ROOM_SIZE), Color(Color.RED, 0.5))
+	
+	if current_hovered_item:
+		if "coords" in current_hovered_item.data:
+			var coords: Vector3i = current_hovered_item.data.coords
+			if coords.z == current_layer:
+				map_overlay.draw_rect(Rect2(Vector2(coords.x + map_offset.x, coords.y + map_offset.y) * MetSys.ROOM_SIZE, MetSys.ROOM_SIZE), Color(Color.RED, 0.5))
+		else:
+			for coords in MetSys.map_data.get_rooms_assigned_to(current_hovered_item.data.map):
+				if coords.z != current_layer:
+					break
+				
+				map_overlay.draw_rect(Rect2(Vector2(coords.x + map_offset.x, coords.y + map_offset.y) * MetSys.ROOM_SIZE, MetSys.ROOM_SIZE), Color(Color.RED, 0.5))
 
 func _on_map_draw() -> void:
 	if not plugin:
@@ -88,3 +113,15 @@ func _on_map_draw() -> void:
 func get_cursor_pos() -> Vector2i:
 	var pos := (map_overlay.get_local_mouse_position() - MetSys.ROOM_SIZE / 2).snapped(MetSys.ROOM_SIZE) / MetSys.ROOM_SIZE as Vector2i - map_offset
 	return pos
+
+func _unhandled_key_input(event: InputEvent) -> void:
+	if not visible:
+		return
+	
+	if event is InputEventKey and event.pressed:
+		if event.keycode == KEY_Q:
+			%CurrentLayer.value -= 1
+			accept_event()
+		elif event.keycode == KEY_E:
+			%CurrentLayer.value += 1
+			accept_event()
