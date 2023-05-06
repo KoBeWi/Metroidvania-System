@@ -37,7 +37,7 @@ func _editor_draw(map_overlay: CanvasItem):
 		map_overlay.draw_rect(Rect2(Vector2(p.x, p.y) * MetSys.ROOM_SIZE, MetSys.ROOM_SIZE), Color(1, 1, 0, 0.25))
 	
 	if drag_from == EDITOR_SCRIPT.NULL_VECTOR2I:
-		if use_cursor and (not room_only_cursor or get_room_at_cursor()) and map_overlay.get_local_mouse_position().x >= 0 and map_overlay.get_local_mouse_position().y >= 0:
+		if use_cursor and map_overlay.cursor_inside and (not room_only_cursor or get_room_at_cursor()):
 			map_overlay.draw_rect(Rect2(get_cursor_pos() as Vector2 * MetSys.ROOM_SIZE, MetSys.ROOM_SIZE), Color.GREEN, false, 2)
 	else:
 		var rect := get_rect_between(drag_from, get_cursor_pos())

@@ -78,7 +78,7 @@ func _on_overlay_draw() -> void:
 	else:
 		map_overlay.draw_string(font, Vector2(0, panel.size.y + font.get_height()), str(mouse), HORIZONTAL_ALIGNMENT_LEFT, -1, 16, Color.RED if room_under_cursor else Color.WHITE)
 	
-	if not $Panel.get_global_rect().has_point(get_global_mouse_position()):
+	if map_overlay.cursor_inside:
 		map_overlay.draw_rect(Rect2(Vector2(mouse + map_offset) * MetSys.ROOM_SIZE, MetSys.ROOM_SIZE), Color.GREEN, false, 2)
 	
 	if get_tree().edited_scene_root.scene_file_path.begins_with(MetSys.settings.map_root_folder):
@@ -125,3 +125,8 @@ func _unhandled_key_input(event: InputEvent) -> void:
 		elif event.keycode == KEY_E:
 			%CurrentLayer.value += 1
 			accept_event()
+
+func recenter_view() -> void:
+	map_offset = Vector2i(10, 10)
+	map_overlay.queue_redraw()
+	map.queue_redraw()

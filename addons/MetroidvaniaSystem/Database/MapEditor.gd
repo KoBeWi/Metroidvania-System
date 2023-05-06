@@ -120,3 +120,8 @@ func _unhandled_key_input(event: InputEvent) -> void:
 		elif event.keycode == KEY_E:
 			%CurrentLayer.value += 1
 			accept_event()
+
+func recenter_view() -> void:
+	map_offset = Vector2i(10, 10)
+	map_overlay.queue_redraw()
+	map.queue_redraw()

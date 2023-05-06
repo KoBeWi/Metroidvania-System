@@ -1,6 +1,7 @@
-[gd_scene load_steps=10 format=3 uid="uid://dfbykrvyqnqr5"]
+[gd_scene load_steps=11 format=3 uid="uid://dfbykrvyqnqr5"]
 
 [ext_resource type="Script" path="res://addons/MetroidvaniaSystem/Database/MapEditor.gd" id="1_i7yda"]
+[ext_resource type="Script" path="res://addons/MetroidvaniaSystem/Database/MapOverlay.gd" id="2_w1wnt"]
 
 [sub_resource type="ButtonGroup" id="ButtonGroup_pv7fp"]
 
@@ -562,6 +563,7 @@ horizontal_alignment = 1
 [node name="CurrentLayer" type="SpinBox" parent="PanelContainer/Layer"]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_horizontal = 4
 
 [node name="Label2" type="Label" parent="PanelContainer/Layer"]
 layout_mode = 2
@@ -570,13 +572,23 @@ horizontal_alignment = 1
 
 [node name="SpinBox2" type="SpinBox" parent="PanelContainer/Layer"]
 layout_mode = 2
+size_flags_horizontal = 4
 min_value = -1.0
 value = -1.0
+
+[node name="Button" type="Button" parent="PanelContainer/Layer"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Recenter View"
+
+[node name="HSeparator" type="HSeparator" parent="PanelContainer/Layer"]
+layout_mode = 2
 
 [node name="MapOverlay" type="Control" parent="."]
 texture_filter = 1
 layout_mode = 2
 size_flags_horizontal = 3
+script = ExtResource("2_w1wnt")
 
 [node name="ColorRect" type="ColorRect" parent="MapOverlay"]
 modulate = Color(0, 0, 0, 0.12549)
@@ -627,6 +639,7 @@ filters = PackedStringArray("*.tscn")
 [connection signal="value_changed" from="PanelContainer/EditControls/Groups/CurrentGroup" to="MapOverlay" method="queue_redraw" unbinds=1]
 [connection signal="value_changed" from="PanelContainer/Layer/CurrentLayer" to="." method="layer_changed"]
 [connection signal="value_changed" from="PanelContainer/Layer/SpinBox2" to="." method="preview_layer_changed"]
+[connection signal="pressed" from="PanelContainer/Layer/Button" to="." method="recenter_view"]
 [connection signal="draw" from="MapOverlay" to="." method="_on_overlay_draw"]
 [connection signal="gui_input" from="MapOverlay" to="." method="_on_map_input"]
 [connection signal="draw" from="MapOverlay/Map" to="." method="_on_map_draw"]

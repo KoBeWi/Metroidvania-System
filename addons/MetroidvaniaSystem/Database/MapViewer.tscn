@@ -1,6 +1,7 @@
-[gd_scene load_steps=5 format=3 uid="uid://df5fuj4vjr11p"]
+[gd_scene load_steps=6 format=3 uid="uid://df5fuj4vjr11p"]
 
 [ext_resource type="Script" path="res://addons/MetroidvaniaSystem/Database/MapViewer.gd" id="1_s16ok"]
+[ext_resource type="Script" path="res://addons/MetroidvaniaSystem/Database/MapOverlay.gd" id="2_pgyha"]
 [ext_resource type="Script" path="res://addons/MetroidvaniaSystem/Scripts/EditorIconButton.gd" id="2_tjngl"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ejg0f"]
@@ -145,6 +146,7 @@ metadata/_edit_lock_ = true
 clip_contents = true
 layout_mode = 2
 size_flags_horizontal = 3
+script = ExtResource("2_pgyha")
 
 [node name="ColorRect" type="ColorRect" parent="MapOverlay"]
 modulate = Color(0, 0, 0, 0.12549)
@@ -192,6 +194,12 @@ horizontal_alignment = 1
 [node name="CurrentLayer" type="SpinBox" parent="Panel/VBoxContainer/Layer"]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="Button2" type="Button" parent="Panel/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Recenter View"
 
 [node name="HSeparator" type="HSeparator" parent="Panel/VBoxContainer"]
 layout_mode = 2
@@ -259,6 +267,7 @@ size_flags_vertical = 0
 [connection signal="gui_input" from="MapOverlay" to="." method="_on_map_input"]
 [connection signal="draw" from="MapOverlay/Map" to="." method="_on_map_draw"]
 [connection signal="value_changed" from="Panel/VBoxContainer/Layer/CurrentLayer" to="." method="layer_changed"]
+[connection signal="pressed" from="Panel/VBoxContainer/Button2" to="." method="recenter_view"]
 [connection signal="toggled" from="Panel/VBoxContainer/Button" to="Panel/VBoxContainer/Stats" method="set_visible"]
 [connection signal="toggled" from="Panel/VBoxContainer/Button" to="Panel/VBoxContainer/Stats" method="super_deferred_redraw" unbinds=1]
 [connection signal="toggled" from="Panel/VBoxContainer/Stats/Button" to="Panel/VBoxContainer/Stats/Settings" method="set_visible"]
