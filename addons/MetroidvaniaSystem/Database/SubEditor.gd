@@ -1,8 +1,8 @@
+@tool
 extends Control
 
 const EDITOR_SCRIPT = preload("res://addons/MetroidvaniaSystem/Database/MapEditor.gd")
 var editor: EDITOR_SCRIPT
-var plugin: EditorPlugin
 
 var use_cursor := true
 var room_only_cursor := true
@@ -14,14 +14,15 @@ var highlighted_border := -1
 
 var top_draw: Callable
 
-func _enter_tree() -> void:
-	plugin = owner.plugin
-
 func _ready() -> void:
-	if not plugin:
+	if not owner.plugin:
 		return
 	
 	editor = owner
+	_editor_init.call_deferred()
+
+func _editor_init():
+	pass
 
 func _editor_enter():
 	pass

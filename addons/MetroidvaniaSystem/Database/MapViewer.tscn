@@ -24,18 +24,17 @@ extends VBoxContainer
 @onready var scan_progress: ProgressBar = %ScanProgress
 @onready var summary: VBoxContainer = %Summary
 
-var plugin: EditorPlugin:
-	set(p):
-		plugin = p
-		init()
-
 var thread: Thread
 
-func init():
+func _ready() -> void:
+	if not owner.plugin:
+		return
+	
 	hide()
 	%Settings.hide()
 	%ScanProgress.hide()
 	
+	await get_tree().process_frame
 	for data in MetSys.settings.collectible_list:
 		var collectible := add_collectible()
 		collectible.set_data(data)

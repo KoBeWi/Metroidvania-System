@@ -12,11 +12,7 @@ extends \"res://addons/MetroidvaniaSystem/Database/SubEditor.gd\"
 
 var erase_mode: bool
 
-func _ready() -> void:
-	if not plugin:
-		return
-	
-	super()
+func _editor_init() -> void:
 	room_only_cursor = false
 
 func _editor_exit():
@@ -114,11 +110,7 @@ extends \"res://addons/MetroidvaniaSystem/Database/SubEditor.gd\"
 
 var symbol_group: ButtonGroup
 
-func _ready() -> void:
-	if not plugin:
-		return
-	
-	super()
+func _editor_init() -> void:
 	room_only_cursor = true
 	symbol_group = ButtonGroup.new()
 	
@@ -207,11 +199,7 @@ extends \"res://addons/MetroidvaniaSystem/Database/SubEditor.gd\"
 
 var room_groups: Dictionary
 
-func _ready() -> void:
-	if not plugin:
-		return
-	
-	super()
+func _editor_init() -> void:
 	room_only_cursor = true
 	room_groups = MetSys.map_data.room_groups
 
@@ -265,11 +253,7 @@ resource_name = "BorderType"
 script/source = "@tool
 extends \"res://addons/MetroidvaniaSystem/Database/SubEditor.gd\"
 
-func _ready() -> void:
-	if not plugin:
-		return
-	
-	super()
+func _editor_init() -> void:
 	use_cursor = false
 
 func _editor_input(event: InputEvent):
@@ -314,11 +298,7 @@ resource_name = "BorderColor"
 script/source = "@tool
 extends \"res://addons/MetroidvaniaSystem/Database/SubEditor.gd\"
 
-func _ready() -> void:
-	if not plugin:
-		return
-	
-	super()
+func _editor_init() -> void:
 	use_cursor = false
 
 func _editor_enter():
@@ -379,11 +359,7 @@ resource_name = "MapAssign"
 script/source = "@tool
 extends \"res://addons/MetroidvaniaSystem/Database/SubEditor.gd\"
 
-func _ready() -> void:
-	if not plugin:
-		return
-	
-	super()
+func _editor_init() -> void:
 	use_cursor = false
 
 func _editor_input(event: InputEvent):
@@ -451,16 +427,53 @@ metadata/_edit_lock_ = true
 [node name="PanelContainer" type="PanelContainer" parent="."]
 layout_mode = 2
 
-[node name="Modes" type="VBoxContainer" parent="PanelContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer"]
+layout_mode = 2
+
+[node name="Layer" type="VBoxContainer" parent="PanelContainer/VBoxContainer"]
+layout_mode = 2
+mouse_filter = 2
+metadata/_edit_lock_ = true
+
+[node name="Label" type="Label" parent="PanelContainer/VBoxContainer/Layer"]
+layout_mode = 2
+text = "Current Layer"
+horizontal_alignment = 1
+
+[node name="CurrentLayer" type="SpinBox" parent="PanelContainer/VBoxContainer/Layer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="Label2" type="Label" parent="PanelContainer/VBoxContainer/Layer"]
+layout_mode = 2
+text = "Preview Layer"
+horizontal_alignment = 1
+
+[node name="SpinBox2" type="SpinBox" parent="PanelContainer/VBoxContainer/Layer"]
+layout_mode = 2
+size_flags_horizontal = 4
+min_value = -1.0
+value = -1.0
+
+[node name="Button" type="Button" parent="PanelContainer/VBoxContainer/Layer"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Recenter View"
+
+[node name="HSeparator" type="HSeparator" parent="PanelContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Modes" type="VBoxContainer" parent="PanelContainer/VBoxContainer"]
 layout_mode = 2
 alignment = 1
 
-[node name="Label" type="Label" parent="PanelContainer/Modes"]
+[node name="Label" type="Label" parent="PanelContainer/VBoxContainer/Modes"]
 layout_mode = 2
 text = "Mode"
 horizontal_alignment = 1
 
-[node name="RoomLayout" type="Button" parent="PanelContainer/Modes"]
+[node name="RoomLayout" type="Button" parent="PanelContainer/VBoxContainer/Modes"]
 layout_mode = 2
 toggle_mode = true
 button_pressed = true
@@ -468,121 +481,91 @@ button_group = SubResource("ButtonGroup_pv7fp")
 text = "Room Layout"
 script = SubResource("GDScript_dsps8")
 
-[node name="RoomSymbol" type="Button" parent="PanelContainer/Modes"]
+[node name="RoomSymbol" type="Button" parent="PanelContainer/VBoxContainer/Modes"]
 layout_mode = 2
 toggle_mode = true
 button_group = SubResource("ButtonGroup_pv7fp")
 text = "Room Symbol"
 script = SubResource("GDScript_ujwfx")
 
-[node name="RoomColor" type="Button" parent="PanelContainer/Modes"]
+[node name="RoomColor" type="Button" parent="PanelContainer/VBoxContainer/Modes"]
 layout_mode = 2
 toggle_mode = true
 button_group = SubResource("ButtonGroup_pv7fp")
 text = "Room Color"
 script = SubResource("GDScript_tlx5u")
 
-[node name="RoomGroup" type="Button" parent="PanelContainer/Modes"]
+[node name="RoomGroup" type="Button" parent="PanelContainer/VBoxContainer/Modes"]
 layout_mode = 2
 toggle_mode = true
 button_group = SubResource("ButtonGroup_pv7fp")
 text = "Room Group"
 script = SubResource("GDScript_a80ln")
 
-[node name="BorderType" type="Button" parent="PanelContainer/Modes"]
+[node name="BorderType" type="Button" parent="PanelContainer/VBoxContainer/Modes"]
 layout_mode = 2
 toggle_mode = true
 button_group = SubResource("ButtonGroup_pv7fp")
 text = "Border Type"
 script = SubResource("GDScript_ilxbw")
 
-[node name="BorderColor" type="Button" parent="PanelContainer/Modes"]
+[node name="BorderColor" type="Button" parent="PanelContainer/VBoxContainer/Modes"]
 layout_mode = 2
 toggle_mode = true
 button_group = SubResource("ButtonGroup_pv7fp")
 text = "Border Color"
 script = SubResource("GDScript_a3fsx")
 
-[node name="MapAssign" type="Button" parent="PanelContainer/Modes"]
+[node name="MapAssign" type="Button" parent="PanelContainer/VBoxContainer/Modes"]
 layout_mode = 2
 toggle_mode = true
 button_group = SubResource("ButtonGroup_pv7fp")
 text = "Map Assign"
 script = SubResource("GDScript_p75ne")
 
-[node name="EditControls" type="VBoxContainer" parent="PanelContainer"]
+[node name="HSeparator2" type="HSeparator" parent="PanelContainer/VBoxContainer"]
 layout_mode = 2
+
+[node name="EditControls" type="VBoxContainer" parent="PanelContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 0
 mouse_filter = 2
 alignment = 2
 metadata/_edit_lock_ = true
 
-[node name="Symbols" type="VBoxContainer" parent="PanelContainer/EditControls"]
+[node name="Symbols" type="VBoxContainer" parent="PanelContainer/VBoxContainer/EditControls"]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 
-[node name="SymbolContainer" type="HFlowContainer" parent="PanelContainer/EditControls/Symbols"]
+[node name="SymbolContainer" type="HFlowContainer" parent="PanelContainer/VBoxContainer/EditControls/Symbols"]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="Groups" type="VBoxContainer" parent="PanelContainer/EditControls"]
+[node name="Groups" type="VBoxContainer" parent="PanelContainer/VBoxContainer/EditControls"]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 
-[node name="Label" type="Label" parent="PanelContainer/EditControls/Groups"]
+[node name="Label" type="Label" parent="PanelContainer/VBoxContainer/EditControls/Groups"]
 layout_mode = 2
 text = "Group ID"
 horizontal_alignment = 1
 
-[node name="CurrentGroup" type="SpinBox" parent="PanelContainer/EditControls/Groups"]
+[node name="CurrentGroup" type="SpinBox" parent="PanelContainer/VBoxContainer/EditControls/Groups"]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="Colors" type="VBoxContainer" parent="PanelContainer/EditControls"]
+[node name="Colors" type="VBoxContainer" parent="PanelContainer/VBoxContainer/EditControls"]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 
-[node name="CurrentColor" type="ColorPickerButton" parent="PanelContainer/EditControls/Colors"]
+[node name="CurrentColor" type="ColorPickerButton" parent="PanelContainer/VBoxContainer/EditControls/Colors"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 30)
 layout_mode = 2
 edit_alpha = false
-
-[node name="Layer" type="VBoxContainer" parent="PanelContainer"]
-layout_mode = 2
-mouse_filter = 2
-metadata/_edit_lock_ = true
-
-[node name="Label" type="Label" parent="PanelContainer/Layer"]
-layout_mode = 2
-text = "Current Layer"
-horizontal_alignment = 1
-
-[node name="CurrentLayer" type="SpinBox" parent="PanelContainer/Layer"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 4
-
-[node name="Label2" type="Label" parent="PanelContainer/Layer"]
-layout_mode = 2
-text = "Preview Layer"
-horizontal_alignment = 1
-
-[node name="SpinBox2" type="SpinBox" parent="PanelContainer/Layer"]
-layout_mode = 2
-size_flags_horizontal = 4
-min_value = -1.0
-value = -1.0
-
-[node name="Button" type="Button" parent="PanelContainer/Layer"]
-layout_mode = 2
-size_flags_horizontal = 4
-text = "Recenter View"
-
-[node name="HSeparator" type="HSeparator" parent="PanelContainer/Layer"]
-layout_mode = 2
 
 [node name="MapOverlay" type="Control" parent="."]
 texture_filter = 1
@@ -636,12 +619,12 @@ ok_button_text = "Otwórz"
 file_mode = 0
 filters = PackedStringArray("*.tscn")
 
-[connection signal="value_changed" from="PanelContainer/EditControls/Groups/CurrentGroup" to="MapOverlay" method="queue_redraw" unbinds=1]
-[connection signal="value_changed" from="PanelContainer/Layer/CurrentLayer" to="." method="layer_changed"]
-[connection signal="value_changed" from="PanelContainer/Layer/SpinBox2" to="." method="preview_layer_changed"]
-[connection signal="pressed" from="PanelContainer/Layer/Button" to="." method="recenter_view"]
+[connection signal="value_changed" from="PanelContainer/VBoxContainer/Layer/CurrentLayer" to="." method="layer_changed"]
+[connection signal="value_changed" from="PanelContainer/VBoxContainer/Layer/SpinBox2" to="." method="preview_layer_changed"]
+[connection signal="pressed" from="PanelContainer/VBoxContainer/Layer/Button" to="." method="recenter_view"]
+[connection signal="value_changed" from="PanelContainer/VBoxContainer/EditControls/Groups/CurrentGroup" to="MapOverlay" method="queue_redraw" unbinds=1]
 [connection signal="draw" from="MapOverlay" to="." method="_on_overlay_draw"]
 [connection signal="gui_input" from="MapOverlay" to="." method="_on_map_input"]
 [connection signal="draw" from="MapOverlay/Map" to="." method="_on_map_draw"]
 [connection signal="draw" from="MapOverlay/GhostMap" to="." method="_on_ghost_map_draw"]
-[connection signal="file_selected" from="FileDialog" to="PanelContainer/Modes/MapAssign" method="on_map_selected"]
+[connection signal="file_selected" from="FileDialog" to="PanelContainer/VBoxContainer/Modes/MapAssign" method="on_map_selected"]

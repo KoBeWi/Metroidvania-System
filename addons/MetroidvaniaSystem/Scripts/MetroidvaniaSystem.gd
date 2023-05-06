@@ -29,7 +29,6 @@ enum { R, D, L, U }
 ## TODO: RoomOverride.apply_to_group()
 ## TODO: wybór bordera z listy
 ## TODO: onion wyświetlanie hovered itemów (opcja)
-## TODO: viewer nie inicjalizuje się po uruchomieni
 ## TODO: do szukania: wymyślić jakoś jak wyświetlać różne ikonki w zależności od danych
 ## TODO: summary: wypisywać ilość dla każdego rodzaju
 ## TODO: handler może się rejestrować dla aktualnej scene (owner.set_meta(&"handler"))
