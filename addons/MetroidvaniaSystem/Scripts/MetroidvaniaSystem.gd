@@ -20,7 +20,6 @@ enum { R, D, L, U }
 ## TODO: add_main_symbol() - dodaje symbol i zawsze ma index 0 / ???
 ## TODO: get_coordinate_for_object(Node2D, layer = current_layer)
 ## TODO: pos to map (do rysowania po mapie, x,y pomieszczenia, ratio wewnątrz np (32, 4, 0.1, 0.1))
-## EXAMPLE TODO: override na assigned map: lawa zamienia się w kamień
 ## TODO: methoda add_custom_element(name, callable), potrzeba customowy skrypt dziedziczący jakiś typ, wstawić go w pole w MetSys i jest robiona instancja i wywoływane metody. Callback: element_callback(canvas_item, coords, top_left), np. add_custom_element(:"elevator", draw_elevator); func draw_elevator(...): canvas_item.draw_rect(top_left)
 ## TODO: w motywach pododawać player sceny, symbole i granice
 ## TODO: przerysowaywać scenę jak się zmieni assign
@@ -32,7 +31,6 @@ enum { R, D, L, U }
 ## TODO: do szukania: wymyślić jakoś jak wyświetlać różne ikonki w zależności od danych
 ## TODO: summary: wypisywać ilość dla każdego rodzaju
 ## TODO: handler może się rejestrować dla aktualnej scene (owner.set_meta(&"handler"))
-## TODO: tłumaczenia?
 
 @export var exported_settings: Resource
 
@@ -145,7 +143,9 @@ func get_object_coords(object: Object) -> Vector3i:
 		return coords
 	elif object is Node:
 		var map_name: String = object.owner.scene_file_path.trim_prefix(settings.map_root_folder)
+		map_name = MetSys.map_data.map_overrides.get(map_name, map_name)
 		assert(map_name in map_data.assigned_maps)
+		
 		var coords: Vector3i = map_data.assigned_maps[map_name].front()
 		for vec in map_data.assigned_maps[map_name]:
 			coords.x = mini(coords.x, vec.x)

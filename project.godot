@@ -12,7 +12,7 @@ config_version=5
 
 config/name="Metroidvania System"
 run/main_scene="res://SampleProject/Game.tscn"
-config/features=PackedStringArray("4.0")
+config/features=PackedStringArray("4.1")
 config/icon="res://icon.png"
 config/tags=PackedStringArray("addon")
 
@@ -28,8 +28,8 @@ gdscript/warnings/unused_variable=0
 gdscript/warnings/unused_local_constant=0
 gdscript/warnings/unused_private_class_variable=0
 gdscript/warnings/unused_parameter=0
-gdscript/warnings/narrowing_conversion=0
 gdscript/warnings/integer_division=0
+gdscript/warnings/narrowing_conversion=0
 
 [display]
 

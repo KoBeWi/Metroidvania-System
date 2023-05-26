@@ -13,6 +13,7 @@ var collectibles: int:
 		%CollectibleCount.text = str(count)
 
 var generated_rooms: Array[Vector3i]
+var events: Array[String]
 
 func _ready() -> void:
 	if FileAccess.file_exists("user://save_data.sav"):
@@ -20,6 +21,7 @@ func _ready() -> void:
 		MetSys.set_save_data(save_data)
 		collectibles = save_data.collectible_count
 		generated_rooms.assign(save_data.generated_rooms)
+		events.assign(save_data.events)
 	else:
 		MetSys.set_save_data()
 	
@@ -61,4 +63,4 @@ static func get_singleton() -> Game:
 	return (Game as Script).get_meta(&"singleton") as Game
 
 func get_save_data() -> Dictionary:
-	return {"collectible_count": collectibles, "generated_rooms": generated_rooms}
+	return {"collectible_count": collectibles, "generated_rooms": generated_rooms, "events": events}

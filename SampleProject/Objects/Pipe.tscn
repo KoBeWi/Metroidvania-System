@@ -1,0 +1,57 @@
+[gd_scene load_steps=4 format=3 uid="uid://cuo3rbw43trj4"]
+
+[ext_resource type="Texture2D" uid="uid://c00he1hprcray" path="res://SampleProject/Sprites/Pipe.png" id="1_a8g7e"]
+[ext_resource type="Texture2D" uid="uid://dav4phd4q7vv3" path="res://SampleProject/Sprites/PipeWater.png" id="2_dls1c"]
+
+[sub_resource type="GDScript" id="GDScript_366bh"]
+script/source = "extends Line2D
+
+const FLOW_SPEED = 100.0
+
+@onready var parent: Line2D = get_parent()
+var current_point: Vector2
+var current_index: int = 1
+
+func _ready() -> void:
+	current_point = parent.points[0]
+	add_point(current_point)
+	add_point(current_point)
+	set_process(false)
+
+func flow(delta: float):
+	_process(delta  / FLOW_SPEED)
+
+func _process(delta: float) -> void:
+	var next_point := parent.points[current_index]
+	var finished := current_point.distance_squared_to(next_point) < 4
+	
+	if finished:
+		current_point = next_point
+	else:
+		current_point = current_point.move_toward(next_point, FLOW_SPEED * delta)
+	set_point_position(current_index, current_point)
+	
+	if finished:
+		if current_index == parent.points.size() - 1:
+			set_process(false)
+		else:
+			add_point(current_point)
+			current_index += 1
+"
+
+[node name="Pipe" type="Line2D"]
+z_index = -1
+texture_repeat = 2
+width = 32.0
+texture = ExtResource("1_a8g7e")
+texture_mode = 1
+joint_mode = 2
+
+[node name="Water" type="Line2D" parent="."]
+show_behind_parent = true
+texture_repeat = 2
+width = 32.0
+texture = ExtResource("2_dls1c")
+texture_mode = 1
+joint_mode = 2
+script = SubResource("GDScript_366bh")
