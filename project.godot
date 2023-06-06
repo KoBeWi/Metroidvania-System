@@ -11,10 +11,10 @@ config_version=5
 [application]
 
 config/name="Metroidvania System"
+config/tags=PackedStringArray("addon")
 run/main_scene="res://SampleProject/Game.tscn"
 config/features=PackedStringArray("4.1")
 config/icon="res://icon.png"
-config/tags=PackedStringArray("addon")
 
 [autoload]
 
@@ -43,7 +43,7 @@ script/search_in_file_extensions=PackedStringArray("gd", "gdshader", "tscn")
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/CustomRunner/plugin.cfg", "res://addons/PluginRefresher/plugin.cfg", "res://addons/MetroidvaniaSystem/plugin.cfg")
+enabled=PackedStringArray("res://addons/CustomRunner/plugin.cfg", "res://addons/MetroidvaniaSystem/plugin.cfg", "res://addons/PluginRefresher/plugin.cfg")
 
 [rendering]
 

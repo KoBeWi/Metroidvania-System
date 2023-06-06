@@ -80,6 +80,11 @@ func _process(delta: float) -> void:
 	if not thread.is_alive():
 		thread.wait_to_finish()
 		thread = null
+		
+		scan_progress.hide()
+		summary.get_parent().show()
+		%ScanButton.disabled = false
+		super_deferred_redraw()
 
 func scan_maps(element_list: Array[Dictionary]):
 	var maps: Array[String]
@@ -116,14 +121,9 @@ func scan_maps(element_list: Array[Dictionary]):
 					break
 		
 		if not current_element.is_empty():
-			complete_element(current_element)
+			complete_element.call_deferred(current_element)
 		
 		scan_progress.value += 1
-	
-	scan_progress.hide()
-	summary.get_parent().show()
-	%ScanButton.disabled = false
-	super_deferred_redraw()
 
 func complete_element(element: Dictionary):
 	var found := preload(\"res://addons/MetroidvaniaSystem/Nodes/CollectibleFoundItem.tscn\").instantiate()

@@ -11,6 +11,8 @@ const GENERATED_MAPS_PATH = \"user://Generated\"
 const FWD = { MetroidvaniaSystem.R: Vector2i.RIGHT, MetroidvaniaSystem.D: Vector2i.DOWN, MetroidvaniaSystem.L: Vector2i.LEFT, MetroidvaniaSystem.U: Vector2i.UP }
 
 var generating: Thread
+var new_generated_maps: Array[String]
+var first_generated_map := 1
 
 func _ready() -> void:
 	await get_tree().process_frame ## do usunięcia
@@ -78,6 +80,8 @@ func generate_map():
 			return accum
 		, Vector2i())
 	
+	new_generated_maps.clear()
+	
 	for pos in grid:
 		var coords := Vector3i(0 + pos.x, -7 + pos.y, 2)
 		Game.get_singleton().generated_rooms.append(coords)
@@ -91,8 +95,37 @@ func generate_map():
 	
 	builder.update_map()
 
-func generate_room(from_map: String, exits: int, place_collectible: bool):
-	var map: Node2D = load(\"res://SampleProject/Maps/%s\" % from_map).instantiate()
+func generate_room(from_map: String, exits: int, place_collectible: bool) -> String:
+	var scene: PackedScene = load(\"res://SampleProject/Maps/%s\" % from_map)
+	
+	from_map = from_map.get_basename()
+	var new_map: String
+	var files: Array[String]
+	
+	if new_generated_maps.is_empty():
+		new_map = from_map + \"1.tscn\"
+		files.assign(DirAccess.get_files_at(GENERATED_MAPS_PATH))
+	else:
+		new_map = new_generated_maps[0]
+		files = new_generated_maps
+	
+	var i := first_generated_map
+	while new_map in files:
+		i += 1
+		new_map = str(from_map, i, \".tscn\")
+	
+	if first_generated_map == 1:
+		first_generated_map = i
+	
+	new_generated_maps.append(new_map)
+	new_map = GENERATED_MAPS_PATH.path_join(new_map)
+	
+	prepare_scene.call_deferred(scene, exits, place_collectible, new_map)
+	
+	return new_map
+
+func prepare_scene(from_scene: PackedScene, exits: int, place_collectible: bool, target_name: String):
+	var map: Node2D = from_scene.instantiate()
 	
 	var config := map.get_node(^\"Config\")
 	config.exits = exits
@@ -100,22 +133,9 @@ func generate_room(from_map: String, exits: int, place_collectible: bool):
 	if not place_collectible:
 		map.get_node(^\"Collectible\").free()
 	
-	from_map = from_map.get_basename()
-	var new_map := from_map + \"1.tscn\"
-	var files := DirAccess.get_files_at(GENERATED_MAPS_PATH)
-	
-	var i := 1
-	while new_map in files:
-		i += 1
-		new_map = str(from_map, i, \".tscn\")
-	
-	new_map = GENERATED_MAPS_PATH.path_join(new_map)
-	
 	var ps := PackedScene.new()
 	ps.pack(map)
-	ResourceSaver.save(ps, new_map)
-	
-	return new_map
+	ResourceSaver.save(ps, target_name)
 
 func _process(delta: float) -> void:
 	if not generating.is_alive():
