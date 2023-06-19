@@ -87,6 +87,8 @@ func _process(delta: float) -> void:
 		super_deferred_redraw()
 
 func scan_maps(element_list: Array[Dictionary]):
+	Thread.set_thread_safety_checks_enabled(false)
+	
 	var maps: Array[String]
 	var folders: Array[String]
 	folders.append(MetSys.settings.map_root_folder)

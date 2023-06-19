@@ -47,6 +47,8 @@ func _on_body_entered(body: Node2D) -> void:
 	%TileMap.set_layer_enabled(2, false)
 
 func generate_map():
+	Thread.set_thread_safety_checks_enabled(false)
+	
 	var grid: Dictionary#[Vector2i, int]
 	var distance_grid: Dictionary#[Vector2i, int]
 	grid[Vector2i()] = 4
