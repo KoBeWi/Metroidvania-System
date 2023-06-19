@@ -4,10 +4,14 @@
 script/source = "@tool
 extends Control
 
-signal edit_settings
+var plugin: EditorPlugin
+
+func _enter_tree() -> void:
+	if owner:
+		plugin = owner.plugin
 
 func edit_settings_pressed():
-	edit_settings.emit()
+	plugin.get_editor_interface().edit_resource(MetSys.exported_settings)
 
 func force_reload() -> void:
 	MetSys.map_data = MetSys.MapData.new()
@@ -20,6 +24,23 @@ func force_reload() -> void:
 				i += 1
 			else:
 				group.remove_at(i)
+
+func edit_database_theme() -> void:
+	plugin.get_editor_interface().edit_resource(owner.theme)
+
+func reset_theme() -> void:
+	var th: Theme = owner.theme
+	th.set_color(&\"group_color\", &\"MetSys\", Color(Color.MEDIUM_PURPLE, 0.8))
+	th.set_color(&\"highlighted_room\", &\"MetSys\", Color(Color.GREEN, 0.25))
+	th.set_color(&\"assigned_room\", &\"MetSys\", Color(Color.MEDIUM_SEA_GREEN, 0.8))
+	th.set_color(&\"border_highlight\", &\"MetSys\", Color(Color.GREEN, 0.5))
+	th.set_color(&\"cursor_color\", &\"MetSys\", Color.GREEN)
+	th.set_color(&\"cursor_color_erase\", &\"MetSys\", Color.RED)
+	th.set_color(&\"marked_collectible_room\", &\"MetSys\", Color(Color.RED, 0.5))
+	th.set_color(&\"current_scene_room\", &\"MetSys\", Color(Color.RED, 0.5))
+	th.set_color(&\"map_not_assigned\", &\"MetSys\", Color.RED)
+	th.set_color(&\"map_assigned\", &\"MetSys\", Color.WHITE)
+	ResourceSaver.save(th)
 "
 
 [node name="Manage" type="MarginContainer"]
@@ -41,5 +62,18 @@ text = "General Settings"
 layout_mode = 2
 text = "Reload and Cleanup Map Data"
 
+[node name="Button3" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "Edit Database Theme"
+
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="Button4" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "Reset Database Theme"
+
 [connection signal="pressed" from="VBoxContainer/Button" to="." method="edit_settings_pressed"]
 [connection signal="pressed" from="VBoxContainer/Button2" to="." method="force_reload"]
+[connection signal="pressed" from="VBoxContainer/Button3" to="." method="edit_database_theme"]
+[connection signal="pressed" from="VBoxContainer/Button4" to="." method="reset_theme"]

@@ -45,6 +45,10 @@ script/search_in_file_extensions=PackedStringArray("gd", "gdshader", "tscn")
 
 enabled=PackedStringArray("res://addons/CustomRunner/plugin.cfg", "res://addons/MetroidvaniaSystem/plugin.cfg", "res://addons/PluginRefresher/plugin.cfg")
 
+[filesystem]
+
+import/blender/enabled=false
+
 [rendering]
 
 environment/default_environment="res://default_env.tres"

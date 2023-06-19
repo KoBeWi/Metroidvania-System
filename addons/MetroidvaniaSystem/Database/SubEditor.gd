@@ -3,10 +3,10 @@ extends Control
 
 const EDITOR_SCRIPT = preload("res://addons/MetroidvaniaSystem/Database/MapEditor.gd")
 var editor: EDITOR_SCRIPT
+var theme_cache: Dictionary
 
 var use_cursor := true
 var room_only_cursor := true
-var cursor_color := Color.GREEN
 
 var drag_from: Vector2i = EDITOR_SCRIPT.NULL_VECTOR2I
 var highlighted_room: Array[Vector3i]
@@ -24,6 +24,9 @@ func _ready() -> void:
 func _editor_init():
 	pass
 
+func _update_theme():
+	pass
+
 func _editor_enter():
 	pass
 
@@ -35,29 +38,29 @@ func _editor_input(event: InputEvent):
 
 func _editor_draw(map_overlay: CanvasItem):
 	for p in highlighted_room:
-		map_overlay.draw_rect(Rect2(Vector2(p.x, p.y) * MetSys.ROOM_SIZE, MetSys.ROOM_SIZE), Color(1, 1, 0, 0.25))
+		map_overlay.draw_rect(Rect2(Vector2(p.x, p.y) * MetSys.ROOM_SIZE, MetSys.ROOM_SIZE), theme_cache.highlighted_room)
 	
 	if drag_from == EDITOR_SCRIPT.NULL_VECTOR2I:
 		if use_cursor and map_overlay.cursor_inside and (not room_only_cursor or get_room_at_cursor()):
-			map_overlay.draw_rect(Rect2(get_cursor_pos() as Vector2 * MetSys.ROOM_SIZE, MetSys.ROOM_SIZE), Color.GREEN, false, 2)
+			map_overlay.draw_rect(Rect2(get_cursor_pos() as Vector2 * MetSys.ROOM_SIZE, MetSys.ROOM_SIZE), theme_cache.cursor_color, false, 2)
 	else:
 		var rect := get_rect_between(drag_from, get_cursor_pos())
 		top_draw = func(map_overlay: CanvasItem): map_overlay.draw_string(get_theme_font(&"font", &"Label"), Vector2(0, 40), "%d x %d" % [rect.size.x, rect.size.y])
 		
 		rect.position *= MetSys.ROOM_SIZE
 		rect.size *= MetSys.ROOM_SIZE
-		map_overlay.draw_rect(rect, cursor_color, false, 2)
+		map_overlay.draw_rect(rect, theme_cache.cursor_color, false, 2)
 	
 	if highlighted_border > -1:
 		match highlighted_border:
 			MetSys.R:
-				map_overlay.draw_rect(Rect2(get_cursor_pos() as Vector2 * MetSys.ROOM_SIZE + Vector2(MetSys.ROOM_SIZE.x * 0.667, 0), MetSys.ROOM_SIZE * Vector2(0.333, 1)), Color(0, 1, 0, 0.5))
+				map_overlay.draw_rect(Rect2(get_cursor_pos() as Vector2 * MetSys.ROOM_SIZE + Vector2(MetSys.ROOM_SIZE.x * 0.667, 0), MetSys.ROOM_SIZE * Vector2(0.333, 1)), theme_cache.border_highlight)
 			MetSys.D:
-				map_overlay.draw_rect(Rect2(get_cursor_pos() as Vector2 * MetSys.ROOM_SIZE + Vector2(0, MetSys.ROOM_SIZE.y * 0.667), MetSys.ROOM_SIZE * Vector2(1, 0.333)), Color(0, 1, 0, 0.5))
+				map_overlay.draw_rect(Rect2(get_cursor_pos() as Vector2 * MetSys.ROOM_SIZE + Vector2(0, MetSys.ROOM_SIZE.y * 0.667), MetSys.ROOM_SIZE * Vector2(1, 0.333)), theme_cache.border_highlight)
 			MetSys.L:
-				map_overlay.draw_rect(Rect2(get_cursor_pos() as Vector2 * MetSys.ROOM_SIZE, MetSys.ROOM_SIZE * Vector2(0.333, 1)), Color(0, 1, 0, 0.5))
+				map_overlay.draw_rect(Rect2(get_cursor_pos() as Vector2 * MetSys.ROOM_SIZE, MetSys.ROOM_SIZE * Vector2(0.333, 1)), theme_cache.border_highlight)
 			MetSys.U:
-				map_overlay.draw_rect(Rect2(get_cursor_pos() as Vector2 * MetSys.ROOM_SIZE, MetSys.ROOM_SIZE * Vector2(1, 0.333)), Color(0, 1, 0, 0.5))
+				map_overlay.draw_rect(Rect2(get_cursor_pos() as Vector2 * MetSys.ROOM_SIZE, MetSys.ROOM_SIZE * Vector2(1, 0.333)), theme_cache.border_highlight)
 
 func get_cursor_pos() -> Vector2i:
 	var pos := (editor.map_overlay.get_local_mouse_position() - MetSys.ROOM_SIZE / 2).snapped(MetSys.ROOM_SIZE) / MetSys.ROOM_SIZE as Vector2i
@@ -94,3 +97,10 @@ func get_square_border_idx(rel: Vector2) -> int:
 
 func get_room_at_cursor() -> MetroidvaniaSystem.MapData.RoomData:
 	return MetSys.map_data.get_room_at(get_coords(get_cursor_pos()))
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_THEME_CHANGED:
+		theme_cache.highlighted_room = get_theme_color(&"highlighted_room", &"MetSys")
+		theme_cache.border_highlight = get_theme_color(&"border_highlight", &"MetSys")
+		theme_cache.cursor_color = get_theme_color(&"cursor_color", &"MetSys")
+		_update_theme()

@@ -32,6 +32,11 @@ func _ready() -> void:
 	mode_group.pressed.connect(mode_pressed)
 	get_current_sub_editor()._editor_enter()
 
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_THEME_CHANGED:
+		if map_overlay:
+			map_overlay.queue_redraw()
+
 func mode_pressed(button: BaseButton):
 	get_current_sub_editor()._editor_exit()
 	mode = button.get_index()

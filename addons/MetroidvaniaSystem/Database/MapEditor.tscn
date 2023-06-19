@@ -16,7 +16,7 @@ func _editor_init() -> void:
 	room_only_cursor = false
 
 func _editor_exit():
-	cursor_color = Color.GREEN
+	theme_cache.cursor_color = get_theme_color(&\"cursor_color\", &\"MetSys\")
 
 func _editor_input(event: InputEvent):
 	if event is InputEventMouseButton:
@@ -32,14 +32,14 @@ func _editor_input(event: InputEvent):
 			if event.pressed:
 				drag_from = get_cursor_pos()
 				erase_mode = true
-				cursor_color = Color.RED
+				theme_cache.cursor_color = get_theme_color(&\"cursor_color_erase\", &\"MetSys\")
 				queue_redraw()
 			else:
 				var rect := get_rect_between(drag_from, get_cursor_pos())
 				rect.position -= editor.map.position / MetSys.ROOM_SIZE
 				erase_rooms(rect)
 				erase_mode = false
-				cursor_color = Color.GREEN
+				theme_cache.cursor_color = get_theme_color(&\"cursor_color\", &\"MetSys\")
 				drag_from = EDITOR_SCRIPT.NULL_VECTOR2I
 
 func update_rooms(rect: Rect2i):
@@ -203,6 +203,9 @@ func _editor_init() -> void:
 	room_only_cursor = true
 	room_groups = MetSys.map_data.room_groups
 
+func _update_theme():
+	theme_cache.group_color = get_theme_color(&\"group_color\", &\"MetSys\")
+
 func _editor_enter():
 	%Groups.show()
 
@@ -213,7 +216,7 @@ func _editor_draw(map_overlay: CanvasItem):
 	super(map_overlay)
 	
 	for p in room_groups.get(%CurrentGroup.value as int, []):
-		map_overlay.draw_rect(Rect2(Vector2(p.x, p.y) * MetSys.ROOM_SIZE, MetSys.ROOM_SIZE), Color(Color.MEDIUM_PURPLE, 0.8))
+		map_overlay.draw_rect(Rect2(Vector2(p.x, p.y) * MetSys.ROOM_SIZE, MetSys.ROOM_SIZE), theme_cache.group_color)
 
 func _editor_input(event: InputEvent):
 	if event is InputEventMouseMotion:
@@ -362,6 +365,9 @@ extends \"res://addons/MetroidvaniaSystem/Database/SubEditor.gd\"
 func _editor_init() -> void:
 	use_cursor = false
 
+func _update_theme():
+	theme_cache.assigned_room = get_theme_color(&\"assigned_room\", &\"MetSys\")
+
 func _editor_input(event: InputEvent):
 	if event is InputEventMouseMotion:
 		var hr := highlighted_room
@@ -396,7 +402,7 @@ func _editor_draw(map_overlay: CanvasItem):
 			continue
 		
 		for p in room:
-			map_overlay.draw_rect(Rect2(Vector2(p.x, p.y) * MetSys.ROOM_SIZE, MetSys.ROOM_SIZE), Color(Color.MEDIUM_SEA_GREEN, 0.8))
+			map_overlay.draw_rect(Rect2(Vector2(p.x, p.y) * MetSys.ROOM_SIZE, MetSys.ROOM_SIZE), theme_cache.assigned_room)
 
 	if not highlighted_room.is_empty():
 		map_overlay.draw_set_transform_matrix(Transform2D())

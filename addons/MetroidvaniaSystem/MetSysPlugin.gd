@@ -17,12 +17,8 @@ func _get_plugin_icon() -> Texture2D:
 func _enter_tree() -> void:
 	main = preload("res://addons/MetroidvaniaSystem/Database/Main.tscn").instantiate()
 	main.plugin = self
-	main.ready.connect(setup_main)
 	get_editor_interface().get_editor_main_screen().add_child(main)
 	main.hide()
-
-func setup_main() -> void:
-	main.tabs.get_tab_control(TAB_MANAGE).edit_settings.connect(get_editor_interface().edit_resource.bind(MetSys.exported_settings))
 
 func _exit_tree() -> void:
 	main.queue_free()

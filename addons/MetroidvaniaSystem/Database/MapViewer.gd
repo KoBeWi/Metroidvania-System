@@ -11,6 +11,7 @@ enum {MODE_LAYOUT = 1, MODE_ROOM_SYMBOL, MODE_ROOM_COLOR, MODE_ROOM_GROUP, MODE_
 
 const NULL_VECTOR2I = Vector2i(-9999999, -9999999)
 var plugin: EditorPlugin
+var theme_cache: Dictionary
 
 var drag_from: Vector2i = NULL_VECTOR2I
 var view_drag: Vector4
@@ -30,6 +31,14 @@ func _ready() -> void:
 	
 	plugin.scene_changed.connect(map_overlay.queue_redraw.unbind(1))
 	MetSys.map_updated.connect(map.queue_redraw)
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_THEME_CHANGED:
+		theme_cache.marked_collectible_room = get_theme_color(&"marked_collectible_room", &"MetSys")
+		theme_cache.current_scene_room = get_theme_color(&"current_scene_room", &"MetSys")
+		theme_cache.cursor_color = get_theme_color(&"cursor_color", &"MetSys")
+		theme_cache.map_not_assigned = get_theme_color(&"map_not_assigned", &"MetSys")
+		theme_cache.map_assigned = get_theme_color(&"map_assigned", &"MetSys")
 
 func layer_changed(l: int):
 	current_layer = l
@@ -82,10 +91,10 @@ func _on_overlay_draw() -> void:
 	if room_under_cursor and not room_under_cursor.assigned_map.is_empty():
 		map_overlay.draw_string(font, Vector2(0, panel.size.y + font.get_height()), str(mouse, " ", room_under_cursor.assigned_map))
 	else:
-		map_overlay.draw_string(font, Vector2(0, panel.size.y + font.get_height()), str(mouse), HORIZONTAL_ALIGNMENT_LEFT, -1, 16, Color.RED if room_under_cursor else Color.WHITE)
+		map_overlay.draw_string(font, Vector2(0, panel.size.y + font.get_height()), str(mouse), HORIZONTAL_ALIGNMENT_LEFT, -1, 16, theme_cache.map_not_assigned if room_under_cursor else theme_cache.map_assigned)
 	
 	if map_overlay.cursor_inside:
-		map_overlay.draw_rect(Rect2(Vector2(mouse + map_offset) * MetSys.ROOM_SIZE, MetSys.ROOM_SIZE), Color.GREEN, false, 2)
+		map_overlay.draw_rect(Rect2(Vector2(mouse + map_offset) * MetSys.ROOM_SIZE, MetSys.ROOM_SIZE), theme_cache.cursor_color, false, 2)
 	
 	if get_tree().edited_scene_root.scene_file_path.begins_with(MetSys.settings.map_root_folder):
 		var current_scene := get_tree().edited_scene_root.scene_file_path.trim_prefix(MetSys.settings.map_root_folder)
@@ -94,19 +103,19 @@ func _on_overlay_draw() -> void:
 			if coords.z != current_layer:
 				break
 			
-			map_overlay.draw_rect(Rect2(Vector2(coords.x + map_offset.x, coords.y + map_offset.y) * MetSys.ROOM_SIZE, MetSys.ROOM_SIZE), Color(Color.RED, 0.5))
+			map_overlay.draw_rect(Rect2(Vector2(coords.x + map_offset.x, coords.y + map_offset.y) * MetSys.ROOM_SIZE, MetSys.ROOM_SIZE), theme_cache.current_scene_room)
 	
 	if current_hovered_item:
 		if "coords" in current_hovered_item.data:
 			var coords: Vector3i = current_hovered_item.data.coords
 			if coords.z == current_layer:
-				map_overlay.draw_rect(Rect2(Vector2(coords.x + map_offset.x, coords.y + map_offset.y) * MetSys.ROOM_SIZE, MetSys.ROOM_SIZE), Color(Color.RED, 0.5))
+				map_overlay.draw_rect(Rect2(Vector2(coords.x + map_offset.x, coords.y + map_offset.y) * MetSys.ROOM_SIZE, MetSys.ROOM_SIZE), theme_cache.marked_collectible_room)
 		else:
 			for coords in MetSys.map_data.get_rooms_assigned_to(current_hovered_item.data.map):
 				if coords.z != current_layer:
 					break
 				
-				map_overlay.draw_rect(Rect2(Vector2(coords.x + map_offset.x, coords.y + map_offset.y) * MetSys.ROOM_SIZE, MetSys.ROOM_SIZE), Color(Color.RED, 0.5))
+				map_overlay.draw_rect(Rect2(Vector2(coords.x + map_offset.x, coords.y + map_offset.y) * MetSys.ROOM_SIZE, MetSys.ROOM_SIZE), theme_cache.marked_collectible_room)
 
 func _on_map_draw() -> void:
 	if not plugin:
