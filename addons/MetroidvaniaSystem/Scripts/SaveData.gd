@@ -45,9 +45,11 @@ func add_room_override(room: MetroidvaniaSystem.MapData.RoomData) -> Metroidvani
 	return room_overrides[room]
 
 func remove_room_override(room: MetroidvaniaSystem.MapData.RoomData) -> bool:
-	var had := room_overrides.has(room)
+	var override := room_overrides.get(room)
+	if override:
+		override._cleanup_assigned_map()
 	room_overrides.erase(room)
-	return had
+	return override != null
 
 func add_room_marker(coords: Vector3i, symbol: int):
 	if not coords in room_markers:
@@ -73,7 +75,7 @@ func get_data() -> Dictionary:
 	
 	data[&"room_overrides"] = room_overrides.keys().map(func(room):
 		var coords: Vector3i = MetSys.map_data.rooms.find_key(room)
-		return room_overrides[room].get_override_string(coords))
+		return room_overrides[room]._get_override_string(coords))
 	
 	return data
 

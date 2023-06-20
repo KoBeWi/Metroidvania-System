@@ -198,6 +198,7 @@ script/source = "@tool
 extends \"res://addons/MetroidvaniaSystem/Database/SubEditor.gd\"
 
 var room_groups: Dictionary
+var drawing: int
 
 func _editor_init() -> void:
 	room_only_cursor = true
@@ -220,15 +221,13 @@ func _editor_draw(map_overlay: CanvasItem):
 
 func _editor_input(event: InputEvent):
 	if event is InputEventMouseMotion:
-		## TODO: continuous draw
 		editor.map_overlay.queue_redraw()
-	
-	if event is InputEventMouseButton:
-		if event.pressed:
+		
+		if drawing != 0:
 			var coords := get_coords(get_cursor_pos())
 			var current_group: int = %CurrentGroup.value
 			
-			if event.button_index == MOUSE_BUTTON_LEFT:
+			if drawing & MOUSE_BUTTON_MASK_LEFT != 0:
 				var room_data: MetroidvaniaSystem.MapData.RoomData = MetSys.map_data.get_room_at(coords)
 				if not room_data:
 					return
@@ -239,7 +238,7 @@ func _editor_input(event: InputEvent):
 				if not coords in room_groups[current_group]:
 					room_groups[current_group].append(coords)
 				editor.map_overlay.queue_redraw()
-			elif event.button_index == MOUSE_BUTTON_RIGHT:
+			elif drawing & MOUSE_BUTTON_MASK_RIGHT != 0:
 				if not current_group in room_groups:
 					return
 				
@@ -249,6 +248,9 @@ func _editor_input(event: InputEvent):
 				
 				room_groups[current_group].erase(coords)
 				editor.map_overlay.queue_redraw()
+	
+	if event is InputEventMouseButton:
+		drawing = int(event.pressed) * event.button_mask
 "
 
 [sub_resource type="GDScript" id="GDScript_ilxbw"]

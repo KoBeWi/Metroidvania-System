@@ -38,8 +38,6 @@ func start_water() -> void:
 	
 	var override := MetSys.add_room_override(Vector3i(0, -1, 0))
 	override.set_assigned_map(\"LavaCorridorAfterwater.tscn\")
-	override = MetSys.add_room_override(Vector3i(1, -1, 0)) ## TODO: wywalić jak na wszystkie będzie
-	override.set_assigned_map(\"LavaCorridorAfterwater.tscn\")
 "
 
 [node name="Map" type="Node2D"]

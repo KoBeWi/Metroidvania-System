@@ -8,6 +8,7 @@ class RoomData:
 	var border_colors: Array[Color] = [Color.TRANSPARENT, Color.TRANSPARENT, Color.TRANSPARENT, Color.TRANSPARENT]
 	var symbol := -1
 	var assigned_map: String
+	var override_map: String
 	
 	var loading
 	
@@ -94,12 +95,17 @@ class RoomData:
 		var override := get_override()
 		if override and override.assigned_map != "/":
 			return override.assigned_map
+		if not override_map.is_empty():
+			return override_map
 		return assigned_map
 	
 	func get_override() -> RoomOverride:
 		if not MetSys.save_data:
 			return null
 		return MetSys.save_data.room_overrides.get(self)
+	
+	func get_coords() -> Vector3i:
+		return MetSys.map_data.rooms.find_key(self)
 
 class RoomOverride extends RoomData:
 	# TODO: metody pomocnicze
@@ -138,7 +144,7 @@ class RoomOverride extends RoomData:
 	
 	func set_assigned_map(map := "/"):
 		if map == "/":
-			MetSys.map_data.map_overrides.erase(map)
+			_cleanup_assigned_map()
 		else:
 			if custom_room_coords != MetroidvaniaSystem.VECTOR3INF:
 				if not map in MetSys.map_data.assigned_maps:
@@ -146,11 +152,16 @@ class RoomOverride extends RoomData:
 				MetSys.map_data.assigned_maps[map].append(custom_room_coords)
 			else:
 				MetSys.map_data.map_overrides[map] = original_room.assigned_map
+				
+				for coords in MetSys.map_data.get_whole_room(original_room.get_coords()):
+					var room: RoomData = MetSys.map_data.rooms[coords]
+					if not room.override_map.is_empty():
+						push_warning("Assigned map already overriden at: %s" % coords)
+					room.override_map = map
 		
-		# TODO: na wszystkie pomieszczenia
 		assigned_map = map
 	
-	func destroy():
+	func destroy() -> void:
 		if custom_room_coords == MetroidvaniaSystem.VECTOR3INF:
 			push_error("Only custom room can be destroyed.")
 			return
@@ -160,10 +171,18 @@ class RoomOverride extends RoomData:
 		MetSys.map_data.room_overrides.erase(custom_room_coords)
 		MetSys.map_data.custom_rooms.erase(self)
 	
-	func get_override_string(coords: Vector3i) -> String:
+	func _cleanup_assigned_map() -> void:
+		if assigned_map == "/":
+			return
+		
+		MetSys.map_data.map_overrides.erase(assigned_map)
+		for coords in MetSys.map_data.get_whole_room(original_room.get_coords()):
+			MetSys.map_data.rooms[coords].override_map = ""
+	
+	func _get_override_string(coords: Vector3i) -> String:
 		return str(get_string(), "|", coords.x, ",", coords.y, ",", coords.z, "|", custom_room_coords != MetroidvaniaSystem.VECTOR3INF)
 	
-	func commit():
+	func commit() -> void:
 		MetSys.map_updated.emit()
 
 var rooms: Dictionary#[Vector3i, RoomData]
