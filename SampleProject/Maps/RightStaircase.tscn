@@ -8,7 +8,7 @@ script/source = "extends Area2D
 
 func on_body_entered(body: Node2D) -> void:
 	return
-	var override := MetSys.add_room_override(Vector3i(MetSys.last_player_position.x, MetSys.last_player_position.y, 0))
+	var override := MetSys.get_room_override(Vector3i(MetSys.last_player_position.x, MetSys.last_player_position.y, 0))
 	override.borders[MetSys.L] = 1
 	override.commit()
 "

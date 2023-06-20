@@ -24,7 +24,6 @@ enum { R, D, L, U }
 ## TODO: w motywach pododawać player sceny, symbole i granice
 ## TODO: przerysowaywać scenę jak się zmieni assign
 ## TODO: dużo rzeczy w preview i edytorze się powtarza -> ujednolicić do MapView?
-## TODO: create_override -> get_override(coords, create_if_not_exists)
 ## TODO: RoomOverride.apply_to_group()
 ## TODO: wybór bordera z listy
 ## TODO: onion wyświetlanie hovered itemów (opcja)
@@ -168,10 +167,18 @@ func visit_room(room: Vector3i):
 	if not new_map.is_empty() and not previous_map.is_empty() and new_map != previous_map:
 		map_changed.emit(new_map)
 
-func add_room_override(coords: Vector3i) -> MapData.RoomOverride:
+func get_room_override(coords: Vector3i, auto_create := true) -> MapData.RoomOverride:
 	var room := map_data.get_room_at(coords)
 	assert(room, "Can't override non-existent room")
-	return save_data.add_room_override(room)
+	
+	var existing := room.get_override()
+	if existing:
+		return existing
+	elif auto_create:
+		return save_data.add_room_override(room)
+	else:
+		push_error("No override found at %s" % coords)
+		return null
 
 func remove_room_override(coords: Vector3i):
 	var room = MetSys.map_data.get_room_at(coords)

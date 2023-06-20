@@ -36,7 +36,7 @@ func start_water() -> void:
 	$Water.set_process(true)
 	Game.get_singleton().events.append(\"left_water\")
 	
-	var override := MetSys.add_room_override(Vector3i(0, -1, 0))
+	var override := MetSys.get_room_override(Vector3i(0, -1, 0))
 	override.set_assigned_map(\"LavaCorridorAfterwater.tscn\")
 "
 

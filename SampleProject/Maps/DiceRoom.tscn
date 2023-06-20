@@ -28,7 +28,7 @@ func _on_body_entered(body: Node2D) -> void:
 	%TileMap.set_layer_enabled(2, true)
 	
 	for coords in Game.get_singleton().generated_rooms:
-		MetSys.add_room_override(coords).destroy()
+		MetSys.get_room_override(coords, false).destroy()
 		MetSys.save_data.discovered_rooms.erase(coords)
 	Game.get_singleton().generated_rooms.clear()
 	
