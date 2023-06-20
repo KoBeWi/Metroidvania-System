@@ -17,7 +17,7 @@ enum { R, D, L, U }
 
 ## TODO: validator? do sprawdzania czy wszystkie pomieszczenia mają przypisaną mapę itp
 ## TODO: walidator motywów (czy rozmiary się zgadzają itp
-## TODO: add_main_symbol() - dodaje symbol i zawsze ma index 0 / ???
+## TODO: add_main_symbol() - dodaje symbol i zawsze ma index 0 / ??? / ogólnie symbole do ogarnięcia (w tym dla override)
 ## TODO: get_coordinate_for_object(Node2D, layer = current_layer)
 ## TODO: pos to map (do rysowania po mapie, x,y pomieszczenia, ratio wewnątrz np (32, 4, 0.1, 0.1))
 ## TODO: methoda add_custom_element(name, callable), potrzeba customowy skrypt dziedziczący jakiś typ, wstawić go w pole w MetSys i jest robiona instancja i wywoływane metody. Callback: element_callback(canvas_item, coords, top_left), np. add_custom_element(:"elevator", draw_elevator); func draw_elevator(...): canvas_item.draw_rect(top_left)
