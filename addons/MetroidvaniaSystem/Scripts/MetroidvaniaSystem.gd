@@ -208,8 +208,8 @@ func draw_player_location(canvas_item: CanvasItem, offset: Vector2, exact := fal
 func discover_room_group(group_id: int):
 	assert(group_id in map_data.room_groups)
 	
-	for room in map_data.room_groups[group_id]:
-		save_data.discover_room(room)
+	for coords in map_data.room_groups[group_id]:
+		save_data.discover_room(coords)
 	
 	map_updated.emit()
 

@@ -3,8 +3,8 @@ const FWD = { MetroidvaniaSystem.R: Vector2i.RIGHT, MetroidvaniaSystem.D: Vector
 class RoomData:
 	enum { DATA_EXITS, DATA_COLORS, DATA_SYMBOL, DATA_MAP, OVERRIDE_COORDS, OVERRIDE_CUSTOM }
 	
-	var borders: Array[int] = [-1, -1, -1, -1]
 	var color: Color = Color.TRANSPARENT
+	var borders: Array[int] = [-1, -1, -1, -1]
 	var border_colors: Array[Color] = [Color.TRANSPARENT, Color.TRANSPARENT, Color.TRANSPARENT, Color.TRANSPARENT]
 	var symbol := -1
 	var assigned_map: String
@@ -73,7 +73,7 @@ class RoomData:
 			return c
 		return MetSys.settings.theme.default_center_color
 	
-	func get_border(idx: int) -> int: # TODO: reszta
+	func get_border(idx: int) -> int:
 		var override := get_override()
 		if override and override.borders[idx] != -2:
 			return override.borders[idx]
@@ -108,7 +108,6 @@ class RoomData:
 		return MetSys.map_data.rooms.find_key(self)
 
 class RoomOverride extends RoomData:
-	# TODO: metody pomocnicze
 	var original_room: RoomData
 	var custom_room_coords := MetroidvaniaSystem.VECTOR3INF
 	
@@ -142,6 +141,17 @@ class RoomOverride extends RoomData:
 		
 		return override
 	
+	func set_border(idx: int, value := -2):
+		assert(idx >= 0 and idx < 4)
+		borders[idx] = value
+	
+	func set_border_color(idx: int, value := Color.TRANSPARENT):
+		assert(idx >= 0 and idx < 4)
+		border_colors[idx] = value
+	
+	func set_color(value := Color.TRANSPARENT):
+		color = value
+	
 	func set_assigned_map(map := "/"):
 		if map == "/":
 			_cleanup_assigned_map()
@@ -160,6 +170,19 @@ class RoomOverride extends RoomData:
 					room.override_map = map
 		
 		assigned_map = map
+	
+	func apply_to_group(group_id: int):
+		assert(group_id in MetSys.map_data.room_groups)
+		
+		for coords in MetSys.map_data.room_groups[group_id]:
+			var override: RoomOverride = MetSys.get_room_override(coords)
+			if override == self:
+				continue
+			
+			override.borders = borders.duplicate()
+			override.color = color
+			override.border_colors = border_colors
+			override.symbol = symbol
 	
 	func destroy() -> void:
 		if custom_room_coords == MetroidvaniaSystem.VECTOR3INF:
