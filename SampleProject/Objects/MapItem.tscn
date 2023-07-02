@@ -8,7 +8,7 @@ script/source = "extends Area2D
 @export var room_group: int
 
 func _ready() -> void:
-	MetSys.register_storable_object(self)
+	MetSys.register_storable_object_with_marker(self)
 
 func collect(body: Node2D) -> void:
 	MetSys.store_object(self)

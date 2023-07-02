@@ -24,7 +24,6 @@ enum { R, D, L, U }
 ## TODO: w motywach pododawać player sceny, symbole i granice
 ## TODO: przerysowaywać scenę jak się zmieni assign
 ## TODO: dużo rzeczy w preview i edytorze się powtarza -> ujednolicić do MapView?
-## TODO: RoomOverride.apply_to_group()
 ## TODO: wybór bordera z listy
 ## TODO: onion wyświetlanie hovered itemów (opcja)
 ## TODO: do szukania: wymyślić jakoś jak wyświetlać różne ikonki w zależności od danych
@@ -90,7 +89,7 @@ func set_player_position(position: Vector2):
 		room_changed.emit(player_pos)
 		last_player_position = player_pos_3d
 
-func register_storable_object(object: Object, stored_callback := Callable(), map_marker := DEFAULT_SYMBOL):
+func register_storable_object_with_marker(object: Object, stored_callback := Callable(), map_marker := DEFAULT_SYMBOL):
 	if stored_callback.is_null():
 		if object is Node:
 			stored_callback = Callable(object, &"queue_free")
@@ -108,6 +107,9 @@ func register_storable_object(object: Object, stored_callback := Callable(), map
 		
 		if save_data.register_storable_object(object):
 			save_data.add_room_marker(get_object_coords(object), map_marker)
+
+func register_storable_object(object: Object, stored_callback := Callable()):
+	register_storable_object_with_marker(object, stored_callback, -1)
 
 func store_object(object: Object, map_marker := DEFAULT_SYMBOL):
 	save_data.store_object(object)
@@ -185,6 +187,9 @@ func remove_room_override(coords: Vector3i):
 	assert(room, "Can't remove override of non-existent room")
 	if save_data.remove_room_override(room):
 		map_updated.emit()
+
+func get_current_coords() -> Vector3i:
+	return Vector3i(last_player_position.x, last_player_position.y, current_layer)
 
 func draw_map_square(canvas_item: CanvasItem, offset: Vector2, coords: Vector3i, use_save_data := false):
 	RoomDrawer.draw(canvas_item, offset, coords, map_data, save_data if use_save_data else null)

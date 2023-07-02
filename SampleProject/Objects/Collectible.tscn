@@ -6,7 +6,7 @@
 script/source = "extends Area2D
 
 func _ready() -> void:
-	MetSys.register_storable_object(self)
+	MetSys.register_storable_object_with_marker(self)
 
 func collect(body: Node2D) -> void:
 	if not body.is_in_group(&\"player\"):

@@ -54,7 +54,7 @@ class RoomData:
 			data.append(str(symbol))
 		else:
 			data.append("")
-		data.append(assigned_map.trim_prefix(MetSys.settings.map_root_folder).trim_prefix("/"))
+		data.append(assigned_map.trim_prefix(MetSys.settings.map_root_folder + "/"))
 		return "|".join(data)
 	
 	func load_next_chunk() -> String:

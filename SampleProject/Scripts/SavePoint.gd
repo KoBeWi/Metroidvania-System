@@ -1,5 +1,6 @@
 extends Area2D
 
+## TODO: save current location
 @onready var start_time := Time.get_ticks_msec()
 
 func _ready() -> void:

@@ -20,7 +20,7 @@ static func draw(canvas_item: CanvasItem, offset: Vector2, coords: Vector3i, map
 	# center
 	if bool(display_flags & MetroidvaniaSystem.DISPLAY_CENTER):
 		var room_color := room_data.get_color()
-		theme.center_texture.draw(ci, offset * MetSys.ROOM_SIZE, room_color if discovered == 2 else theme.unexplored_room_fill_color)
+		theme.center_texture.draw(ci, offset * MetSys.ROOM_SIZE, room_color if discovered == 2 else theme.unexplored_center_color)
 	
 	var borders: Array[int] = [-1, -1, -1, -1]
 	for i in 4:

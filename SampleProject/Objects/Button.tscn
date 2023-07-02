@@ -8,7 +8,7 @@ script/source = "extends Area2D
 signal pressed
 
 func _ready() -> void:
-	MetSys.register_storable_object(self, press, -1)
+	MetSys.register_storable_object(self, press)
 
 func _on_body_entered(body: Node2D) -> void:
 	if not body.is_in_group(&\"player\"):

@@ -17,3 +17,5 @@ SotN = Castlevania: Symphony of the Night
 RR = Rabi-Ribi
 VoF = Voice of Flowers
 Zeric
+
+Info co gdziej jest w przykładowym projekcie
