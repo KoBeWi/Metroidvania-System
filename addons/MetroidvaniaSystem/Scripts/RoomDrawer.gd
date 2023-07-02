@@ -116,11 +116,15 @@ static func draw(canvas_item: CanvasItem, offset: Vector2, coords: Vector3i, map
 	if bool(display_flags & MetroidvaniaSystem.DISPLAY_SYMBOLS):
 		var symbol: int = -1
 		
-		if save_data and coords in save_data.room_markers:
-			symbol = save_data.room_markers[coords].back()
+		if save_data and coords in save_data.custom_markers:
+			var custom: int = save_data.custom_markers[coords]
+			for i in range(63, -1, -1):
+				if custom & 1 << i:
+					symbol = i
+					break
 		
 		if symbol == -1:
-			symbol = room_data.symbol
+			symbol = room_data.get_symbol()
 		
 		if symbol > - 1:
 			assert(symbol < theme.symbols.size(), "Bad symbol '%s' at '%s'" % [symbol, coords])

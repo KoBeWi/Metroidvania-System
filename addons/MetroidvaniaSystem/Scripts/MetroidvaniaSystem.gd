@@ -17,7 +17,6 @@ enum { R, D, L, U }
 
 ## TODO: validator? do sprawdzania czy wszystkie pomieszczenia mają przypisaną mapę itp
 ## TODO: walidator motywów (czy rozmiary się zgadzają itp
-## TODO: add_main_symbol() - dodaje symbol i zawsze ma index 0 / ??? / ogólnie symbole do ogarnięcia (w tym dla override)
 ## TODO: get_coordinate_for_object(Node2D, layer = current_layer)
 ## TODO: pos to map (do rysowania po mapie, x,y pomieszczenia, ratio wewnątrz np (32, 4, 0.1, 0.1))
 ## TODO: methoda add_custom_element(name, callable), potrzeba customowy skrypt dziedziczący jakiś typ, wstawić go w pole w MetSys i jest robiona instancja i wywoływane metody. Callback: element_callback(canvas_item, coords, top_left), np. add_custom_element(:"elevator", draw_elevator); func draw_elevator(...): canvas_item.draw_rect(top_left)
@@ -89,6 +88,13 @@ func set_player_position(position: Vector2):
 		room_changed.emit(player_pos)
 		last_player_position = player_pos_3d
 
+func add_custom_marker(coords: Vector3i, symbol: int):
+	assert(symbol >= 0 and symbol < mini(MetSys.settings.theme.symbols.size(), 63))
+	save_data.add_custom_marker(coords, symbol)
+
+func remove_custom_marker(coords: Vector3i, symbol: int):
+	save_data.remove_custom_marker(coords, symbol)
+
 func register_storable_object_with_marker(object: Object, stored_callback := Callable(), map_marker := DEFAULT_SYMBOL):
 	if stored_callback.is_null():
 		if object is Node:
@@ -105,8 +111,8 @@ func register_storable_object_with_marker(object: Object, stored_callback := Cal
 		if map_marker > -1:
 			object.set_meta(&"map_marker", map_marker)
 		
-		if save_data.register_storable_object(object):
-			save_data.add_room_marker(get_object_coords(object), map_marker)
+		if save_data.register_storable_object(object) and map_marker > -1:
+			save_data.add_custom_marker(get_object_coords(object), map_marker)
 
 func register_storable_object(object: Object, stored_callback := Callable()):
 	register_storable_object_with_marker(object, stored_callback, -1)
@@ -114,13 +120,13 @@ func register_storable_object(object: Object, stored_callback := Callable()):
 func store_object(object: Object, map_marker := DEFAULT_SYMBOL):
 	save_data.store_object(object)
 	if object.has_meta(&"map_marker"):
-		save_data.remove_room_marker(get_object_coords(object), object.get_meta(&"map_marker"))
+		save_data.remove_custom_marker(get_object_coords(object), object.get_meta(&"map_marker"))
 	
 	if map_marker == DEFAULT_SYMBOL:
 		map_marker = settings.theme.collected_item_symbol
 	
 	if map_marker > -1:
-		save_data.add_room_marker(get_object_coords(object), map_marker)
+		save_data.add_custom_marker(get_object_coords(object), map_marker)
 
 func get_object_id(object: Object) -> String:
 	if object.has_meta(&"object_id"):

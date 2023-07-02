@@ -91,6 +91,12 @@ class RoomData:
 			return c
 		return MetSys.settings.theme.default_border_color
 	
+	func get_symbol() -> int:
+		var override := get_override()
+		if override and override.symbol != -2:
+			return override.symbol
+		return symbol
+	
 	func get_assigned_map() -> String:
 		var override := get_override()
 		if override and override.assigned_map != "/":
@@ -151,6 +157,10 @@ class RoomOverride extends RoomData:
 	
 	func set_color(value := Color.TRANSPARENT):
 		color = value
+	
+	func set_symbol(value := -2):
+		assert(value >= -2 and value < MetSys.settings.theme.symbols.size())
+		symbol = value
 	
 	func set_assigned_map(map := "/"):
 		if map == "/":
