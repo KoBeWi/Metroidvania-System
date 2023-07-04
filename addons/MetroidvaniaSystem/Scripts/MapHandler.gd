@@ -1,8 +1,8 @@
 @tool
 extends Node2D
 
-const GRID_COLOR = Color(1, 1, 1, 0.333)
-const GRID_PASSAGE_COLOR = Color(1, 0, 1, 0.666)
+var GRID_COLOR: Color
+var GRID_PASSAGE_COLOR: Color
 
 var rooms: Array[Vector3i]
 var initialized: bool
@@ -17,7 +17,9 @@ func _enter_tree() -> void:
 	initialized = true
 	
 	if Engine.is_editor_hint():
-		pass
+		var theme: Theme = load("res://addons/MetroidvaniaSystem/Database/DatabaseTheme.tres")
+		GRID_COLOR = theme.get_color(&"scene_room_border", &"MetSys")
+		GRID_PASSAGE_COLOR = theme.get_color(&"scene_room_exit", &"MetSys")
 	else:
 		MetSys.current_map = self
 	

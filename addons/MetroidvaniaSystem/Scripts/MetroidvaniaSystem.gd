@@ -17,7 +17,6 @@ enum { R, D, L, U }
 
 ## TODO: validator? do sprawdzania czy wszystkie pomieszczenia mają przypisaną mapę itp
 ## TODO: walidator motywów (czy rozmiary się zgadzają itp
-## TODO: get_coordinate_for_object(Node2D, layer = current_layer)
 ## TODO: pos to map (do rysowania po mapie, x,y pomieszczenia, ratio wewnątrz np (32, 4, 0.1, 0.1))
 ## TODO: methoda add_custom_element(name, callable), potrzeba customowy skrypt dziedziczący jakiś typ, wstawić go w pole w MetSys i jest robiona instancja i wywoływane metody. Callback: element_callback(canvas_item, coords, top_left), np. add_custom_element(:"elevator", draw_elevator); func draw_elevator(...): canvas_item.draw_rect(top_left)
 ## TODO: w motywach pododawać player sceny, symbole i granice
@@ -27,7 +26,7 @@ enum { R, D, L, U }
 ## TODO: onion wyświetlanie hovered itemów (opcja)
 ## TODO: do szukania: wymyślić jakoś jak wyświetlać różne ikonki w zależności od danych
 ## TODO: summary: wypisywać ilość dla każdego rodzaju
-## TODO: handler może się rejestrować dla aktualnej scene (owner.set_meta(&"handler"))
+## TODO: handler może się rejestrować dla aktualnej scene (owner.set_meta(&"handler")) // jest, tylko trzeba lepszą nazwę
 
 @export var exported_settings: Resource
 
@@ -196,6 +195,11 @@ func remove_room_override(coords: Vector3i):
 
 func get_current_coords() -> Vector3i:
 	return Vector3i(last_player_position.x, last_player_position.y, current_layer)
+
+func get_current_map() -> MapHandler:
+	if is_instance_valid(current_map):
+		return current_map
+	return null
 
 func draw_map_square(canvas_item: CanvasItem, offset: Vector2, coords: Vector3i, use_save_data := false):
 	RoomDrawer.draw(canvas_item, offset, coords, map_data, save_data if use_save_data else null)
