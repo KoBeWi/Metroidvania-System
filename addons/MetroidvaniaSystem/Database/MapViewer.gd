@@ -5,7 +5,6 @@ enum {MODE_LAYOUT = 1, MODE_ROOM_SYMBOL, MODE_ROOM_COLOR, MODE_ROOM_GROUP, MODE_
 
 @onready var map_overlay: Control = $MapOverlay
 @onready var map: Control = %Map
-@onready var panel: PanelContainer = $Panel
 
 @export var mode_group: ButtonGroup
 
@@ -46,12 +45,12 @@ func layer_changed(l: int):
 	map_overlay.queue_redraw()
 
 func _on_item_hover(item: Control):
-	item.unhovered.connect(_on_item_unhover.bind(item))
+	item.mouse_exited.connect(_on_item_unhover.bind(item))
 	current_hovered_item = item
 	map_overlay.queue_redraw()
 
 func _on_item_unhover(item: Control):
-	item.unhovered.disconnect(_on_item_unhover)
+	item.mouse_exited.disconnect(_on_item_unhover)
 	if item == current_hovered_item:
 		current_hovered_item = null
 		map_overlay.queue_redraw()
@@ -89,9 +88,9 @@ func _on_overlay_draw() -> void:
 	
 	var font := get_theme_font(&"font", &"Label")
 	if room_under_cursor and not room_under_cursor.assigned_map.is_empty():
-		map_overlay.draw_string(font, Vector2(0, panel.size.y + font.get_height()), str(mouse, " ", room_under_cursor.assigned_map))
+		map_overlay.draw_string(font, Vector2(0, font.get_height()), str(mouse, " ", room_under_cursor.assigned_map))
 	else:
-		map_overlay.draw_string(font, Vector2(0, panel.size.y + font.get_height()), str(mouse), HORIZONTAL_ALIGNMENT_LEFT, -1, 16, theme_cache.map_not_assigned if room_under_cursor else theme_cache.map_assigned)
+		map_overlay.draw_string(font, Vector2(0, font.get_height()), str(mouse), HORIZONTAL_ALIGNMENT_LEFT, -1, 16, theme_cache.map_not_assigned if room_under_cursor else theme_cache.map_assigned)
 	
 	if map_overlay.cursor_inside:
 		map_overlay.draw_rect(Rect2(Vector2(mouse + map_offset) * MetSys.ROOM_SIZE, MetSys.ROOM_SIZE), theme_cache.cursor_color, false, 2)
@@ -106,12 +105,13 @@ func _on_overlay_draw() -> void:
 			map_overlay.draw_rect(Rect2(Vector2(coords.x + map_offset.x, coords.y + map_offset.y) * MetSys.ROOM_SIZE, MetSys.ROOM_SIZE), theme_cache.current_scene_room)
 	
 	if current_hovered_item:
-		if "coords" in current_hovered_item.data:
-			var coords: Vector3i = current_hovered_item.data.coords
+		var data: Dictionary = current_hovered_item.get_meta(&"data")
+		if "coords" in data:
+			var coords: Vector3i = data.coords
 			if coords.z == current_layer:
 				map_overlay.draw_rect(Rect2(Vector2(coords.x + map_offset.x, coords.y + map_offset.y) * MetSys.ROOM_SIZE, MetSys.ROOM_SIZE), theme_cache.marked_collectible_room)
 		else:
-			for coords in MetSys.map_data.get_rooms_assigned_to(current_hovered_item.data.map):
+			for coords in MetSys.map_data.get_rooms_assigned_to(data.map):
 				if coords.z != current_layer:
 					break
 				

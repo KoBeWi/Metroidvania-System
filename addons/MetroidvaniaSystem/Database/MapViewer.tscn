@@ -1,43 +1,48 @@
-[gd_scene load_steps=6 format=3 uid="uid://df5fuj4vjr11p"]
+[gd_scene load_steps=7 format=3 uid="uid://df5fuj4vjr11p"]
 
 [ext_resource type="Script" path="res://addons/MetroidvaniaSystem/Database/MapViewer.gd" id="1_s16ok"]
 [ext_resource type="Script" path="res://addons/MetroidvaniaSystem/Database/MapOverlay.gd" id="2_pgyha"]
 [ext_resource type="Script" path="res://addons/MetroidvaniaSystem/Scripts/EditorIconButton.gd" id="2_tjngl"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ejg0f"]
-content_margin_left = 4.0
-content_margin_top = 4.0
-content_margin_right = 4.0
-content_margin_bottom = 4.0
-draw_center = false
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(1, 1, 1, 1)
+[sub_resource type="ButtonGroup" id="ButtonGroup_lmh17"]
 
-[sub_resource type="GDScript" id="GDScript_i8h0q"]
-resource_name = "Stats"
+[sub_resource type="GDScript" id="GDScript_fjyy3"]
+resource_name = "Settings"
 script/source = "@tool
-extends VBoxContainer
+extends Button
 
-@onready var scan_progress: ProgressBar = %ScanProgress
-@onready var summary: VBoxContainer = %Summary
+var plugin: EditorPlugin
 
-var thread: Thread
+func _enter_tree() -> void:
+	if owner:
+		plugin = owner.plugin
 
 func _ready() -> void:
-	if not owner.plugin:
+	if not plugin:
 		return
 	
-	hide()
-	%Settings.hide()
-	%ScanProgress.hide()
+	_pressed()
 	
 	await get_tree().process_frame
 	for data in MetSys.settings.collectible_list:
 		var collectible := add_collectible()
 		collectible.set_data(data)
+
+func _pressed() -> void:
+	for button in button_group.get_buttons():
+		button.exit()
+	
+	%Settings.show()
+
+func exit():
+	%Settings.hide()
+
+func add_collectible() -> Control:
+	var collectible := preload(\"res://addons/MetroidvaniaSystem/Nodes/CollectibleElement.tscn\").instantiate()
+	%CollectibleList.add_child(collectible)
+	collectible.save_request.connect(save_collectible_list)
+	return collectible
+	super_deferred_redraw()
 
 func save_collectible_list():
 	var list: Array[Dictionary]
@@ -47,24 +52,44 @@ func save_collectible_list():
 	MetSys.settings.collectible_list = list
 	ResourceSaver.save(MetSys.settings)
 
-func add_collectible() -> Control:
-	var collectible := preload(\"res://addons/MetroidvaniaSystem/Nodes/CollectibleElement.tscn\").instantiate()
-	%CollectibleList.add_child(collectible)
-	collectible.save_request.connect(save_collectible_list)
-	return collectible
-	super_deferred_redraw()
-
 func super_deferred_redraw():
-	get_tree().create_timer(0.1).timeout.connect(owner.map_overlay.queue_redraw)
+	pass
+#	get_tree().create_timer(0.1).timeout.connect(owner.map_overlay.queue_redraw)
+"
+
+[sub_resource type="GDScript" id="GDScript_dicqo"]
+resource_name = "Finder"
+script/source = "@tool
+extends Button
+
+@onready var scan_progress: ProgressBar = %ScanProgress
+@onready var summary: VBoxContainer = %Summary
+
+var thread: Thread
+var found_elements: Array[Dictionary]
+
+func _ready() -> void:
+	scan_progress.hide()
+	exit()
+
+func _pressed() -> void:
+	for button in button_group.get_buttons():
+		button.exit()
+	
+	%Finder.show()
+
+func exit():
+	%Finder.hide()
 
 func start_scan() -> void:
-	summary.get_parent().hide()
+	summary.hide()
 	%ScanButton.disabled = true
 	
 	var collectible_list: Array[Dictionary]
 	for item in %CollectibleList.get_children():
 		collectible_list.append(item.get_data2())
 	
+	found_elements.clear()
 	for item in summary.get_children():
 		item.free()
 	
@@ -77,14 +102,32 @@ func _process(delta: float) -> void:
 		set_process(false)
 		return
 	
-	if not thread.is_alive():
-		thread.wait_to_finish()
-		thread = null
+	if thread.is_alive():
+		return
+	
+	thread.wait_to_finish()
+	thread = null
+	
+	scan_progress.hide()
+	summary.show()
+	%ScanButton.disabled = false
+	
+	for item in %CollectibleList.get_children():
+		var data: Dictionary = item.get_data2()
+		var count := 0
+		var count_label := setup_header(data)
 		
-		scan_progress.hide()
-		summary.get_parent().show()
-		%ScanButton.disabled = false
-		super_deferred_redraw()
+		for found in found_elements:
+			if found.element != data.element:
+				continue
+			
+			count += 1
+			setup_found(found)
+		
+		count_label.text = str(count)
+		summary.add_child(HSeparator.new())
+	
+	super_deferred_redraw()
 
 func scan_maps(element_list: Array[Dictionary]):
 	Thread.set_thread_safety_checks_enabled(false)
@@ -107,9 +150,10 @@ func scan_maps(element_list: Array[Dictionary]):
 		
 		var current_element: Dictionary
 		for line in lines:
+			## TODO: ignorować zduplikowane ID
 			if not current_element.is_empty():
-				if line.begins_with(\"[node name=\") or line.begins_with(\"[connection\"):
-					complete_element(current_element)
+				if line.begins_with(\"[\"):
+					found_elements.append(current_element)
 					current_element = {}
 				elif line.begins_with(\"position =\"):
 					current_element.position = str_to_var(line.get_slice(\"=\", 1))
@@ -123,7 +167,7 @@ func scan_maps(element_list: Array[Dictionary]):
 					break
 		
 		if not current_element.is_empty():
-			complete_element.call_deferred(current_element)
+			found_elements.append(current_element)
 		
 		scan_progress.value += 1
 
@@ -132,9 +176,53 @@ func complete_element(element: Dictionary):
 	found.set_element(element)
 	found.hovered.connect(owner._on_item_hover.bind(found))
 	summary.add_child.call_deferred(found)
+
+func super_deferred_redraw():
+	pass
+#	get_tree().create_timer(0.1).timeout.connect(owner.map_overlay.queue_redraw)
+
+func setup_header(data: Dictionary) -> Label:
+	var hbox := HBoxContainer.new()
+	summary.add_child(hbox)
+	
+	var tex := TextureRect.new()
+	hbox.add_child(tex)
+	tex.texture = data.get(\"icon\")
+	
+	var label := Label.new()
+	hbox.add_child(label)
+	label.text = data.element
+	
+	label = Label.new()
+	hbox.add_child(label)
+	
+	return label
+
+func setup_found(data: Dictionary):
+	var label := Label.new()
+	summary.add_child(label)
+	label.mouse_filter = Control.MOUSE_FILTER_PASS
+	label.set_meta(&\"data\", data)
+	
+	data.map = data.map.trim_prefix(MetSys.settings.map_root_folder)
+	
+	var room := MetSys.map_data.get_rooms_assigned_to(data.map)
+	if \"position\" in data and not room.is_empty():
+		var top_left := MetroidvaniaSystem.VECTOR2INF
+		for coords in room:
+			top_left.x = mini(coords.x, top_left.x)
+			top_left.y = mini(coords.y, top_left.y)
+		
+		var pos := top_left + Vector2i(data.position / MetSys.settings.in_game_room_size)
+		data.coords = Vector3i(pos.x, pos.y, room[0].z)
+		label.text = \"%s %s\" % [data.map, data.coords]
+	else:
+		label.text = \"%s\" % data.map
+	
+	label.mouse_entered.connect(owner._on_item_hover.bind(label))
 "
 
-[node name="MapViewer" type="MarginContainer"]
+[node name="MapViewer" type="HBoxContainer"]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -142,6 +230,111 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_s16ok")
 metadata/_edit_lock_ = true
+
+[node name="Panel" type="PanelContainer" parent="."]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel"]
+layout_mode = 2
+
+[node name="Layer" type="VBoxContainer" parent="Panel/VBoxContainer"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="Label" type="Label" parent="Panel/VBoxContainer/Layer"]
+layout_mode = 2
+text = "Current Layer"
+horizontal_alignment = 1
+
+[node name="CurrentLayer" type="SpinBox" parent="Panel/VBoxContainer/Layer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="Button2" type="Button" parent="Panel/VBoxContainer/Layer"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Recenter View"
+
+[node name="HSeparator" type="HSeparator" parent="Panel/VBoxContainer"]
+layout_mode = 2
+
+[node name="Modes" type="VBoxContainer" parent="Panel/VBoxContainer"]
+layout_mode = 2
+
+[node name="Settings" type="Button" parent="Panel/VBoxContainer/Modes"]
+layout_mode = 2
+toggle_mode = true
+button_pressed = true
+button_group = SubResource("ButtonGroup_lmh17")
+text = "Collectible Settings"
+script = SubResource("GDScript_fjyy3")
+
+[node name="Finder" type="Button" parent="Panel/VBoxContainer/Modes"]
+layout_mode = 2
+toggle_mode = true
+button_group = SubResource("ButtonGroup_lmh17")
+text = "Collectible Finder"
+script = SubResource("GDScript_dicqo")
+
+[node name="HSeparator2" type="HSeparator" parent="Panel/VBoxContainer"]
+layout_mode = 2
+
+[node name="EditControls" type="VBoxContainer" parent="Panel/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Settings" type="VBoxContainer" parent="Panel/VBoxContainer/EditControls"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Panel/VBoxContainer/EditControls/Settings"]
+layout_mode = 2
+size_flags_vertical = 3
+vertical_scroll_mode = 2
+
+[node name="CollectibleList" type="VBoxContainer" parent="Panel/VBoxContainer/EditControls/Settings/ScrollContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Button" type="Button" parent="Panel/VBoxContainer/EditControls/Settings"]
+layout_mode = 2
+icon_alignment = 1
+script = ExtResource("2_tjngl")
+icon_name = "Add"
+
+[node name="Finder" type="VBoxContainer" parent="Panel/VBoxContainer/EditControls"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ScanButton" type="Button" parent="Panel/VBoxContainer/EditControls/Finder"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Scan Maps"
+
+[node name="ScanProgress" type="ProgressBar" parent="Panel/VBoxContainer/EditControls/Finder"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Panel/VBoxContainer/EditControls/Finder"]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 3
+vertical_scroll_mode = 2
+
+[node name="Summary" type="VBoxContainer" parent="Panel/VBoxContainer/EditControls/Finder/ScrollContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 0
 
 [node name="MapOverlay" type="Control" parent="."]
 clip_contents = true
@@ -173,105 +366,10 @@ grow_vertical = 2
 size_flags_horizontal = 3
 mouse_filter = 2
 
-[node name="Panel" type="PanelContainer" parent="."]
-custom_minimum_size = Vector2(200, 0)
-layout_mode = 2
-size_flags_horizontal = 0
-size_flags_vertical = 0
-theme_override_styles/panel = SubResource("StyleBoxFlat_ejg0f")
-
-[node name="VBoxContainer" type="VBoxContainer" parent="Panel"]
-layout_mode = 2
-
-[node name="Layer" type="VBoxContainer" parent="Panel/VBoxContainer"]
-layout_mode = 2
-mouse_filter = 2
-
-[node name="Label" type="Label" parent="Panel/VBoxContainer/Layer"]
-layout_mode = 2
-text = "Current Layer"
-horizontal_alignment = 1
-
-[node name="CurrentLayer" type="SpinBox" parent="Panel/VBoxContainer/Layer"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 4
-
-[node name="Button2" type="Button" parent="Panel/VBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 4
-text = "Recenter View"
-
-[node name="HSeparator" type="HSeparator" parent="Panel/VBoxContainer"]
-layout_mode = 2
-
-[node name="Button" type="Button" parent="Panel/VBoxContainer"]
-layout_mode = 2
-toggle_mode = true
-text = "Collectible Stats"
-
-[node name="Stats" type="VBoxContainer" parent="Panel/VBoxContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-script = SubResource("GDScript_i8h0q")
-
-[node name="Button" type="Button" parent="Panel/VBoxContainer/Stats"]
-layout_mode = 2
-toggle_mode = true
-text = "Edit Settings"
-
-[node name="Settings" type="VBoxContainer" parent="Panel/VBoxContainer/Stats"]
-unique_name_in_owner = true
-layout_mode = 2
-
-[node name="ScrollContainer" type="ScrollContainer" parent="Panel/VBoxContainer/Stats/Settings"]
-custom_minimum_size = Vector2(0, 160)
-layout_mode = 2
-vertical_scroll_mode = 2
-
-[node name="CollectibleList" type="VBoxContainer" parent="Panel/VBoxContainer/Stats/Settings/ScrollContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="Button" type="Button" parent="Panel/VBoxContainer/Stats/Settings"]
-layout_mode = 2
-icon_alignment = 1
-script = ExtResource("2_tjngl")
-icon_name = "Add"
-
-[node name="HSeparator" type="HSeparator" parent="Panel/VBoxContainer/Stats"]
-layout_mode = 2
-
-[node name="ScanButton" type="Button" parent="Panel/VBoxContainer/Stats"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "Scan Maps"
-
-[node name="ScanProgress" type="ProgressBar" parent="Panel/VBoxContainer/Stats"]
-unique_name_in_owner = true
-layout_mode = 2
-
-[node name="ScrollContainer" type="ScrollContainer" parent="Panel/VBoxContainer/Stats"]
-custom_minimum_size = Vector2(0, 200)
-layout_mode = 2
-horizontal_scroll_mode = 3
-vertical_scroll_mode = 2
-
-[node name="Summary" type="VBoxContainer" parent="Panel/VBoxContainer/Stats/ScrollContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 0
-
+[connection signal="value_changed" from="Panel/VBoxContainer/Layer/CurrentLayer" to="." method="layer_changed"]
+[connection signal="pressed" from="Panel/VBoxContainer/Layer/Button2" to="." method="recenter_view"]
+[connection signal="pressed" from="Panel/VBoxContainer/EditControls/Settings/Button" to="Panel/VBoxContainer/Modes/Settings" method="add_collectible"]
+[connection signal="pressed" from="Panel/VBoxContainer/EditControls/Finder/ScanButton" to="Panel/VBoxContainer/Modes/Finder" method="start_scan"]
 [connection signal="draw" from="MapOverlay" to="." method="_on_overlay_draw"]
 [connection signal="gui_input" from="MapOverlay" to="." method="_on_map_input"]
 [connection signal="draw" from="MapOverlay/Map" to="." method="_on_map_draw"]
-[connection signal="value_changed" from="Panel/VBoxContainer/Layer/CurrentLayer" to="." method="layer_changed"]
-[connection signal="pressed" from="Panel/VBoxContainer/Button2" to="." method="recenter_view"]
-[connection signal="toggled" from="Panel/VBoxContainer/Button" to="Panel/VBoxContainer/Stats" method="set_visible"]
-[connection signal="toggled" from="Panel/VBoxContainer/Button" to="Panel/VBoxContainer/Stats" method="super_deferred_redraw" unbinds=1]
-[connection signal="toggled" from="Panel/VBoxContainer/Stats/Button" to="Panel/VBoxContainer/Stats/Settings" method="set_visible"]
-[connection signal="toggled" from="Panel/VBoxContainer/Stats/Button" to="Panel/VBoxContainer/Stats" method="super_deferred_redraw" flags=3 unbinds=1]
-[connection signal="pressed" from="Panel/VBoxContainer/Stats/Settings/Button" to="Panel/VBoxContainer/Stats" method="add_collectible"]
-[connection signal="pressed" from="Panel/VBoxContainer/Stats/ScanButton" to="Panel/VBoxContainer/Stats" method="start_scan"]

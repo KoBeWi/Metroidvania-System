@@ -33,5 +33,5 @@ func set_data(data: Dictionary):
 		resource_picker.edited_resource = load(data.icon)
 
 func delete() -> void:
-	queue_redraw()
+	queue_free()
 	save_request.emit()
