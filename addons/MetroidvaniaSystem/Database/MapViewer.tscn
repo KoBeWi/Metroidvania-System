@@ -42,7 +42,6 @@ func add_collectible() -> Control:
 	%CollectibleList.add_child(collectible)
 	collectible.save_request.connect(save_collectible_list)
 	return collectible
-	super_deferred_redraw()
 
 func save_collectible_list():
 	var list: Array[Dictionary]
@@ -51,10 +50,6 @@ func save_collectible_list():
 			list.append(collectible.get_data())
 	MetSys.settings.collectible_list = list
 	ResourceSaver.save(MetSys.settings)
-
-func super_deferred_redraw():
-	pass
-#	get_tree().create_timer(0.1).timeout.connect(owner.map_overlay.queue_redraw)
 "
 
 [sub_resource type="GDScript" id="GDScript_dicqo"]
@@ -126,8 +121,6 @@ func _process(delta: float) -> void:
 		
 		count_label.text = str(count)
 		summary.add_child(HSeparator.new())
-	
-	super_deferred_redraw()
 
 func scan_maps(element_list: Array[Dictionary]):
 	Thread.set_thread_safety_checks_enabled(false)
@@ -150,7 +143,7 @@ func scan_maps(element_list: Array[Dictionary]):
 		
 		var current_element: Dictionary
 		for line in lines:
-			## TODO: ignorować zduplikowane ID
+			## TODO: ignorować zduplikowane ID / albo można wyróżniać/tooltipować
 			if not current_element.is_empty():
 				if line.begins_with(\"[\"):
 					found_elements.append(current_element)
@@ -176,10 +169,6 @@ func complete_element(element: Dictionary):
 	found.set_element(element)
 	found.hovered.connect(owner._on_item_hover.bind(found))
 	summary.add_child.call_deferred(found)
-
-func super_deferred_redraw():
-	pass
-#	get_tree().create_timer(0.1).timeout.connect(owner.map_overlay.queue_redraw)
 
 func setup_header(data: Dictionary) -> Label:
 	var hbox := HBoxContainer.new()
