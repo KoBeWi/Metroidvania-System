@@ -21,13 +21,10 @@ enum { R, D, L, U }
 ## TODO: methoda add_custom_element(name, callable), potrzeba customowy skrypt dziedziczący jakiś typ, wstawić go w pole w MetSys i jest robiona instancja i wywoływane metody. Callback: element_callback(canvas_item, coords, top_left), np. add_custom_element(:"elevator", draw_elevator); func draw_elevator(...): canvas_item.draw_rect(top_left)
 ## TODO: w motywach pododawać player sceny, symbole i granice
 ## TODO: przerysowaywać scenę jak się zmieni assign
-## TODO: dużo rzeczy w preview i edytorze się powtarza -> ujednolicić do MapView?
 ## TODO: wybór bordera z listy
 ## TODO: onion wyświetlanie hovered itemów (opcja)
 ## TODO: do szukania: wymyślić jakoś jak wyświetlać różne ikonki w zależności od danych
-## TODO: summary: wypisywać ilość dla każdego rodzaju
 ## TODO: handler może się rejestrować dla aktualnej scene (owner.set_meta(&"handler")) // jest, tylko trzeba lepszą nazwę
-## TODO: ujednolicić Editor i Viewer. Dać pasek z boku w obu, grubszy
 
 @export var exported_settings: Resource
 

@@ -63,8 +63,7 @@ func _editor_draw(map_overlay: CanvasItem):
 				map_overlay.draw_rect(Rect2(get_cursor_pos() as Vector2 * MetSys.ROOM_SIZE, MetSys.ROOM_SIZE * Vector2(1, 0.333)), theme_cache.border_highlight)
 
 func get_cursor_pos() -> Vector2i:
-	var pos := (editor.map_overlay.get_local_mouse_position() - MetSys.ROOM_SIZE / 2).snapped(MetSys.ROOM_SIZE) / MetSys.ROOM_SIZE as Vector2i
-	return pos - editor.map_offset
+	return editor.get_cursor_pos()
 
 func get_coords(p: Vector2i, layer := editor.current_layer) -> Vector3i:
 	return Vector3i(p.x, p.y, layer)

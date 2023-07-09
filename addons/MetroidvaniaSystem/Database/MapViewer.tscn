@@ -242,7 +242,8 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 4
 
-[node name="Button2" type="Button" parent="Panel/VBoxContainer/Layer"]
+[node name="RecenterButton" type="Button" parent="Panel/VBoxContainer/Layer"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 4
 text = "Recenter View"
@@ -355,10 +356,5 @@ grow_vertical = 2
 size_flags_horizontal = 3
 mouse_filter = 2
 
-[connection signal="value_changed" from="Panel/VBoxContainer/Layer/CurrentLayer" to="." method="layer_changed"]
-[connection signal="pressed" from="Panel/VBoxContainer/Layer/Button2" to="." method="recenter_view"]
 [connection signal="pressed" from="Panel/VBoxContainer/EditControls/Settings/Button" to="Panel/VBoxContainer/Modes/Settings" method="add_collectible"]
 [connection signal="pressed" from="Panel/VBoxContainer/EditControls/Finder/ScanButton" to="Panel/VBoxContainer/Modes/Finder" method="start_scan"]
-[connection signal="draw" from="MapOverlay" to="." method="_on_overlay_draw"]
-[connection signal="gui_input" from="MapOverlay" to="." method="_on_map_input"]
-[connection signal="draw" from="MapOverlay/Map" to="." method="_on_map_draw"]
