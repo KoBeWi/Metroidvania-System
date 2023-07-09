@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://df5fuj4vjr11p"]
+[gd_scene load_steps=8 format=3 uid="uid://df5fuj4vjr11p"]
 
 [ext_resource type="Script" path="res://addons/MetroidvaniaSystem/Database/MapViewer.gd" id="1_s16ok"]
 [ext_resource type="Script" path="res://addons/MetroidvaniaSystem/Database/MapOverlay.gd" id="2_pgyha"]
@@ -211,6 +211,9 @@ func setup_found(data: Dictionary):
 	label.mouse_entered.connect(owner._on_item_hover.bind(label))
 "
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_e26ld"]
+bg_color = Color(0, 0, 0, 0.501961)
+
 [node name="MapViewer" type="HBoxContainer"]
 anchors_preset = 15
 anchor_right = 1.0
@@ -349,6 +352,13 @@ show_behind_parent = true
 anchors_preset = 0
 size_flags_horizontal = 3
 mouse_filter = 2
+
+[node name="StatusLabel" type="Label" parent="MapOverlay"]
+unique_name_in_owner = true
+offset_right = 1.0
+offset_bottom = 23.0
+theme_override_styles/normal = SubResource("StyleBoxFlat_e26ld")
+vertical_alignment = 1
 
 [connection signal="pressed" from="Panel/VBoxContainer/EditControls/Settings/Button" to="Panel/VBoxContainer/Modes/Settings" method="add_collectible"]
 [connection signal="pressed" from="Panel/VBoxContainer/EditControls/Finder/ScanButton" to="Panel/VBoxContainer/Modes/Finder" method="start_scan"]

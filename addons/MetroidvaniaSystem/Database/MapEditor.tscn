@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://dfbykrvyqnqr5"]
+[gd_scene load_steps=12 format=3 uid="uid://dfbykrvyqnqr5"]
 
 [ext_resource type="Script" path="res://addons/MetroidvaniaSystem/Database/MapEditor.gd" id="1_i7yda"]
 [ext_resource type="Script" path="res://addons/MetroidvaniaSystem/Database/MapOverlay.gd" id="2_w1wnt"]
@@ -420,6 +420,11 @@ func on_map_selected(path: String) -> void:
 	editor.map_overlay.queue_redraw()
 "
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xiyo8"]
+content_margin_left = 4.0
+content_margin_right = 4.0
+bg_color = Color(0, 0, 0, 0.501961)
+
 [node name="MapEditor" type="HBoxContainer"]
 anchors_preset = 15
 anchor_right = 1.0
@@ -619,6 +624,14 @@ grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
 mouse_filter = 2
+
+[node name="StatusLabel" type="Label" parent="MapOverlay"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_right = 1.0
+offset_bottom = 23.0
+theme_override_styles/normal = SubResource("StyleBoxFlat_xiyo8")
+vertical_alignment = 1
 
 [node name="FileDialog" type="FileDialog" parent="."]
 unique_name_in_owner = true

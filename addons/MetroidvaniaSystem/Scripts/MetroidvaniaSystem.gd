@@ -25,7 +25,6 @@ enum { R, D, L, U }
 ## TODO: onion wyświetlanie hovered itemów (opcja)
 ## TODO: do szukania: wymyślić jakoś jak wyświetlać różne ikonki w zależności od danych
 ## TODO: handler może się rejestrować dla aktualnej scene (owner.set_meta(&"handler")) // jest, tylko trzeba lepszą nazwę
-## TODO: dać jakieś tło do koordynatów kursora i wyrównać między view i editor
 
 @export var exported_settings: Resource
 

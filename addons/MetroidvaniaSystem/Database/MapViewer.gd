@@ -37,6 +37,15 @@ func _on_item_unhover(item: Control):
 		current_hovered_item = null
 		map_overlay.queue_redraw()
 
+func _update_status_label():
+	status_label.modulate = Color.WHITE
+	if room_under_cursor and not room_under_cursor.assigned_map.is_empty():
+		status_label.text = str(get_cursor_pos(), " ", room_under_cursor.assigned_map)
+	else:
+		if room_under_cursor:
+			status_label.modulate = Color.RED
+		status_label.text = str(get_cursor_pos())
+
 func _on_overlay_input(event: InputEvent) -> void:
 	super(event)
 	
@@ -54,12 +63,6 @@ func _on_overlay_draw() -> void:
 		return
 	
 	var mouse := get_cursor_pos()
-	
-	var font := get_theme_font(&"font", &"Label")
-	if room_under_cursor and not room_under_cursor.assigned_map.is_empty():
-		map_overlay.draw_string(font, Vector2(0, font.get_height()), str(mouse, " ", room_under_cursor.assigned_map))
-	else:
-		map_overlay.draw_string(font, Vector2(0, font.get_height()), str(mouse), HORIZONTAL_ALIGNMENT_LEFT, -1, 16, theme_cache.map_not_assigned if room_under_cursor else theme_cache.map_assigned)
 	
 	if map_overlay.cursor_inside:
 		map_overlay.draw_rect(Rect2(Vector2(mouse + map_offset) * MetSys.ROOM_SIZE, MetSys.ROOM_SIZE), theme_cache.cursor_color, false, 2)

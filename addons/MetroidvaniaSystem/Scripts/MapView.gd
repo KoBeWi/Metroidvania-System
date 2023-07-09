@@ -3,6 +3,7 @@ extends Control
 @onready var map_overlay: Control = $MapOverlay
 @onready var map: Control = %Map
 @onready var current_layer_spinbox: SpinBox = %CurrentLayer
+@onready var status_label: Label = %StatusLabel
 
 const NULL_VECTOR2I = Vector2i(-9999999, -9999999)
 var plugin: EditorPlugin
@@ -53,6 +54,8 @@ func _on_overlay_input(event: InputEvent) -> void:
 			_on_drag()
 		else:
 			map_overlay.queue_redraw()
+		
+		_update_status_label()
 	
 	if event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_MIDDLE:
@@ -66,6 +69,9 @@ func _on_overlay_input(event: InputEvent) -> void:
 
 func _on_drag():
 	pass
+
+func _update_status_label():
+	status_label.text = str(get_cursor_pos())
 
 func _unhandled_key_input(event: InputEvent) -> void:
 	if not visible:

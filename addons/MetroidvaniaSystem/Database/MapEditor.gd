@@ -54,9 +54,6 @@ func _on_overlay_draw() -> void:
 	sub.top_draw = Callable()
 	sub._editor_draw(map_overlay)
 	
-	map_overlay.draw_set_transform_matrix(Transform2D())
-	map_overlay.draw_string(get_theme_font(&"font", &"Label"), Vector2(0, 20), str(get_cursor_pos()))
-	
 	if sub.top_draw.is_valid():
 		sub.top_draw.call(map_overlay)
 
