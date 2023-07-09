@@ -20,12 +20,15 @@ func _enter_tree() -> void:
 		return
 
 func _ready() -> void:
+	map.set_deferred(&"size", MetSys.ROOM_SIZE * 200)
+	
 	map.draw.connect(_on_map_draw)
 	map_overlay.gui_input.connect(_on_overlay_input)
 	map_overlay.draw.connect(_on_overlay_draw)
 	
 	current_layer_spinbox.value_changed.connect(on_layer_changed)
 	%RecenterButton.pressed.connect(on_recenter_view)
+	update_map_position()
 
 func get_cursor_pos() -> Vector2i:
 	var pos := (map_overlay.get_local_mouse_position() - MetSys.ROOM_SIZE / 2).snapped(MetSys.ROOM_SIZE) / MetSys.ROOM_SIZE as Vector2i - map_offset
@@ -39,13 +42,13 @@ func on_layer_changed(l: int):
 func on_recenter_view() -> void:
 	map_offset = Vector2i(10, 10)
 	map_overlay.queue_redraw()
-	map.queue_redraw()
+	update_map_position()
 
 func _on_overlay_input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion:
 		if view_drag != Vector4():
 			map_offset = Vector2(view_drag.z, view_drag.w) + (map_overlay.get_local_mouse_position() - Vector2(view_drag.x, view_drag.y)) / MetSys.ROOM_SIZE
-			map.queue_redraw()
+			update_map_position()
 			map_overlay.queue_redraw()
 			_on_drag()
 		else:
@@ -78,7 +81,7 @@ func _unhandled_key_input(event: InputEvent) -> void:
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_THEME_CHANGED:
-		if map_overlay and visible:
+		if map_overlay:
 			map_overlay.queue_redraw()
 
 func _on_map_draw() -> void:
@@ -87,7 +90,10 @@ func _on_map_draw() -> void:
 	
 	for x in range(-100, 100):
 		for y in range(-100, 100):
-			MetSys.draw_map_square(map, Vector2i(x, y) + map_offset, Vector3i(x, y, current_layer))
+			MetSys.draw_map_square(map, Vector2i(x, y) + Vector2i(100, 100), Vector3i(x, y, current_layer))
 
 func _on_overlay_draw() -> void:
 	pass
+
+func update_map_position():
+	map.position = Vector2(map_offset - Vector2i(100, 100)) * MetSys.ROOM_SIZE

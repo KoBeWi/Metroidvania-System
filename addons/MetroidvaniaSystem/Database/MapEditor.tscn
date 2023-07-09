@@ -25,7 +25,6 @@ func _editor_input(event: InputEvent):
 				drag_from = get_cursor_pos()
 			else:
 				var rect := get_rect_between(drag_from, get_cursor_pos())
-				rect.position -= editor.map.position / MetSys.ROOM_SIZE
 				update_rooms(rect)
 				drag_from = EDITOR_SCRIPT.NULL_VECTOR2I
 		elif event.button_index == MOUSE_BUTTON_RIGHT:
@@ -36,7 +35,6 @@ func _editor_input(event: InputEvent):
 				queue_redraw()
 			else:
 				var rect := get_rect_between(drag_from, get_cursor_pos())
-				rect.position -= editor.map.position / MetSys.ROOM_SIZE
 				erase_rooms(rect)
 				erase_mode = false
 				theme_cache.cursor_color = get_theme_color(&\"cursor_color\", &\"MetSys\")
@@ -579,6 +577,7 @@ edit_alpha = false
 
 [node name="MapOverlay" type="Control" parent="."]
 texture_filter = 1
+clip_contents = true
 layout_mode = 2
 size_flags_horizontal = 3
 script = ExtResource("2_w1wnt")
