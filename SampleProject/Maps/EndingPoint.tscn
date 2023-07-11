@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://th6yo5pc7h8e"]
 
 [ext_resource type="TileSet" uid="uid://bwpcg2opya34n" path="res://SampleProject/Resources/Tileset.tres" id="1_kb04r"]
-[ext_resource type="PackedScene" uid="uid://bsg0351mx3b4u" path="res://addons/MetroidvaniaSystem/Nodes/MapHandler.tscn" id="2_6arb4"]
+[ext_resource type="PackedScene" uid="uid://bsg0351mx3b4u" path="res://addons/MetroidvaniaSystem/Nodes/MapInstance.tscn" id="2_6arb4"]
 
 [sub_resource type="GDScript" id="GDScript_5r1j4"]
 script/source = "extends Area2D

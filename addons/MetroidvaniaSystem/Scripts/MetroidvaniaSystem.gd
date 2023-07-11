@@ -10,7 +10,7 @@ const Settings = preload("res://addons/MetroidvaniaSystem/Scripts/Settings.gd")
 const SaveData = preload("res://addons/MetroidvaniaSystem/Scripts/SaveData.gd")
 const MapData = preload("res://addons/MetroidvaniaSystem/Scripts/MapData.gd")
 const MapBuilder = preload("res://addons/MetroidvaniaSystem/Scripts/MapBuilder.gd")
-const MapHandler = preload("res://addons/MetroidvaniaSystem/Scripts/MapHandler.gd")
+const MapInstance = preload("res://addons/MetroidvaniaSystem/Scripts/MapInstance.gd")
 const RoomDrawer = preload("res://addons/MetroidvaniaSystem/Scripts/RoomDrawer.gd")
 
 enum { R, D, L, U }
@@ -23,7 +23,6 @@ enum { R, D, L, U }
 ## TODO: przerysowaywać scenę jak się zmieni assign
 ## TODO: wybór bordera z listy
 ## TODO: do szukania: wymyślić jakoś jak wyświetlać różne ikonki w zależności od danych
-## TODO: handler może się rejestrować dla aktualnej scene (owner.set_meta(&"handler")) // jest, tylko trzeba lepszą nazwę
 
 @export var exported_settings: Resource
 
@@ -36,7 +35,7 @@ var save_data: SaveData
 var last_player_position := VECTOR3INF
 var exact_player_position: Vector2
 var player_location_instance: Node2D
-var current_map: MapHandler
+var current_map: MapInstance
 
 var current_layer: int:
 	set(layer):
@@ -193,7 +192,7 @@ func remove_room_override(coords: Vector3i):
 func get_current_coords() -> Vector3i:
 	return Vector3i(last_player_position.x, last_player_position.y, current_layer)
 
-func get_current_map() -> MapHandler:
+func get_current_map_instance() -> MapInstance:
 	if is_instance_valid(current_map):
 		return current_map
 	return null

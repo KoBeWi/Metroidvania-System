@@ -355,6 +355,7 @@ mouse_filter = 2
 
 [node name="StatusLabel" type="Label" parent="MapOverlay"]
 unique_name_in_owner = true
+layout_mode = 0
 offset_right = 1.0
 offset_bottom = 23.0
 theme_override_styles/normal = SubResource("StyleBoxFlat_e26ld")

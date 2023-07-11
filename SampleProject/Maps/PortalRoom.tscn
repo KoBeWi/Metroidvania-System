@@ -1,7 +1,7 @@
 [gd_scene load_steps=9 format=3 uid="uid://dafqk3u71on41"]
 
 [ext_resource type="TileSet" uid="uid://bwpcg2opya34n" path="res://SampleProject/Resources/Tileset.tres" id="1_svur5"]
-[ext_resource type="PackedScene" uid="uid://bsg0351mx3b4u" path="res://addons/MetroidvaniaSystem/Nodes/MapHandler.tscn" id="2_uxtjt"]
+[ext_resource type="PackedScene" uid="uid://bsg0351mx3b4u" path="res://addons/MetroidvaniaSystem/Nodes/MapInstance.tscn" id="2_uxtjt"]
 [ext_resource type="Script" path="res://SampleProject/Scripts/Portal.gd" id="3_5l7d4"]
 [ext_resource type="Texture2D" uid="uid://cargdawan7gao" path="res://SampleProject/Sprites/Portal.png" id="3_iqu6u"]
 
