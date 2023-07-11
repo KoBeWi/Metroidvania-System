@@ -21,6 +21,7 @@ func _ready() -> void:
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_THEME_CHANGED:
 		theme_cache.marked_collectible_room = get_theme_color(&"marked_collectible_room", &"MetSys")
+		theme_cache.foreign_marked_collectible_room = get_theme_color(&"foreign_marked_collectible_room", &"MetSys")
 		theme_cache.current_scene_room = get_theme_color(&"current_scene_room", &"MetSys")
 		theme_cache.cursor_color = get_theme_color(&"cursor_color", &"MetSys")
 		theme_cache.map_not_assigned = get_theme_color(&"map_not_assigned", &"MetSys")
@@ -80,8 +81,7 @@ func _on_overlay_draw() -> void:
 		var data: Dictionary = current_hovered_item.get_meta(&"data")
 		if "coords" in data:
 			var coords: Vector3i = data.coords
-			if coords.z == current_layer:
-				map_overlay.draw_rect(Rect2(Vector2(coords.x + map_offset.x, coords.y + map_offset.y) * MetSys.ROOM_SIZE, MetSys.ROOM_SIZE), theme_cache.marked_collectible_room)
+			map_overlay.draw_rect(Rect2(Vector2(coords.x + map_offset.x, coords.y + map_offset.y) * MetSys.ROOM_SIZE, MetSys.ROOM_SIZE), theme_cache.marked_collectible_room if coords.z == current_layer else theme_cache.foreign_marked_collectible_room)
 		else:
 			for coords in MetSys.map_data.get_rooms_assigned_to(data.map):
 				if coords.z != current_layer:
