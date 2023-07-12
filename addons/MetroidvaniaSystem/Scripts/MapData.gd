@@ -180,6 +180,7 @@ class RoomOverride extends RoomData:
 					room.override_map = map
 		
 		assigned_map = map
+		MetSys.room_assign_updated.emit()
 	
 	func apply_to_group(group_id: int):
 		assert(group_id in MetSys.map_data.room_groups)

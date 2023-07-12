@@ -20,7 +20,6 @@ enum { R, D, L, U }
 ## TODO: pos to map (do rysowania po mapie, x,y pomieszczenia, ratio wewnątrz np (32, 4, 0.1, 0.1))
 ## TODO: methoda add_custom_element(name, callable), potrzeba customowy skrypt dziedziczący jakiś typ, wstawić go w pole w MetSys i jest robiona instancja i wywoływane metody. Callback: element_callback(canvas_item, coords, top_left), np. add_custom_element(:"elevator", draw_elevator); func draw_elevator(...): canvas_item.draw_rect(top_left)
 ## TODO: w motywach pododawać player sceny, symbole i granice
-## TODO: przerysowaywać scenę jak się zmieni assign
 ## TODO: wybór bordera z listy
 ## TODO: do szukania: wymyślić jakoś jak wyświetlać różne ikonki w zależności od danych
 
@@ -46,6 +45,7 @@ var current_layer: int:
 		map_updated.emit()
 
 signal map_updated
+signal room_assign_updated
 signal room_changed(new_room: Vector2i)
 signal map_changed(new_map: String)
 

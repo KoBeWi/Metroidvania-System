@@ -39,6 +39,7 @@ func _on_item_unhover(item: Control):
 		map_overlay.queue_redraw()
 
 func _update_status_label():
+	status_label.show()
 	status_label.modulate = Color.WHITE
 	if room_under_cursor and not room_under_cursor.assigned_map.is_empty():
 		status_label.text = str(get_cursor_pos(), " ", room_under_cursor.assigned_map)

@@ -24,12 +24,14 @@ func _ready() -> void:
 	map.set_deferred(&"size", MetSys.ROOM_SIZE * 200)
 	
 	map.draw.connect(_on_map_draw)
+	map_overlay.mouse_exited.connect(status_label.hide)
 	map_overlay.gui_input.connect(_on_overlay_input)
 	map_overlay.draw.connect(_on_overlay_draw)
 	
 	current_layer_spinbox.value_changed.connect(on_layer_changed)
 	%RecenterButton.pressed.connect(on_recenter_view)
 	update_map_position()
+	status_label.hide()
 
 func get_cursor_pos() -> Vector2i:
 	var pos := (map_overlay.get_local_mouse_position() - MetSys.ROOM_SIZE / 2).snapped(MetSys.ROOM_SIZE) / MetSys.ROOM_SIZE as Vector2i - map_offset
@@ -71,6 +73,7 @@ func _on_drag():
 	pass
 
 func _update_status_label():
+	status_label.show()
 	status_label.text = str(get_cursor_pos())
 
 func _unhandled_key_input(event: InputEvent) -> void:

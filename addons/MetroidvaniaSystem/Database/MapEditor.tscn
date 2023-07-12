@@ -391,6 +391,7 @@ func _editor_input(event: InputEvent):
 					first = false
 				
 				MetSys.map_data.get_room_at(p).assigned_map = \"\"
+				MetSys.room_assign_updated.emit()
 			
 			editor.map_overlay.queue_redraw()
 
@@ -416,6 +417,7 @@ func on_map_selected(path: String) -> void:
 	for coords in highlighted_room:
 		MetSys.map_data.get_room_at(coords).assigned_map = path
 		MetSys.map_data.assigned_maps[path].append(coords)
+		MetSys.room_assign_updated.emit()
 	
 	editor.map_overlay.queue_redraw()
 "

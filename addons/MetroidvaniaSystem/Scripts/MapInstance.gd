@@ -17,11 +17,17 @@ func _enter_tree() -> void:
 	initialized = true
 	
 	if Engine.is_editor_hint():
+		MetSys.room_assign_updated.connect(_update_assigned_map)
 		var theme: Theme = load("res://addons/MetroidvaniaSystem/Database/DatabaseTheme.tres")
 		GRID_COLOR = theme.get_color(&"scene_room_border", &"MetSys")
 		GRID_PASSAGE_COLOR = theme.get_color(&"scene_room_exit", &"MetSys")
 	else:
 		MetSys.current_map = self
+	
+	_update_assigned_map()
+
+func _update_assigned_map():
+	queue_redraw()
 	
 	var owner_node := owner if owner != null else self
 	rooms = MetSys.map_data.get_rooms_assigned_to(owner_node.scene_file_path.trim_prefix(MetSys.settings.map_root_folder))
