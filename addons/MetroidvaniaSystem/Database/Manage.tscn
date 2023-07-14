@@ -1,4 +1,4 @@
-[gd_scene load_steps=2 format=3 uid="uid://he12yvtcmf87"]
+[gd_scene load_steps=4 format=3 uid="uid://he12yvtcmf87"]
 
 [sub_resource type="GDScript" id="GDScript_kxd0b"]
 script/source = "@tool
@@ -9,6 +9,10 @@ var plugin: EditorPlugin
 func _enter_tree() -> void:
 	if owner:
 		plugin = owner.plugin
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_THEME_CHANGED:
+		%ValidationPanel.add_theme_stylebox_override(&\"panel\", get_theme_stylebox(&\"panel\", &\"Tree\"))
 
 func edit_settings_pressed():
 	plugin.get_editor_interface().edit_resource(MetSys.exported_settings)
@@ -29,6 +33,8 @@ func edit_database_theme() -> void:
 	plugin.get_editor_interface().edit_resource(owner.theme)
 
 func reset_theme() -> void:
+	%AllowReset.button_pressed = false
+	
 	var th: Theme = owner.theme
 	th.set_color(&\"group_color\", &\"MetSys\", Color(Color.MEDIUM_PURPLE, 0.8))
 	th.set_color(&\"highlighted_room\", &\"MetSys\", Color(Color.GREEN, 0.25))
@@ -42,6 +48,93 @@ func reset_theme() -> void:
 	th.set_color(&\"map_not_assigned\", &\"MetSys\", Color.RED)
 	th.set_color(&\"map_assigned\", &\"MetSys\", Color.WHITE)
 	ResourceSaver.save(th)
+
+func toggle_allow_reset(button_pressed: bool) -> void:
+	%ResetButton.disabled = not button_pressed
+"
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6lvlf"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 5.0
+bg_color = Color(0.1, 0.1, 0.1, 0.6)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 5
+
+[sub_resource type="GDScript" id="GDScript_x20sf"]
+resource_name = "ValidationPlanel"
+script/source = "@tool
+extends PanelContainer
+
+enum { INFO, WARNING, ERROR }
+
+var plugin: EditorPlugin
+var warning_color: Color
+var error_color: Color
+
+func _enter_tree() -> void:
+	if owner:
+		plugin = owner.plugin
+
+func _ready() -> void:
+	if plugin:
+		hide()
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_THEME_CHANGED:
+		warning_color = get_theme_color(&\"warning_color\", &\"Editor\")
+		warning_color = get_theme_color(&\"error_color\", &\"Editor\")
+
+func validate_map_data() -> void:
+	dismiss()
+	
+	for coords in MetSys.map_data.rooms:
+		if not MetSys.map_data.get_assigned_map_at(coords):
+			add_label(\"Missing assigned map at: %s\" % coords, WARNING)
+	
+	## TODO
+
+func validate_map_theme() -> void:
+	dismiss()
+	
+	var map_theme: MapTheme = MetSys.settings.theme
+	
+	if map_theme.center_texture:
+		add_label(\"Room Shape: %s\" % (\"Rectangle\" if map_theme.rectangle else \"Square\"), INFO)
+		add_label(\"Base Room Size: %s\" % map_theme.center_texture.get_size(), INFO)
+	else:
+		add_label(\"Theme is missing center texture.\", ERROR)
+		return
+	
+	add_label(\"Test.\", ERROR)
+	
+	## TODO
+
+func add_label(text: String, type: int):
+	show()
+	
+	var label := Label.new()
+	label.text = \"• \" + text
+	
+	match type:
+		WARNING:
+			label.modulate = Color.YELLOW
+		ERROR:
+			label.modulate = Color.RED
+	
+	%Output.add_child(label)
+
+func dismiss() -> void:
+	if not visible:
+		return
+	
+	for node in %Output.get_children():
+		node.queue_free()
+	hide()
 "
 
 [node name="Manage" type="MarginContainer"]
@@ -52,29 +145,85 @@ theme_override_constants/margin_top = 32
 script = SubResource("GDScript_kxd0b")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
+custom_minimum_size = Vector2(400, 0)
 layout_mode = 2
 size_flags_horizontal = 4
 
-[node name="Button" type="Button" parent="VBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="Button" type="Button" parent="VBoxContainer/VBoxContainer"]
 layout_mode = 2
 text = "General Settings"
 
-[node name="Button2" type="Button" parent="VBoxContainer"]
+[node name="Button2" type="Button" parent="VBoxContainer/VBoxContainer"]
 layout_mode = 2
 text = "Reload and Cleanup Map Data"
 
-[node name="Button3" type="Button" parent="VBoxContainer"]
+[node name="HSeparator3" type="HSeparator" parent="VBoxContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Button4" type="Button" parent="VBoxContainer/VBoxContainer"]
+layout_mode = 2
+text = "Validate Map Data"
+
+[node name="Button5" type="Button" parent="VBoxContainer/VBoxContainer"]
+layout_mode = 2
+text = "Validate Map Theme"
+
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Button3" type="Button" parent="VBoxContainer/VBoxContainer"]
 layout_mode = 2
 text = "Edit Database Theme"
 
-[node name="HSeparator" type="HSeparator" parent="VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="Button4" type="Button" parent="VBoxContainer"]
+[node name="AllowReset" type="CheckBox" parent="VBoxContainer/VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
 layout_mode = 2
+
+[node name="ResetButton" type="Button" parent="VBoxContainer/VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+disabled = true
 text = "Reset Database Theme"
 
-[connection signal="pressed" from="VBoxContainer/Button" to="." method="edit_settings_pressed"]
-[connection signal="pressed" from="VBoxContainer/Button2" to="." method="force_reload"]
-[connection signal="pressed" from="VBoxContainer/Button3" to="." method="edit_database_theme"]
-[connection signal="pressed" from="VBoxContainer/Button4" to="." method="reset_theme"]
+[node name="HSeparator2" type="HSeparator" parent="VBoxContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="ValidationPanel" type="PanelContainer" parent="VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_6lvlf")
+script = SubResource("GDScript_x20sf")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/ValidationPanel"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/ValidationPanel/VBoxContainer"]
+layout_mode = 2
+text = "Validation Result"
+horizontal_alignment = 1
+
+[node name="Output" type="VBoxContainer" parent="VBoxContainer/ValidationPanel/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Button" type="Button" parent="VBoxContainer/ValidationPanel/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Dismiss"
+
+[connection signal="pressed" from="VBoxContainer/VBoxContainer/Button" to="." method="edit_settings_pressed"]
+[connection signal="pressed" from="VBoxContainer/VBoxContainer/Button2" to="." method="force_reload"]
+[connection signal="pressed" from="VBoxContainer/VBoxContainer/Button4" to="VBoxContainer/ValidationPanel" method="validate_map_data"]
+[connection signal="pressed" from="VBoxContainer/VBoxContainer/Button5" to="VBoxContainer/ValidationPanel" method="validate_map_theme"]
+[connection signal="pressed" from="VBoxContainer/VBoxContainer/Button3" to="." method="edit_database_theme"]
+[connection signal="toggled" from="VBoxContainer/VBoxContainer/HBoxContainer/AllowReset" to="." method="toggle_allow_reset"]
+[connection signal="pressed" from="VBoxContainer/VBoxContainer/HBoxContainer/ResetButton" to="." method="reset_theme"]
+[connection signal="pressed" from="VBoxContainer/ValidationPanel/VBoxContainer/Button" to="VBoxContainer/ValidationPanel" method="dismiss"]
