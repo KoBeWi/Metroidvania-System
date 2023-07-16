@@ -17,12 +17,8 @@ var current_layer: int
 func _enter_tree() -> void:
 	if owner:
 		plugin = owner.plugin
-	else:
-		return
 
 func _ready() -> void:
-	map.set_deferred(&"size", MetSys.ROOM_SIZE * 200)
-	
 	map.draw.connect(_on_map_draw)
 	map_overlay.mouse_exited.connect(status_label.hide)
 	map_overlay.gui_input.connect(_on_overlay_input)
@@ -30,8 +26,11 @@ func _ready() -> void:
 	
 	current_layer_spinbox.value_changed.connect(on_layer_changed)
 	%RecenterButton.pressed.connect(on_recenter_view)
-	update_map_position()
+	
 	status_label.hide()
+	await get_tree().process_frame
+	update_map_position()
+	map.size = MetSys.ROOM_SIZE * 200
 
 func get_cursor_pos() -> Vector2i:
 	var pos := (map_overlay.get_local_mouse_position() - MetSys.ROOM_SIZE / 2).snapped(MetSys.ROOM_SIZE) / MetSys.ROOM_SIZE as Vector2i - map_offset

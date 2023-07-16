@@ -11,6 +11,9 @@ func _enter_tree() -> void:
 		plugin = owner.plugin
 
 func _notification(what: int) -> void:
+	if not plugin:
+		return
+	
 	if what == NOTIFICATION_THEME_CHANGED:
 		%ValidationPanel.add_theme_stylebox_override(&\"panel\", get_theme_stylebox(&\"panel\", &\"Tree\"))
 

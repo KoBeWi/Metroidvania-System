@@ -15,7 +15,7 @@ const RoomDrawer = preload("res://addons/MetroidvaniaSystem/Scripts/RoomDrawer.g
 
 enum { R, D, L, U }
 
-## TODO: validator? do sprawdzania czy wszystkie pomieszczenia mają przypisaną mapę itp
+## TODO: validator? do sprawdzania czy wszystkie pomieszczenia mają przypisaną mapę, czy każdy symbol jest użyty, czy symbole collectibli są poprawne itp
 ## TODO: walidator motywów (czy rozmiary się zgadzają itp
 ## TODO: pos to map (do rysowania po mapie, x,y pomieszczenia, ratio wewnątrz np (32, 4, 0.1, 0.1))
 ## TODO: methoda add_custom_element(name, callable), potrzeba customowy skrypt dziedziczący jakiś typ, wstawić go w pole w MetSys i jest robiona instancja i wywoływane metody. Callback: element_callback(canvas_item, coords, top_left), np. add_custom_element(:"elevator", draw_elevator); func draw_elevator(...): canvas_item.draw_rect(top_left)
@@ -23,6 +23,7 @@ enum { R, D, L, U }
 ## TODO: wybór bordera z listy
 ## TODO: do szukania: wymyślić jakoś jak wyświetlać różne ikonki w zależności od danych
 ## TODO: get_used_squares() i dać trójkątne pomieszczenie. Czarno tam gdzie nic nie ma
+## TODO: do single border dać oddzielną metodę na rysowanie borderów
 
 @export var exported_settings: Resource
 

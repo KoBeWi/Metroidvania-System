@@ -45,6 +45,7 @@ func _editor_draw(map_overlay: CanvasItem):
 			map_overlay.draw_rect(Rect2(get_cursor_pos() as Vector2 * MetSys.ROOM_SIZE, MetSys.ROOM_SIZE), theme_cache.cursor_color, false, 2)
 	else:
 		var rect := get_rect_between(drag_from, get_cursor_pos())
+		## FIXME źle pozycja
 		top_draw = func(map_overlay: CanvasItem): map_overlay.draw_string(get_theme_font(&"font", &"Label"), Vector2(0, 40), "%d x %d" % [rect.size.x, rect.size.y])
 		
 		rect.position *= MetSys.ROOM_SIZE
