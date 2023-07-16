@@ -20,3 +20,4 @@ Zeric
 
 Info co gdziej jest w przykładowym projekcie
 can't have multiple handlers in tree
+separatory mogą być mniejsze niż środek

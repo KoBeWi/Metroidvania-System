@@ -73,11 +73,15 @@ resource_name = "ValidationPlanel"
 script/source = "@tool
 extends PanelContainer
 
-enum { INFO, WARNING, ERROR }
+enum { SUCCESS, WARNING, ERROR, INFO }
 
 var plugin: EditorPlugin
+
 var warning_color: Color
 var error_color: Color
+var success_color: Color
+
+var has_error: bool
 
 func _enter_tree() -> void:
 	if owner:
@@ -90,7 +94,8 @@ func _ready() -> void:
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_THEME_CHANGED:
 		warning_color = get_theme_color(&\"warning_color\", &\"Editor\")
-		warning_color = get_theme_color(&\"error_color\", &\"Editor\")
+		error_color = get_theme_color(&\"error_color\", &\"Editor\")
+		success_color = get_theme_color(&\"success_color\", &\"Editor\")
 
 func validate_map_data() -> void:
 	dismiss()
@@ -103,6 +108,7 @@ func validate_map_data() -> void:
 
 func validate_map_theme() -> void:
 	dismiss()
+	has_error = false
 	
 	var map_theme: MapTheme = MetSys.settings.theme
 	
@@ -110,24 +116,111 @@ func validate_map_theme() -> void:
 		add_label(\"Room Shape: %s\" % (\"Rectangle\" if map_theme.rectangle else \"Square\"), INFO)
 		add_label(\"Base Room Size: %s\" % map_theme.center_texture.get_size(), INFO)
 	else:
-		add_label(\"Theme is missing center texture.\", ERROR)
+		add_label(\"Theme is missing center texture. Map can't be drawn.\", ERROR)
 		return
 	
-	add_label(\"Test.\", ERROR)
+	if map_theme.rectangle:
+		if map_theme.vertical_borders.size() != map_theme.horizontal_borders.size():
+			add_label(\"Number of horizontal and vertical borders do not match.\", ERROR)
+		
+		check_vertical_border_texture(map_theme.vertical_wall, \"Vertical wall texture\")
+		check_vertical_border_texture(map_theme.vertical_passage, \"Vertical passage texture\")
+		
+		for i in map_theme.vertical_borders.size():
+			var texture: Texture2D = map_theme.vertical_borders[i]
+			check_vertical_border_texture(texture, \"Vertical border texture at index %d\" % i)
+		
+		check_horizontal_border_texture(map_theme.horizontal_wall, \"Horizontal wall texture\")
+		check_horizontal_border_texture(map_theme.horizontal_passage, \"Horizontal passage texture\")
+		
+		for i in map_theme.horizontal_borders.size():
+			var texture: Texture2D = map_theme.horizontal_borders[i]
+			check_horizontal_border_texture(texture, \"Horizontal border texture at index %d\" % i)
+	else:
+		check_vertical_border_texture(map_theme.wall, \"Wall texture\")
+		check_vertical_border_texture(map_theme.passage, \"Passage texture\")
+		
+		for i in map_theme.borders.size():
+			var texture: Texture2D = map_theme.borders[i]
+			check_vertical_border_texture(texture, \"Border texture at index %d\" % i)
 	
-	## TODO
+	if map_theme.uncollected_item_symbol >= map_theme.symbols.size():
+		add_label(\"Uncollected item symbol index is greater than number of available symbols.\", ERROR)
+	
+	if map_theme.collected_item_symbol >= map_theme.symbols.size():
+		add_label(\"Collected item symbol index is greater than number of available symbols.\", ERROR)
+	
+	for i in map_theme.symbols.size():
+		check_symbol_texture(map_theme.symbols[i], \"Symbol %d texture\" % i)
+	
+	check_corner_texture(map_theme.inner_corner, \"Inner corner texture\")
+	check_corner_texture(map_theme.outer_corner, \"Outer corner texture\")
+	if map_theme.use_shared_borders:
+		check_corner_texture(map_theme.t_corner, \"T corner texture\")
+		check_corner_texture(map_theme.cross_corner, \"Cross corner texture\")
+	
+	if map_theme.player_location_scene:
+		var test := map_theme.player_location_scene.instantiate()
+		test.queue_free()
+		if not test is Node2D:
+			add_label(\"Player location scene is not a Node2D.\", ERROR)
+	else:
+		add_label(\"Missing player location scene. Player location can't be displayed using built-in methods.\", WARNING)
+	
+	if not has_error:
+		add_label(\"Theme is valid.\", SUCCESS)
+
+func check_vertical_border_texture(texture: Texture2D, texture_name: String):
+	if texture:
+		var map_theme: MapTheme = MetSys.settings.theme
+		if texture.get_height() != map_theme.center_texture.get_height():
+			add_label(\"%s has invalid height (%d). It should be vertical, oriented towards the right side and match the height of the center texture.\" % [texture_name, texture.get_height()], ERROR)
+		elif texture.get_width() > map_theme.center_texture.get_width() / 2:
+			add_label(\"%s is wider than half of the center texture. It may cause overlaps.\" % texture_name, WARNING)
+	else:
+		add_label(\"%s is empty.\" % texture_name, ERROR)
+
+func check_horizontal_border_texture(texture: Texture2D, texture_name: String):
+	if texture:
+		var map_theme: MapTheme = MetSys.settings.theme
+		if texture.get_height() != map_theme.center_texture.get_width():
+			add_label(\"%s has invalid height (%d). It should be vertical, oriented towards the right side and height should match the width of the center texture.\" % [texture_name, texture.get_height()], ERROR)
+		elif texture.get_width() > map_theme.center_texture.get_height() / 2:
+			add_label(\"%s is wider than half of the height of the center texture. It may cause overlaps.\" % texture_name, WARNING)
+	else:
+		add_label(\"%s is empty.\" % texture_name, ERROR)
+
+func check_symbol_texture(texture: Texture2D, texture_name: String):
+	if texture:
+		var map_theme: MapTheme = MetSys.settings.theme
+		if texture.get_width() > map_theme.center_texture.get_width() or texture.get_height() > map_theme.center_texture.get_height():
+			add_label(\"%s is bigger than center texture. It will stick out of rooms.\" % texture_name, WARNING)
+	else:
+		add_label(\"%s is empty.\" % texture_name, ERROR)
+
+func check_corner_texture(texture: Texture2D, texture_name: String):
+	if texture:
+		var map_theme: MapTheme = MetSys.settings.theme
+		if texture.get_width() > map_theme.center_texture.get_width() / 2 or texture.get_height() > map_theme.center_texture.get_height() / 2:
+			add_label(\"%s is bigger than half of the center texture. It may cause overlaps.\" % texture_name, WARNING)
+	else:
+		add_label(\"%s is empty.\" % texture_name, ERROR)
 
 func add_label(text: String, type: int):
 	show()
 	
 	var label := Label.new()
+	label.autowrap_mode = TextServer.AUTOWRAP_WORD
 	label.text = \"• \" + text
 	
 	match type:
+		SUCCESS:
+			label.modulate = success_color
 		WARNING:
-			label.modulate = Color.YELLOW
+			label.modulate = warning_color
 		ERROR:
-			label.modulate = Color.RED
+			label.modulate = error_color
+			has_error = true
 	
 	%Output.add_child(label)
 
@@ -141,9 +234,15 @@ func dismiss() -> void:
 "
 
 [node name="Manage" type="MarginContainer"]
-offset_top = 35.0
-offset_right = 147.0
-offset_bottom = 35.0
+anchors_preset = 13
+anchor_left = 0.5
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -200.0
+offset_right = 200.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 3
 theme_override_constants/margin_top = 32
 script = SubResource("GDScript_kxd0b")
 
@@ -202,6 +301,7 @@ layout_mode = 2
 [node name="ValidationPanel" type="PanelContainer" parent="VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_vertical = 3
 theme_override_styles/panel = SubResource("StyleBoxFlat_6lvlf")
 script = SubResource("GDScript_x20sf")
 
@@ -213,9 +313,15 @@ layout_mode = 2
 text = "Validation Result"
 horizontal_alignment = 1
 
-[node name="Output" type="VBoxContainer" parent="VBoxContainer/ValidationPanel/VBoxContainer"]
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/ValidationPanel/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Output" type="VBoxContainer" parent="VBoxContainer/ValidationPanel/VBoxContainer/ScrollContainer"]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
 
 [node name="Button" type="Button" parent="VBoxContainer/ValidationPanel/VBoxContainer"]
 layout_mode = 2
