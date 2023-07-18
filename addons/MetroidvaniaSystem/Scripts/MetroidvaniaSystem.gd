@@ -22,7 +22,6 @@ enum { R, D, L, U }
 ## TODO: get_used_squares() i dać trójkątne pomieszczenie. Czarno tam gdzie nic nie ma
 ## TODO: do single border dać oddzielną metodę na rysowanie borderów
 ## FIXME: zmiana motywu powoduje pustą mapę aż do przesunięcia
-## TODO: czy symbole się odświeżają?? (lista w edytorze)
 ## TODO: siatka w edytorze // ogólnie empty w motywie?
 
 @export var exported_settings: Resource
@@ -53,6 +52,7 @@ signal map_changed(new_map: String)
 
 func _enter_tree() -> void:
 	settings = exported_settings
+	settings.theme_changed.connect(_update_theme)
 	_update_theme()
 	
 	map_data = MapData.new()

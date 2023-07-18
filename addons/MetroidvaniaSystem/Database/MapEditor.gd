@@ -1,7 +1,7 @@
 @tool
 extends "res://addons/MetroidvaniaSystem/Scripts/MapView.gd"
 
-enum {MODE_LAYOUT = 1, MODE_ROOM_SYMBOL, MODE_ROOM_COLOR, MODE_ROOM_GROUP, MODE_BORDER_TYPE, MODE_BORDER_COLOR, MODE_MAP}
+enum { MODE_LAYOUT, MODE_ROOM_SYMBOL, MODE_ROOM_COLOR, MODE_ROOM_GROUP, MODE_BORDER_TYPE, MODE_BORDER_COLOR, MODE_MAP }
 
 @onready var ghost_map: Control = %GhostMap
 
@@ -15,13 +15,12 @@ func _ready() -> void:
 		return
 	super()
 	
-	MetSys.map_updated.connect(map.queue_redraw)
 	mode_group.pressed.connect(mode_pressed)
 	get_current_sub_editor()._editor_enter()
 
 func mode_pressed(button: BaseButton):
 	get_current_sub_editor()._editor_exit()
-	mode = button.get_index()
+	mode = button.get_index() - 1
 	get_current_sub_editor()._editor_enter()
 	
 	map_overlay.queue_redraw()
@@ -35,7 +34,7 @@ func preview_layer_changed(value: float) -> void:
 	ghost_map.queue_redraw()
 
 func get_current_sub_editor() -> Control:
-	return mode_group.get_buttons()[mode - 1]
+	return mode_group.get_buttons()[mode]
 
 func _on_overlay_input(event: InputEvent) -> void:
 	super(event)

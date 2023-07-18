@@ -112,6 +112,13 @@ func _editor_init() -> void:
 	room_only_cursor = true
 	symbol_group = ButtonGroup.new()
 	
+	reload_symbols()
+	MetSys.settings.theme_changed.connect(reload_symbols, CONNECT_DEFERRED)
+
+func reload_symbols():
+	for symbol in %SymbolContainer.get_children():
+		symbol.free()
+	
 	for symbol in MetSys.settings.theme.symbols:
 		add_symbol(symbol)
 
@@ -266,6 +273,13 @@ var border_group: ButtonGroup
 func _editor_init() -> void:
 	use_cursor = false
 	border_group = ButtonGroup.new()
+	
+	reload_borders()
+	MetSys.settings.theme_changed.connect(reload_borders, CONNECT_DEFERRED)
+
+func reload_borders():
+	for symbol in %BorderContainer.get_children():
+		symbol.free()
 	
 	if MetSys.settings.theme.rectangle:
 		add_border(MetSys.settings.theme.vertical_wall)
@@ -630,6 +644,11 @@ unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 30)
 layout_mode = 2
 edit_alpha = false
+
+[node name="Label" type="Label" parent="PanelContainer/VBoxContainer/EditControls/Colors"]
+layout_mode = 2
+text = "Ctrl+Click a room to pick color"
+autowrap_mode = 2
 
 [node name="MapOverlay" type="Control" parent="."]
 texture_filter = 1

@@ -3,9 +3,11 @@ extends Resource
 
 @export var theme: MapTheme:
 	set(t):
+		if t == theme:
+			return
+		
 		theme = t
-		if Engine.get_main_loop() and Engine.get_main_loop().root.has_node(^"MetSys"):
-			MetSys._update_theme()
+		theme_changed.emit()
 
 @export_dir var map_root_folder: String
 
@@ -13,3 +15,5 @@ extends Resource
 
 @export var in_game_room_size := Vector2(1152, 648)
 @export var collectible_list: Array[Dictionary]
+
+signal theme_changed

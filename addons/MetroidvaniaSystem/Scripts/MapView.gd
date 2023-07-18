@@ -27,6 +27,8 @@ func _ready() -> void:
 	current_layer_spinbox.value_changed.connect(on_layer_changed)
 	%RecenterButton.pressed.connect(on_recenter_view)
 	
+	MetSys.settings.theme_changed.connect(func(): update_map_position(); on_layer_changed(current_layer))
+	
 	status_label.hide()
 	await get_tree().process_frame
 	update_map_position()
