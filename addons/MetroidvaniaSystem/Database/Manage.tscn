@@ -99,12 +99,34 @@ func _notification(what: int) -> void:
 
 func validate_map_data() -> void:
 	dismiss()
+	has_error = false
+	
+	var map_theme: MapTheme = MetSys.settings.theme
+	
+	var unused_symbols: Array[int]
+	unused_symbols.assign(range(map_theme.symbols.size()))
+	unused_symbols.erase(map_theme.uncollected_item_symbol)
+	unused_symbols.erase(map_theme.collected_item_symbol)
 	
 	for coords in MetSys.map_data.rooms:
+		var room_data: MetroidvaniaSystem.MapData.RoomData = MetSys.map_data.rooms[coords]
+		
 		if not MetSys.map_data.get_assigned_map_at(coords):
-			add_label(\"Missing assigned map at: %s\" % coords, WARNING)
+			add_label(\"No assigned map at: %s\" % coords, WARNING)
+		
+		unused_symbols.erase(room_data.get_symbol())
+		
+		for i in 4:
+			if room_data.get_border(i) != 0:
+				var next: Vector3i = coords + Vector3i(MetroidvaniaSystem.MapData.FWD[i].x, MetroidvaniaSystem.MapData.FWD[i].y, 0)
+				if not MetSys.map_data.get_room_at(next):
+					add_label(\"Passage to nowhere at: %s\" % coords, WARNING)
 	
-	## TODO
+	for symbol in unused_symbols:
+		add_label(\"Potentially unused symbol: %d\" % symbol, WARNING)
+	
+	if not has_error:
+		add_label(\"Map data is valid.\", SUCCESS)
 
 func validate_map_theme() -> void:
 	dismiss()

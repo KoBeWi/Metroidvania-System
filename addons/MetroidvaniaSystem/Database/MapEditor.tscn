@@ -220,35 +220,40 @@ func _editor_draw(map_overlay: CanvasItem):
 func _editor_input(event: InputEvent):
 	if event is InputEventMouseMotion:
 		editor.map_overlay.queue_redraw()
-		
-		if drawing != 0:
-			var coords := get_coords(get_cursor_pos())
-			var current_group: int = %CurrentGroup.value
-			
-			if drawing & MOUSE_BUTTON_MASK_LEFT != 0:
-				var room_data: MetroidvaniaSystem.MapData.RoomData = MetSys.map_data.get_room_at(coords)
-				if not room_data:
-					return
-				
-				if not current_group in room_groups:
-					room_groups[current_group] = []
-				
-				if not coords in room_groups[current_group]:
-					room_groups[current_group].append(coords)
-				editor.map_overlay.queue_redraw()
-			elif drawing & MOUSE_BUTTON_MASK_RIGHT != 0:
-				if not current_group in room_groups:
-					return
-				
-				var room_data: MetroidvaniaSystem.MapData.RoomData = MetSys.map_data.get_room_at(coords)
-				if not room_data:
-					return
-				
-				room_groups[current_group].erase(coords)
-				editor.map_overlay.queue_redraw()
+		draw_group()
 	
 	if event is InputEventMouseButton:
 		drawing = int(event.pressed) * event.button_mask
+		draw_group()
+
+func draw_group():
+	if drawing == 0:
+		return
+	
+	var coords := get_coords(get_cursor_pos())
+	var current_group: int = %CurrentGroup.value
+	
+	if drawing & MOUSE_BUTTON_MASK_LEFT != 0:
+		var room_data: MetroidvaniaSystem.MapData.RoomData = MetSys.map_data.get_room_at(coords)
+		if not room_data:
+			return
+		
+		if not current_group in room_groups:
+			room_groups[current_group] = []
+		
+		if not coords in room_groups[current_group]:
+			room_groups[current_group].append(coords)
+		editor.map_overlay.queue_redraw()
+	elif drawing & MOUSE_BUTTON_MASK_RIGHT != 0:
+		if not current_group in room_groups:
+			return
+		
+		var room_data: MetroidvaniaSystem.MapData.RoomData = MetSys.map_data.get_room_at(coords)
+		if not room_data:
+			return
+		
+		room_groups[current_group].erase(coords)
+		editor.map_overlay.queue_redraw()
 "
 
 [sub_resource type="GDScript" id="GDScript_ilxbw"]
