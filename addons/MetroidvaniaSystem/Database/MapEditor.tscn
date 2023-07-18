@@ -261,8 +261,30 @@ resource_name = "BorderType"
 script/source = "@tool
 extends \"res://addons/MetroidvaniaSystem/Database/SubEditor.gd\"
 
+var border_group: ButtonGroup
+
 func _editor_init() -> void:
 	use_cursor = false
+	border_group = ButtonGroup.new()
+	
+	if MetSys.settings.theme.rectangle:
+		add_border(MetSys.settings.theme.vertical_wall)
+		add_border(MetSys.settings.theme.vertical_passage)
+		
+		for border in MetSys.settings.theme.vertical_borders:
+			add_border(border)
+	else:
+		add_border(MetSys.settings.theme.wall)
+		add_border(MetSys.settings.theme.passage)
+		
+		for border in MetSys.settings.theme.borders:
+			add_border(border)
+
+func _editor_enter():
+	%Borders.show()
+
+func _editor_exit():
+	%Borders.hide()
 
 func _editor_input(event: InputEvent):
 	var room_data := get_room_at_cursor()
@@ -285,7 +307,7 @@ func _editor_input(event: InputEvent):
 				editor.map_overlay.queue_redraw()
 				
 				if highlighted_border != -1 and event.button_mask & MOUSE_BUTTON_MASK_LEFT:
-					room_data.borders[highlighted_border] = (borders[highlighted_border] + 1) % MetSys.theme.get_border_count()
+					room_data.borders[highlighted_border] = border_group.get_pressed_button().get_index()
 					editor.map.queue_redraw()
 		else:
 			highlighted_border = -1
@@ -297,8 +319,21 @@ func _editor_input(event: InputEvent):
 		
 		if event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 			var borders: Array[int] = room_data.borders
-			room_data.borders[highlighted_border] = (borders[highlighted_border] + 1) % MetSys.settings.theme.get_border_count()
+			room_data.borders[highlighted_border] = border_group.get_pressed_button().get_index()
 			editor.map.queue_redraw()
+
+func add_border(texture: Texture2D):
+	var button := Button.new()
+	button.icon = texture
+	button.toggle_mode = true
+	button.button_group = border_group
+	button.custom_minimum_size.x = MetSys.ROOM_SIZE.x
+	button.icon_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	
+	if not border_group.get_pressed_button():
+		button.button_pressed = true
+	
+	%BorderContainer.add_child(button)
 "
 
 [sub_resource type="GDScript" id="GDScript_a3fsx"]
@@ -559,6 +594,15 @@ visible = false
 layout_mode = 2
 
 [node name="SymbolContainer" type="HFlowContainer" parent="PanelContainer/VBoxContainer/EditControls/Symbols"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Borders" type="VBoxContainer" parent="PanelContainer/VBoxContainer/EditControls"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="BorderContainer" type="HFlowContainer" parent="PanelContainer/VBoxContainer/EditControls/Borders"]
 unique_name_in_owner = true
 layout_mode = 2
 
