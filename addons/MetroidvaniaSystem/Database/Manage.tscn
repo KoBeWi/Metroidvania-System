@@ -150,6 +150,9 @@ func validate_map_theme() -> void:
 		add_label(\"Theme is missing center texture. Map can't be drawn.\", ERROR)
 		return
 	
+	if map_theme.empty_space_texture and map_theme.empty_space_texture.get_size() != map_theme.center_texture.get_size():
+		add_label(\"Size mismatch between empty texture (%s) and center texture.\" % map_theme.empty_space_texture.get_size(), ERROR)
+	
 	if map_theme.rectangle:
 		if map_theme.vertical_borders.size() != map_theme.horizontal_borders.size():
 			add_label(\"Number of horizontal and vertical borders do not match.\", ERROR)

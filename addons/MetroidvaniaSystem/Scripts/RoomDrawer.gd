@@ -1,8 +1,10 @@
 extends RefCounted
 
-static func draw(canvas_item: CanvasItem, offset: Vector2, coords: Vector3i, map_data: MetroidvaniaSystem.MapData, save_data: MetroidvaniaSystem.SaveData):
+static func draw(canvas_item: CanvasItem, offset: Vector2, coords: Vector3i, skip_empty: bool, map_data: MetroidvaniaSystem.MapData, save_data: MetroidvaniaSystem.SaveData):
 	var room_data := map_data.get_room_at(coords)
 	if not room_data:
+		if not skip_empty:
+			draw_empty(canvas_item, offset)
 		return
 	
 	var discovered := 2
@@ -10,6 +12,8 @@ static func draw(canvas_item: CanvasItem, offset: Vector2, coords: Vector3i, map
 		discovered = save_data.is_room_discovered(coords)
 	
 	if discovered == 0:
+		if not skip_empty:
+			draw_empty(canvas_item, offset)
 		return
 	
 	var theme: MapTheme = MetSys.settings.theme
@@ -129,6 +133,12 @@ static func draw(canvas_item: CanvasItem, offset: Vector2, coords: Vector3i, map
 		if symbol > - 1:
 			assert(symbol < theme.symbols.size(), "Bad symbol '%s' at '%s'" % [symbol, coords])
 			canvas_item.draw_texture(theme.symbols[symbol], offset * MetSys.ROOM_SIZE + MetSys.ROOM_SIZE / 2 - theme.symbols[symbol].get_size() / 2)
+
+static func draw_empty(canvas_item: CanvasItem, offset: Vector2):
+	var theme: MapTheme = MetSys.settings.theme
+	if theme.empty_space_texture:
+		var ci := canvas_item.get_canvas_item()
+		theme.empty_space_texture.draw(ci, offset * MetSys.ROOM_SIZE, Color.WHITE)
 
 static func get_border_texture(theme: MapTheme, idx: int, direction: int) -> Texture2D:
 	var texture_name: StringName

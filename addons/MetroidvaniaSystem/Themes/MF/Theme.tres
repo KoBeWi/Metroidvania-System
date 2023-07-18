@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="MapTheme" load_steps=15 format=3 uid="uid://cua5dfmrbmlho"]
+[gd_resource type="Resource" script_class="MapTheme" load_steps=16 format=3 uid="uid://cua5dfmrbmlho"]
 
 [ext_resource type="Texture2D" uid="uid://bhu6ahuyeibux" path="res://addons/MetroidvaniaSystem/Themes/MF/Borders/Door1.png" id="1_bjnja"]
 [ext_resource type="Texture2D" uid="uid://s6mehjjuhuts" path="res://addons/MetroidvaniaSystem/Themes/MF/Corner.png" id="1_ygjik"]
@@ -8,6 +8,7 @@
 [ext_resource type="Texture2D" uid="uid://cyeby1pppqw8t" path="res://addons/MetroidvaniaSystem/Themes/MF/Borders/Door4.png" id="4_t572b"]
 [ext_resource type="Texture2D" uid="uid://bdj2f008uewl8" path="res://addons/MetroidvaniaSystem/Themes/MF/BorderPassage.png" id="5_uvfq1"]
 [ext_resource type="Texture2D" uid="uid://q0b38erpbso0" path="res://addons/MetroidvaniaSystem/Themes/MF/BorderWall.png" id="6_g57qo"]
+[ext_resource type="Texture2D" uid="uid://ciflfxrgql206" path="res://addons/MetroidvaniaSystem/Themes/MF/Empty.png" id="6_uxupo"]
 [ext_resource type="Script" path="res://addons/MetroidvaniaSystem/Scripts/MapTheme.gd" id="8_diwrg"]
 [ext_resource type="PackedScene" uid="uid://jm00e7eg4gpc" path="res://addons/MetroidvaniaSystem/Themes/MF/PlayerLocation.tscn" id="8_sqyj2"]
 [ext_resource type="Texture2D" uid="uid://c62mrym4j2hhq" path="res://addons/MetroidvaniaSystem/Themes/MF/Symbols/Item.png" id="10_smrpc"]
@@ -17,17 +18,18 @@
 
 [resource]
 script = ExtResource("8_diwrg")
+center_texture = ExtResource("4_syph2")
+empty_space_texture = ExtResource("6_uxupo")
+player_location_scene = ExtResource("8_sqyj2")
+use_shared_borders = false
 default_center_color = Color(1, 0, 1, 1)
 unexplored_center_color = Color(0.45098, 0.443137, 0.45098, 1)
 default_border_color = Color(1, 1, 1, 1)
 unexplored_border_color = Color(1, 1, 1, 1)
 room_separator_color = Color(0, 0, 0, 1)
-player_location_scene = ExtResource("8_sqyj2")
 symbols = Array[Texture2D]([ExtResource("10_smrpc"), ExtResource("11_k45ht"), ExtResource("12_43s74"), ExtResource("13_3gklv")])
 uncollected_item_symbol = 0
 collected_item_symbol = 1
-center_texture = ExtResource("4_syph2")
-use_shared_borders = false
 wall = ExtResource("6_g57qo")
 passage = ExtResource("5_uvfq1")
 borders = Array[Texture2D]([ExtResource("1_bjnja"), ExtResource("2_ehkly"), ExtResource("3_3mhp0"), ExtResource("4_t572b")])

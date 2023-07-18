@@ -6,28 +6,35 @@ const DYNAMIC_PROPERTIES = [&"vertical_wall", &"horizontal_wall", &"vertical_pas
 	&"horizontal_borders", &"vertical_borders", &"vertical_separator", &"horizontal_separator",
 	&"wall", &"passage", &"borders", &"separator", &"inner_corner", &"outer_corner", &"t_corner", &"cross_corner"]
 
+@export var center_texture: Texture2D:
+	set(ct):
+		center_texture = ct
+		var new_rectangle := center_texture.get_width() != center_texture.get_height()
+		if new_rectangle != rectangle:
+			rectangle = new_rectangle
+			notify_property_list_changed()
+
+@export var empty_space_texture: Texture2D
+
+@export var player_location_scene: PackedScene
+
+@export var use_shared_borders: bool:
+	set(usb):
+		if usb != use_shared_borders:
+			use_shared_borders = usb
+			notify_property_list_changed()
+
+@export_group("Colors")
 @export var default_center_color: Color
 @export var unexplored_center_color: Color
 @export var default_border_color: Color
 @export var unexplored_border_color: Color
 @export var room_separator_color: Color
 
-@export var player_location_scene: PackedScene
-
+@export_group("Symbols")
 @export var symbols: Array[Texture2D]
 @export var uncollected_item_symbol := -1
 @export var collected_item_symbol := -1
-
-@export var center_texture: Texture2D:
-	set(ct):
-		center_texture = ct
-		rectangle = center_texture.get_width() != center_texture.get_height()
-		notify_property_list_changed()
-
-@export var use_shared_borders: bool:
-	set(usb):
-		use_shared_borders = usb
-		notify_property_list_changed()
 
 var data: Dictionary
 var rectangle: bool

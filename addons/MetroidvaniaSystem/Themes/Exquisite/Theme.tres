@@ -16,17 +16,17 @@
 
 [resource]
 script = ExtResource("8_gh637")
+center_texture = ExtResource("4_2clky")
+player_location_scene = ExtResource("3_mk7eh")
+use_shared_borders = false
 default_center_color = Color(0.5, 0.25, 0.25, 1)
 unexplored_center_color = Color(0.745098, 0.745098, 0.745098, 1)
 default_border_color = Color(1, 0.741176, 0.580392, 1)
 unexplored_border_color = Color(1, 1, 1, 1)
 room_separator_color = Color(1, 1, 1, 0.13)
-player_location_scene = ExtResource("3_mk7eh")
 symbols = Array[Texture2D]([ExtResource("9_c11cy"), ExtResource("9_3gfe5"), ExtResource("11_o6efd")])
 uncollected_item_symbol = 2
 collected_item_symbol = -1
-center_texture = ExtResource("4_2clky")
-use_shared_borders = false
 vertical_wall = ExtResource("7_eifkn")
 horizontal_wall = ExtResource("2_tawyw")
 vertical_passage = ExtResource("5_sn1if")

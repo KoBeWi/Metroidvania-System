@@ -22,7 +22,7 @@ enum { R, D, L, U }
 ## TODO: get_used_squares() i dać trójkątne pomieszczenie. Czarno tam gdzie nic nie ma
 ## TODO: do single border dać oddzielną metodę na rysowanie borderów
 ## FIXME: zmiana motywu powoduje pustą mapę aż do przesunięcia
-## TODO: siatka w edytorze // ogólnie empty w motywie?
+## TODO: siatka w edytorze
 
 @export var exported_settings: Resource
 
@@ -199,8 +199,8 @@ func get_current_map_instance() -> MapInstance:
 		return current_map
 	return null
 
-func draw_map_square(canvas_item: CanvasItem, offset: Vector2, coords: Vector3i, use_save_data := false):
-	RoomDrawer.draw(canvas_item, offset, coords, map_data, save_data if use_save_data else null)
+func draw_map_square(canvas_item: CanvasItem, offset: Vector2, coords: Vector3i, skip_empty := false, use_save_data := true):
+	RoomDrawer.draw(canvas_item, offset, coords, skip_empty, map_data, save_data if use_save_data else null)
 
 func draw_player_location(canvas_item: CanvasItem, offset: Vector2, exact := false):
 	var last_player_position_2d := Vector2(last_player_position.x, last_player_position.y)

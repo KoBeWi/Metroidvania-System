@@ -27,12 +27,11 @@ func _ready() -> void:
 	current_layer_spinbox.value_changed.connect(on_layer_changed)
 	%RecenterButton.pressed.connect(on_recenter_view)
 	
-	MetSys.settings.theme_changed.connect(func(): update_map_position(); on_layer_changed(current_layer))
-	
 	status_label.hide()
 	await get_tree().process_frame
 	update_map_position()
 	map.size = MetSys.ROOM_SIZE * 200
+	MetSys.settings.theme_changed.connect(func(): update_map_position(); on_layer_changed(current_layer))
 
 func get_cursor_pos() -> Vector2i:
 	var pos := (map_overlay.get_local_mouse_position() - MetSys.ROOM_SIZE / 2).snapped(MetSys.ROOM_SIZE) / MetSys.ROOM_SIZE as Vector2i - map_offset
@@ -100,7 +99,7 @@ func _on_map_draw() -> void:
 	
 	for x in range(-100, 100):
 		for y in range(-100, 100):
-			MetSys.draw_map_square(map, Vector2i(x, y) + Vector2i(100, 100), Vector3i(x, y, current_layer))
+			MetSys.draw_map_square(map, Vector2i(x, y) + Vector2i(100, 100), Vector3i(x, y, current_layer), true, false)
 
 func _on_overlay_draw() -> void:
 	pass
