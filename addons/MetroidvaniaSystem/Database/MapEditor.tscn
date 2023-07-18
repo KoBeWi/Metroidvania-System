@@ -668,6 +668,19 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
+[node name="Grid" type="Control" parent="MapOverlay"]
+unique_name_in_owner = true
+show_behind_parent = true
+clip_contents = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+
 [node name="Map" type="Control" parent="MapOverlay"]
 unique_name_in_owner = true
 show_behind_parent = true
@@ -713,5 +726,6 @@ filters = PackedStringArray("*.tscn")
 
 [connection signal="value_changed" from="PanelContainer/VBoxContainer/Layer/SpinBox2" to="." method="preview_layer_changed"]
 [connection signal="value_changed" from="PanelContainer/VBoxContainer/EditControls/Groups/CurrentGroup" to="MapOverlay" method="queue_redraw" unbinds=1]
+[connection signal="draw" from="MapOverlay/Grid" to="." method="_on_grid_draw"]
 [connection signal="draw" from="MapOverlay/GhostMap" to="." method="_on_ghost_map_draw"]
 [connection signal="file_selected" from="FileDialog" to="PanelContainer/VBoxContainer/Modes/MapAssign" method="on_map_selected"]

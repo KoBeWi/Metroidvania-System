@@ -4,6 +4,7 @@ extends "res://addons/MetroidvaniaSystem/Scripts/MapView.gd"
 enum { MODE_LAYOUT, MODE_ROOM_SYMBOL, MODE_ROOM_COLOR, MODE_ROOM_GROUP, MODE_BORDER_TYPE, MODE_BORDER_COLOR, MODE_MAP }
 
 @onready var ghost_map: Control = %GhostMap
+@onready var grid: Control = %Grid
 
 @export var mode_group: ButtonGroup
 
@@ -13,10 +14,11 @@ var preview_layer := -1
 func _ready() -> void:
 	if not plugin:
 		return
-	super()
+	await super()
 	
 	mode_group.pressed.connect(mode_pressed)
 	get_current_sub_editor()._editor_enter()
+	MetSys.settings.theme_changed.connect(grid.queue_redraw)
 
 func mode_pressed(button: BaseButton):
 	get_current_sub_editor()._editor_exit()
@@ -66,3 +68,15 @@ func _on_ghost_map_draw() -> void:
 	for x in range(-100, 100):
 		for y in range(-100, 100):
 			MetSys.draw_map_square(ghost_map, Vector2i(x, y) + map_offset, Vector3i(x, y, preview_layer))
+
+func _on_grid_draw() -> void:
+	if not plugin:
+		return
+	
+	var empty_texture: Texture2D = MetSys.settings.theme.empty_space_texture
+	for x in ceili(grid.size.x / MetSys.ROOM_SIZE.x):
+		for y in ceili(grid.size.y / MetSys.ROOM_SIZE.y):
+			if empty_texture:
+				grid.draw_texture(empty_texture, Vector2(x, y) * MetSys.ROOM_SIZE)
+			else:
+				grid.draw_rect(Rect2(Vector2(x, y) * MetSys.ROOM_SIZE, MetSys.ROOM_SIZE), Color(Color.WHITE, 0.1), false)

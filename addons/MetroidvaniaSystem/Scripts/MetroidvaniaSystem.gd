@@ -22,7 +22,6 @@ enum { R, D, L, U }
 ## TODO: get_used_squares() i dać trójkątne pomieszczenie. Czarno tam gdzie nic nie ma
 ## TODO: do single border dać oddzielną metodę na rysowanie borderów
 ## FIXME: zmiana motywu powoduje pustą mapę aż do przesunięcia
-## TODO: siatka w edytorze
 
 @export var exported_settings: Resource
 

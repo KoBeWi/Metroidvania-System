@@ -360,7 +360,7 @@ size_flags_vertical = 3
 [node name="Button" type="Button" parent="VBoxContainer/ValidationPanel/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
-text = "Dismiss"
+text = "Close"
 
 [connection signal="pressed" from="VBoxContainer/VBoxContainer/Button" to="." method="edit_settings_pressed"]
 [connection signal="pressed" from="VBoxContainer/VBoxContainer/Button2" to="." method="force_reload"]

@@ -1,7 +1,8 @@
-[gd_resource type="Resource" script_class="MapTheme" load_steps=14 format=3 uid="uid://bt6s3nd8xo6b"]
+[gd_resource type="Resource" script_class="MapTheme" load_steps=15 format=3 uid="uid://bt6s3nd8xo6b"]
 
 [ext_resource type="Texture2D" uid="uid://6lyqjfj3vsy7" path="res://addons/MetroidvaniaSystem/Themes/Exquisite/BorderPassageHorizontal.png" id="1_hth3y"]
 [ext_resource type="Texture2D" uid="uid://c5wg3is8k5pux" path="res://addons/MetroidvaniaSystem/Themes/Exquisite/BorderWallHorizontal.png" id="2_tawyw"]
+[ext_resource type="Texture2D" uid="uid://208uoowofggq" path="res://addons/MetroidvaniaSystem/Themes/Exquisite/Empty.png" id="2_tsiva"]
 [ext_resource type="Texture2D" uid="uid://rgchhbw4jh7f" path="res://addons/MetroidvaniaSystem/Themes/Exquisite/CornerInner.png" id="3_4qbbp"]
 [ext_resource type="PackedScene" path="res://addons/MetroidvaniaSystem/Themes/Exquisite/PlayerLocation.tscn" id="3_mk7eh"]
 [ext_resource type="Texture2D" uid="uid://bxs8cn6khov7j" path="res://addons/MetroidvaniaSystem/Themes/Exquisite/RoomFill.png" id="4_2clky"]
@@ -17,6 +18,7 @@
 [resource]
 script = ExtResource("8_gh637")
 center_texture = ExtResource("4_2clky")
+empty_space_texture = ExtResource("2_tsiva")
 player_location_scene = ExtResource("3_mk7eh")
 use_shared_borders = false
 default_center_color = Color(0.5, 0.25, 0.25, 1)
