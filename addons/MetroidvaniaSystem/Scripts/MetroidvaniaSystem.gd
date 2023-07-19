@@ -21,7 +21,7 @@ enum { R, D, L, U }
 ## TODO: do szukania: wymyślić jakoś jak wyświetlać różne ikonki w zależności od danych
 ## TODO: get_used_squares() i dać trójkątne pomieszczenie. Czarno tam gdzie nic nie ma
 ## TODO: do single border dać oddzielną metodę na rysowanie borderów
-## FIXME: zmiana motywu powoduje pustą mapę aż do przesunięcia
+## TODO: Map -> World albo Map -> Level
 
 @export var exported_settings: Resource
 
@@ -227,3 +227,12 @@ func discover_room_group(group_id: int):
 
 func get_map_builder() -> MapBuilder:
 	return MapBuilder.new()
+
+func get_full_map_path(map_name: String) -> String:
+	return settings.map_root_folder.path_join(map_name)
+
+func get_current_map_name() -> String:
+	if current_map:
+		return current_map.map_name
+	else:
+		return ""

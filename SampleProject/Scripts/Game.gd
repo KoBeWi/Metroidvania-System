@@ -22,11 +22,12 @@ func _ready() -> void:
 		collectibles = save_data.collectible_count
 		generated_rooms.assign(save_data.generated_rooms)
 		events.assign(save_data.events)
+		starting_map = save_data.current_map
 	else:
 		MetSys.set_save_data()
 	
-	goto_map(starting_map)
-	var start := map.get_node_or_null(^"StartPoint")
+	goto_map(MetSys.get_full_map_path(starting_map))
+	var start := map.get_node_or_null(^"SavePoint")
 	if start:
 		player.position = start.position
 	MetSys.map_changed.connect(on_map_changed, CONNECT_DEFERRED)
@@ -63,4 +64,9 @@ static func get_singleton() -> Game:
 	return (Game as Script).get_meta(&"singleton") as Game
 
 func get_save_data() -> Dictionary:
-	return {"collectible_count": collectibles, "generated_rooms": generated_rooms, "events": events}
+	return {
+		"collectible_count": collectibles,
+		"generated_rooms": generated_rooms,
+		"events": events,
+		"current_map": MetSys.get_current_map_name(),
+	}

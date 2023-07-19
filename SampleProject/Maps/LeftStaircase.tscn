@@ -1,7 +1,7 @@
 [gd_scene load_steps=7 format=3 uid="uid://b1nanw80m5sqa"]
 
 [ext_resource type="TileSet" uid="uid://bwpcg2opya34n" path="res://SampleProject/Resources/Tileset.tres" id="1_gs7nu"]
-[ext_resource type="PackedScene" uid="uid://bsg0351mx3b4u" path="res://addons/MetroidvaniaSystem/Nodes/MapHandler.tscn" id="2_yec0f"]
+[ext_resource type="PackedScene" uid="uid://bsg0351mx3b4u" path="res://addons/MetroidvaniaSystem/Nodes/MapInstance.tscn" id="2_yec0f"]
 [ext_resource type="PackedScene" uid="uid://d165fnekqr5ex" path="res://SampleProject/Objects/Button.tscn" id="3_0lim4"]
 [ext_resource type="PackedScene" uid="uid://cuo3rbw43trj4" path="res://SampleProject/Objects/Pipe.tscn" id="4_5yvvy"]
 

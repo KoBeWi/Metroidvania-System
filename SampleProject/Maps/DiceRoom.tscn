@@ -1,7 +1,7 @@
 [gd_scene load_steps=9 format=3 uid="uid://cjk52vjugqh5"]
 
 [ext_resource type="TileSet" uid="uid://bwpcg2opya34n" path="res://SampleProject/Resources/Tileset.tres" id="1_l63o1"]
-[ext_resource type="PackedScene" uid="uid://bsg0351mx3b4u" path="res://addons/MetroidvaniaSystem/Nodes/MapHandler.tscn" id="2_b0ayl"]
+[ext_resource type="PackedScene" uid="uid://bsg0351mx3b4u" path="res://addons/MetroidvaniaSystem/Nodes/MapInstance.tscn" id="2_b0ayl"]
 [ext_resource type="PackedScene" uid="uid://ke056546dq4j" path="res://SampleProject/Objects/Dice.glb" id="3_a62rx"]
 
 [sub_resource type="GDScript" id="GDScript_2fold"]
@@ -15,8 +15,7 @@ var new_generated_maps: Array[String]
 var first_generated_map := 1
 
 func _ready() -> void:
-	await get_tree().process_frame ## do usunięcia
-	DirAccess.make_dir_absolute(GENERATED_MAPS_PATH) ## TODO: czyścić to
+	DirAccess.make_dir_absolute(GENERATED_MAPS_PATH)
 	if not Game.get_singleton().generated_rooms.is_empty():
 		%TileMap.set_layer_enabled(2, false)
 	
@@ -37,6 +36,9 @@ func _on_body_entered(body: Node2D) -> void:
 	tween.tween_property(%DiceAnimator, ^\"speed_scale\", 4.0, 4.0)
 	tween.tween_interval(randf_range(1.0, 2.0))
 	tween.tween_property(%DiceAnimator, ^\"speed_scale\", 0.0, 2.0)
+	
+	for file in DirAccess.get_files_at(GENERATED_MAPS_PATH):
+		DirAccess.remove_absolute(GENERATED_MAPS_PATH.path_join(file))
 	
 	generating = Thread.new()
 	generating.start(generate_map)

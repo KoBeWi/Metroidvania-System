@@ -6,6 +6,7 @@ var GRID_PASSAGE_COLOR: Color
 
 var rooms: Array[Vector3i]
 var initialized: bool
+var map_name: String
 
 var min_room := Vector2i(999999, 999999)
 var max_room := Vector2i(-999999, -999999)
@@ -30,7 +31,8 @@ func _update_assigned_map():
 	queue_redraw()
 	
 	var owner_node := owner if owner != null else self
-	rooms = MetSys.map_data.get_rooms_assigned_to(owner_node.scene_file_path.trim_prefix(MetSys.settings.map_root_folder))
+	map_name = owner_node.scene_file_path.trim_prefix(MetSys.settings.map_root_folder)
+	rooms = MetSys.map_data.get_rooms_assigned_to(map_name)
 	if rooms.is_empty():
 		return
 	
