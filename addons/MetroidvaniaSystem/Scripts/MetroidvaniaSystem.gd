@@ -21,7 +21,6 @@ enum { R, D, L, U }
 ## TODO: do szukania: wymyślić jakoś jak wyświetlać różne ikonki w zależności od danych
 ## TODO: get_used_squares() i dać trójkątne pomieszczenie. Czarno tam gdzie nic nie ma
 ## TODO: do single border dać oddzielną metodę na rysowanie borderów
-## TODO: Map -> World albo Map -> Level
 
 @export var exported_settings: Resource
 
@@ -43,11 +42,11 @@ var current_layer: int:
 		
 		current_layer = layer
 		map_updated.emit()
+signal room_changed(new_room: Vector2i)
+signal map_changed(new_map: String)
 
 signal map_updated
 signal room_assign_updated
-signal room_changed(new_room: Vector2i)
-signal map_changed(new_map: String)
 
 func _enter_tree() -> void:
 	settings = exported_settings
@@ -74,6 +73,14 @@ func set_save_data(data := {}):
 func reset_save_data():
 	save_data = SaveData.new()
 
+func visit_room(room: Vector3i):
+	save_data.explore_room(room)
+	
+	var previous_map := map_data.get_assigned_map_at(Vector3i(last_player_position.x, last_player_position.y, current_layer))
+	var new_map := map_data.get_assigned_map_at(room)
+	if not new_map.is_empty() and not previous_map.is_empty() and new_map != previous_map:
+		map_changed.emit(new_map)
+
 func set_player_position(position: Vector2):
 	exact_player_position = position
 	
@@ -83,6 +90,14 @@ func set_player_position(position: Vector2):
 		visit_room(Vector3i(player_pos.x, player_pos.y, current_layer))
 		room_changed.emit(player_pos)
 		last_player_position = player_pos_3d
+
+func discover_room_group(group_id: int):
+	assert(group_id in map_data.room_groups)
+	
+	for coords in map_data.room_groups[group_id]:
+		save_data.discover_room(coords)
+	
+	map_updated.emit()
 
 func add_custom_marker(coords: Vector3i, symbol: int):
 	assert(symbol >= 0 and symbol < mini(MetSys.settings.theme.symbols.size(), 63))
@@ -117,6 +132,8 @@ func store_object(object: Object, map_marker := DEFAULT_SYMBOL):
 	save_data.store_object(object)
 	if object.has_meta(&"map_marker"):
 		save_data.remove_custom_marker(get_object_coords(object), object.get_meta(&"map_marker"))
+	else:
+		map_marker = -1
 	
 	if map_marker == DEFAULT_SYMBOL:
 		map_marker = settings.theme.collected_item_symbol
@@ -163,14 +180,6 @@ func get_object_coords(object: Object) -> Vector3i:
 		return coords
 	return Vector3i()
 
-func visit_room(room: Vector3i):
-	save_data.explore_room(room)
-	
-	var previous_map := map_data.get_assigned_map_at(Vector3i(last_player_position.x, last_player_position.y, current_layer))
-	var new_map := map_data.get_assigned_map_at(room)
-	if not new_map.is_empty() and not previous_map.is_empty() and new_map != previous_map:
-		map_changed.emit(new_map)
-
 func get_room_override(coords: Vector3i, auto_create := true) -> MapData.RoomOverride:
 	var room := map_data.get_room_at(coords)
 	assert(room, "Can't override non-existent room")
@@ -190,18 +199,13 @@ func remove_room_override(coords: Vector3i):
 	if save_data.remove_room_override(room):
 		map_updated.emit()
 
-func get_current_coords() -> Vector3i:
-	return Vector3i(last_player_position.x, last_player_position.y, current_layer)
-
-func get_current_map_instance() -> MapInstance:
-	if is_instance_valid(current_map):
-		return current_map
-	return null
+func get_map_builder() -> MapBuilder:
+	return MapBuilder.new()
 
 func draw_map_square(canvas_item: CanvasItem, offset: Vector2, coords: Vector3i, skip_empty := false, use_save_data := true):
 	RoomDrawer.draw(canvas_item, offset, coords, skip_empty, map_data, save_data if use_save_data else null)
 
-func draw_player_location(canvas_item: CanvasItem, offset: Vector2, exact := false):
+func draw_player_location(canvas_item: CanvasItem, offset: Vector2, exact := false): ## zamiast tego toggle?
 	var last_player_position_2d := Vector2(last_player_position.x, last_player_position.y)
 	var player_position := (last_player_position_2d + offset) * ROOM_SIZE + ROOM_SIZE / 2
 	if exact:
@@ -217,22 +221,19 @@ func draw_player_location(canvas_item: CanvasItem, offset: Vector2, exact := fal
 	
 	player_location_instance.position = player_position
 
-func discover_room_group(group_id: int):
-	assert(group_id in map_data.room_groups)
-	
-	for coords in map_data.room_groups[group_id]:
-		save_data.discover_room(coords)
-	
-	map_updated.emit()
+func get_current_coords() -> Vector3i:
+	return Vector3i(last_player_position.x, last_player_position.y, current_layer)
 
-func get_map_builder() -> MapBuilder:
-	return MapBuilder.new()
-
-func get_full_map_path(map_name: String) -> String:
-	return settings.map_root_folder.path_join(map_name)
+func get_current_map_instance() -> MapInstance:
+	if is_instance_valid(current_map):
+		return current_map
+	return null
 
 func get_current_map_name() -> String:
 	if current_map:
 		return current_map.map_name
 	else:
 		return ""
+
+func get_full_map_path(map_name: String) -> String:
+	return settings.map_root_folder.path_join(map_name)
