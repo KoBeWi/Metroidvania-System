@@ -154,7 +154,10 @@ static func draw_shared_borders():
 	var shared_borders_to_draw: Dictionary = MetSys.get_meta(&"shared_borders_to_draw")
 	var shared_borders_data: Dictionary = MetSys.get_meta(&"shared_borders_data")
 	
-	var shared_corners_data: Dictionary
+	var shared_borders_colors: Dictionary#[Vector3i, Color]
+	var shared_corners_data: Dictionary#[Vector3i, int]
+	var shared_corners_colors: Dictionary#[Vector3i, Color]
+	
 	var display_flags: int = shared_borders_data["display_flags"]
 	var canvas_item: CanvasItem = shared_borders_data["canvas_item"]
 	var ci := canvas_item.get_canvas_item()
@@ -170,17 +173,39 @@ static func draw_shared_borders():
 	shared_borders_to_draw.merge(additional_corners)
 	for coords in shared_borders_to_draw:
 		var corner_data := 0
-		corner_data |= (1 << 0) * (get_corner_bit(coords, MetroidvaniaSystem.R) | get_corner_bit(coords + Vector3i(1, 0, 0), MetroidvaniaSystem.L))
-		corner_data |= (1 << 1) * (get_corner_bit(coords, MetroidvaniaSystem.D) | get_corner_bit(coords + Vector3i(0, 1, 0), MetroidvaniaSystem.U))
-		corner_data |= (1 << 2) * (get_corner_bit(coords + Vector3i(0, 1, 0), MetroidvaniaSystem.R) | get_corner_bit(coords + Vector3i(1, 1, 0), MetroidvaniaSystem.L))
-		corner_data |= (1 << 3) * (get_corner_bit(coords + Vector3i(1, 0, 0), MetroidvaniaSystem.D) | get_corner_bit(coords + Vector3i(1, 1, 0), MetroidvaniaSystem.U))
+		if theme.is_unicorner():
+			corner_data = 15
+		else:
+			corner_data |= (1 << 0) * (get_corner_bit(coords, MetroidvaniaSystem.R) | get_corner_bit(coords + Vector3i(1, 0, 0), MetroidvaniaSystem.L))
+			corner_data |= (1 << 1) * (get_corner_bit(coords, MetroidvaniaSystem.D) | get_corner_bit(coords + Vector3i(0, 1, 0), MetroidvaniaSystem.U))
+			corner_data |= (1 << 2) * (get_corner_bit(coords + Vector3i(0, 1, 0), MetroidvaniaSystem.R) | get_corner_bit(coords + Vector3i(1, 1, 0), MetroidvaniaSystem.L))
+			corner_data |= (1 << 3) * (get_corner_bit(coords + Vector3i(1, 0, 0), MetroidvaniaSystem.D) | get_corner_bit(coords + Vector3i(1, 1, 0), MetroidvaniaSystem.U))
+		
+		var color_blend: Array[Color]
+		for i in 4:
+			var color: Color
+			if i < 2:
+				color = get_shared_border_color(coords, i)
+			else:
+				color = get_shared_border_color(coords + Vector3i(1, 1, 0), i)
+			
+			if color.a > 0:
+				color_blend.append(color)
+		
 		shared_corners_data[coords] = corner_data
+		if not color_blend.is_empty():
+			var ratio: float = 1.0 / color_blend.size()
+			shared_corners_colors[coords] = color_blend.reduce(func(final: Color, current: Color): return final.lerp(current, ratio))
 		
 		var border_data: Array[int] = [-1, -1]
+		var border_colors: Array[Color] = [Color(), Color()]
 		for i in 2:
 			var fwd := Vector3i(MetroidvaniaSystem.MapData.FWD[i].x, MetroidvaniaSystem.MapData.FWD[i].y, 0)
 			border_data[i] = maxi(get_border_at(coords, i), get_border_at(coords + fwd, opposite(i)))
+			border_colors[i] = get_shared_border_color(coords, i)
+		
 		shared_borders_data[coords] = border_data
+		shared_borders_colors[coords] = border_colors
 	
 	# borders
 	for coords in shared_borders_to_draw:
@@ -200,18 +225,7 @@ static func draw_shared_borders():
 					border = 0
 				
 				texture = get_border_texture(theme, border, i)
-				
-				var fwd := Vector3i(MetroidvaniaSystem.MapData.FWD[i].x, MetroidvaniaSystem.MapData.FWD[i].y, 0)
-				var room_data := MetSys.map_data.get_room_at(coords)
-				if room_data:
-					color = room_data.get_border_color(i)
-				
-				room_data = MetSys.map_data.get_room_at(coords + fwd)
-				if room_data:
-					if color == Color():
-						color = room_data.get_border_color(opposite(i))
-					else:
-						color = color.lerp(room_data.get_border_color(opposite(i)), 0.5)
+				color = shared_borders_colors[coords][i]
 			
 			if not texture:
 				continue
@@ -232,17 +246,28 @@ static func draw_shared_borders():
 		var corner_texture: Texture2D
 		var corner_rotation := -1
 		match corner_type:
+			1:
+				corner_texture = theme.u_corner
+				match corner_data:
+					1:
+						corner_rotation = 0
+					2:
+						corner_rotation = 3
+					4:
+						corner_rotation = 2
+					8:
+						corner_rotation = 1
 			2:
-				corner_texture = theme.corner
+				corner_texture = theme.l_corner
 				match corner_data:
 					3:
-						corner_rotation = 2
-					6:
-						corner_rotation = 1
-					9:
 						corner_rotation = 3
-					12:
+					6:
+						corner_rotation = 2
+					9:
 						corner_rotation = 0
+					12:
+						corner_rotation = 1
 			3:
 				corner_texture = theme.t_corner
 				match corner_data:
@@ -262,7 +287,7 @@ static func draw_shared_borders():
 			continue
 		
 		canvas_item.draw_set_transform(offset * MetSys.ROOM_SIZE + MetSys.ROOM_SIZE, PI * 0.5 * corner_rotation, Vector2.ONE)
-		corner_texture.draw(canvas_item.get_canvas_item(), -corner_texture.get_size() / 2, theme.default_border_color)
+		corner_texture.draw(canvas_item.get_canvas_item(), -corner_texture.get_size() / 2, shared_corners_colors[coords])
 	
 	MetSys.remove_meta(&"shared_borders_to_draw")
 	MetSys.remove_meta(&"shared_borders_data")
@@ -275,6 +300,23 @@ static func get_border_at(coords: Vector3i, idx: int) -> int:
 
 static func get_corner_bit(coords: Vector3i, idx: int) -> int:
 	return int(get_border_at(coords, idx) > -1)
+
+static func get_shared_border_color(coords: Vector3i, idx: int) -> Color:
+	var fwd := Vector3i(MetroidvaniaSystem.MapData.FWD[idx].x, MetroidvaniaSystem.MapData.FWD[idx].y, 0)
+	var color := Color.TRANSPARENT
+	
+	var room_data = MetSys.map_data.get_room_at(coords)
+	if room_data:
+		color = room_data.get_border_color(idx)
+	
+	room_data = MetSys.map_data.get_room_at(coords + fwd)
+	if room_data:
+		if color.a > 0:
+			color = color.lerp(room_data.get_border_color(opposite(idx)), 0.5)
+		else:
+			color = room_data.get_border_color(opposite(idx))
+	
+	return color
 
 static func draw_empty(canvas_item: CanvasItem, offset: Vector2):
 	var theme: MapTheme = MetSys.settings.theme

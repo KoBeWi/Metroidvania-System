@@ -20,7 +20,6 @@ enum { R, D, L, U }
 ## TODO: w motywach pododawać player sceny, symbole i granice
 ## TODO: do szukania: wymyślić jakoś jak wyświetlać różne ikonki w zależności od danych
 ## TODO: get_used_squares() i dać trójkątne pomieszczenie. Czarno tam gdzie nic nie ma
-## TODO: shared border: uprościć rysowanie jak ta sama tekstura
 
 @export var exported_settings: Resource
 

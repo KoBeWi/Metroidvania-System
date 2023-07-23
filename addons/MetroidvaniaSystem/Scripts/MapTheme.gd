@@ -4,7 +4,8 @@ class_name MapTheme
 
 const DYNAMIC_PROPERTIES = [&"vertical_wall", &"horizontal_wall", &"vertical_passage", &"horizontal_passage",
 	&"horizontal_borders", &"vertical_borders", &"vertical_separator", &"horizontal_separator",
-	&"wall", &"passage", &"borders", &"separator", &"inner_corner", &"outer_corner", &"corner", &"t_corner", &"cross_corner"]
+	&"wall", &"passage", &"borders", &"separator", &"inner_corner", &"outer_corner",
+	&"u_corner", &"l_corner", &"t_corner", &"cross_corner"]
 
 @export var center_texture: Texture2D:
 	set(ct):
@@ -62,7 +63,8 @@ func _get_property_list() -> Array[Dictionary]:
 	properties.append({name = &"Corner Textures", type = TYPE_NIL, usage = PROPERTY_USAGE_GROUP})
 	
 	if use_shared_borders:
-		properties.append(_get_texture_property(&"corner"))
+		properties.append(_get_texture_property(&"u_corner"))
+		properties.append(_get_texture_property(&"l_corner"))
 		properties.append(_get_texture_property(&"t_corner"))
 		properties.append(_get_texture_property(&"cross_corner"))
 	else:
@@ -70,6 +72,13 @@ func _get_property_list() -> Array[Dictionary]:
 		properties.append(_get_texture_property(&"outer_corner"))
 	
 	return properties
+
+func is_unicorner() -> bool:
+	if use_shared_borders:
+		var corner: Texture2D = get(&"u_corner")
+		return get(&"l_corner") == corner and get(&"t_corner") == corner and get(&"cross_corner") == corner
+	else:
+		return get(&"inner_corner") == get(&"outer_corner")
 
 func _set(property: StringName, value) -> bool:
 	if property in DYNAMIC_PROPERTIES:

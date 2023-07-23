@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://djdgo7kixxhpj"
-path="res://.godot/imported/Corner.png-691d2ac7be090145ae386a0ec2c80540.ctex"
+uid="uid://dx7x7ne1r4bix"
+path="res://.godot/imported/CornerU.png-b2623c796905924d5ba56c4730c3233b.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/MetroidvaniaSystem/Themes/Zeric/Corner.png"
-dest_files=["res://.godot/imported/Corner.png-691d2ac7be090145ae386a0ec2c80540.ctex"]
+source_file="res://addons/MetroidvaniaSystem/Themes/Zeric/CornerU.png"
+dest_files=["res://.godot/imported/CornerU.png-b2623c796905924d5ba56c4730c3233b.ctex"]
 
 [params]
 

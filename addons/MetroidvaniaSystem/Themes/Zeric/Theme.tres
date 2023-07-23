@@ -1,13 +1,14 @@
-[gd_resource type="Resource" script_class="MapTheme" load_steps=10 format=3 uid="uid://b7a3sieqfuewe"]
+[gd_resource type="Resource" script_class="MapTheme" load_steps=11 format=3 uid="uid://b7a3sieqfuewe"]
 
 [ext_resource type="Texture2D" uid="uid://ckdojstmtqikr" path="res://addons/MetroidvaniaSystem/Themes/Zeric/Borders/BlueBarrier.png" id="1_gcegi"]
 [ext_resource type="Texture2D" uid="uid://bpmgmiri5e6e2" path="res://addons/MetroidvaniaSystem/Themes/Zeric/Borders/RedBarrier.png" id="2_cjw1d"]
 [ext_resource type="Texture2D" uid="uid://dqgc82vybc0cy" path="res://addons/MetroidvaniaSystem/Themes/Zeric/BorderPassage.png" id="3_vb4jp"]
 [ext_resource type="Texture2D" uid="uid://dijxm76dgesma" path="res://addons/MetroidvaniaSystem/Themes/Zeric/RoomFill.png" id="4_01u05"]
-[ext_resource type="Texture2D" uid="uid://djdgo7kixxhpj" path="res://addons/MetroidvaniaSystem/Themes/Zeric/Corner.png" id="4_8c823"]
 [ext_resource type="Texture2D" uid="uid://dw0lgh8p873i4" path="res://addons/MetroidvaniaSystem/Themes/Zeric/CornerCross.png" id="4_jwgxf"]
 [ext_resource type="Script" path="res://addons/MetroidvaniaSystem/Scripts/MapTheme.gd" id="5_oyauq"]
+[ext_resource type="Texture2D" uid="uid://djdgo7kixxhpj" path="res://addons/MetroidvaniaSystem/Themes/Zeric/CornerL.png" id="5_varkp"]
 [ext_resource type="Texture2D" uid="uid://cu2f7csv8gt7c" path="res://addons/MetroidvaniaSystem/Themes/Zeric/BorderWall.png" id="6_xee1q"]
+[ext_resource type="Texture2D" uid="uid://dx7x7ne1r4bix" path="res://addons/MetroidvaniaSystem/Themes/Zeric/CornerU.png" id="9_pbdb6"]
 [ext_resource type="Texture2D" uid="uid://q1rcrbo2ekm4" path="res://addons/MetroidvaniaSystem/Themes/Zeric/CornerT.png" id="9_ppmy6"]
 
 [resource]
@@ -25,6 +26,7 @@ collected_item_symbol = -1
 wall = ExtResource("6_xee1q")
 passage = ExtResource("3_vb4jp")
 borders = Array[Texture2D]([ExtResource("1_gcegi"), ExtResource("2_cjw1d")])
-corner = ExtResource("4_8c823")
+u_corner = ExtResource("9_pbdb6")
+l_corner = ExtResource("5_varkp")
 t_corner = ExtResource("9_ppmy6")
 cross_corner = ExtResource("4_jwgxf")

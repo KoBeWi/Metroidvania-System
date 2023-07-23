@@ -150,6 +150,9 @@ func validate_map_theme() -> void:
 		add_label(\"Theme is missing center texture. Map can't be drawn.\", ERROR)
 		return
 	
+	if map_theme.is_unicorner():
+		add_label(\"Uses unified corners.\", INFO)
+	
 	if map_theme.empty_space_texture and map_theme.empty_space_texture.get_size() != map_theme.center_texture.get_size():
 		add_label(\"Size mismatch between empty texture (%s) and center texture.\" % map_theme.empty_space_texture.get_size(), ERROR)
 	
@@ -187,7 +190,8 @@ func validate_map_theme() -> void:
 	for i in map_theme.symbols.size():
 		check_symbol_texture(map_theme.symbols[i], \"Symbol %d texture\" % i)
 	if map_theme.use_shared_borders:
-		check_corner_texture(map_theme.corner, \"Corner texture\")
+		check_corner_texture(map_theme.u_corner, \"U corner texture\")
+		check_corner_texture(map_theme.l_corner, \"L corner texture\")
 		check_corner_texture(map_theme.t_corner, \"T corner texture\")
 		check_corner_texture(map_theme.cross_corner, \"Cross corner texture\")
 	else:
