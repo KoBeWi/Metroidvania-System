@@ -20,7 +20,7 @@ enum { R, D, L, U }
 ## TODO: w motywach pododawać player sceny, symbole i granice
 ## TODO: do szukania: wymyślić jakoś jak wyświetlać różne ikonki w zależności od danych
 ## TODO: get_used_squares() i dać trójkątne pomieszczenie. Czarno tam gdzie nic nie ma
-## TODO: shared border: bordery są aliasowane (ciemniejsze), trzeba wypełniać brakujące dane
+## TODO: shared border: uprościć rysowanie jak ta sama tekstura
 
 @export var exported_settings: Resource
 
@@ -205,8 +205,8 @@ func get_map_builder() -> MapBuilder:
 func draw_map_square(canvas_item: CanvasItem, offset: Vector2, coords: Vector3i, skip_empty := false, use_save_data := true):
 	RoomDrawer.draw(canvas_item, offset, coords, skip_empty, map_data, save_data if use_save_data else null)
 
-func draw_shared_corners():
-	RoomDrawer.draw_shared_corners()
+func draw_shared_borders():
+	RoomDrawer.draw_shared_borders()
 
 func draw_player_location(canvas_item: CanvasItem, offset: Vector2, exact := false): ## zamiast tego toggle?
 	var last_player_position_2d := Vector2(last_player_position.x, last_player_position.y)

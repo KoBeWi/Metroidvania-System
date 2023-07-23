@@ -102,7 +102,7 @@ func _on_map_draw() -> void:
 			MetSys.draw_map_square(map, Vector2i(x, y) + Vector2i(100, 100), Vector3i(x, y, current_layer), true, false)
 	
 	if MetSys.settings.theme.use_shared_borders:
-		MetSys.draw_shared_corners()
+		MetSys.draw_shared_borders()
 
 func _on_overlay_draw() -> void:
 	pass

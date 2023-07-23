@@ -28,7 +28,7 @@ func _draw() -> void:
 			MetSys.draw_map_square(self, Vector2i(x + 1, y + 1), Vector3i(current_room.x + x, current_room.y + y, MetSys.current_layer))
 	
 	if MetSys.settings.theme.use_shared_borders:
-		MetSys.draw_shared_corners()
+		MetSys.draw_shared_borders()
 
 func _input(event: InputEvent) -> void:
 	if event is InputEventKey:
@@ -104,7 +104,7 @@ func _draw() -> void:
 			MetSys.draw_map_square(self, Vector2i(x, y), Vector3i(x - offset.x, y - offset.y, MetSys.current_layer))
 	
 	if MetSys.settings.theme.use_shared_borders:
-		MetSys.draw_shared_corners()
+		MetSys.draw_shared_borders()
 	
 	MetSys.draw_player_location(self, offset, exact_player_location)
 
