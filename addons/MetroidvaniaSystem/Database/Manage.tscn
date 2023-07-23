@@ -186,12 +186,13 @@ func validate_map_theme() -> void:
 	
 	for i in map_theme.symbols.size():
 		check_symbol_texture(map_theme.symbols[i], \"Symbol %d texture\" % i)
-	
-	check_corner_texture(map_theme.inner_corner, \"Inner corner texture\")
-	check_corner_texture(map_theme.outer_corner, \"Outer corner texture\")
 	if map_theme.use_shared_borders:
+		check_corner_texture(map_theme.corner, \"Corner texture\")
 		check_corner_texture(map_theme.t_corner, \"T corner texture\")
 		check_corner_texture(map_theme.cross_corner, \"Cross corner texture\")
+	else:
+		check_corner_texture(map_theme.inner_corner, \"Inner corner texture\")
+		check_corner_texture(map_theme.outer_corner, \"Outer corner texture\")
 	
 	if map_theme.player_location_scene:
 		var test := map_theme.player_location_scene.instantiate()
