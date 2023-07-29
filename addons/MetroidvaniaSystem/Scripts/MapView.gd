@@ -30,11 +30,11 @@ func _ready() -> void:
 	status_label.hide()
 	await get_tree().process_frame
 	update_map_position()
-	map.size = MetSys.ROOM_SIZE * 200
+	map.size = MetSys.CELL_SIZE * 200
 	MetSys.settings.theme_changed.connect(func(): update_map_position(); on_layer_changed(current_layer))
 
 func get_cursor_pos() -> Vector2i:
-	var pos := (map_overlay.get_local_mouse_position() - MetSys.ROOM_SIZE / 2).snapped(MetSys.ROOM_SIZE) / MetSys.ROOM_SIZE as Vector2i - map_offset
+	var pos := (map_overlay.get_local_mouse_position() - MetSys.CELL_SIZE / 2).snapped(MetSys.CELL_SIZE) / MetSys.CELL_SIZE as Vector2i - map_offset
 	return pos
 
 func on_layer_changed(l: int):
@@ -50,7 +50,7 @@ func on_recenter_view() -> void:
 func _on_overlay_input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion:
 		if view_drag != Vector4():
-			map_offset = Vector2(view_drag.z, view_drag.w) + (map_overlay.get_local_mouse_position() - Vector2(view_drag.x, view_drag.y)) / MetSys.ROOM_SIZE
+			map_offset = Vector2(view_drag.z, view_drag.w) + (map_overlay.get_local_mouse_position() - Vector2(view_drag.x, view_drag.y)) / MetSys.CELL_SIZE
 			update_map_position()
 			map_overlay.queue_redraw()
 			_on_drag()
@@ -99,7 +99,7 @@ func _on_map_draw() -> void:
 	
 	for x in range(-100, 100):
 		for y in range(-100, 100):
-			MetSys.draw_map_square(map, Vector2i(x, y) + Vector2i(100, 100), Vector3i(x, y, current_layer), true, false)
+			MetSys.draw_cell(map, Vector2i(x, y) + Vector2i(100, 100), Vector3i(x, y, current_layer), true, false)
 	
 	if MetSys.settings.theme.use_shared_borders:
 		MetSys.draw_shared_borders()
@@ -108,4 +108,4 @@ func _on_overlay_draw() -> void:
 	pass
 
 func update_map_position():
-	map.position = Vector2(map_offset - Vector2i(100, 100)) * MetSys.ROOM_SIZE
+	map.position = Vector2(map_offset - Vector2i(100, 100)) * MetSys.CELL_SIZE

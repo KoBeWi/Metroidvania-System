@@ -1,13 +1,13 @@
 const FWD = { MetroidvaniaSystem.R: Vector2i.RIGHT, MetroidvaniaSystem.D: Vector2i.DOWN, MetroidvaniaSystem.L: Vector2i.LEFT, MetroidvaniaSystem.U: Vector2i.UP }
 
-class RoomData:
+class CellData:
 	enum { DATA_EXITS, DATA_COLORS, DATA_SYMBOL, DATA_MAP, OVERRIDE_COORDS, OVERRIDE_CUSTOM }
 	
 	var color: Color = Color.TRANSPARENT
 	var borders: Array[int] = [-1, -1, -1, -1]
 	var border_colors: Array[Color] = [Color.TRANSPARENT, Color.TRANSPARENT, Color.TRANSPARENT, Color.TRANSPARENT]
 	var symbol := -1
-	var assigned_map: String
+	var assigned_scene: String
 	var override_map: String
 	
 	var loading
@@ -36,7 +36,7 @@ class RoomData:
 		if not chunk.is_empty():
 			symbol = chunk.to_int()
 		
-		assigned_map = load_next_chunk()
+		assigned_scene = load_next_chunk()
 		loading = null
 	
 	func get_string() -> String:
@@ -54,7 +54,7 @@ class RoomData:
 			data.append(str(symbol))
 		else:
 			data.append("")
-		data.append(assigned_map.trim_prefix(MetSys.settings.map_root_folder + "/"))
+		data.append(assigned_scene.trim_prefix(MetSys.settings.map_root_folder + "/"))
 		return "|".join(data)
 	
 	func load_next_chunk() -> String:
@@ -97,53 +97,53 @@ class RoomData:
 			return override.symbol
 		return symbol
 	
-	func get_assigned_map() -> String:
+	func get_assigned_scene() -> String:
 		var override := get_override()
-		if override and override.assigned_map != "/":
-			return override.assigned_map
+		if override and override.assigned_scene != "/":
+			return override.assigned_scene
 		if not override_map.is_empty():
 			return override_map
-		return assigned_map
+		return assigned_scene
 	
-	func get_override() -> RoomOverride:
+	func get_override() -> CellOverride:
 		if not MetSys.save_data:
 			return null
-		return MetSys.save_data.room_overrides.get(self)
+		return MetSys.save_data.cell_overrides.get(self)
 	
 	func get_coords() -> Vector3i:
-		return MetSys.map_data.rooms.find_key(self)
+		return MetSys.map_data.cells.find_key(self)
 
-class RoomOverride extends RoomData:
-	var original_room: RoomData
-	var custom_room_coords := MetroidvaniaSystem.VECTOR3INF
+class CellOverride extends CellData:
+	var original_room: CellData
+	var custom_cell_coords := MetroidvaniaSystem.VECTOR3INF
 	
-	func _init(from: RoomData) -> void:
+	func _init(from: CellData) -> void:
 		original_room = from
 		borders = [-2, -2, -2, -2]
 		symbol = -2
-		assigned_map = "/"
+		assigned_scene = "/"
 	
-	static func load_from_line(line: String) -> RoomOverride:
-		var room: RoomData
-		var coords_string := line.get_slice("|", RoomData.OVERRIDE_COORDS)
+	static func load_from_line(line: String) -> CellOverride:
+		var cell: CellData
+		var coords_string := line.get_slice("|", CellData.OVERRIDE_COORDS)
 		var coords := Vector3i(coords_string.get_slice(",", 0).to_int(), coords_string.get_slice(",", 1).to_int(), coords_string.get_slice(",", 2).to_int())
 		
-		var is_custom := line.get_slice("|", RoomData.OVERRIDE_CUSTOM) == "true"
+		var is_custom := line.get_slice("|", CellData.OVERRIDE_CUSTOM) == "true"
 		if is_custom:
-			room = MetSys.map_data.create_room_at(coords)
+			cell = MetSys.map_data.create_cell_at(coords)
 		else:
-			room = MetSys.map_data.get_room_at(coords)
+			cell = MetSys.map_data.get_cell_at(coords)
 		
-		var override := RoomOverride.new(room)
+		var override := CellOverride.new(cell)
 		if is_custom:
-			override.custom_room_coords = coords
+			override.custom_cell_coords = coords
 		
-		var fake_room := RoomData.new(line)
-		override.borders = fake_room.borders
-		override.border_colors = fake_room.border_colors
-		override.color = fake_room.color
-		override.symbol = fake_room.symbol
-		override.set_assigned_map(fake_room.assigned_map)
+		var fake_cell := CellData.new(line)
+		override.borders = fake_cell.borders
+		override.border_colors = fake_cell.border_colors
+		override.color = fake_cell.color
+		override.symbol = fake_cell.symbol
+		override.set_assigned_scene(fake_cell.assigned_scene)
 		
 		return override
 	
@@ -162,31 +162,31 @@ class RoomOverride extends RoomData:
 		assert(value >= -2 and value < MetSys.settings.theme.symbols.size())
 		symbol = value
 	
-	func set_assigned_map(map := "/"):
+	func set_assigned_scene(map := "/"):
 		if map == "/":
-			_cleanup_assigned_map()
+			_cleanup_assigned_scene()
 		else:
-			if custom_room_coords != MetroidvaniaSystem.VECTOR3INF:
-				if not map in MetSys.map_data.assigned_maps:
-					MetSys.map_data.assigned_maps[map] = []
-				MetSys.map_data.assigned_maps[map].append(custom_room_coords)
+			if custom_cell_coords != MetroidvaniaSystem.VECTOR3INF:
+				if not map in MetSys.map_data.assigned_scenes:
+					MetSys.map_data.assigned_scenes[map] = []
+				MetSys.map_data.assigned_scenes[map].append(custom_cell_coords)
 			else:
-				MetSys.map_data.map_overrides[map] = original_room.assigned_map
+				MetSys.map_data.map_overrides[map] = original_room.assigned_scene
 				
 				for coords in MetSys.map_data.get_whole_room(original_room.get_coords()):
-					var room: RoomData = MetSys.map_data.rooms[coords]
-					if not room.override_map.is_empty():
+					var cell: CellData = MetSys.map_data.cells[coords]
+					if not cell.override_map.is_empty():
 						push_warning("Assigned map already overriden at: %s" % coords)
-					room.override_map = map
+					cell.override_map = map
 		
-		assigned_map = map
+		assigned_scene = map
 		MetSys.room_assign_updated.emit()
 	
 	func apply_to_group(group_id: int):
-		assert(group_id in MetSys.map_data.room_groups)
+		assert(group_id in MetSys.map_data.cell_groups)
 		
-		for coords in MetSys.map_data.room_groups[group_id]:
-			var override: RoomOverride = MetSys.get_room_override(coords)
+		for coords in MetSys.map_data.cell_groups[group_id]:
+			var override: CellOverride = MetSys.get_cell_override(coords)
 			if override == self:
 				continue
 			
@@ -196,35 +196,35 @@ class RoomOverride extends RoomData:
 			override.symbol = symbol
 	
 	func destroy() -> void:
-		if custom_room_coords == MetroidvaniaSystem.VECTOR3INF:
-			push_error("Only custom room can be destroyed.")
+		if custom_cell_coords == MetroidvaniaSystem.VECTOR3INF:
+			push_error("Only custom cell can be destroyed.")
 			return
 		
-		MetSys.remove_room_override(custom_room_coords)
-		MetSys.map_data.erase_room(custom_room_coords)
-		MetSys.map_data.room_overrides.erase(custom_room_coords)
+		MetSys.remove_cell_override(custom_cell_coords)
+		MetSys.map_data.erase_cell(custom_cell_coords)
+		MetSys.map_data.cell_overrides.erase(custom_cell_coords)
 		MetSys.map_data.custom_rooms.erase(self)
 	
-	func _cleanup_assigned_map() -> void:
-		if assigned_map == "/":
+	func _cleanup_assigned_scene() -> void:
+		if assigned_scene == "/":
 			return
 		
-		MetSys.map_data.map_overrides.erase(assigned_map)
+		MetSys.map_data.map_overrides.erase(assigned_scene)
 		for coords in MetSys.map_data.get_whole_room(original_room.get_coords()):
-			MetSys.map_data.rooms[coords].override_map = ""
+			MetSys.map_data.cells[coords].override_map = ""
 	
 	func _get_override_string(coords: Vector3i) -> String:
-		return str(get_string(), "|", coords.x, ",", coords.y, ",", coords.z, "|", custom_room_coords != MetroidvaniaSystem.VECTOR3INF)
+		return str(get_string(), "|", coords.x, ",", coords.y, ",", coords.z, "|", custom_cell_coords != MetroidvaniaSystem.VECTOR3INF)
 	
 	func commit() -> void:
 		MetSys.map_updated.emit()
 
-var rooms: Dictionary#[Vector3i, RoomData]
-var custom_rooms: Dictionary#[Vector3i, RoomData]
-var assigned_maps: Dictionary#[String, Array[Vector3i]]
-var room_groups: Dictionary#[int, Array[Vector3i]]
+var cells: Dictionary#[Vector3i, CellData]
+var custom_rooms: Dictionary#[Vector3i, CellData]
+var assigned_scenes: Dictionary#[String, Array[Vector3i]]
+var cell_groups: Dictionary#[int, Array[Vector3i]]
 
-var room_overrides: Dictionary#[Vector3i, RoomOverride]
+var cell_overrides: Dictionary#[Vector3i, CellOverride]
 var map_overrides: Dictionary#[String, String]
 
 func load_data():
@@ -248,11 +248,11 @@ func load_data():
 			i += 1
 			line = data[i]
 			
-			var room_data := RoomData.new(line)
-			if not room_data.assigned_map.is_empty():
-				assigned_maps[room_data.assigned_map] = [coords]
+			var cell_data := CellData.new(line)
+			if not cell_data.assigned_scene.is_empty():
+				assigned_scenes[cell_data.assigned_scene] = [coords]
 			
-			rooms[coords] = room_data
+			cells[coords] = cell_data
 		elif is_in_groups:
 			var group_data := data[i].split(":")
 			var group_id := group_data[0].to_int()
@@ -264,49 +264,49 @@ func load_data():
 				coords.z = group_data[j].get_slice(",", 2).to_int()
 				rooms_in_group.append(coords)
 			
-			room_groups[group_id] = rooms_in_group
+			cell_groups[group_id] = rooms_in_group
 		
 		i += 1
 	
-	for map in assigned_maps.keys():
-		var assigned_rooms: Array[Vector3i]
-		assigned_rooms.assign(assigned_maps[map])
-		assigned_maps[map] = get_whole_room(assigned_rooms[0])
+	for map in assigned_scenes.keys():
+		var assigned_cells: Array[Vector3i]
+		assigned_cells.assign(assigned_scenes[map])
+		assigned_scenes[map] = get_whole_room(assigned_cells[0])
 
 func save_data():
 	var file := FileAccess.open(MetSys.settings.map_root_folder.path_join("MapData.txt"), FileAccess.WRITE)
 	
-	for group in room_groups:
-		if room_groups[group].is_empty():
+	for group in cell_groups:
+		if cell_groups[group].is_empty():
 			continue
 		
 		var line: PackedStringArray
 		line.append(str(group))
-		for coords in room_groups[group]:
+		for coords in cell_groups[group]:
 			line.append("%s,%s,%s" % [coords.x, coords.y, coords.z])
 		
 		file.store_line(":".join(line))
 	
-	for coords in rooms:
+	for coords in cells:
 		file.store_line("[%s,%s,%s]" % [coords.x, coords.y, coords.z])
 		
-		var room_data := get_room_at(coords)
-		file.store_line(room_data.get_string())
+		var cell_data := get_cell_at(coords)
+		file.store_line(cell_data.get_string())
 
-func get_room_at(coords: Vector3i) -> RoomData:
-	return rooms.get(coords)
+func get_cell_at(coords: Vector3i) -> CellData:
+	return cells.get(coords)
 
-func create_room_at(coords: Vector3i) -> RoomData:
-	rooms[coords] = RoomData.new("")
-	return rooms[coords]
+func create_cell_at(coords: Vector3i) -> CellData:
+	cells[coords] = CellData.new("")
+	return cells[coords]
 
-func create_custom_room(coords: Vector3i) -> RoomOverride:
-	assert(not coords in rooms, "A room already exists at this position")
-	var room := create_room_at(coords)
-	custom_rooms[coords] = room
+func create_custom_cell(coords: Vector3i) -> CellOverride:
+	assert(not coords in cells, "A cell already exists at this position")
+	var cell := create_cell_at(coords)
+	custom_rooms[coords] = cell
 	
-	var override: RoomOverride = MetSys.save_data.add_room_override(room)
-	override.custom_room_coords = coords
+	var override: CellOverride = MetSys.save_data.add_cell_override(cell)
+	override.custom_cell_coords = coords
 	return override
 
 func get_whole_room(at: Vector3i) -> Array[Vector3i]:
@@ -320,36 +320,36 @@ func get_whole_room(at: Vector3i) -> Array[Vector3i]:
 		checked.append(p)
 		
 		var coords := Vector3i(p.x, p.y, at.z)
-		if coords in rooms:
+		if coords in cells:
 			room.append(coords)
 			for i in 4:
-				if rooms[coords].borders[i] == -1:
+				if cells[coords].borders[i] == -1:
 					var p2: Vector2i = p + FWD[i]
 					if not p2 in to_check and not p2 in checked:
 						to_check.append(p2)
 	
 	return room
 
-func get_rooms_assigned_to(map: String) -> Array[Vector3i]:
+func get_cells_assigned_to(map: String) -> Array[Vector3i]:
 	if map in map_overrides:
 		map = map_overrides[map]
 	
 	var ret: Array[Vector3i]
-	ret.assign(assigned_maps.get(map, []))
+	ret.assign(assigned_scenes.get(map, []))
 	return ret
 
-func get_assigned_map_at(coords: Vector3i) -> String:
-	var room := get_room_at(coords)
-	if room:
-		return room.get_assigned_map()
+func get_assigned_scene_at(coords: Vector3i) -> String:
+	var cell := get_cell_at(coords)
+	if cell:
+		return cell.get_assigned_scene()
 	else:
 		return ""
 
-func erase_room(coords: Vector3i):
-	var assigned_map: String = rooms[coords].assigned_map
-	MetSys.map_data.assigned_maps[assigned_map] = []
+func erase_cell(coords: Vector3i):
+	var assigned_scene: String = cells[coords].assigned_scene
+	MetSys.map_data.assigned_scenes[assigned_scene] = []
 	
-	rooms.erase(coords)
+	cells.erase(coords)
 	
-	for group in room_groups.values():
+	for group in cell_groups.values():
 		group.erase(coords)

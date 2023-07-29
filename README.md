@@ -6,7 +6,7 @@ Features:
 - Map Viewer will highlight the currently opened scene on map
 
 Terminology
-Room, Border, Corner, Passage, Wall, Map Square, Scene?
+Room, Border, Corner, Passage, Wall, Cell
 
 Themes
 AoS = Castlevania: Aria of Sorrow

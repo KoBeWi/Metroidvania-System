@@ -24,10 +24,10 @@ func force_reload() -> void:
 	MetSys.map_data = MetSys.MapData.new()
 	MetSys.map_data.load_data()
 	
-	for group in MetSys.map_data.room_groups.values():
+	for group in MetSys.map_data.cell_groups.values():
 		var i: int
 		while i < group.size():
-			if MetSys.map_data.get_room_at(group[i]):
+			if MetSys.map_data.get_cell_at(group[i]):
 				i += 1
 			else:
 				group.remove_at(i)
@@ -41,15 +41,15 @@ func reset_theme() -> void:
 	var th: Theme = owner.theme
 	th.set_color(&\"group_color\", &\"MetSys\", Color(Color.MEDIUM_PURPLE, 0.8))
 	th.set_color(&\"highlighted_room\", &\"MetSys\", Color(Color.GREEN, 0.25))
-	th.set_color(&\"assigned_room\", &\"MetSys\", Color(Color.MEDIUM_SEA_GREEN, 0.8))
+	th.set_color(&\"assigned_scene\", &\"MetSys\", Color(Color.MEDIUM_SEA_GREEN, 0.8))
 	th.set_color(&\"border_highlight\", &\"MetSys\", Color(Color.GREEN, 0.5))
 	th.set_color(&\"cursor_color\", &\"MetSys\", Color.GREEN)
 	th.set_color(&\"cursor_color_erase\", &\"MetSys\", Color.RED)
 	th.set_color(&\"marked_collectible_room\", &\"MetSys\", Color(Color.BLUE_VIOLET, 0.75))
 	th.set_color(&\"foreign_marked_collectible_room\", &\"MetSys\", Color(Color.RED, 0.25))
 	th.set_color(&\"current_scene_room\", &\"MetSys\", Color(Color.RED, 0.5))
-	th.set_color(&\"map_not_assigned\", &\"MetSys\", Color.RED)
-	th.set_color(&\"map_assigned\", &\"MetSys\", Color.WHITE)
+	th.set_color(&\"room_not_assigned\", &\"MetSys\", Color.RED)
+	th.set_color(&\"room_assigned\", &\"MetSys\", Color.WHITE)
 	ResourceSaver.save(th)
 
 func toggle_allow_reset(button_pressed: bool) -> void:
@@ -108,27 +108,27 @@ func validate_map_data() -> void:
 	unused_symbols.erase(map_theme.uncollected_item_symbol)
 	unused_symbols.erase(map_theme.collected_item_symbol)
 	
-	for coords in MetSys.map_data.rooms:
-		var room_data: MetroidvaniaSystem.MapData.RoomData = MetSys.map_data.rooms[coords]
+	for coords in MetSys.map_data.cells:
+		var cell_data: MetroidvaniaSystem.MapData.CellData = MetSys.map_data.cells[coords]
 		
-		if not MetSys.map_data.get_assigned_map_at(coords):
+		if not MetSys.map_data.get_assigned_scene_at(coords):
 			add_label(\"No assigned map at: %s\" % coords, WARNING)
 		
-		var symbol := room_data.get_symbol()
+		var symbol := cell_data.get_symbol()
 		if symbol >= map_theme.symbols.size():
 			add_label(\"Invalid symbol (%d) at: %s\" % [symbol, coords], ERROR)
 		else:
 			unused_symbols.erase(symbol)
 		
 		for i in 4:
-			var border := room_data.get_border(i)
+			var border := cell_data.get_border(i)
 			if map_theme.rectangle and border >= map_theme.vertical_borders.size() + 2:
 				add_label(\"Invalid border (%d) at: %s\" % [border, coords], ERROR)
 			elif not map_theme.rectangle and border >= map_theme.borders.size() + 2:
 				add_label(\"Invalid border (%d) at: %s\" % [border, coords], ERROR)
-			elif room_data.get_border(i) != 0:
+			elif cell_data.get_border(i) != 0:
 				var next: Vector3i = coords + Vector3i(MetroidvaniaSystem.MapData.FWD[i].x, MetroidvaniaSystem.MapData.FWD[i].y, 0)
-				if not MetSys.map_data.get_room_at(next):
+				if not MetSys.map_data.get_cell_at(next):
 					add_label(\"Passage to nowhere at: %s\" % coords, WARNING)
 	
 	for symbol in unused_symbols:
@@ -144,8 +144,8 @@ func validate_map_theme() -> void:
 	var map_theme: MapTheme = MetSys.settings.theme
 	
 	if map_theme.center_texture:
-		add_label(\"Room Shape: %s\" % (\"Rectangle\" if map_theme.rectangle else \"Square\"), INFO)
-		add_label(\"Base Room Size: %s\" % map_theme.center_texture.get_size(), INFO)
+		add_label(\"Cell Shape: %s\" % (\"Rectangle\" if map_theme.rectangle else \"Square\"), INFO)
+		add_label(\"Base Cell Size: %s\" % map_theme.center_texture.get_size(), INFO)
 	else:
 		add_label(\"Theme is missing center texture. Map can't be drawn.\", ERROR)
 		return
@@ -233,7 +233,7 @@ func check_symbol_texture(texture: Texture2D, texture_name: String):
 	if texture:
 		var map_theme: MapTheme = MetSys.settings.theme
 		if texture.get_width() > map_theme.center_texture.get_width() or texture.get_height() > map_theme.center_texture.get_height():
-			add_label(\"%s is bigger than center texture. It will stick out of rooms.\" % texture_name, WARNING)
+			add_label(\"%s is bigger than center texture. It will stick out of cells.\" % texture_name, WARNING)
 	else:
 		add_label(\"%s is empty.\" % texture_name, ERROR)
 

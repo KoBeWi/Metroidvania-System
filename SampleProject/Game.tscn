@@ -12,8 +12,8 @@ script/source = "extends Panel
 var current_room: Vector2i
 
 func _ready() -> void:
-	custom_minimum_size = MetSys.ROOM_SIZE * 3
-	$ColorRect.custom_minimum_size = MetSys.ROOM_SIZE
+	custom_minimum_size = MetSys.CELL_SIZE * 3
+	$ColorRect.custom_minimum_size = MetSys.CELL_SIZE
 	
 	MetSys.room_changed.connect(on_room_changed)
 	MetSys.map_updated.connect(queue_redraw)
@@ -25,7 +25,7 @@ func on_room_changed(new_room: Vector2i):
 func _draw() -> void:
 	for x in range(-1, 2):
 		for y in range(-1, 2):
-			MetSys.draw_map_square(self, Vector2i(x + 1, y + 1), Vector3i(current_room.x + x, current_room.y + y, MetSys.current_layer))
+			MetSys.draw_cell(self, Vector2i(x + 1, y + 1), Vector3i(current_room.x + x, current_room.y + y, MetSys.current_layer))
 	
 	if MetSys.settings.theme.use_shared_borders:
 		MetSys.draw_shared_borders()
@@ -86,7 +86,7 @@ var current_room: Vector2i
 var offset: Vector2i
 
 func _ready() -> void:
-	SIZE = size / MetSys.ROOM_SIZE
+	SIZE = size / MetSys.CELL_SIZE
 	
 	if exact_player_location:
 		set_process(true)
@@ -101,7 +101,7 @@ func _process(delta: float) -> void:
 func _draw() -> void:
 	for x in SIZE.x:
 		for y in SIZE.y:
-			MetSys.draw_map_square(self, Vector2i(x, y), Vector3i(x - offset.x, y - offset.y, MetSys.current_layer))
+			MetSys.draw_cell(self, Vector2i(x, y), Vector3i(x - offset.x, y - offset.y, MetSys.current_layer))
 	
 	if MetSys.settings.theme.use_shared_borders:
 		MetSys.draw_shared_borders()

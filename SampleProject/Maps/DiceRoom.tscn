@@ -1,7 +1,7 @@
 [gd_scene load_steps=9 format=3 uid="uid://cjk52vjugqh5"]
 
 [ext_resource type="TileSet" uid="uid://bwpcg2opya34n" path="res://SampleProject/Resources/Tileset.tres" id="1_l63o1"]
-[ext_resource type="PackedScene" uid="uid://bsg0351mx3b4u" path="res://addons/MetroidvaniaSystem/Nodes/MapInstance.tscn" id="2_b0ayl"]
+[ext_resource type="PackedScene" uid="uid://bsg0351mx3b4u" path="res://addons/MetroidvaniaSystem/Nodes/RoomInstance.tscn" id="2_b0ayl"]
 [ext_resource type="PackedScene" uid="uid://ke056546dq4j" path="res://SampleProject/Objects/Dice.glb" id="3_a62rx"]
 
 [sub_resource type="GDScript" id="GDScript_2fold"]
@@ -27,8 +27,8 @@ func _on_body_entered(body: Node2D) -> void:
 	%TileMap.set_layer_enabled(2, true)
 	
 	for coords in Game.get_singleton().generated_rooms:
-		MetSys.get_room_override(coords, false).destroy()
-		MetSys.save_data.discovered_rooms.erase(coords)
+		MetSys.get_cell_override(coords, false).destroy()
+		MetSys.save_data.discovered_cells.erase(coords)
 	Game.get_singleton().generated_rooms.clear()
 	
 	%DiceAnimator.play(&\"Spin\")
@@ -74,7 +74,7 @@ func generate_map():
 		grid[next] = 1 << ((go + 2) % 4)
 		distance_grid[next] = distance_grid[pos] + 1
 	
-	var dice_room_data := MetSys.map_data.get_room_at(Vector3i(-1, -7, 2))
+	var dice_cell_data := MetSys.map_data.get_cell_at(Vector3i(-1, -7, 2))
 	var builder := MetSys.get_map_builder()
 	
 	var collectible_pos: Vector2i = distance_grid.keys().reduce(func(accum: Vector2i, pos: Vector2i):
@@ -90,16 +90,16 @@ func generate_map():
 		var coords := Vector3i(0 + pos.x, -7 + pos.y, 2)
 		Game.get_singleton().generated_rooms.append(coords)
 		
-		var room := builder.create_room(coords)
-		room.color = dice_room_data.color
+		var cell := builder.create_cell(coords)
+		cell.color = dice_cell_data.color
 		for i in 4:
-			room.borders[i] = 1 if grid[pos] & 1 << i else 0
-			room.border_colors[i] = dice_room_data.border_colors[i]
-		room.set_assigned_map(generate_room(\"Junction.tscn\", grid[pos], pos == collectible_pos))
+			cell.borders[i] = 1 if grid[pos] & 1 << i else 0
+			cell.border_colors[i] = dice_cell_data.border_colors[i]
+		cell.set_assigned_scene(generate_cell(\"Junction.tscn\", grid[pos], pos == collectible_pos))
 	
 	builder.update_map()
 
-func generate_room(from_map: String, exits: int, place_collectible: bool) -> String:
+func generate_cell(from_map: String, exits: int, place_collectible: bool) -> String:
 	var scene: PackedScene = load(\"res://SampleProject/Maps/%s\" % from_map)
 	
 	from_map = from_map.get_basename()
@@ -255,7 +255,7 @@ offset_left = -192.0
 offset_top = 176.0
 offset_right = 192.0
 offset_bottom = 202.0
-text = "Touch the Dice to randomize rooms"
+text = "Touch the Dice to randomize cells"
 horizontal_alignment = 1
 
 [connection signal="body_entered" from="Dice" to="Dice" method="_on_body_entered"]

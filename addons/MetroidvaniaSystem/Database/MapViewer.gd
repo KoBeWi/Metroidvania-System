@@ -7,7 +7,7 @@ enum {MODE_LAYOUT = 1, MODE_ROOM_SYMBOL, MODE_ROOM_COLOR, MODE_ROOM_GROUP, MODE_
 
 var theme_cache: Dictionary
 
-var room_under_cursor: MetroidvaniaSystem.MapData.RoomData
+var room_under_cursor: MetroidvaniaSystem.MapData.CellData
 var current_hovered_item: Control
 
 func _ready() -> void:
@@ -24,8 +24,8 @@ func _notification(what: int) -> void:
 		theme_cache.foreign_marked_collectible_room = get_theme_color(&"foreign_marked_collectible_room", &"MetSys")
 		theme_cache.current_scene_room = get_theme_color(&"current_scene_room", &"MetSys")
 		theme_cache.cursor_color = get_theme_color(&"cursor_color", &"MetSys")
-		theme_cache.map_not_assigned = get_theme_color(&"map_not_assigned", &"MetSys")
-		theme_cache.map_assigned = get_theme_color(&"map_assigned", &"MetSys")
+		theme_cache.room_not_assigned = get_theme_color(&"room_not_assigned", &"MetSys")
+		theme_cache.room_assigned = get_theme_color(&"room_assigned", &"MetSys")
 
 func _on_item_hover(item: Control):
 	item.mouse_exited.connect(_on_item_unhover.bind(item))
@@ -41,8 +41,8 @@ func _on_item_unhover(item: Control):
 func _update_status_label():
 	status_label.show()
 	status_label.modulate = Color.WHITE
-	if room_under_cursor and not room_under_cursor.assigned_map.is_empty():
-		status_label.text = str(get_cursor_pos(), " ", room_under_cursor.assigned_map)
+	if room_under_cursor and not room_under_cursor.assigned_scene.is_empty():
+		status_label.text = str(get_cursor_pos(), " ", room_under_cursor.assigned_scene)
 	else:
 		if room_under_cursor:
 			status_label.modulate = Color.RED
@@ -53,12 +53,12 @@ func _on_overlay_input(event: InputEvent) -> void:
 	
 	if event is InputEventMouseMotion:
 		var cursor := get_cursor_pos()
-		room_under_cursor = MetSys.map_data.get_room_at(Vector3i(cursor.x, cursor.y, current_layer))
+		room_under_cursor = MetSys.map_data.get_cell_at(Vector3i(cursor.x, cursor.y, current_layer))
 	
 	if event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_LEFT:
-			if event.pressed and room_under_cursor and not room_under_cursor.assigned_map.is_empty():
-				plugin.get_editor_interface().open_scene_from_path(MetSys.settings.map_root_folder.path_join(room_under_cursor.assigned_map))
+			if event.pressed and room_under_cursor and not room_under_cursor.assigned_scene.is_empty():
+				plugin.get_editor_interface().open_scene_from_path(MetSys.settings.map_root_folder.path_join(room_under_cursor.assigned_scene))
 
 func _on_overlay_draw() -> void:
 	if not plugin:
@@ -67,25 +67,25 @@ func _on_overlay_draw() -> void:
 	var mouse := get_cursor_pos()
 	
 	if map_overlay.cursor_inside:
-		map_overlay.draw_rect(Rect2(Vector2(mouse + map_offset) * MetSys.ROOM_SIZE, MetSys.ROOM_SIZE), theme_cache.cursor_color, false, 2)
+		map_overlay.draw_rect(Rect2(Vector2(mouse + map_offset) * MetSys.CELL_SIZE, MetSys.CELL_SIZE), theme_cache.cursor_color, false, 2)
 	
 	if get_tree().edited_scene_root.scene_file_path.begins_with(MetSys.settings.map_root_folder):
 		var current_scene := get_tree().edited_scene_root.scene_file_path.trim_prefix(MetSys.settings.map_root_folder)
 		
-		for coords in MetSys.map_data.get_rooms_assigned_to(current_scene):
+		for coords in MetSys.map_data.get_cells_assigned_to(current_scene):
 			if coords.z != current_layer:
 				break
 			
-			map_overlay.draw_rect(Rect2(Vector2(coords.x + map_offset.x, coords.y + map_offset.y) * MetSys.ROOM_SIZE, MetSys.ROOM_SIZE), theme_cache.current_scene_room)
+			map_overlay.draw_rect(Rect2(Vector2(coords.x + map_offset.x, coords.y + map_offset.y) * MetSys.CELL_SIZE, MetSys.CELL_SIZE), theme_cache.current_scene_room)
 	
 	if current_hovered_item:
 		var data: Dictionary = current_hovered_item.get_meta(&"data")
 		if "coords" in data:
 			var coords: Vector3i = data.coords
-			map_overlay.draw_rect(Rect2(Vector2(coords.x + map_offset.x, coords.y + map_offset.y) * MetSys.ROOM_SIZE, MetSys.ROOM_SIZE), theme_cache.marked_collectible_room if coords.z == current_layer else theme_cache.foreign_marked_collectible_room)
+			map_overlay.draw_rect(Rect2(Vector2(coords.x + map_offset.x, coords.y + map_offset.y) * MetSys.CELL_SIZE, MetSys.CELL_SIZE), theme_cache.marked_collectible_room if coords.z == current_layer else theme_cache.foreign_marked_collectible_room)
 		else:
-			for coords in MetSys.map_data.get_rooms_assigned_to(data.map):
+			for coords in MetSys.map_data.get_cells_assigned_to(data.map):
 				if coords.z != current_layer:
 					break
 				
-				map_overlay.draw_rect(Rect2(Vector2(coords.x + map_offset.x, coords.y + map_offset.y) * MetSys.ROOM_SIZE, MetSys.ROOM_SIZE), theme_cache.marked_collectible_room)
+				map_overlay.draw_rect(Rect2(Vector2(coords.x + map_offset.x, coords.y + map_offset.y) * MetSys.CELL_SIZE, MetSys.CELL_SIZE), theme_cache.marked_collectible_room)

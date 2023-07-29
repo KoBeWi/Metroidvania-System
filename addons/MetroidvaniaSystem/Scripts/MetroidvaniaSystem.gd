@@ -10,7 +10,7 @@ const Settings = preload("res://addons/MetroidvaniaSystem/Scripts/Settings.gd")
 const SaveData = preload("res://addons/MetroidvaniaSystem/Scripts/SaveData.gd")
 const MapData = preload("res://addons/MetroidvaniaSystem/Scripts/MapData.gd")
 const MapBuilder = preload("res://addons/MetroidvaniaSystem/Scripts/MapBuilder.gd")
-const MapInstance = preload("res://addons/MetroidvaniaSystem/Scripts/MapInstance.gd")
+const RoomInstance = preload("res://addons/MetroidvaniaSystem/Scripts/RoomInstance.gd")
 const RoomDrawer = preload("res://addons/MetroidvaniaSystem/Scripts/RoomDrawer.gd")
 
 enum { R, D, L, U }
@@ -24,7 +24,7 @@ enum { R, D, L, U }
 @export var exported_settings: Resource
 
 var settings: Settings
-var ROOM_SIZE: Vector2
+var CELL_SIZE: Vector2
 
 var map_data: MapData
 var save_data: SaveData
@@ -32,7 +32,7 @@ var save_data: SaveData
 var last_player_position := VECTOR3INF
 var exact_player_position: Vector2
 var player_location_instance: Node2D
-var current_map: MapInstance
+var current_room: RoomInstance
 
 var current_layer: int:
 	set(layer):
@@ -56,7 +56,7 @@ func _enter_tree() -> void:
 	map_data.load_data()
 
 func _update_theme():
-	ROOM_SIZE = settings.theme.center_texture.get_size()
+	CELL_SIZE = settings.theme.center_texture.get_size()
 	map_updated.emit()
 
 func _ready() -> void:
@@ -72,29 +72,29 @@ func set_save_data(data := {}):
 func reset_save_data():
 	save_data = SaveData.new()
 
-func visit_room(room: Vector3i):
-	save_data.explore_room(room)
+func visit_cell(coords: Vector3i):
+	save_data.explore_cell(coords)
 	
-	var previous_map := map_data.get_assigned_map_at(Vector3i(last_player_position.x, last_player_position.y, current_layer))
-	var new_map := map_data.get_assigned_map_at(room)
+	var previous_map := map_data.get_assigned_scene_at(Vector3i(last_player_position.x, last_player_position.y, current_layer))
+	var new_map := map_data.get_assigned_scene_at(coords)
 	if not new_map.is_empty() and not previous_map.is_empty() and new_map != previous_map:
 		map_changed.emit(new_map)
 
 func set_player_position(position: Vector2):
 	exact_player_position = position
 	
-	var player_pos := Vector2i((position / settings.in_game_room_size).floor()) + current_map.min_room
+	var player_pos := Vector2i((position / settings.in_game_CELL_SIZE).floor()) + current_room.min_room
 	var player_pos_3d := Vector3i(player_pos.x, player_pos.y, current_layer)
 	if player_pos_3d != last_player_position:
-		visit_room(Vector3i(player_pos.x, player_pos.y, current_layer))
+		visit_cell(Vector3i(player_pos.x, player_pos.y, current_layer))
 		room_changed.emit(player_pos)
 		last_player_position = player_pos_3d
 
 func discover_room_group(group_id: int):
-	assert(group_id in map_data.room_groups)
+	assert(group_id in map_data.cell_groups)
 	
-	for coords in map_data.room_groups[group_id]:
-		save_data.discover_room(coords)
+	for coords in map_data.cell_groups[group_id]:
+		save_data.discover_cell(coords)
 	
 	map_updated.emit()
 
@@ -163,15 +163,15 @@ func get_object_coords(object: Object) -> Vector3i:
 	elif object is Node:
 		var map_name: String = object.owner.scene_file_path.trim_prefix(settings.map_root_folder)
 		map_name = MetSys.map_data.map_overrides.get(map_name, map_name)
-		assert(map_name in map_data.assigned_maps)
+		assert(map_name in map_data.assigned_scenes)
 		
-		var coords: Vector3i = map_data.assigned_maps[map_name].front()
-		for vec in map_data.assigned_maps[map_name]:
+		var coords: Vector3i = map_data.assigned_scenes[map_name].front()
+		for vec in map_data.assigned_scenes[map_name]:
 			coords.x = mini(coords.x, vec.x)
 			coords.y = mini(coords.y, vec.y)
 		
 		if object is CanvasItem:
-			var position: Vector2 = object.position / settings.in_game_room_size
+			var position: Vector2 = object.position / settings.in_game_CELL_SIZE
 			coords.x += int(position.x)
 			coords.y += int(position.y)
 		
@@ -179,29 +179,29 @@ func get_object_coords(object: Object) -> Vector3i:
 		return coords
 	return Vector3i()
 
-func get_room_override(coords: Vector3i, auto_create := true) -> MapData.RoomOverride:
-	var room := map_data.get_room_at(coords)
-	assert(room, "Can't override non-existent room")
+func get_cell_override(coords: Vector3i, auto_create := true) -> MapData.CellOverride:
+	var cell := map_data.get_cell_at(coords)
+	assert(cell, "Can't override non-existent cell")
 	
-	var existing := room.get_override()
+	var existing := cell.get_override()
 	if existing:
 		return existing
 	elif auto_create:
-		return save_data.add_room_override(room)
+		return save_data.add_cell_override(cell)
 	else:
 		push_error("No override found at %s" % coords)
 		return null
 
-func remove_room_override(coords: Vector3i):
-	var room = MetSys.map_data.get_room_at(coords)
-	assert(room, "Can't remove override of non-existent room")
-	if save_data.remove_room_override(room):
+func remove_cell_override(coords: Vector3i):
+	var cell = MetSys.map_data.get_cell_at(coords)
+	assert(cell, "Can't remove override of non-existent cell")
+	if save_data.remove_cell_override(cell):
 		map_updated.emit()
 
 func get_map_builder() -> MapBuilder:
 	return MapBuilder.new()
 
-func draw_map_square(canvas_item: CanvasItem, offset: Vector2, coords: Vector3i, skip_empty := false, use_save_data := true):
+func draw_cell(canvas_item: CanvasItem, offset: Vector2, coords: Vector3i, skip_empty := false, use_save_data := true):
 	RoomDrawer.draw(canvas_item, offset, coords, skip_empty, map_data, save_data if use_save_data else null)
 
 func draw_shared_borders():
@@ -209,9 +209,9 @@ func draw_shared_borders():
 
 func draw_player_location(canvas_item: CanvasItem, offset: Vector2, exact := false): ## zamiast tego toggle?
 	var last_player_position_2d := Vector2(last_player_position.x, last_player_position.y)
-	var player_position := (last_player_position_2d + offset) * ROOM_SIZE + ROOM_SIZE / 2
+	var player_position := (last_player_position_2d + offset) * CELL_SIZE + CELL_SIZE / 2
 	if exact:
-		player_position += (exact_player_position / settings.in_game_room_size).posmod(1) * ROOM_SIZE - ROOM_SIZE * 0.5
+		player_position += (exact_player_position / settings.in_game_CELL_SIZE).posmod(1) * CELL_SIZE - CELL_SIZE * 0.5
 	
 	if not is_instance_valid(player_location_instance):
 		player_location_instance = settings.theme.player_location_scene.instantiate()
@@ -226,16 +226,16 @@ func draw_player_location(canvas_item: CanvasItem, offset: Vector2, exact := fal
 func get_current_coords() -> Vector3i:
 	return Vector3i(last_player_position.x, last_player_position.y, current_layer)
 
-func get_current_map_instance() -> MapInstance:
-	if is_instance_valid(current_map):
-		return current_map
+func get_current_room_instance() -> RoomInstance:
+	if is_instance_valid(current_room):
+		return current_room
 	return null
 
-func get_current_map_name() -> String:
-	if current_map:
-		return current_map.map_name
+func get_current_room_name() -> String:
+	if current_room:
+		return current_room.map_name
 	else:
 		return ""
 
-func get_full_map_path(map_name: String) -> String:
+func get_full_room_path(map_name: String) -> String:
 	return settings.map_root_folder.path_join(map_name)

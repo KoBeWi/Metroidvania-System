@@ -38,29 +38,29 @@ func _editor_input(event: InputEvent):
 
 func _editor_draw(map_overlay: CanvasItem):
 	for p in highlighted_room:
-		map_overlay.draw_rect(Rect2(Vector2(p.x, p.y) * MetSys.ROOM_SIZE, MetSys.ROOM_SIZE), theme_cache.highlighted_room)
+		map_overlay.draw_rect(Rect2(Vector2(p.x, p.y) * MetSys.CELL_SIZE, MetSys.CELL_SIZE), theme_cache.highlighted_room)
 	
 	if drag_from == EDITOR_SCRIPT.NULL_VECTOR2I:
 		if use_cursor and map_overlay.cursor_inside and (not room_only_cursor or get_room_at_cursor()):
-			map_overlay.draw_rect(Rect2(get_cursor_pos() as Vector2 * MetSys.ROOM_SIZE, MetSys.ROOM_SIZE), theme_cache.cursor_color, false, 2)
+			map_overlay.draw_rect(Rect2(get_cursor_pos() as Vector2 * MetSys.CELL_SIZE, MetSys.CELL_SIZE), theme_cache.cursor_color, false, 2)
 	else:
 		var rect := get_rect_between(drag_from, get_cursor_pos())
-		top_draw = func(map_overlay: CanvasItem): map_overlay.draw_string(get_theme_font(&"font", &"Label"), Vector2(get_cursor_pos()) * MetSys.ROOM_SIZE + MetSys.ROOM_SIZE * Vector2.UP * 0.5, "%d x %d" % [rect.size.x, rect.size.y])
+		top_draw = func(map_overlay: CanvasItem): map_overlay.draw_string(get_theme_font(&"font", &"Label"), Vector2(get_cursor_pos()) * MetSys.CELL_SIZE + MetSys.CELL_SIZE * Vector2.UP * 0.5, "%d x %d" % [rect.size.x, rect.size.y])
 		
-		rect.position *= MetSys.ROOM_SIZE
-		rect.size *= MetSys.ROOM_SIZE
+		rect.position *= MetSys.CELL_SIZE
+		rect.size *= MetSys.CELL_SIZE
 		map_overlay.draw_rect(rect, theme_cache.cursor_color, false, 2)
 	
 	if highlighted_border > -1:
 		match highlighted_border:
 			MetSys.R:
-				map_overlay.draw_rect(Rect2(get_cursor_pos() as Vector2 * MetSys.ROOM_SIZE + Vector2(MetSys.ROOM_SIZE.x * 0.667, 0), MetSys.ROOM_SIZE * Vector2(0.333, 1)), theme_cache.border_highlight)
+				map_overlay.draw_rect(Rect2(get_cursor_pos() as Vector2 * MetSys.CELL_SIZE + Vector2(MetSys.CELL_SIZE.x * 0.667, 0), MetSys.CELL_SIZE * Vector2(0.333, 1)), theme_cache.border_highlight)
 			MetSys.D:
-				map_overlay.draw_rect(Rect2(get_cursor_pos() as Vector2 * MetSys.ROOM_SIZE + Vector2(0, MetSys.ROOM_SIZE.y * 0.667), MetSys.ROOM_SIZE * Vector2(1, 0.333)), theme_cache.border_highlight)
+				map_overlay.draw_rect(Rect2(get_cursor_pos() as Vector2 * MetSys.CELL_SIZE + Vector2(0, MetSys.CELL_SIZE.y * 0.667), MetSys.CELL_SIZE * Vector2(1, 0.333)), theme_cache.border_highlight)
 			MetSys.L:
-				map_overlay.draw_rect(Rect2(get_cursor_pos() as Vector2 * MetSys.ROOM_SIZE, MetSys.ROOM_SIZE * Vector2(0.333, 1)), theme_cache.border_highlight)
+				map_overlay.draw_rect(Rect2(get_cursor_pos() as Vector2 * MetSys.CELL_SIZE, MetSys.CELL_SIZE * Vector2(0.333, 1)), theme_cache.border_highlight)
 			MetSys.U:
-				map_overlay.draw_rect(Rect2(get_cursor_pos() as Vector2 * MetSys.ROOM_SIZE, MetSys.ROOM_SIZE * Vector2(1, 0.333)), theme_cache.border_highlight)
+				map_overlay.draw_rect(Rect2(get_cursor_pos() as Vector2 * MetSys.CELL_SIZE, MetSys.CELL_SIZE * Vector2(1, 0.333)), theme_cache.border_highlight)
 
 func get_cursor_pos() -> Vector2i:
 	return editor.get_cursor_pos()
@@ -80,22 +80,22 @@ func get_rect_between(point1: Vector2, point2: Vector2) -> Rect2:
 	return Rect2(start, Vector2.ONE).expand(end + Vector2.ONE)
 
 func get_square_border_idx(rel: Vector2) -> int:
-	if rel.x < MetSys.ROOM_SIZE.x / 3:
+	if rel.x < MetSys.CELL_SIZE.x / 3:
 		return MetSys.L
 	
-	if rel.x > MetSys.ROOM_SIZE.x - MetSys.ROOM_SIZE.x / 3:
+	if rel.x > MetSys.CELL_SIZE.x - MetSys.CELL_SIZE.x / 3:
 		return MetSys.R
 	
-	if rel.y < MetSys.ROOM_SIZE.y / 3:
+	if rel.y < MetSys.CELL_SIZE.y / 3:
 		return MetSys.U
 	
-	if rel.y > MetSys.ROOM_SIZE.y - MetSys.ROOM_SIZE.y / 3:
+	if rel.y > MetSys.CELL_SIZE.y - MetSys.CELL_SIZE.y / 3:
 		return MetSys.D
 	
 	return -1
 
-func get_room_at_cursor() -> MetroidvaniaSystem.MapData.RoomData:
-	return MetSys.map_data.get_room_at(get_coords(get_cursor_pos()))
+func get_room_at_cursor() -> MetroidvaniaSystem.MapData.CellData:
+	return MetSys.map_data.get_cell_at(get_coords(get_cursor_pos()))
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_THEME_CHANGED:

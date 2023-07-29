@@ -18,10 +18,10 @@ func _on_body_entered(body: Node2D) -> void:
 	
 	var builder := MetSys.get_map_builder()
 	
-	var start := builder.create_room(Vector3i(0, -7, 2))
-	start.set_assigned_map("Procedural/Generated".path_join(generate_room("Junction.tscn")))
-	start = builder.create_room(Vector3i(1, -7, 2)) # test
-	start.set_assigned_map("Procedural/Generated".path_join(generate_room("Junction.tscn")))
+	var start := builder.create_cell(Vector3i(0, -7, 2))
+	start.set_assigned_scene("Procedural/Generated".path_join(generate_room("Junction.tscn")))
+	start = builder.create_cell(Vector3i(1, -7, 2)) # test
+	start.set_assigned_scene("Procedural/Generated".path_join(generate_room("Junction.tscn")))
 	
 	builder.update_map()
 	generating = false

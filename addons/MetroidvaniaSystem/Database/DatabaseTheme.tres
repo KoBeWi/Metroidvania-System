@@ -1,7 +1,7 @@
 [gd_resource type="Theme" format=3 uid="uid://dfyoc5jqnnpf5"]
 
 [resource]
-MetSys/colors/assigned_room = Color(0.235294, 0.701961, 0.443137, 0.8)
+MetSys/colors/assigned_scene = Color(0.235294, 0.701961, 0.443137, 0.8)
 MetSys/colors/border_highlight = Color(0, 1, 0, 0.5)
 MetSys/colors/current_scene_room = Color(1, 0, 0, 0.5)
 MetSys/colors/cursor_color = Color(0, 1, 0, 1)
@@ -9,8 +9,8 @@ MetSys/colors/cursor_color_erase = Color(1, 0, 0, 1)
 MetSys/colors/foreign_marked_collectible_room = Color(1, 0, 0, 0.25)
 MetSys/colors/group_color = Color(0.576471, 0.439216, 0.858824, 0.8)
 MetSys/colors/highlighted_room = Color(0, 1, 0, 0.25)
-MetSys/colors/map_assigned = Color(1, 1, 1, 1)
-MetSys/colors/map_not_assigned = Color(1, 0, 0, 1)
+MetSys/colors/room_assigned = Color(1, 1, 1, 1)
+MetSys/colors/room_not_assigned = Color(1, 0, 0, 1)
 MetSys/colors/marked_collectible_room = Color(0.541176, 0.168627, 0.886275, 0.75)
-MetSys/colors/scene_room_border = Color(1, 1, 1, 0.33)
+MetSys/colors/scene_cell_border = Color(1, 1, 1, 0.33)
 MetSys/colors/scene_room_exit = Color(1, 0, 1, 0.67)

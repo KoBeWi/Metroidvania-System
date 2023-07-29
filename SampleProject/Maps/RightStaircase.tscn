@@ -21,7 +21,7 @@ func _ready() -> void:
 	MetSys.register_storable_object(self)
 
 func on_body_entered(body: Node2D) -> void:
-	var override := MetSys.get_room_override(MetSys.get_current_coords())
+	var override := MetSys.get_cell_override(MetSys.get_current_coords())
 	override.set_border(MetroidvaniaSystem.R, 1)
 	override.commit()
 	

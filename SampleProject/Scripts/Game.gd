@@ -22,11 +22,11 @@ func _ready() -> void:
 		collectibles = save_data.collectible_count
 		generated_rooms.assign(save_data.generated_rooms)
 		events.assign(save_data.events)
-		starting_map = save_data.current_map
+		starting_map = save_data.current_room
 	else:
 		MetSys.set_save_data()
 	
-	goto_map(MetSys.get_full_map_path(starting_map))
+	goto_map(MetSys.get_full_room_path(starting_map))
 	var start := map.get_node_or_null(^"SavePoint")
 	if start:
 		player.position = start.position
@@ -37,18 +37,18 @@ func _ready() -> void:
 func goto_map(map_path: String):
 	var prev_map_position: Vector2i = MetSys.VECTOR2INF
 	if map:
-		prev_map_position = MetSys.get_current_map_instance().min_room
+		prev_map_position = MetSys.get_current_room_instance().min_room
 		map.queue_free()
 		map = null
 	
 	map = load(map_path).instantiate()
 	add_child(map)
-	MetSys.get_current_map_instance().adjust_camera_limits($Player/Camera2D)
+	MetSys.get_current_room_instance().adjust_camera_limits($Player/Camera2D)
 	
-	MetSys.current_layer = MetSys.get_current_map_instance().layer
+	MetSys.current_layer = MetSys.get_current_room_instance().layer
 	
 	if prev_map_position != MetSys.VECTOR2INF:
-		player.position -= Vector2(MetSys.get_current_map_instance().min_room - prev_map_position) * MetSys.settings.in_game_room_size
+		player.position -= Vector2(MetSys.get_current_room_instance().min_room - prev_map_position) * MetSys.settings.in_game_CELL_SIZE
 		player.on_enter()
 
 func _physics_process(delta: float) -> void:
@@ -68,5 +68,5 @@ func get_save_data() -> Dictionary:
 		"collectible_count": collectibles,
 		"generated_rooms": generated_rooms,
 		"events": events,
-		"current_map": MetSys.get_current_map_name(),
+		"current_room": MetSys.get_current_room_name(),
 	}
