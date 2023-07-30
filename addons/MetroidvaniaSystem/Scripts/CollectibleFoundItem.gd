@@ -19,7 +19,7 @@ func set_element(element: Dictionary):
 			top_left.x = mini(coords.x, top_left.x)
 			top_left.y = mini(coords.y, top_left.y)
 		
-		var pos := top_left + Vector2i(data.position / MetSys.settings.in_game_CELL_SIZE)
+		var pos := top_left + Vector2i(data.position / MetSys.settings.in_game_room_size)
 		data.coords = Vector3i(pos.x, pos.y, room[0].z)
 		%Button.tooltip_text = "%s\nat: %s %s" % [data.element, data.map, data.coords]
 	else:

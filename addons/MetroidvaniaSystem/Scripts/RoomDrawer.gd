@@ -1,6 +1,9 @@
 extends RefCounted
 
 static func draw(canvas_item: CanvasItem, offset: Vector2, coords: Vector3i, skip_empty: bool, map_data: MetroidvaniaSystem.MapData, save_data: MetroidvaniaSystem.SaveData):
+	if MetSys.settings.custom_elements and not map_data.custom_elements.is_empty():
+		setup_custom_elements(canvas_item, offset, coords)
+	
 	var cell_data := map_data.get_cell_at(coords)
 	if not cell_data:
 		if not skip_empty:
@@ -291,6 +294,40 @@ static func draw_shared_borders():
 	
 	MetSys.remove_meta(&"shared_borders_to_draw")
 	MetSys.remove_meta(&"shared_borders_data")
+
+static func setup_custom_elements(canvas_item: CanvasItem, offset: Vector2, coords: Vector3i):
+		var custom_element_data: Dictionary
+		if not MetSys.has_meta(&"custom_elements_data"):
+			custom_element_data["canvas_item"] = canvas_item
+			custom_element_data["start_coords"] = coords
+			custom_element_data["end_coords"] = coords
+			custom_element_data["base_offset"] = offset
+			MetSys.set_meta(&"custom_elements_data", custom_element_data)
+		else:
+			custom_element_data = MetSys.get_meta(&"custom_elements_data")
+		
+		custom_element_data["start_coords"].x = mini(custom_element_data["start_coords"].x, coords.x)
+		custom_element_data["start_coords"].y = mini(custom_element_data["start_coords"].y, coords.y)
+		custom_element_data["end_coords"].x = maxi(custom_element_data["end_coords"].x, coords.x)
+		custom_element_data["end_coords"].y = maxi(custom_element_data["end_coords"].y, coords.y)
+		custom_element_data["base_offset"].x = minf(custom_element_data["base_offset"].x, coords.x)
+		custom_element_data["base_offset"].y = minf(custom_element_data["base_offset"].y, coords.y)
+
+static func draw_custom_elements(elements: Dictionary):
+	var custom_element_data: Dictionary = MetSys.get_meta(&"custom_elements_data")
+	MetSys.remove_meta(&"custom_elements_data")
+	
+	var element_manager: MetroidvaniaSystem.CustomElementManager = MetSys.settings.custom_elements
+	var canvas_item: CanvasItem = custom_element_data["canvas_item"]
+	var base_offset: Vector2 = custom_element_data["base_offset"]
+	var z: int = custom_element_data["start_coords"].z
+	
+	for y in range(custom_element_data["start_coords"].y, custom_element_data["end_coords"].y + 1):
+		for x in range(custom_element_data["start_coords"].x, custom_element_data["end_coords"].x + 1):
+			var coords := Vector3i(x, y, z)
+			if coords in elements:
+				var element: Dictionary = elements[coords]
+				element_manager.draw_element(canvas_item, coords, element.name, (-base_offset + Vector2(coords.x, coords.y)) * MetSys.CELL_SIZE, Vector2(element.size) * MetSys.CELL_SIZE, element.data)
 
 static func get_border_at(coords: Vector3i, idx: int) -> int:
 	var cell_data = MetSys.map_data.get_cell_at(coords)

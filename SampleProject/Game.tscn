@@ -29,6 +29,7 @@ func _draw() -> void:
 	
 	if MetSys.settings.theme.use_shared_borders:
 		MetSys.draw_shared_borders()
+	MetSys.draw_custom_elements()
 
 func _input(event: InputEvent) -> void:
 	if event is InputEventKey:
@@ -105,6 +106,7 @@ func _draw() -> void:
 	
 	if MetSys.settings.theme.use_shared_borders:
 		MetSys.draw_shared_borders()
+	MetSys.draw_custom_elements()
 	
 	MetSys.draw_player_location(self, offset, exact_player_location)
 

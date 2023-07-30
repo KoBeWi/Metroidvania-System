@@ -2,5 +2,5 @@
 
 [ext_resource type="Script" path="res://addons/MetroidvaniaSystem/Scripts/RoomInstance.gd" id="1_oi7y8"]
 
-[node name="MapHandler" type="Node2D"]
+[node name="RoomInstance" type="Node2D"]
 script = ExtResource("1_oi7y8")

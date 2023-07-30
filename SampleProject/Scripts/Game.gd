@@ -48,7 +48,7 @@ func goto_map(map_path: String):
 	MetSys.current_layer = MetSys.get_current_room_instance().layer
 	
 	if prev_map_position != MetSys.VECTOR2INF:
-		player.position -= Vector2(MetSys.get_current_room_instance().min_room - prev_map_position) * MetSys.settings.in_game_CELL_SIZE
+		player.position -= Vector2(MetSys.get_current_room_instance().min_room - prev_map_position) * MetSys.settings.in_game_room_size
 		player.on_enter()
 
 func _physics_process(delta: float) -> void:

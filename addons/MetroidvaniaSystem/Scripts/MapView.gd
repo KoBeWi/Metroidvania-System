@@ -54,6 +54,7 @@ func _on_overlay_input(event: InputEvent) -> void:
 			update_map_position()
 			map_overlay.queue_redraw()
 			_on_drag()
+			## TODO: wrapping
 		else:
 			map_overlay.queue_redraw()
 		
@@ -103,6 +104,8 @@ func _on_map_draw() -> void:
 	
 	if MetSys.settings.theme.use_shared_borders:
 		MetSys.draw_shared_borders()
+	
+	MetSys.draw_custom_elements()
 
 func _on_overlay_draw() -> void:
 	pass

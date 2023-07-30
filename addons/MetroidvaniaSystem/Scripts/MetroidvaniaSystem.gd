@@ -12,14 +12,16 @@ const MapData = preload("res://addons/MetroidvaniaSystem/Scripts/MapData.gd")
 const MapBuilder = preload("res://addons/MetroidvaniaSystem/Scripts/MapBuilder.gd")
 const RoomInstance = preload("res://addons/MetroidvaniaSystem/Scripts/RoomInstance.gd")
 const RoomDrawer = preload("res://addons/MetroidvaniaSystem/Scripts/RoomDrawer.gd")
+const CustomElementManager = preload("res://addons/MetroidvaniaSystem/Scripts/CustomElementManager.gd")
 
 enum { R, D, L, U }
 
-## TODO: pos to map (do rysowania po mapie, x,y pomieszczenia, ratio wewnątrz np (32, 4, 0.1, 0.1))
-## TODO: methoda add_custom_element(name, callable), potrzeba customowy skrypt dziedziczący jakiś typ, wstawić go w pole w MetSys i jest robiona instancja i wywoływane metody. Callback: element_callback(canvas_item, coords, top_left), np. add_custom_element(:"elevator", draw_elevator); func draw_elevator(...): canvas_item.draw_rect(top_left)
 ## TODO: w motywach pododawać player sceny, symbole i granice
 ## TODO: do szukania: wymyślić jakoś jak wyświetlać różne ikonki w zależności od danych
 ## TODO: get_used_squares() i dać trójkątne pomieszczenie. Czarno tam gdzie nic nie ma
+## TODO: MetSys.meta musi być czyszczone
+## TODO: get_unsaved_data()
+## TODO: export JSON?
 
 @export var exported_settings: Resource
 
@@ -83,7 +85,7 @@ func visit_cell(coords: Vector3i):
 func set_player_position(position: Vector2):
 	exact_player_position = position
 	
-	var player_pos := Vector2i((position / settings.in_game_CELL_SIZE).floor()) + current_room.min_room
+	var player_pos := Vector2i((position / settings.in_game_room_size).floor()) + current_room.min_room
 	var player_pos_3d := Vector3i(player_pos.x, player_pos.y, current_layer)
 	if player_pos_3d != last_player_position:
 		visit_cell(Vector3i(player_pos.x, player_pos.y, current_layer))
@@ -161,17 +163,17 @@ func get_object_coords(object: Object) -> Vector3i:
 		object.set_meta(&"object_coords", coords)
 		return coords
 	elif object is Node:
-		var map_name: String = object.owner.scene_file_path.trim_prefix(settings.map_root_folder)
-		map_name = MetSys.map_data.map_overrides.get(map_name, map_name)
-		assert(map_name in map_data.assigned_scenes)
+		var room_name: String = object.owner.scene_file_path.trim_prefix(settings.map_root_folder)
+		room_name = MetSys.map_data.map_overrides.get(room_name, room_name)
+		assert(room_name in map_data.assigned_scenes)
 		
-		var coords: Vector3i = map_data.assigned_scenes[map_name].front()
-		for vec in map_data.assigned_scenes[map_name]:
+		var coords: Vector3i = map_data.assigned_scenes[room_name].front()
+		for vec in map_data.assigned_scenes[room_name]:
 			coords.x = mini(coords.x, vec.x)
 			coords.y = mini(coords.y, vec.y)
 		
 		if object is CanvasItem:
-			var position: Vector2 = object.position / settings.in_game_CELL_SIZE
+			var position: Vector2 = object.position / settings.in_game_room_size
 			coords.x += int(position.x)
 			coords.y += int(position.y)
 		
@@ -207,11 +209,16 @@ func draw_cell(canvas_item: CanvasItem, offset: Vector2, coords: Vector3i, skip_
 func draw_shared_borders():
 	RoomDrawer.draw_shared_borders()
 
+func draw_custom_elements():
+	if not settings.custom_elements or map_data.custom_elements.is_empty():
+		return
+	RoomDrawer.draw_custom_elements(map_data.custom_elements)
+
 func draw_player_location(canvas_item: CanvasItem, offset: Vector2, exact := false): ## zamiast tego toggle?
 	var last_player_position_2d := Vector2(last_player_position.x, last_player_position.y)
 	var player_position := (last_player_position_2d + offset) * CELL_SIZE + CELL_SIZE / 2
 	if exact:
-		player_position += (exact_player_position / settings.in_game_CELL_SIZE).posmod(1) * CELL_SIZE - CELL_SIZE * 0.5
+		player_position += (exact_player_position / settings.in_game_room_size).posmod(1) * CELL_SIZE - CELL_SIZE * 0.5
 	
 	if not is_instance_valid(player_location_instance):
 		player_location_instance = settings.theme.player_location_scene.instantiate()
@@ -233,9 +240,9 @@ func get_current_room_instance() -> RoomInstance:
 
 func get_current_room_name() -> String:
 	if current_room:
-		return current_room.map_name
+		return current_room.room_name
 	else:
 		return ""
 
-func get_full_room_path(map_name: String) -> String:
-	return settings.map_root_folder.path_join(map_name)
+func get_full_room_path(room_name: String) -> String:
+	return settings.map_root_folder.path_join(room_name)

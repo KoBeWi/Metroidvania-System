@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://c01ibpvrp2wsd"]
 
 [ext_resource type="Script" path="res://addons/MetroidvaniaSystem/Scripts/MetroidvaniaSystem.gd" id="1_y1fyl"]
-[ext_resource type="Resource" uid="uid://po1yy1ihchuv" path="res://addons/MetroidvaniaSystem/Nodes/Settings.tres" id="2_l4rc7"]
+[ext_resource type="Resource" uid="uid://po1yy1ihchuv" path="res://SampleProject/Resources/Settings.tres" id="2_l4rc7"]
 
 [node name="MetroidvaniaSettings" type="Node"]
 script = ExtResource("1_y1fyl")

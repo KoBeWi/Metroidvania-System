@@ -6,7 +6,7 @@ var GRID_PASSAGE_COLOR: Color
 
 var cells: Array[Vector3i]
 var initialized: bool
-var map_name: String
+var room_name: String
 
 var min_room := Vector2i(999999, 999999)
 var max_room := Vector2i(-999999, -999999)
@@ -31,8 +31,8 @@ func _update_assigned_scene():
 	queue_redraw()
 	
 	var owner_node := owner if owner != null else self
-	map_name = owner_node.scene_file_path.trim_prefix(MetSys.settings.map_root_folder)
-	cells = MetSys.map_data.get_cells_assigned_to(map_name)
+	room_name = owner_node.scene_file_path.trim_prefix(MetSys.settings.map_root_folder)
+	cells = MetSys.map_data.get_cells_assigned_to(room_name)
 	if cells.is_empty():
 		return
 	
@@ -46,8 +46,8 @@ func _update_assigned_scene():
 func adjust_camera_limits(camera: Camera2D):
 	camera.limit_left = 0
 	camera.limit_top = 0
-	camera.limit_right = (max_room.x - min_room.x + 1) * MetSys.settings.in_game_CELL_SIZE.x
-	camera.limit_bottom = (max_room.y - min_room.y + 1) * MetSys.settings.in_game_CELL_SIZE.y
+	camera.limit_right = (max_room.x - min_room.x + 1) * MetSys.settings.in_game_room_size.x
+	camera.limit_bottom = (max_room.y - min_room.y + 1) * MetSys.settings.in_game_room_size.y
 
 func _draw() -> void:
 	if not Engine.is_editor_hint() or cells.is_empty():
@@ -64,10 +64,10 @@ func _draw() -> void:
 			
 			match i:
 				MetroidvaniaSystem.R:
-					draw_rect(Rect2((coords + Vector2.RIGHT) * MetSys.settings.in_game_CELL_SIZE + Vector2(-width, 0), Vector2(width, MetSys.settings.in_game_CELL_SIZE.y)), color)
+					draw_rect(Rect2((coords + Vector2.RIGHT) * MetSys.settings.in_game_room_size + Vector2(-width, 0), Vector2(width, MetSys.settings.in_game_room_size.y)), color)
 				MetroidvaniaSystem.D:
-					draw_rect(Rect2((coords + Vector2.DOWN) * MetSys.settings.in_game_CELL_SIZE + Vector2(0, -width), Vector2(MetSys.settings.in_game_CELL_SIZE.x, width)), color)
+					draw_rect(Rect2((coords + Vector2.DOWN) * MetSys.settings.in_game_room_size + Vector2(0, -width), Vector2(MetSys.settings.in_game_room_size.x, width)), color)
 				MetroidvaniaSystem.L:
-					draw_rect(Rect2(coords * MetSys.settings.in_game_CELL_SIZE, Vector2(width, MetSys.settings.in_game_CELL_SIZE.y)), color)
+					draw_rect(Rect2(coords * MetSys.settings.in_game_room_size, Vector2(width, MetSys.settings.in_game_room_size.y)), color)
 				MetroidvaniaSystem.U:
-					draw_rect(Rect2(coords * MetSys.settings.in_game_CELL_SIZE, Vector2(MetSys.settings.in_game_CELL_SIZE.x, width)), color)
+					draw_rect(Rect2(coords * MetSys.settings.in_game_room_size, Vector2(MetSys.settings.in_game_room_size.x, width)), color)

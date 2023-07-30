@@ -1,14 +1,12 @@
 @tool
 extends "res://addons/MetroidvaniaSystem/Scripts/MapView.gd"
 
-enum { MODE_LAYOUT, MODE_CELL_SYMBOL, MODE_CELL_COLOR, MODE_CELL_GROUP, MODE_BORDER_TYPE, MODE_BORDER_COLOR, MODE_MAP } ## nieużywane??
-
 @onready var ghost_map: Control = %GhostMap
 @onready var grid: Control = %Grid
 
 @export var mode_group: ButtonGroup
 
-var mode: int = MODE_LAYOUT
+var mode: int
 var preview_layer := -1
 
 func _ready() -> void:

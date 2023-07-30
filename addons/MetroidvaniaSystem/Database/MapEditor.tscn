@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://dfbykrvyqnqr5"]
+[gd_scene load_steps=13 format=3 uid="uid://dfbykrvyqnqr5"]
 
 [ext_resource type="Script" path="res://addons/MetroidvaniaSystem/Database/MapEditor.gd" id="1_i7yda"]
 [ext_resource type="Script" path="res://addons/MetroidvaniaSystem/Database/MapOverlay.gd" id="2_w1wnt"]
@@ -101,6 +101,49 @@ func close_border(pos: Vector2i, border: int):
 		cell.borders[border] = 0
 "
 
+[sub_resource type="GDScript" id="GDScript_tlx5u"]
+resource_name = "RoomColor"
+script/source = "@tool
+extends \"res://addons/MetroidvaniaSystem/Database/SubEditor.gd\"
+
+func _editor_enter():
+	%Colors.show()
+
+func _editor_exit():
+	%Colors.hide()
+
+func _editor_input(event: InputEvent):
+	if event is InputEventMouseButton:
+		if event.pressed:
+			var cell_data := get_room_at_cursor()
+			if not cell_data:
+				return
+			
+			if event.button_index == MOUSE_BUTTON_LEFT:
+				if event.is_command_or_control_pressed():
+					if cell_data.color.a > 0:
+						%CurrentColor.color = cell_data.color
+				else:
+					cell_data.color = %CurrentColor.color
+					editor.map.queue_redraw()
+			elif event.button_index == MOUSE_BUTTON_RIGHT:
+				cell_data.color = Color.TRANSPARENT
+				editor.map.queue_redraw()
+	elif event is InputEventMouseMotion:
+		if event.button_mask & (MOUSE_BUTTON_MASK_LEFT | MOUSE_BUTTON_MASK_RIGHT):
+			var cell_data := get_room_at_cursor()
+			if not cell_data:
+				return
+			
+			var target_color := Color.TRANSPARENT
+			if event.button_mask & MOUSE_BUTTON_MASK_LEFT:
+				target_color = %CurrentColor.color
+			
+			if cell_data.color != target_color:
+				cell_data.color = target_color
+				editor.map.queue_redraw()
+"
+
 [sub_resource type="GDScript" id="GDScript_ujwfx"]
 resource_name = "RoomSymbol"
 script/source = "@tool
@@ -152,49 +195,6 @@ func add_symbol(texture: Texture2D):
 		button.button_pressed = true
 	
 	%SymbolContainer.add_child(button)
-"
-
-[sub_resource type="GDScript" id="GDScript_tlx5u"]
-resource_name = "RoomColor"
-script/source = "@tool
-extends \"res://addons/MetroidvaniaSystem/Database/SubEditor.gd\"
-
-func _editor_enter():
-	%Colors.show()
-
-func _editor_exit():
-	%Colors.hide()
-
-func _editor_input(event: InputEvent):
-	if event is InputEventMouseButton:
-		if event.pressed:
-			var cell_data := get_room_at_cursor()
-			if not cell_data:
-				return
-			
-			if event.button_index == MOUSE_BUTTON_LEFT:
-				if event.is_command_or_control_pressed():
-					if cell_data.color.a > 0:
-						%CurrentColor.color = cell_data.color
-				else:
-					cell_data.color = %CurrentColor.color
-					editor.map.queue_redraw()
-			elif event.button_index == MOUSE_BUTTON_RIGHT:
-				cell_data.color = Color.TRANSPARENT
-				editor.map.queue_redraw()
-	elif event is InputEventMouseMotion:
-		if event.button_mask & (MOUSE_BUTTON_MASK_LEFT | MOUSE_BUTTON_MASK_RIGHT):
-			var cell_data := get_room_at_cursor()
-			if not cell_data:
-				return
-			
-			var target_color := Color.TRANSPARENT
-			if event.button_mask & MOUSE_BUTTON_MASK_LEFT:
-				target_color = %CurrentColor.color
-			
-			if cell_data.color != target_color:
-				cell_data.color = target_color
-				editor.map.queue_redraw()
 "
 
 [sub_resource type="GDScript" id="GDScript_a80ln"]
@@ -476,6 +476,77 @@ func on_map_selected(path: String) -> void:
 	editor.map_overlay.queue_redraw()
 "
 
+[sub_resource type="GDScript" id="GDScript_gb3rf"]
+resource_name = "CustomElements"
+script/source = "@tool
+extends \"res://addons/MetroidvaniaSystem/Database/SubEditor.gd\"
+
+var current_element: String
+
+func _editor_init() -> void:
+	room_only_cursor = false
+	
+	reload_custom_elements()
+
+func reload_custom_elements():
+	for element in %CustomElementContainer.get_children():
+		element.queue_free()
+	current_element = \"\"
+	
+	if not MetSys.settings.custom_elements or MetSys.settings.custom_elements.custom_elements.is_empty():
+		%NoElements.show()
+		return
+	else:
+		%NoElements.hide()
+	
+	var element_group := ButtonGroup.new()
+	
+	for element in MetSys.settings.custom_elements.custom_elements:
+		var button := CheckBox.new()
+		button.text = str(element).capitalize()
+		button.button_group = element_group
+		button.pressed.connect(set_current_element.bind(element))
+		%CustomElementContainer.add_child(button)
+		
+		if not element_group.get_pressed_button():
+			button.button_pressed = true
+
+func _editor_enter():
+	%CustomElements.show()
+
+func _editor_exit():
+	%CustomElements.hide()
+
+func set_current_element(element: String):
+	current_element = element ## podświetlanie tego elementu
+
+func _editor_input(event: InputEvent):
+	if event is InputEventMouseButton:
+		if event.button_index == MOUSE_BUTTON_LEFT:
+			if event.pressed:
+				drag_from = get_cursor_pos()
+			else:
+				var rect := get_rect_between(drag_from, get_cursor_pos())
+				add_element(rect)
+				drag_from = EDITOR_SCRIPT.NULL_VECTOR2I
+		elif event.button_index == MOUSE_BUTTON_RIGHT:
+			if event.pressed:
+				var coords := Vector3i(get_cursor_pos().x, get_cursor_pos().y, editor.current_layer)
+				if coords in MetSys.map_data.custom_elements:
+					MetSys.map_data.custom_elements.erase(coords)
+					editor.map.queue_redraw()
+
+func add_element(rect: Rect2i):
+	var element: Dictionary
+	element.name = current_element
+	element.size = rect.size
+	element.data = %CustomData.text
+	
+	var coords := Vector3i(rect.position.x, rect.position.y, editor.current_layer)
+	MetSys.map_data.custom_elements[coords] = element
+	editor.map.queue_redraw()
+"
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xiyo8"]
 content_margin_left = 4.0
 content_margin_right = 4.0
@@ -550,21 +621,21 @@ button_group = SubResource("ButtonGroup_pv7fp")
 text = "Room Layout"
 script = SubResource("GDScript_dsps8")
 
-[node name="RoomSymbol" type="Button" parent="PanelContainer/VBoxContainer/Modes"]
-layout_mode = 2
-toggle_mode = true
-button_group = SubResource("ButtonGroup_pv7fp")
-text = "Cell Symbol"
-script = SubResource("GDScript_ujwfx")
-
-[node name="RoomColor" type="Button" parent="PanelContainer/VBoxContainer/Modes"]
+[node name="CellColor" type="Button" parent="PanelContainer/VBoxContainer/Modes"]
 layout_mode = 2
 toggle_mode = true
 button_group = SubResource("ButtonGroup_pv7fp")
 text = "Cell Color"
 script = SubResource("GDScript_tlx5u")
 
-[node name="RoomGroup" type="Button" parent="PanelContainer/VBoxContainer/Modes"]
+[node name="CellSymbol" type="Button" parent="PanelContainer/VBoxContainer/Modes"]
+layout_mode = 2
+toggle_mode = true
+button_group = SubResource("ButtonGroup_pv7fp")
+text = "Cell Symbol"
+script = SubResource("GDScript_ujwfx")
+
+[node name="CellGroup" type="Button" parent="PanelContainer/VBoxContainer/Modes"]
 layout_mode = 2
 toggle_mode = true
 button_group = SubResource("ButtonGroup_pv7fp")
@@ -591,6 +662,13 @@ toggle_mode = true
 button_group = SubResource("ButtonGroup_pv7fp")
 text = "Scene Assign"
 script = SubResource("GDScript_p75ne")
+
+[node name="CustomElements" type="Button" parent="PanelContainer/VBoxContainer/Modes"]
+layout_mode = 2
+toggle_mode = true
+button_group = SubResource("ButtonGroup_pv7fp")
+text = "Custom Elements"
+script = SubResource("GDScript_gb3rf")
 
 [node name="HSeparator2" type="HSeparator" parent="PanelContainer/VBoxContainer"]
 layout_mode = 2
@@ -649,6 +727,33 @@ edit_alpha = false
 layout_mode = 2
 text = "Ctrl+Click a cell to pick color"
 autowrap_mode = 2
+
+[node name="CustomElements" type="VBoxContainer" parent="PanelContainer/VBoxContainer/EditControls"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/VBoxContainer/EditControls/CustomElements"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="PanelContainer/VBoxContainer/EditControls/CustomElements/HBoxContainer"]
+layout_mode = 2
+text = "Data"
+
+[node name="CustomData" type="LineEdit" parent="PanelContainer/VBoxContainer/EditControls/CustomElements/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="NoElements" type="Label" parent="PanelContainer/VBoxContainer/EditControls/CustomElements"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "No Custom Elements Registered"
+autowrap_mode = 2
+
+[node name="CustomElementContainer" type="VBoxContainer" parent="PanelContainer/VBoxContainer/EditControls/CustomElements"]
+unique_name_in_owner = true
+layout_mode = 2
 
 [node name="MapOverlay" type="Control" parent="."]
 texture_filter = 1

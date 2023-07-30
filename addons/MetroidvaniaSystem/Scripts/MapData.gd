@@ -203,7 +203,7 @@ class CellOverride extends CellData:
 		MetSys.remove_cell_override(custom_cell_coords)
 		MetSys.map_data.erase_cell(custom_cell_coords)
 		MetSys.map_data.cell_overrides.erase(custom_cell_coords)
-		MetSys.map_data.custom_rooms.erase(self)
+		MetSys.map_data.custom_cells.erase(self)
 	
 	func _cleanup_assigned_scene() -> void:
 		if assigned_scene == "/":
@@ -220,9 +220,10 @@ class CellOverride extends CellData:
 		MetSys.map_updated.emit()
 
 var cells: Dictionary#[Vector3i, CellData]
-var custom_rooms: Dictionary#[Vector3i, CellData]
+var custom_cells: Dictionary#[Vector3i, CellData]
 var assigned_scenes: Dictionary#[String, Array[Vector3i]]
 var cell_groups: Dictionary#[int, Array[Vector3i]]
+var custom_elements: Dictionary#[Vector3i, Struct]
 
 var cell_overrides: Dictionary#[Vector3i, CellOverride]
 var map_overrides: Dictionary#[String, String]
@@ -233,11 +234,11 @@ func load_data():
 	var data := file.get_as_text().split("\n")
 	var i: int
 	
-	var is_in_groups := true
+	var current_section := 0 # groups, custom_elements, cells
 	while i < data.size():
 		var line := data[i]
 		if line.begins_with("["):
-			is_in_groups = false
+			current_section = 2
 			line = line.trim_prefix("[").trim_suffix("]")
 			
 			var coords: Vector3i
@@ -253,8 +254,25 @@ func load_data():
 				assigned_scenes[cell_data.assigned_scene] = [coords]
 			
 			cells[coords] = cell_data
-		elif is_in_groups:
-			var group_data := data[i].split(":")
+		elif current_section == 1 or current_section == 0 and line.contains("/"):
+			current_section = 1
+			var element_data := line.split("/")
+			var element: Dictionary
+			element.name = element_data[1]
+			element.size = Vector2i(element_data[2].get_slice("x", 0).to_int(), element_data[2].get_slice("x", 1).to_int())
+			if element_data.size() == 4:
+				element.element_data = element_data[3]
+			else:
+				element.element_data = ""
+			
+			var coords: Vector3i
+			coords.x = element_data[0].get_slice(",", 0).to_int()
+			coords.y = element_data[0].get_slice(",", 1).to_int()
+			coords.z = element_data[0].get_slice(",", 2).to_int()
+			custom_elements[coords] = element
+			print(custom_elements)
+		elif current_section == 0:
+			var group_data := line.split(":")
 			var group_id := group_data[0].to_int()
 			var rooms_in_group: Array
 			for j in range(1, group_data.size()):
@@ -287,6 +305,18 @@ func save_data():
 		
 		file.store_line(":".join(line))
 	
+	for coords in custom_elements:
+		var line: PackedStringArray
+		line.append("%s,%s,%s" % [coords.x, coords.y, coords.z])
+		
+		var element: Dictionary = custom_elements[coords]
+		line.append(element.name)
+		line.append("%sx%s" % [element.size.x, element.size.y])
+		if not element.data.is_empty():
+			line.append(element.data)
+		
+		file.store_line("/".join(line))
+	
 	for coords in cells:
 		file.store_line("[%s,%s,%s]" % [coords.x, coords.y, coords.z])
 		
@@ -303,7 +333,7 @@ func create_cell_at(coords: Vector3i) -> CellData:
 func create_custom_cell(coords: Vector3i) -> CellOverride:
 	assert(not coords in cells, "A cell already exists at this position")
 	var cell := create_cell_at(coords)
-	custom_rooms[coords] = cell
+	custom_cells[coords] = cell
 	
 	var override: CellOverride = MetSys.save_data.add_cell_override(cell)
 	override.custom_cell_coords = coords
