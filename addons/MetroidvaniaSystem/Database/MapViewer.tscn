@@ -229,36 +229,41 @@ custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 size_flags_horizontal = 0
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Panel"]
+[node name="ScrollContainer" type="ScrollContainer" parent="Panel"]
 layout_mode = 2
 
-[node name="Layer" type="VBoxContainer" parent="Panel/VBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Layer" type="VBoxContainer" parent="Panel/ScrollContainer/VBoxContainer"]
 layout_mode = 2
 mouse_filter = 2
 
-[node name="Label" type="Label" parent="Panel/VBoxContainer/Layer"]
+[node name="Label" type="Label" parent="Panel/ScrollContainer/VBoxContainer/Layer"]
 layout_mode = 2
 text = "Current Layer"
 horizontal_alignment = 1
 
-[node name="CurrentLayer" type="SpinBox" parent="Panel/VBoxContainer/Layer"]
+[node name="CurrentLayer" type="SpinBox" parent="Panel/ScrollContainer/VBoxContainer/Layer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 4
 
-[node name="RecenterButton" type="Button" parent="Panel/VBoxContainer/Layer"]
+[node name="RecenterButton" type="Button" parent="Panel/ScrollContainer/VBoxContainer/Layer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 4
 text = "Recenter View"
 
-[node name="HSeparator" type="HSeparator" parent="Panel/VBoxContainer"]
+[node name="HSeparator" type="HSeparator" parent="Panel/ScrollContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="Modes" type="VBoxContainer" parent="Panel/VBoxContainer"]
+[node name="Modes" type="VBoxContainer" parent="Panel/ScrollContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="Settings" type="Button" parent="Panel/VBoxContainer/Modes"]
+[node name="Settings" type="Button" parent="Panel/ScrollContainer/VBoxContainer/Modes"]
 layout_mode = 2
 toggle_mode = true
 button_pressed = true
@@ -266,65 +271,65 @@ button_group = SubResource("ButtonGroup_lmh17")
 text = "Collectible Settings"
 script = SubResource("GDScript_fjyy3")
 
-[node name="Finder" type="Button" parent="Panel/VBoxContainer/Modes"]
+[node name="Finder" type="Button" parent="Panel/ScrollContainer/VBoxContainer/Modes"]
 layout_mode = 2
 toggle_mode = true
 button_group = SubResource("ButtonGroup_lmh17")
 text = "Collectible Finder"
 script = SubResource("GDScript_dicqo")
 
-[node name="HSeparator2" type="HSeparator" parent="Panel/VBoxContainer"]
+[node name="HSeparator2" type="HSeparator" parent="Panel/ScrollContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="EditControls" type="VBoxContainer" parent="Panel/VBoxContainer"]
+[node name="EditControls" type="VBoxContainer" parent="Panel/ScrollContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="Settings" type="VBoxContainer" parent="Panel/VBoxContainer/EditControls"]
+[node name="Settings" type="VBoxContainer" parent="Panel/ScrollContainer/VBoxContainer/EditControls"]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="ScrollContainer" type="ScrollContainer" parent="Panel/VBoxContainer/EditControls/Settings"]
+[node name="ScrollContainer" type="ScrollContainer" parent="Panel/ScrollContainer/VBoxContainer/EditControls/Settings"]
 layout_mode = 2
 size_flags_vertical = 3
 vertical_scroll_mode = 2
 
-[node name="CollectibleList" type="VBoxContainer" parent="Panel/VBoxContainer/EditControls/Settings/ScrollContainer"]
+[node name="CollectibleList" type="VBoxContainer" parent="Panel/ScrollContainer/VBoxContainer/EditControls/Settings/ScrollContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Button" type="Button" parent="Panel/VBoxContainer/EditControls/Settings"]
+[node name="Button" type="Button" parent="Panel/ScrollContainer/VBoxContainer/EditControls/Settings"]
 layout_mode = 2
 icon_alignment = 1
 script = ExtResource("2_tjngl")
 icon_name = "Add"
 
-[node name="Finder" type="VBoxContainer" parent="Panel/VBoxContainer/EditControls"]
+[node name="Finder" type="VBoxContainer" parent="Panel/ScrollContainer/VBoxContainer/EditControls"]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="ScanButton" type="Button" parent="Panel/VBoxContainer/EditControls/Finder"]
+[node name="ScanButton" type="Button" parent="Panel/ScrollContainer/VBoxContainer/EditControls/Finder"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Scan Maps"
 
-[node name="ScanProgress" type="ProgressBar" parent="Panel/VBoxContainer/EditControls/Finder"]
+[node name="ScanProgress" type="ProgressBar" parent="Panel/ScrollContainer/VBoxContainer/EditControls/Finder"]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 
-[node name="ScrollContainer" type="ScrollContainer" parent="Panel/VBoxContainer/EditControls/Finder"]
+[node name="ScrollContainer" type="ScrollContainer" parent="Panel/ScrollContainer/VBoxContainer/EditControls/Finder"]
 layout_mode = 2
 size_flags_vertical = 3
 horizontal_scroll_mode = 3
 vertical_scroll_mode = 2
 
-[node name="Summary" type="VBoxContainer" parent="Panel/VBoxContainer/EditControls/Finder/ScrollContainer"]
+[node name="Summary" type="VBoxContainer" parent="Panel/ScrollContainer/VBoxContainer/EditControls/Finder/ScrollContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -362,5 +367,5 @@ offset_bottom = 23.0
 theme_override_styles/normal = SubResource("StyleBoxFlat_qbvjg")
 vertical_alignment = 1
 
-[connection signal="pressed" from="Panel/VBoxContainer/EditControls/Settings/Button" to="Panel/VBoxContainer/Modes/Settings" method="add_collectible"]
-[connection signal="pressed" from="Panel/VBoxContainer/EditControls/Finder/ScanButton" to="Panel/VBoxContainer/Modes/Finder" method="start_scan"]
+[connection signal="pressed" from="Panel/ScrollContainer/VBoxContainer/EditControls/Settings/Button" to="Panel/ScrollContainer/VBoxContainer/Modes/Settings" method="add_collectible"]
+[connection signal="pressed" from="Panel/ScrollContainer/VBoxContainer/EditControls/Finder/ScanButton" to="Panel/ScrollContainer/VBoxContainer/Modes/Finder" method="start_scan"]
