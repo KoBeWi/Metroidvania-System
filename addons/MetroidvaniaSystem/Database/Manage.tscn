@@ -50,10 +50,19 @@ func reset_theme() -> void:
 	th.set_color(&\"current_scene_room\", &\"MetSys\", Color(Color.RED, 0.5))
 	th.set_color(&\"room_not_assigned\", &\"MetSys\", Color.RED)
 	th.set_color(&\"room_assigned\", &\"MetSys\", Color.WHITE)
+	th.set_color(&\"active_custom_element\", &\"MetSys\", Color(0.1, 0.1, 1, 0.8))
+	th.set_color(&\"inactive_custom_element\", &\"MetSys\", Color(0, 0, 1, 0.4))
+	th.set_color(&\"custom_element_marker\", &\"MetSys\", Color.YELLOW)
 	ResourceSaver.save(th)
 
 func toggle_allow_reset(button_pressed: bool) -> void:
 	%ResetButton.disabled = not button_pressed
+
+func refresh_custom_elements() -> void:
+	var custom_script := MetSys.settings.custom_element_script
+	MetSys.settings.custom_element_script = null
+	MetSys.settings.custom_element_script = custom_script
+	MetSys.settings.custom_elements_changed.emit()
 "
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6lvlf"]
@@ -298,6 +307,10 @@ size_flags_horizontal = 4
 layout_mode = 2
 text = "General Settings"
 
+[node name="Button6" type="Button" parent="VBoxContainer/VBoxContainer"]
+layout_mode = 2
+text = "Refresh Custom Elements"
+
 [node name="Button2" type="Button" parent="VBoxContainer/VBoxContainer"]
 layout_mode = 2
 text = "Reload and Cleanup Map Data"
@@ -368,6 +381,7 @@ size_flags_horizontal = 4
 text = "Close"
 
 [connection signal="pressed" from="VBoxContainer/VBoxContainer/Button" to="." method="edit_settings_pressed"]
+[connection signal="pressed" from="VBoxContainer/VBoxContainer/Button6" to="." method="refresh_custom_elements"]
 [connection signal="pressed" from="VBoxContainer/VBoxContainer/Button2" to="." method="force_reload"]
 [connection signal="pressed" from="VBoxContainer/VBoxContainer/Button4" to="VBoxContainer/ValidationPanel" method="validate_map_data"]
 [connection signal="pressed" from="VBoxContainer/VBoxContainer/Button5" to="VBoxContainer/ValidationPanel" method="validate_map_theme"]

@@ -21,8 +21,10 @@ extends Resource
 			return
 		
 		custom_element_script = elements
-		custom_elements = elements.new()
+		if elements:
+			custom_elements = elements.new()
 
 var custom_elements: MetroidvaniaSystem.CustomElementManager
 
 signal theme_changed
+signal custom_elements_changed

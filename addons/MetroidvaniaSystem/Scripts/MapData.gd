@@ -261,16 +261,15 @@ func load_data():
 			element.name = element_data[1]
 			element.size = Vector2i(element_data[2].get_slice("x", 0).to_int(), element_data[2].get_slice("x", 1).to_int())
 			if element_data.size() == 4:
-				element.element_data = element_data[3]
+				element.data = element_data[3]
 			else:
-				element.element_data = ""
+				element.data = ""
 			
 			var coords: Vector3i
 			coords.x = element_data[0].get_slice(",", 0).to_int()
 			coords.y = element_data[0].get_slice(",", 1).to_int()
 			coords.z = element_data[0].get_slice(",", 2).to_int()
 			custom_elements[coords] = element
-			print(custom_elements)
 		elif current_section == 0:
 			var group_data := line.split(":")
 			var group_id := group_data[0].to_int()

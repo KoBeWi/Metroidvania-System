@@ -482,11 +482,19 @@ script/source = "@tool
 extends \"res://addons/MetroidvaniaSystem/Database/SubEditor.gd\"
 
 var current_element: String
+var custom_elements: Dictionary
 
 func _editor_init() -> void:
 	room_only_cursor = false
+	custom_elements = MetSys.map_data.custom_elements
+	MetSys.settings.custom_elements_changed.connect(reload_custom_elements)
 	
 	reload_custom_elements()
+
+func _update_theme():
+	theme_cache.active_custom_element = get_theme_color(&\"active_custom_element\", &\"MetSys\")
+	theme_cache.inactive_custom_element = get_theme_color(&\"inactive_custom_element\", &\"MetSys\")
+	theme_cache.custom_element_marker = get_theme_color(&\"custom_element_marker\", &\"MetSys\")
 
 func reload_custom_elements():
 	for element in %CustomElementContainer.get_children():
@@ -510,6 +518,7 @@ func reload_custom_elements():
 		
 		if not element_group.get_pressed_button():
 			button.button_pressed = true
+			set_current_element(element)
 
 func _editor_enter():
 	%CustomElements.show()
@@ -518,7 +527,27 @@ func _editor_exit():
 	%CustomElements.hide()
 
 func set_current_element(element: String):
-	current_element = element ## podświetlanie tego elementu
+	current_element = element
+	editor.map_overlay.queue_redraw()
+
+func _editor_draw(map_overlay: CanvasItem):
+	super(map_overlay)
+	
+	for coords in custom_elements:
+		if coords.z != editor.current_layer:
+			continue
+		
+		var element_color: Color
+		var element: Dictionary = custom_elements[coords]
+		if element.name == current_element:
+			element_color = theme_cache.active_custom_element
+		else:
+			element_color = theme_cache.inactive_custom_element
+		
+		map_overlay.draw_rect(Rect2(Vector2(coords.x, coords.y) * MetSys.CELL_SIZE, Vector2(element.size) * MetSys.CELL_SIZE), element_color)
+		
+		var square := minf(MetSys.CELL_SIZE.x, MetSys.CELL_SIZE.y)
+		map_overlay.draw_rect(Rect2((Vector2(coords.x, coords.y) + Vector2(0.5, 0.5)) * MetSys.CELL_SIZE - Vector2.ONE * square * 0.5, Vector2.ONE * square).grow(-square * 0.2), theme_cache.custom_element_marker)
 
 func _editor_input(event: InputEvent):
 	if event is InputEventMouseButton:

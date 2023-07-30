@@ -82,6 +82,13 @@ func visit_cell(coords: Vector3i):
 	if not new_map.is_empty() and not previous_map.is_empty() and new_map != previous_map:
 		map_changed.emit(new_map)
 
+func is_cell_discovered(coords: Vector3i, include_mapped := true) -> bool:
+	if not save_data:
+		return true
+	
+	var discovered := save_data.is_cell_discovered(coords)
+	return discovered == 2 or include_mapped and discovered == 1
+
 func set_player_position(position: Vector2):
 	exact_player_position = position
 	
