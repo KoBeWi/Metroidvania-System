@@ -58,7 +58,7 @@ layer_5/y_sort_origin = 0
 layer_5/z_index = 0
 layer_5/tile_data = PackedInt32Array(196619, 524291, 8, 196620, 524291, 8, 196621, 524291, 8, 196622, 524291, 8, 196623, 524291, 8, 11, 524291, 7, 65547, 524291, 7, 131083, 524291, 7, 12, 524291, 7, 65548, 524291, 7, 131084, 524291, 7, 13, 524291, 7, 65549, 524291, 7, 131085, 524291, 7, 14, 524291, 7, 65550, 524291, 7, 131086, 524291, 7, 15, 524291, 7, 65551, 524291, 7, 131087, 524291, 7)
 
-[node name="MapHandler" parent="." instance=ExtResource("2_mlr6y")]
+[node name="RoomInstance" parent="." instance=ExtResource("2_mlr6y")]
 
 [node name="Config" type="Node" parent="."]
 script = SubResource("GDScript_taojh")

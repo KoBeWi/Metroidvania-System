@@ -1,7 +1,7 @@
 [gd_scene load_steps=7 format=3 uid="uid://doae46einc26s"]
 
 [ext_resource type="TileSet" uid="uid://bwpcg2opya34n" path="res://SampleProject/Resources/Tileset.tres" id="1_1mtk5"]
-[ext_resource type="PackedScene" uid="uid://bsg0351mx3b4u" path="res://addons/MetroidvaniaSystem/Nodes/MapHandler.tscn" id="2_y78dk"]
+[ext_resource type="PackedScene" uid="uid://bsg0351mx3b4u" path="res://addons/MetroidvaniaSystem/Nodes/RoomInstance.tscn" id="2_y78dk"]
 [ext_resource type="PackedScene" uid="uid://d0hyimq1tkfa2" path="res://SampleProject/Objects/MapItem.tscn" id="3_j1w80"]
 
 [sub_resource type="GDScript" id="GDScript_ecs00"]
@@ -54,7 +54,7 @@ layer_2/z_index = 1
 layer_2/tile_data = PackedInt32Array(1572888, 458753, 7, 1638424, 458753, 7, 1703960, 458753, 7, 1572889, 524289, 7, 1638425, 524289, 7, 1703961, 524289, 7, 1572890, 524289, 7, 1638426, 524289, 7, 1703962, 524289, 7)
 script = SubResource("GDScript_ecs00")
 
-[node name="MapHandler" parent="." instance=ExtResource("2_y78dk")]
+[node name="RoomInstance" parent="." instance=ExtResource("2_y78dk")]
 
 [node name="Secret" type="Area2D" parent="."]
 z_index = 2

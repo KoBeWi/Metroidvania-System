@@ -67,7 +67,7 @@ layer_2/tile_data = PackedInt32Array(589845, 655361, 6, 655381, 655361, 7, 72091
 script = SubResource("GDScript_7ce5k")
 layer = 2
 
-[node name="MapHandler" parent="." instance=ExtResource("2_yec0f")]
+[node name="RoomInstance" parent="." instance=ExtResource("2_yec0f")]
 
 [node name="Button" parent="." instance=ExtResource("3_0lim4")]
 position = Vector2(736, 384)

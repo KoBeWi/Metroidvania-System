@@ -5,7 +5,7 @@
 
 [node name="Map" type="Node2D"]
 
-[node name="MapHandler" parent="." instance=ExtResource("1_kdxru")]
+[node name="RoomInstance" parent="." instance=ExtResource("1_kdxru")]
 
 [node name="TileMap" type="TileMap" parent="."]
 tile_set = ExtResource("2_s0ssd")

@@ -212,7 +212,7 @@ layer_2/y_sort_origin = 0
 layer_2/z_index = 0
 layer_2/tile_data = PackedInt32Array(589848, 655363, 6, 655384, 655363, 7, 720920, 655363, 8)
 
-[node name="MapHandler" parent="." instance=ExtResource("2_b0ayl")]
+[node name="RoomInstance" parent="." instance=ExtResource("2_b0ayl")]
 
 [node name="Dice" type="Area2D" parent="."]
 position = Vector2(448, 248)
