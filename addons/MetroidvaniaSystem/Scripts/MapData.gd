@@ -204,6 +204,9 @@ class CellOverride extends CellData:
 		MetSys.map_data.erase_cell(custom_cell_coords)
 		MetSys.map_data.cell_overrides.erase(custom_cell_coords)
 		MetSys.map_data.custom_cells.erase(self)
+		
+		if assigned_scene != "/":
+			MetSys.map_data.assigned_scenes[assigned_scene].erase(custom_cell_coords)
 	
 	func _cleanup_assigned_scene() -> void:
 		if assigned_scene == "/":

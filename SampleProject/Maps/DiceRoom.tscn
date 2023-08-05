@@ -1,8 +1,9 @@
-[gd_scene load_steps=9 format=3 uid="uid://cjk52vjugqh5"]
+[gd_scene load_steps=10 format=3 uid="uid://cjk52vjugqh5"]
 
 [ext_resource type="TileSet" uid="uid://bwpcg2opya34n" path="res://SampleProject/Resources/Tileset.tres" id="1_l63o1"]
 [ext_resource type="PackedScene" uid="uid://bsg0351mx3b4u" path="res://addons/MetroidvaniaSystem/Nodes/RoomInstance.tscn" id="2_b0ayl"]
 [ext_resource type="PackedScene" uid="uid://ke056546dq4j" path="res://SampleProject/Objects/Dice.glb" id="3_a62rx"]
+[ext_resource type="PackedScene" uid="uid://cwrf84g5mlucd" path="res://SampleProject/Objects/Portal.tscn" id="5_m5jcc"]
 
 [sub_resource type="GDScript" id="GDScript_2fold"]
 script/source = "extends Area2D
@@ -255,7 +256,12 @@ offset_left = -192.0
 offset_top = 176.0
 offset_right = 192.0
 offset_bottom = 202.0
-text = "Touch the Dice to randomize cells"
+text = "Touch the Dice to randomize rooms"
 horizontal_alignment = 1
+
+[node name="Portal" parent="." instance=ExtResource("5_m5jcc")]
+modulate = Color(0.207843, 0.870588, 0.121569, 1)
+position = Vector2(217, 263)
+target_map = "UpperElevatorRoom.tscn"
 
 [connection signal="body_entered" from="Dice" to="Dice" method="_on_body_entered"]

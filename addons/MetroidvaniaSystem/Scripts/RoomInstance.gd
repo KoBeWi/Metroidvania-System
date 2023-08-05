@@ -46,8 +46,11 @@ func _update_assigned_scene():
 func adjust_camera_limits(camera: Camera2D):
 	camera.limit_left = 0
 	camera.limit_top = 0
-	camera.limit_right = (max_room.x - min_room.x + 1) * MetSys.settings.in_game_room_size.x
-	camera.limit_bottom = (max_room.y - min_room.y + 1) * MetSys.settings.in_game_room_size.y
+	camera.limit_right = get_size().x
+	camera.limit_bottom = get_size().y
+
+func get_size() -> Vector2:
+	return Vector2(max_room - min_room + Vector2i.ONE) * MetSys.settings.in_game_room_size
 
 func _draw() -> void:
 	if not Engine.is_editor_hint() or cells.is_empty():

@@ -106,7 +106,7 @@ func _on_map_draw() -> void:
 		MetSys.draw_shared_borders()
 
 func _on_overlay_draw() -> void:
-	MetSys.draw_custom_elements(map_overlay, Rect2i(-map_offset, map_overlay.size / MetSys.CELL_SIZE + Vector2.ONE))
+	MetSys.draw_custom_elements(map_overlay, Rect2i(-map_offset, map_overlay.size / MetSys.CELL_SIZE + Vector2.ONE), Vector2(), current_layer)
 
 func update_map_position():
 	map.position = Vector2(map_offset - Vector2i(100, 100)) * MetSys.CELL_SIZE

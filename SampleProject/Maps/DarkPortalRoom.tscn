@@ -1,50 +1,8 @@
-[gd_scene load_steps=9 format=3 uid="uid://bfw23ln6e6532"]
+[gd_scene load_steps=4 format=3 uid="uid://bfw23ln6e6532"]
 
 [ext_resource type="TileSet" uid="uid://bwpcg2opya34n" path="res://SampleProject/Resources/Tileset.tres" id="1_o3x6j"]
 [ext_resource type="PackedScene" uid="uid://bsg0351mx3b4u" path="res://addons/MetroidvaniaSystem/Nodes/RoomInstance.tscn" id="2_iipfy"]
-[ext_resource type="Texture2D" uid="uid://cargdawan7gao" path="res://SampleProject/Sprites/Portal.png" id="3_5kt0f"]
-[ext_resource type="Script" path="res://SampleProject/Scripts/Portal.gd" id="3_gh826"]
-
-[sub_resource type="CircleShape2D" id="CircleShape2D_vq33u"]
-radius = 100.0
-
-[sub_resource type="Animation" id="Animation_bkyt7"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:rotation")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [0.0]
-}
-
-[sub_resource type="Animation" id="Animation_g3r3d"]
-resource_name = "Rotat"
-length = 2.0
-loop_mode = 1
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:rotation")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 2),
-"transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [0.0, 6.28319]
-}
-
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_0plid"]
-_data = {
-"RESET": SubResource("Animation_bkyt7"),
-"Rotat": SubResource("Animation_g3r3d")
-}
+[ext_resource type="PackedScene" uid="uid://cwrf84g5mlucd" path="res://SampleProject/Objects/Portal.tscn" id="3_dwger"]
 
 [node name="Map" type="Node2D"]
 
@@ -63,22 +21,7 @@ layer_1/tile_data = PackedInt32Array(589827, 524290, 1, 655363, 524290, 1, 72089
 
 [node name="RoomInstance" parent="." instance=ExtResource("2_iipfy")]
 
-[node name="Portal" type="Area2D" parent="."]
-position = Vector2(304, 263)
-script = ExtResource("3_gh826")
-target_map = "PortalRoom.tscn"
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Portal"]
-shape = SubResource("CircleShape2D_vq33u")
-
-[node name="Sprite2D" type="Sprite2D" parent="Portal"]
+[node name="Portal" parent="." instance=ExtResource("3_dwger")]
 modulate = Color(0.207843, 0.870588, 0.121569, 1)
-texture = ExtResource("3_5kt0f")
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="Portal/Sprite2D"]
-autoplay = "Rotat"
-libraries = {
-"": SubResource("AnimationLibrary_0plid")
-}
-
-[connection signal="body_entered" from="Portal" to="Portal" method="_on_body_entered"]
+position = Vector2(304, 263)
+target_map = "PortalRoom.tscn"

@@ -22,7 +22,6 @@ enum { R, D, L, U }
 ## TODO: MetSys.meta musi być czyszczone
 ## TODO: get_unsaved_data()
 ## TODO: export JSON?
-## TODO: get_discovered_percentage(layer := -1)
 
 @export var exported_settings: Resource
 
@@ -89,6 +88,19 @@ func is_cell_discovered(coords: Vector3i, include_mapped := true) -> bool:
 	
 	var discovered := save_data.is_cell_discovered(coords)
 	return discovered == 2 or include_mapped and discovered == 1
+
+func get_discovered_ratio(layer := -1):
+	var all: float
+	var discovered: float
+	
+	for coords in map_data.cells:
+		if layer != -1 and coords.z != layer:
+			continue
+		
+		all += 1
+		discovered += int(is_cell_discovered(coords, false))
+	
+	return discovered / all
 
 func set_player_position(position: Vector2):
 	exact_player_position = position
