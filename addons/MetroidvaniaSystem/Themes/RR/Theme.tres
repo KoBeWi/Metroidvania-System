@@ -3,8 +3,8 @@
 [ext_resource type="Texture2D" uid="uid://cmsf2ftu1nxv5" path="res://addons/MetroidvaniaSystem/Themes/RR/CornerInner.png" id="1_uvvyp"]
 [ext_resource type="Texture2D" uid="uid://bma4gpyfwxyol" path="res://addons/MetroidvaniaSystem/Themes/RR/CornerOuter.png" id="2_xnnlu"]
 [ext_resource type="Texture2D" uid="uid://binqbgqxhnx7j" path="res://addons/MetroidvaniaSystem/Themes/RR/BorderPassage.png" id="3_6c7r1"]
-[ext_resource type="PackedScene" path="res://addons/MetroidvaniaSystem/Themes/VoF/PlayerLocation.tscn" id="3_8m765"]
 [ext_resource type="Script" path="res://addons/MetroidvaniaSystem/Scripts/MapTheme.gd" id="5_bgi7a"]
+[ext_resource type="PackedScene" uid="uid://d28u2q2eihye7" path="res://addons/MetroidvaniaSystem/Themes/RR/PlayerLocation.tscn" id="5_g1m6u"]
 [ext_resource type="Texture2D" uid="uid://8ehs32p4uca2" path="res://addons/MetroidvaniaSystem/Themes/RR/RoomFill.png" id="5_lncyc"]
 [ext_resource type="Texture2D" uid="uid://p0tx0kl4qk4i" path="res://addons/MetroidvaniaSystem/Themes/RR/Symbols/SavePoint.png" id="7_1emgp"]
 [ext_resource type="Texture2D" uid="uid://duscmhfefarl7" path="res://addons/MetroidvaniaSystem/Themes/RR/BorderWall.png" id="7_s5fc5"]
@@ -22,7 +22,8 @@
 [resource]
 script = ExtResource("5_bgi7a")
 center_texture = ExtResource("5_lncyc")
-player_location_scene = ExtResource("3_8m765")
+player_location_scene = ExtResource("5_g1m6u")
+show_exact_player_location = null
 use_shared_borders = false
 default_center_color = Color(0.513726, 0.670588, 0.462745, 1)
 unexplored_center_color = Color(0.45098, 0.443137, 0.45098, 1)
