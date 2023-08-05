@@ -9,14 +9,21 @@ Terminology
 Room, Border, Corner, Passage, Wall, Cell
 
 Themes
-AoS = Castlevania: Aria of Sorrow
-BS = Bloodstained: Ritual of the Night
-Exquisite
-MF = Metroid Fusion
-SotN = Castlevania: Symphony of the Night
-RR = Rabi-Ribi
-VoF = Voice of Flowers
-Zeric https://gamefaqs.gamespot.com/mobile/956058-castlevania-aria-of-sorrow/map/772-castle-map
+### AoS
+Inspired by Castlevania: Aria of Sorrow
+### BS
+Inspired by Bloodstained: Ritual of the Night
+### Exquisite
+### MF
+Inspired by Metroid Fusion
+### SotN
+Inspired by Castlevania: Symphony of the Night. Basically same as BS, but with square rooms.
+### RR
+Inspired by Rabi-Ribi. Most notably the collectible symbols are displayed only when a collectible is acquired.
+### VoF
+Inspired by Voice of Flowers. In fact it uses some of the old sprites from the game.
+### Zeric
+Inspired by map guides made by user Zeric ([Example])(https://gamefaqs.gamespot.com/mobile/956058-castlevania-aria-of-sorrow/map/772-castle-map)
 
 Info co gdziej jest w przykładowym projekcie
 can't have multiple handlers in tree

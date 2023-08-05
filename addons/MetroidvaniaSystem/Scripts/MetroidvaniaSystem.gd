@@ -25,6 +25,7 @@ enum { R, D, L, U }
 ## TODO: map_overrides -> room_overrides
 ## TODO: in_game_room_size -> in_game_cell_size
 ## TODO: unexplored_display powinno być właściwością motywu raczej
+## TODO: border overlays??? (w sensie ikonki borderów rysowane bez koloru)
 ## FIXME: shared borders zepsute na minimapie
 ## FIXME: cornery się rysują bez outline
 

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://u3h7efr7bfkv"
-path="res://.godot/imported/PlayerMark.png-e95999cdcf9dee373e5599fd90ca2b30.ctex"
+uid="uid://dyuqgby0pkv1i"
+path="res://.godot/imported/PinkBarrier.png-3e4d43ed571bb30e2c8983562435eeb8.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/MetroidvaniaSystem/Themes/Exquisite/PlayerMark.png"
-dest_files=["res://.godot/imported/PlayerMark.png-e95999cdcf9dee373e5599fd90ca2b30.ctex"]
+source_file="res://addons/MetroidvaniaSystem/Themes/Zeric/Borders/PinkBarrier.png"
+dest_files=["res://.godot/imported/PinkBarrier.png-3e4d43ed571bb30e2c8983562435eeb8.ctex"]
 
 [params]
 

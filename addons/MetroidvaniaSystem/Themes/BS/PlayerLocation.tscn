@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://cq5af3a4hpkmc"]
 
-[ext_resource type="Texture2D" uid="uid://rwf0o6emuvco" path="res://addons/MetroidvaniaSystem/Themes/BS/PlayerMark.png" id="1_ky7bq"]
+[ext_resource type="Texture2D" uid="uid://rwf0o6emuvco" path="res://addons/MetroidvaniaSystem/Themes/BS/PlayerLocation.png" id="1_ky7bq"]
 
 [node name="PlayerLocation" type="Sprite2D"]
 texture = ExtResource("1_ky7bq")

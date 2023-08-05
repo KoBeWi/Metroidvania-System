@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://b1hnpnqaqqcds"]
 
-[ext_resource type="Texture2D" uid="uid://cg88cixacoi6n" path="res://addons/MetroidvaniaSystem/Themes/AoS/PlayerMark.png" id="1_6xqmr"]
+[ext_resource type="Texture2D" uid="uid://cg88cixacoi6n" path="res://addons/MetroidvaniaSystem/Themes/AoS/PlayerLocation.png" id="1_6xqmr"]
 
 [sub_resource type="Animation" id="Animation_a76ue"]
 resource_name = "Animate"

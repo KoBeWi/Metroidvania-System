@@ -1,19 +1,29 @@
-[gd_resource type="Resource" script_class="MapTheme" load_steps=11 format=3 uid="uid://b7a3sieqfuewe"]
+[gd_resource type="Resource" script_class="MapTheme" load_steps=20 format=3 uid="uid://b7a3sieqfuewe"]
 
 [ext_resource type="Texture2D" uid="uid://ckdojstmtqikr" path="res://addons/MetroidvaniaSystem/Themes/Zeric/Borders/BlueBarrier.png" id="1_gcegi"]
 [ext_resource type="Texture2D" uid="uid://bpmgmiri5e6e2" path="res://addons/MetroidvaniaSystem/Themes/Zeric/Borders/RedBarrier.png" id="2_cjw1d"]
+[ext_resource type="Texture2D" uid="uid://cdlnh0u7b03jm" path="res://addons/MetroidvaniaSystem/Themes/Zeric/Borders/GreenBarrier.png" id="3_cswle"]
 [ext_resource type="Texture2D" uid="uid://dqgc82vybc0cy" path="res://addons/MetroidvaniaSystem/Themes/Zeric/BorderPassage.png" id="3_vb4jp"]
 [ext_resource type="Texture2D" uid="uid://dijxm76dgesma" path="res://addons/MetroidvaniaSystem/Themes/Zeric/RoomFill.png" id="4_01u05"]
+[ext_resource type="Texture2D" uid="uid://dyuqgby0pkv1i" path="res://addons/MetroidvaniaSystem/Themes/Zeric/Borders/PinkBarrier.png" id="4_el8x7"]
 [ext_resource type="Texture2D" uid="uid://dw0lgh8p873i4" path="res://addons/MetroidvaniaSystem/Themes/Zeric/CornerCross.png" id="4_jwgxf"]
 [ext_resource type="Script" path="res://addons/MetroidvaniaSystem/Scripts/MapTheme.gd" id="5_oyauq"]
 [ext_resource type="Texture2D" uid="uid://djdgo7kixxhpj" path="res://addons/MetroidvaniaSystem/Themes/Zeric/CornerL.png" id="5_varkp"]
 [ext_resource type="Texture2D" uid="uid://cu2f7csv8gt7c" path="res://addons/MetroidvaniaSystem/Themes/Zeric/BorderWall.png" id="6_xee1q"]
+[ext_resource type="PackedScene" uid="uid://csibk51vvt46y" path="res://addons/MetroidvaniaSystem/Themes/Zeric/PlayerLocation.tscn" id="9_ehbr4"]
 [ext_resource type="Texture2D" uid="uid://dx7x7ne1r4bix" path="res://addons/MetroidvaniaSystem/Themes/Zeric/CornerU.png" id="9_pbdb6"]
 [ext_resource type="Texture2D" uid="uid://q1rcrbo2ekm4" path="res://addons/MetroidvaniaSystem/Themes/Zeric/CornerT.png" id="9_ppmy6"]
+[ext_resource type="Texture2D" uid="uid://be4ni10tqfl0y" path="res://addons/MetroidvaniaSystem/Themes/Zeric/Symbols/SavePoint.png" id="10_yydsu"]
+[ext_resource type="Texture2D" uid="uid://ibkx6phkaqdb" path="res://addons/MetroidvaniaSystem/Themes/Zeric/Symbols/Teleport.png" id="11_clwdu"]
+[ext_resource type="Texture2D" uid="uid://b2q837krki0cf" path="res://addons/MetroidvaniaSystem/Themes/Zeric/Symbols/A.png" id="12_d0vb1"]
+[ext_resource type="Texture2D" uid="uid://nolok4hiwxuc" path="res://addons/MetroidvaniaSystem/Themes/Zeric/Symbols/B.png" id="13_67dt0"]
+[ext_resource type="Texture2D" uid="uid://dmhefgbsop1vt" path="res://addons/MetroidvaniaSystem/Themes/Zeric/Symbols/C.png" id="14_benqv"]
+[ext_resource type="Texture2D" uid="uid://pfk5ebtgi020" path="res://addons/MetroidvaniaSystem/Themes/Zeric/Symbols/D.png" id="15_xpbrr"]
 
 [resource]
 script = ExtResource("5_oyauq")
 center_texture = ExtResource("4_01u05")
+player_location_scene = ExtResource("9_ehbr4")
 show_exact_player_location = false
 use_shared_borders = true
 default_center_color = Color(0.129412, 0.0627451, 0.352941, 1)
@@ -21,12 +31,12 @@ unexplored_center_color = Color(0.258824, 0.258824, 0.192157, 1)
 default_border_color = Color(0.870588, 0.807843, 0.807843, 1)
 unexplored_border_color = Color(0, 0, 0, 1)
 room_separator_color = Color(0, 0, 0, 1)
-symbols = Array[Texture2D]([])
+symbols = Array[Texture2D]([ExtResource("10_yydsu"), ExtResource("11_clwdu"), ExtResource("12_d0vb1"), ExtResource("13_67dt0"), ExtResource("14_benqv"), ExtResource("15_xpbrr")])
 uncollected_item_symbol = -1
 collected_item_symbol = -1
 wall = ExtResource("6_xee1q")
 passage = ExtResource("3_vb4jp")
-borders = Array[Texture2D]([ExtResource("1_gcegi"), ExtResource("2_cjw1d")])
+borders = Array[Texture2D]([ExtResource("1_gcegi"), ExtResource("2_cjw1d"), ExtResource("3_cswle"), ExtResource("4_el8x7")])
 u_corner = ExtResource("9_pbdb6")
 l_corner = ExtResource("5_varkp")
 t_corner = ExtResource("9_ppmy6")
