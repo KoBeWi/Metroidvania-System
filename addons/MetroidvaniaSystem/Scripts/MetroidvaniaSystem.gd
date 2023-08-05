@@ -23,6 +23,7 @@ enum { R, D, L, U }
 ## TODO: get_unsaved_data()
 ## TODO: export JSON?
 ## TODO: map_overrides -> room_overrides
+## TODO: in_game_room_size -> in_game_cell_size
 ## TODO: unexplored_display powinno być właściwością motywu raczej
 ## FIXME: shared borders zepsute na minimapie
 ## FIXME: cornery się rysują bez outline
@@ -37,7 +38,6 @@ var save_data: SaveData
 
 var last_player_position := VECTOR3INF
 var exact_player_position: Vector2
-var player_location_instance: Node2D
 var current_room: RoomInstance
 
 var current_layer: int:
@@ -235,21 +235,12 @@ func draw_custom_elements(canvas_item: CanvasItem, rect: Rect2i, drawing_offset 
 		return
 	RoomDrawer.draw_custom_elements(canvas_item, map_data.custom_elements, drawing_offset, rect, layer)
 
-func draw_player_location(canvas_item: CanvasItem, offset: Vector2, exact := false): ## zamiast tego toggle?
-	var last_player_position_2d := Vector2(last_player_position.x, last_player_position.y)
-	var player_position := (last_player_position_2d + offset) * CELL_SIZE + CELL_SIZE / 2
-	if exact:
-		player_position += (exact_player_position / settings.in_game_room_size).posmod(1) * CELL_SIZE - CELL_SIZE * 0.5
-	
-	if not is_instance_valid(player_location_instance):
-		player_location_instance = settings.theme.player_location_scene.instantiate()
-	
-	if player_location_instance.get_parent() != canvas_item:
-		if player_location_instance.get_parent():
-			player_location_instance.get_parent().remove_child(player_location_instance)
-		canvas_item.add_child(player_location_instance)
-	
-	player_location_instance.position = player_position
+func add_player_location(canvas_item: CanvasItem, offset := Vector2()) -> Node2D:
+	var location_instance: Node2D = settings.theme.player_location_scene.instantiate()
+	location_instance.set_script(load("res://addons/MetroidvaniaSystem/Scripts/PlayerLocationInstance.gd"))
+	location_instance.offset = offset
+	canvas_item.add_child(location_instance)
+	return location_instance
 
 func get_current_coords() -> Vector3i:
 	return Vector3i(last_player_position.x, last_player_position.y, current_layer)

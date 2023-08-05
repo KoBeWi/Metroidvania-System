@@ -87,17 +87,16 @@ var SIZE: Vector2i
 
 var current_room: Vector2i
 var offset: Vector2i
+var player_location: Node2D
 
 func _ready() -> void:
 	SIZE = size / MetSys.CELL_SIZE
 	
-	if exact_player_location:
-		set_process(true)
-	else:
-		MetSys.map_updated.connect(queue_redraw)
-		MetSys.room_changed.connect(queue_redraw.unbind(1))
+	MetSys.map_updated.connect(queue_redraw)
+	MetSys.room_changed.connect(queue_redraw.unbind(1))
 	
 	MetSys.map_updated.connect($Percent.update)
+	player_location = MetSys.add_player_location(self)
 
 func _draw() -> void:
 	for x in SIZE.x:
@@ -107,8 +106,6 @@ func _draw() -> void:
 	if MetSys.settings.theme.use_shared_borders:
 		MetSys.draw_shared_borders()
 	MetSys.draw_custom_elements(self, Rect2i(-offset.x, -offset.y, SIZE.x, SIZE.y))
-	
-	MetSys.draw_player_location(self, offset, exact_player_location)
 
 func _input(event: InputEvent) -> void:
 	if event is InputEventKey:
@@ -118,6 +115,7 @@ func _input(event: InputEvent) -> void:
 				if visible:
 					var coords: Vector3i = MetSys.get_current_coords()
 					offset = -Vector2i(coords.x, coords.y) + SIZE / 2
+					player_location.offset = Vector2(offset) * MetSys.CELL_SIZE
 "
 
 [sub_resource type="GDScript" id="GDScript_66suq"]
@@ -129,7 +127,7 @@ func _notification(what: int) -> void:
 
 func update():
 	if is_visible_in_tree():
-		text = \"%02d%%\" % int(MetSys.get_discovered_ratio() * 100)
+		text = \"%03d%%\" % int(MetSys.get_discovered_ratio() * 100)
 "
 
 [node name="Game" type="Node2D"]
@@ -192,6 +190,7 @@ offset_bottom = 160.0
 grow_horizontal = 2
 grow_vertical = 2
 script = SubResource("GDScript_u7odr")
+exact_player_location = true
 
 [node name="Percent" type="Label" parent="UI/FullMap"]
 layout_mode = 0

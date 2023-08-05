@@ -18,6 +18,7 @@ const DYNAMIC_PROPERTIES = [&"vertical_wall", &"horizontal_wall", &"vertical_pas
 @export var empty_space_texture: Texture2D
 
 @export var player_location_scene: PackedScene
+@export var show_exact_player_location: bool
 
 @export var use_shared_borders: bool:
 	set(usb):
