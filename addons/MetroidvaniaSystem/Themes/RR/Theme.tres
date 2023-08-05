@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="MapTheme" load_steps=8 format=3 uid="uid://clhjwcspi4mv"]
+[gd_resource type="Resource" script_class="MapTheme" load_steps=19 format=3 uid="uid://clhjwcspi4mv"]
 
 [ext_resource type="Texture2D" uid="uid://cmsf2ftu1nxv5" path="res://addons/MetroidvaniaSystem/Themes/RR/CornerInner.png" id="1_uvvyp"]
 [ext_resource type="Texture2D" uid="uid://bma4gpyfwxyol" path="res://addons/MetroidvaniaSystem/Themes/RR/CornerOuter.png" id="2_xnnlu"]
@@ -6,7 +6,18 @@
 [ext_resource type="PackedScene" path="res://addons/MetroidvaniaSystem/Themes/VoF/PlayerLocation.tscn" id="3_8m765"]
 [ext_resource type="Script" path="res://addons/MetroidvaniaSystem/Scripts/MapTheme.gd" id="5_bgi7a"]
 [ext_resource type="Texture2D" uid="uid://8ehs32p4uca2" path="res://addons/MetroidvaniaSystem/Themes/RR/RoomFill.png" id="5_lncyc"]
+[ext_resource type="Texture2D" uid="uid://p0tx0kl4qk4i" path="res://addons/MetroidvaniaSystem/Themes/RR/Symbols/SavePoint.png" id="7_1emgp"]
 [ext_resource type="Texture2D" uid="uid://duscmhfefarl7" path="res://addons/MetroidvaniaSystem/Themes/RR/BorderWall.png" id="7_s5fc5"]
+[ext_resource type="Texture2D" uid="uid://b58upbl34awed" path="res://addons/MetroidvaniaSystem/Themes/RR/Symbols/Teleport.png" id="8_lvlx4"]
+[ext_resource type="Texture2D" uid="uid://7edglvavijrj" path="res://addons/MetroidvaniaSystem/Themes/RR/Symbols/HealZone.png" id="9_2xkh4"]
+[ext_resource type="Texture2D" uid="uid://dpxw5vrnuir2h" path="res://addons/MetroidvaniaSystem/Themes/RR/Symbols/AreaExitLeft.png" id="10_sdr2p"]
+[ext_resource type="Texture2D" uid="uid://cpl1sftp2o75h" path="res://addons/MetroidvaniaSystem/Themes/RR/Symbols/AreaExitRight.png" id="11_jypi3"]
+[ext_resource type="Texture2D" uid="uid://hf6g5ohnjnmi" path="res://addons/MetroidvaniaSystem/Themes/RR/Symbols/Egg.png" id="12_hwla1"]
+[ext_resource type="Texture2D" uid="uid://s3visacbaqf8" path="res://addons/MetroidvaniaSystem/Themes/RR/Symbols/Item1.png" id="13_2hfta"]
+[ext_resource type="Texture2D" uid="uid://1cncqjbthmvt" path="res://addons/MetroidvaniaSystem/Themes/RR/Symbols/Item2.png" id="14_4cjom"]
+[ext_resource type="Texture2D" uid="uid://b1ulp3uv1jy0o" path="res://addons/MetroidvaniaSystem/Themes/RR/Symbols/Item3.png" id="15_u4cpx"]
+[ext_resource type="Texture2D" uid="uid://he6nmyfa0xg7" path="res://addons/MetroidvaniaSystem/Themes/RR/Symbols/Item4.png" id="16_ouur6"]
+[ext_resource type="Texture2D" uid="uid://mh8xua0jilr3" path="res://addons/MetroidvaniaSystem/Themes/RR/Symbols/Item5.png" id="17_7i34f"]
 
 [resource]
 script = ExtResource("5_bgi7a")
@@ -16,11 +27,11 @@ use_shared_borders = false
 default_center_color = Color(0.513726, 0.670588, 0.462745, 1)
 unexplored_center_color = Color(0.45098, 0.443137, 0.45098, 1)
 default_border_color = Color(0.180392, 0.298039, 0.156863, 1)
-unexplored_border_color = Color(1, 1, 1, 1)
+unexplored_border_color = Color(0.309804, 0.301961, 0.309804, 1)
 room_separator_color = Color(0, 0, 0, 1)
-symbols = Array[Texture2D]([])
+symbols = Array[Texture2D]([ExtResource("7_1emgp"), ExtResource("8_lvlx4"), ExtResource("9_2xkh4"), ExtResource("10_sdr2p"), ExtResource("11_jypi3"), ExtResource("12_hwla1"), ExtResource("13_2hfta"), ExtResource("14_4cjom"), ExtResource("15_u4cpx"), ExtResource("16_ouur6"), ExtResource("17_7i34f")])
 uncollected_item_symbol = -1
-collected_item_symbol = -1
+collected_item_symbol = 6
 wall = ExtResource("7_s5fc5")
 passage = ExtResource("3_6c7r1")
 borders = Array[Texture2D]([])

@@ -38,7 +38,7 @@ static func draw(canvas_item: CanvasItem, offset: Vector2, coords: Vector3i, ski
 		var shared_borders_to_draw: Dictionary = MetSys.get_meta(&"shared_borders_to_draw")
 		shared_borders_to_draw[coords] = offset
 	else:
-		draw_regular_borders(canvas_item, offset, coords, map_data, cell_data, display_flags)
+		draw_regular_borders(canvas_item, offset, coords, map_data, cell_data, display_flags, discovered)
 	
 	canvas_item.draw_set_transform_matrix(Transform2D())
 	
@@ -59,7 +59,7 @@ static func draw(canvas_item: CanvasItem, offset: Vector2, coords: Vector3i, ski
 			assert(symbol < theme.symbols.size(), "Bad symbol '%s' at '%s'" % [symbol, coords])
 			canvas_item.draw_texture(theme.symbols[symbol], offset * MetSys.CELL_SIZE + MetSys.CELL_SIZE * 0.5 - theme.symbols[symbol].get_size() / 2)
 
-static func draw_regular_borders(canvas_item: CanvasItem, offset: Vector2, coords: Vector3i, map_data: MetroidvaniaSystem.MapData, cell_data: MetroidvaniaSystem.MapData.CellData, display_flags: int):
+static func draw_regular_borders(canvas_item: CanvasItem, offset: Vector2, coords: Vector3i, map_data: MetroidvaniaSystem.MapData, cell_data: MetroidvaniaSystem.MapData.CellData, display_flags: int, discovered: int):
 	var theme: MapTheme = MetSys.settings.theme
 	var ci := canvas_item.get_canvas_item()
 	
@@ -90,7 +90,10 @@ static func draw_regular_borders(canvas_item: CanvasItem, offset: Vector2, coord
 				border = 0
 			
 			texture = get_border_texture(theme, border, i)
-			color = cell_data.get_border_color(i)
+			if discovered == 2:
+				color = cell_data.get_border_color(i)
+			else:
+				color = theme.unexplored_border_color
 		
 		if not texture:
 			continue
@@ -109,7 +112,11 @@ static func draw_regular_borders(canvas_item: CanvasItem, offset: Vector2, coord
 			continue
 		
 		var texture: Texture2D = theme.outer_corner
-		var corner_color = cell_data.get_border_color(i).lerp(cell_data.get_border_color(j), 0.5)
+		var corner_color: Color
+		if discovered == 2:
+			corner_color = cell_data.get_border_color(i).lerp(cell_data.get_border_color(j), 0.5)
+		else:
+			corner_color = theme.unexplored_border_color
 		
 		canvas_item.draw_set_transform(offset * MetSys.CELL_SIZE + MetSys.CELL_SIZE * 0.5, PI * 0.5 * i, Vector2.ONE)
 		

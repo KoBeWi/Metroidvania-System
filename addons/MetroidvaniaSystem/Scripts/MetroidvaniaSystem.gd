@@ -22,6 +22,8 @@ enum { R, D, L, U }
 ## TODO: MetSys.meta musi być czyszczone
 ## TODO: get_unsaved_data()
 ## TODO: export JSON?
+## TODO: map_overrides -> room_overrides
+## TODO: 
 
 @export var exported_settings: Resource
 
@@ -71,9 +73,6 @@ func set_save_data(data := {}):
 	save_data = SaveData.new()
 	save_data.set_data(data)
 
-func reset_save_data():
-	save_data = SaveData.new()
-
 func visit_cell(coords: Vector3i):
 	save_data.explore_cell(coords)
 	
@@ -105,7 +104,7 @@ func get_discovered_ratio(layer := -1):
 func set_player_position(position: Vector2):
 	exact_player_position = position
 	
-	var player_pos := Vector2i((position / settings.in_game_room_size).floor()) + current_room.min_room
+	var player_pos := Vector2i((position / settings.in_game_room_size).floor()) + current_room.min_cell
 	var player_pos_3d := Vector3i(player_pos.x, player_pos.y, current_layer)
 	if player_pos_3d != last_player_position:
 		visit_cell(Vector3i(player_pos.x, player_pos.y, current_layer))
@@ -139,8 +138,8 @@ func register_storable_object_with_marker(object: Object, stored_callback := Cal
 	else:
 		if map_marker == DEFAULT_SYMBOL:
 			map_marker = settings.theme.uncollected_item_symbol
-		
-		if map_marker > -1:
+			object.set_meta(&"map_marker", map_marker)
+		elif map_marker > -1:
 			object.set_meta(&"map_marker", map_marker)
 		
 		if save_data.register_storable_object(object) and map_marker > -1:

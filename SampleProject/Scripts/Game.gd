@@ -37,7 +37,7 @@ func _ready() -> void:
 func goto_map(map_path: String):
 	var prev_map_position: Vector2i = MetSys.VECTOR2INF
 	if map:
-		prev_map_position = MetSys.get_current_room_instance().min_room
+		prev_map_position = MetSys.get_current_room_instance().min_cell
 		map.queue_free()
 		map = null
 	
@@ -48,7 +48,7 @@ func goto_map(map_path: String):
 	MetSys.current_layer = MetSys.get_current_room_instance().layer
 	
 	if prev_map_position != MetSys.VECTOR2INF:
-		player.position -= Vector2(MetSys.get_current_room_instance().min_room - prev_map_position) * MetSys.settings.in_game_room_size
+		player.position -= Vector2(MetSys.get_current_room_instance().min_cell - prev_map_position) * MetSys.settings.in_game_room_size
 		player.on_enter()
 
 func _physics_process(delta: float) -> void:

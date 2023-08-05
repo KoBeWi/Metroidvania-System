@@ -8,8 +8,8 @@ var cells: Array[Vector3i]
 var initialized: bool
 var room_name: String
 
-var min_room := Vector2i(999999, 999999)
-var max_room := Vector2i(-999999, -999999)
+var min_cell := Vector2i(999999, 999999)
+var max_cell := Vector2i(-999999, -999999)
 var layer: int
 
 func _enter_tree() -> void:
@@ -38,10 +38,10 @@ func _update_assigned_scene():
 	
 	layer = cells[0].z
 	for p in cells:
-		min_room.x = mini(min_room.x, p.x)
-		min_room.y = mini(min_room.y, p.y)
-		max_room.x = maxi(max_room.x, p.x)
-		max_room.y = maxi(max_room.y, p.y)
+		min_cell.x = mini(min_cell.x, p.x)
+		min_cell.y = mini(min_cell.y, p.y)
+		max_cell.x = maxi(max_cell.x, p.x)
+		max_cell.y = maxi(max_cell.y, p.y)
 
 func adjust_camera_limits(camera: Camera2D):
 	camera.limit_left = 0
@@ -50,14 +50,14 @@ func adjust_camera_limits(camera: Camera2D):
 	camera.limit_bottom = get_size().y
 
 func get_size() -> Vector2:
-	return Vector2(max_room - min_room + Vector2i.ONE) * MetSys.settings.in_game_room_size
+	return Vector2(max_cell - min_cell + Vector2i.ONE) * MetSys.settings.in_game_room_size
 
 func _draw() -> void:
 	if not Engine.is_editor_hint() or cells.is_empty():
 		return
 	
 	for p in cells:
-		var coords := Vector2(p.x - min_room.x, p.y - min_room.y)
+		var coords := Vector2(p.x - min_cell.x, p.y - min_cell.y)
 		for i in 4:
 			var width := 1
 			var color := GRID_COLOR
