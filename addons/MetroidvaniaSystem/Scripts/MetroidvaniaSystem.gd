@@ -23,7 +23,7 @@ enum { R, D, L, U }
 ## TODO: get_unsaved_data()
 ## TODO: export JSON?
 ## TODO: map_overrides -> room_overrides
-## TODO: 
+## TODO: reload symboli nie działa
 
 @export var exported_settings: Resource
 
@@ -111,7 +111,7 @@ func set_player_position(position: Vector2):
 		room_changed.emit(player_pos)
 		last_player_position = player_pos_3d
 
-func discover_room_group(group_id: int):
+func discover_cell_group(group_id: int):
 	assert(group_id in map_data.cell_groups)
 	
 	for coords in map_data.cell_groups[group_id]:

@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://qp30ichujgjp"
-path="res://.godot/imported/Save.png-cfb0a17a489afe1d959bf7ac49e9763e.ctex"
+path="res://.godot/imported/SaveRoom.png-82271f82f5b4eaaa7a14448ba974c7ee.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/MetroidvaniaSystem/Themes/MF/Symbols/Save.png"
-dest_files=["res://.godot/imported/Save.png-cfb0a17a489afe1d959bf7ac49e9763e.ctex"]
+source_file="res://addons/MetroidvaniaSystem/Themes/MF/Symbols/SaveRoom.png"
+dest_files=["res://.godot/imported/SaveRoom.png-82271f82f5b4eaaa7a14448ba974c7ee.ctex"]
 
 [params]
 
