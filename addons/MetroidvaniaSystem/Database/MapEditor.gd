@@ -47,6 +47,7 @@ func _on_overlay_draw() -> void:
 	if not plugin:
 		return
 	
+	super()
 	map_overlay.draw_set_transform(Vector2(map_offset) * MetSys.CELL_SIZE)
 	
 	var sub := get_current_sub_editor()

@@ -22,6 +22,7 @@ enum { R, D, L, U }
 ## TODO: MetSys.meta musi być czyszczone
 ## TODO: get_unsaved_data()
 ## TODO: export JSON?
+## TODO: get_discovered_percentage(layer := -1)
 
 @export var exported_settings: Resource
 
@@ -216,10 +217,10 @@ func draw_cell(canvas_item: CanvasItem, offset: Vector2, coords: Vector3i, skip_
 func draw_shared_borders():
 	RoomDrawer.draw_shared_borders()
 
-func draw_custom_elements():
+func draw_custom_elements(canvas_item: CanvasItem, rect: Rect2i, drawing_offset := Vector2(), layer := current_layer):
 	if not settings.custom_elements or map_data.custom_elements.is_empty():
 		return
-	RoomDrawer.draw_custom_elements(map_data.custom_elements)
+	RoomDrawer.draw_custom_elements(canvas_item, map_data.custom_elements, drawing_offset, rect, layer)
 
 func draw_player_location(canvas_item: CanvasItem, offset: Vector2, exact := false): ## zamiast tego toggle?
 	var last_player_position_2d := Vector2(last_player_position.x, last_player_position.y)

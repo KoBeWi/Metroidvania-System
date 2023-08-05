@@ -299,35 +299,27 @@ static func setup_custom_elements(canvas_item: CanvasItem, offset: Vector2, coor
 		var custom_element_data: Dictionary
 		if not MetSys.has_meta(&"custom_elements_data"):
 			custom_element_data["canvas_item"] = canvas_item
-			custom_element_data["start_coords"] = coords
-			custom_element_data["end_coords"] = coords
-			custom_element_data["base_offset"] = offset
 			MetSys.set_meta(&"custom_elements_data", custom_element_data)
-		else:
-			custom_element_data = MetSys.get_meta(&"custom_elements_data")
-		
-		custom_element_data["start_coords"].x = mini(custom_element_data["start_coords"].x, coords.x)
-		custom_element_data["start_coords"].y = mini(custom_element_data["start_coords"].y, coords.y)
-		custom_element_data["end_coords"].x = maxi(custom_element_data["end_coords"].x, coords.x)
-		custom_element_data["end_coords"].y = maxi(custom_element_data["end_coords"].y, coords.y)
-		custom_element_data["base_offset"].x = minf(custom_element_data["base_offset"].x, coords.x)
-		custom_element_data["base_offset"].y = minf(custom_element_data["base_offset"].y, coords.y)
 
-static func draw_custom_elements(elements: Dictionary):
-	var custom_element_data: Dictionary = MetSys.get_meta(&"custom_elements_data")
-	MetSys.remove_meta(&"custom_elements_data")
-	
+static func draw_custom_elements(canvas_item: CanvasItem, elements: Dictionary, base_offset: Vector2, rect: Rect2i, layer: int):
 	var element_manager: MetroidvaniaSystem.CustomElementManager = MetSys.settings.custom_elements
-	var canvas_item: CanvasItem = custom_element_data["canvas_item"]
-	var base_offset: Vector2 = custom_element_data["base_offset"]
-	var z: int = custom_element_data["start_coords"].z
+	var already_drawn: Array[Dictionary]
 	
-	for y in range(custom_element_data["start_coords"].y, custom_element_data["end_coords"].y + 1):
-		for x in range(custom_element_data["start_coords"].x, custom_element_data["end_coords"].x + 1):
-			var coords := Vector3i(x, y, z)
-			if coords in elements:
+	for y in rect.size.y:
+		for x in rect.size.y:
+			var pos := rect.position + Vector2i(x, y)
+			for coords in elements:
+				if coords.z != layer:
+					continue
+				
 				var element: Dictionary = elements[coords]
-				element_manager.draw_element(canvas_item, coords, element.name, (-base_offset + Vector2(coords.x, coords.y)) * MetSys.CELL_SIZE, Vector2(element.size) * MetSys.CELL_SIZE, element.data)
+				if element in already_drawn:
+					continue
+				
+				var elerect := Rect2i(coords.x, coords.y, element["size"].x, element["size"].y)
+				if elerect.has_point(pos):
+					element_manager.draw_element(canvas_item, coords, element.name, (base_offset + Vector2(coords.x, coords.y) - Vector2(pos) + Vector2(x, y)) * MetSys.CELL_SIZE, Vector2(element.size) * MetSys.CELL_SIZE, element.data)
+					already_drawn.append(element)
 
 static func get_border_at(coords: Vector3i, idx: int) -> int:
 	var cell_data = MetSys.map_data.get_cell_at(coords)
