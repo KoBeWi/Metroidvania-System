@@ -56,8 +56,10 @@ static func draw(canvas_item: CanvasItem, offset: Vector2, coords: Vector3i, ski
 			symbol = cell_data.get_symbol()
 		
 		if symbol > - 1:
-			assert(symbol < theme.symbols.size(), "Bad symbol '%s' at '%s'" % [symbol, coords])
-			canvas_item.draw_texture(theme.symbols[symbol], offset * MetSys.CELL_SIZE + MetSys.CELL_SIZE * 0.5 - theme.symbols[symbol].get_size() / 2)
+			if symbol >= theme.symbols.size():
+				push_error("Bad symbol '%s' at '%s'" % [symbol, coords])
+			else:
+				canvas_item.draw_texture(theme.symbols[symbol], offset * MetSys.CELL_SIZE + MetSys.CELL_SIZE * 0.5 - theme.symbols[symbol].get_size() / 2)
 
 static func draw_regular_borders(canvas_item: CanvasItem, offset: Vector2, coords: Vector3i, map_data: MetroidvaniaSystem.MapData, cell_data: MetroidvaniaSystem.MapData.CellData, display_flags: int, discovered: int):
 	var theme: MapTheme = MetSys.settings.theme
@@ -158,7 +160,9 @@ static func draw_regular_borders(canvas_item: CanvasItem, offset: Vector2, coord
 
 static func draw_shared_borders():
 	assert(MetSys.settings.theme.use_shared_borders, "This function requires shared borders to be enabled.")
-	assert(MetSys.has_meta(&"shared_borders_to_draw"), "No shared borders to draw. Did you draw cells?")
+	if not MetSys.has_meta(&"shared_borders_to_draw"):
+		return
+	
 	var theme: MapTheme = MetSys.settings.theme
 	
 	var shared_borders_to_draw: Dictionary = MetSys.get_meta(&"shared_borders_to_draw")

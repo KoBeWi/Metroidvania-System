@@ -23,7 +23,9 @@ enum { R, D, L, U }
 ## TODO: get_unsaved_data()
 ## TODO: export JSON?
 ## TODO: map_overrides -> room_overrides
-## TODO: reload symboli nie działa
+## TODO: unexplored_display powinno być właściwością motywu raczej
+## FIXME: shared borders zepsute na minimapie
+## FIXME: cornery się rysują bez outline
 
 @export var exported_settings: Resource
 

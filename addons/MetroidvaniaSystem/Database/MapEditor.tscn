@@ -487,7 +487,7 @@ var custom_elements: Dictionary
 func _editor_init() -> void:
 	room_only_cursor = false
 	custom_elements = MetSys.map_data.custom_elements
-	MetSys.settings.custom_elements_changed.connect(reload_custom_elements)
+	MetSys.settings.theme_changed.connect(reload_custom_elements)
 	
 	reload_custom_elements()
 

@@ -13,7 +13,9 @@ var current_room: Vector2i
 
 func _ready() -> void:
 	custom_minimum_size = MetSys.CELL_SIZE * 3
+	$ColorRect.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT, Control.PRESET_MODE_MINSIZE, 16)
 	$ColorRect.custom_minimum_size = MetSys.CELL_SIZE
+	$ColorRect.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
 	
 	MetSys.room_changed.connect(on_room_changed)
 	MetSys.map_updated.connect(queue_redraw)

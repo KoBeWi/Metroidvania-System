@@ -62,7 +62,8 @@ func refresh_custom_elements() -> void:
 	var custom_script := MetSys.settings.custom_element_script
 	MetSys.settings.custom_element_script = null
 	MetSys.settings.custom_element_script = custom_script
-	MetSys.settings.custom_elements_changed.emit()
+	
+	MetSys.settings.theme_changed.emit()
 "
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6lvlf"]
@@ -309,7 +310,7 @@ text = "General Settings"
 
 [node name="Button6" type="Button" parent="VBoxContainer/VBoxContainer"]
 layout_mode = 2
-text = "Refresh Custom Elements"
+text = "Force Refresh Elements"
 
 [node name="Button2" type="Button" parent="VBoxContainer/VBoxContainer"]
 layout_mode = 2

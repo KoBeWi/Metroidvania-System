@@ -16,7 +16,7 @@ MF = Metroid Fusion
 SotN = Castlevania: Symphony of the Night
 RR = Rabi-Ribi
 VoF = Voice of Flowers
-Zeric
+Zeric https://gamefaqs.gamespot.com/mobile/956058-castlevania-aria-of-sorrow/map/772-castle-map
 
 Info co gdziej jest w przykładowym projekcie
 can't have multiple handlers in tree

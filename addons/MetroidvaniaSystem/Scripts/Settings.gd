@@ -27,4 +27,3 @@ extends Resource
 var custom_elements: MetroidvaniaSystem.CustomElementManager
 
 signal theme_changed
-signal custom_elements_changed
