@@ -17,15 +17,13 @@ const CustomElementManager = preload("res://addons/MetroidvaniaSystem/Scripts/Cu
 enum { R, D, L, U }
 
 ## TODO: do szukania: wymyślić jakoś jak wyświetlać różne ikonki w zależności od danych
-## TODO: get_used_squares() i dać trójkątne pomieszczenie. Czarno tam gdzie nic nie ma
+## TODO: get_used_squares() i dać trójkątne pomieszczenie. Czarno tam gdzie nic nie ma / get_local_cells()
 ## TODO: MetSys.meta musi być czyszczone
 ## TODO: get_unsaved_data()
-## TODO: map_overrides -> scene_overrides
-## TODO: in_game_room_size -> in_game_cell_size
 ## TODO: unexplored_display powinno być właściwością motywu raczej
 ## TODO: border overlays??? (w sensie ikonki borderów rysowane bez koloru)
+## TODO: poczwórne cornery (w sensie w środku pokoju)
 ## TODO: shared_borders: ignorować nieodkryte kwadraty
-## TODO: passage -> connection ??
 ## TODO: color pick do borderów
 ## FIXME: shared borders zepsute na minimapie
 ## FIXME: cornery się rysują bez outline
@@ -108,7 +106,7 @@ func get_discovered_ratio(layer := -1):
 func set_player_position(position: Vector2):
 	exact_player_position = position
 	
-	var player_pos := Vector2i((position / settings.in_game_room_size).floor()) + current_room.min_cell
+	var player_pos := Vector2i((position / settings.in_game_cell_size).floor()) + current_room.min_cell
 	var player_pos_3d := Vector3i(player_pos.x, player_pos.y, current_layer)
 	if player_pos_3d != last_player_position:
 		visit_cell(Vector3i(player_pos.x, player_pos.y, current_layer))
@@ -187,7 +185,7 @@ func get_object_coords(object: Object) -> Vector3i:
 		return coords
 	elif object is Node:
 		var room_name: String = object.owner.scene_file_path.trim_prefix(settings.map_root_folder)
-		room_name = MetSys.map_data.map_overrides.get(room_name, room_name)
+		room_name = MetSys.map_data.scene_overrides.get(room_name, room_name)
 		assert(room_name in map_data.assigned_scenes)
 		
 		var coords: Vector3i = map_data.assigned_scenes[room_name].front()
@@ -196,7 +194,7 @@ func get_object_coords(object: Object) -> Vector3i:
 			coords.y = mini(coords.y, vec.y)
 		
 		if object is CanvasItem:
-			var position: Vector2 = object.position / settings.in_game_room_size
+			var position: Vector2 = object.position / settings.in_game_cell_size
 			coords.x += int(position.x)
 			coords.y += int(position.y)
 		

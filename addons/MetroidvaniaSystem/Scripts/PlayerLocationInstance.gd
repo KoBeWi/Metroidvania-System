@@ -17,6 +17,6 @@ func _process(delta: float) -> void:
 	var last_player_position_2d := Vector2(MetSys.last_player_position.x, MetSys.last_player_position.y)
 	var player_position := last_player_position_2d * MetSys.CELL_SIZE + MetSys.CELL_SIZE / 2
 	if exact:
-		player_position += (MetSys.exact_player_position / MetSys.settings.in_game_room_size).posmod(1) * MetSys.CELL_SIZE - MetSys.CELL_SIZE * 0.5
+		player_position += (MetSys.exact_player_position / MetSys.settings.in_game_cell_size).posmod(1) * MetSys.CELL_SIZE - MetSys.CELL_SIZE * 0.5
 	
 	position = player_position + offset

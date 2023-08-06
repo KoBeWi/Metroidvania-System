@@ -201,7 +201,7 @@ func setup_found(data: Dictionary):
 			top_left.x = mini(coords.x, top_left.x)
 			top_left.y = mini(coords.y, top_left.y)
 		
-		var pos := top_left + Vector2i(data.position / MetSys.settings.in_game_room_size)
+		var pos := top_left + Vector2i(data.position / MetSys.settings.in_game_cell_size)
 		data.coords = Vector3i(pos.x, pos.y, room[0].z)
 		label.text = \"%s %s\" % [data.map, data.coords]
 	else:

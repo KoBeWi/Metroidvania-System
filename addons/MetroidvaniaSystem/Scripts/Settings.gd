@@ -13,7 +13,7 @@ extends Resource
 
 @export_flags("Center", "Outline", "Borders", "Symbol") var unexplored_display := 3
 
-@export var in_game_room_size := Vector2(1152, 648)
+@export var in_game_cell_size := Vector2(1152, 648)
 @export var collectible_list: Array[Dictionary]
 @export var custom_element_script: Script:
 	set(elements):

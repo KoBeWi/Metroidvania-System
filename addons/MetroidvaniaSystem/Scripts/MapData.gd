@@ -171,7 +171,7 @@ class CellOverride extends CellData:
 					MetSys.map_data.assigned_scenes[map] = []
 				MetSys.map_data.assigned_scenes[map].append(custom_cell_coords)
 			else:
-				MetSys.map_data.map_overrides[map] = original_room.assigned_scene
+				MetSys.map_data.scene_overrides[map] = original_room.assigned_scene
 				
 				for coords in MetSys.map_data.get_whole_room(original_room.get_coords()):
 					var cell: CellData = MetSys.map_data.cells[coords]
@@ -212,7 +212,7 @@ class CellOverride extends CellData:
 		if assigned_scene == "/":
 			return
 		
-		MetSys.map_data.map_overrides.erase(assigned_scene)
+		MetSys.map_data.scene_overrides.erase(assigned_scene)
 		for coords in MetSys.map_data.get_whole_room(original_room.get_coords()):
 			MetSys.map_data.cells[coords].override_map = ""
 	
@@ -229,7 +229,7 @@ var cell_groups: Dictionary#[int, Array[Vector3i]]
 var custom_elements: Dictionary#[Vector3i, Struct]
 
 var cell_overrides: Dictionary#[Vector3i, CellOverride]
-var map_overrides: Dictionary#[String, String]
+var scene_overrides: Dictionary#[String, String]
 
 func load_data():
 	var file := FileAccess.open(MetSys.settings.map_root_folder.path_join("MapData.txt"), FileAccess.READ)
@@ -363,8 +363,8 @@ func get_whole_room(at: Vector3i) -> Array[Vector3i]:
 	return room
 
 func get_cells_assigned_to(map: String) -> Array[Vector3i]:
-	if map in map_overrides:
-		map = map_overrides[map]
+	if map in scene_overrides:
+		map = scene_overrides[map]
 	
 	var ret: Array[Vector3i]
 	ret.assign(assigned_scenes.get(map, []))

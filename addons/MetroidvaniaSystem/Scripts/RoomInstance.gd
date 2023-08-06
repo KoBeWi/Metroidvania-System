@@ -50,7 +50,7 @@ func adjust_camera_limits(camera: Camera2D):
 	camera.limit_bottom = get_size().y
 
 func get_size() -> Vector2:
-	return Vector2(max_cell - min_cell + Vector2i.ONE) * MetSys.settings.in_game_room_size
+	return Vector2(max_cell - min_cell + Vector2i.ONE) * MetSys.settings.in_game_cell_size
 
 func _draw() -> void:
 	if not Engine.is_editor_hint() or cells.is_empty():
@@ -67,10 +67,10 @@ func _draw() -> void:
 			
 			match i:
 				MetroidvaniaSystem.R:
-					draw_rect(Rect2((coords + Vector2.RIGHT) * MetSys.settings.in_game_room_size + Vector2(-width, 0), Vector2(width, MetSys.settings.in_game_room_size.y)), color)
+					draw_rect(Rect2((coords + Vector2.RIGHT) * MetSys.settings.in_game_cell_size + Vector2(-width, 0), Vector2(width, MetSys.settings.in_game_cell_size.y)), color)
 				MetroidvaniaSystem.D:
-					draw_rect(Rect2((coords + Vector2.DOWN) * MetSys.settings.in_game_room_size + Vector2(0, -width), Vector2(MetSys.settings.in_game_room_size.x, width)), color)
+					draw_rect(Rect2((coords + Vector2.DOWN) * MetSys.settings.in_game_cell_size + Vector2(0, -width), Vector2(MetSys.settings.in_game_cell_size.x, width)), color)
 				MetroidvaniaSystem.L:
-					draw_rect(Rect2(coords * MetSys.settings.in_game_room_size, Vector2(width, MetSys.settings.in_game_room_size.y)), color)
+					draw_rect(Rect2(coords * MetSys.settings.in_game_cell_size, Vector2(width, MetSys.settings.in_game_cell_size.y)), color)
 				MetroidvaniaSystem.U:
-					draw_rect(Rect2(coords * MetSys.settings.in_game_room_size, Vector2(MetSys.settings.in_game_room_size.x, width)), color)
+					draw_rect(Rect2(coords * MetSys.settings.in_game_cell_size, Vector2(MetSys.settings.in_game_cell_size.x, width)), color)
