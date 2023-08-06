@@ -20,12 +20,12 @@ enum { R, D, L, U }
 ## TODO: get_used_squares() i dać trójkątne pomieszczenie. Czarno tam gdzie nic nie ma / get_local_cells()
 ## TODO: MetSys.meta musi być czyszczone
 ## TODO: get_unsaved_data()
-## TODO: unexplored_display powinno być właściwością motywu raczej
-## TODO: border overlays??? (w sensie ikonki borderów rysowane bez koloru)
-## TODO: poczwórne cornery (w sensie w środku pokoju)
+## TODO: unexplored_display powinno być właściwością motywu raczej; i w README napisać
+## TODO???: border overlays (w sensie ikonki borderów rysowane bez koloru)
+## TODO???: poczwórne cornery (w sensie w środku pokoju)
+## TODO???: symbol modulate, rotation
 ## TODO: shared_borders: ignorować nieodkryte kwadraty
 ## FIXME: shared borders zepsute na minimapie
-## FIXME: cornery się rysują bez outline
 
 @export var exported_settings: Resource
 

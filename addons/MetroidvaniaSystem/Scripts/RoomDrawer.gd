@@ -68,12 +68,13 @@ static func draw_regular_borders(canvas_item: CanvasItem, offset: Vector2, coord
 	# borders
 	var borders: Array[int] = [-1, -1, -1, -1]
 	
+	var display_outlines := bool(display_flags & MetroidvaniaSystem.DISPLAY_OUTLINE)
 	for i in 4:
 		var border: int = cell_data.get_border(i)
-		if not bool(display_flags & MetroidvaniaSystem.DISPLAY_OUTLINE) and border == 0:
+		if not display_outlines and border == 0:
 			borders[i] = -1
 		elif not bool(display_flags & MetroidvaniaSystem.DISPLAY_BORDERS):
-			borders[i] = mini(border, 0)
+			borders[i] = mini(border, 0 if display_outlines else -1)
 		else:
 			borders[i] = border
 	
@@ -83,8 +84,9 @@ static func draw_regular_borders(canvas_item: CanvasItem, offset: Vector2, coord
 		
 		var rotation := PI * 0.5 * i
 		if borders[i] == -1:
-			texture = get_border_texture(theme, -1, i)
-			color = theme.room_separator_color
+			if display_outlines:
+				texture = get_border_texture(theme, -1, i)
+				color = theme.room_separator_color
 		else:
 			var border: int = borders[i]
 			
@@ -106,6 +108,9 @@ static func draw_regular_borders(canvas_item: CanvasItem, offset: Vector2, coord
 				texture.draw(ci, -texture.get_size() / 2 + Vector2.RIGHT * (MetSys.CELL_SIZE.x * 0.5 - texture.get_width() / 2), color)
 			MetroidvaniaSystem.D, MetroidvaniaSystem.U:
 				texture.draw(ci, -texture.get_size() / 2 + Vector2.RIGHT * (MetSys.CELL_SIZE.y * 0.5 - texture.get_width() / 2), color)
+	
+	if not display_outlines:
+		return
 	
 	# outer corner
 	for i in 4:
