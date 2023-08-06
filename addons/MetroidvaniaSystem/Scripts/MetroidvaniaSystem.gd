@@ -24,7 +24,6 @@ enum { R, D, L, U }
 ## TODO: border overlays??? (w sensie ikonki borderów rysowane bez koloru)
 ## TODO: poczwórne cornery (w sensie w środku pokoju)
 ## TODO: shared_borders: ignorować nieodkryte kwadraty
-## TODO: color pick do borderów
 ## FIXME: shared borders zepsute na minimapie
 ## FIXME: cornery się rysują bez outline
 

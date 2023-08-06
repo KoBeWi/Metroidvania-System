@@ -116,7 +116,7 @@ static func draw_regular_borders(canvas_item: CanvasItem, offset: Vector2, coord
 		var texture: Texture2D = theme.outer_corner
 		var corner_color: Color
 		if discovered == 2:
-			corner_color = cell_data.get_border_color(i).lerp(cell_data.get_border_color(j), 0.5)
+			corner_color = get_shared_color(cell_data.get_border_color(i), cell_data.get_border_color(j), theme.default_border_color)
 		else:
 			corner_color = theme.unexplored_border_color
 		
@@ -144,7 +144,7 @@ static func draw_regular_borders(canvas_item: CanvasItem, offset: Vector2, coord
 				continue
 		
 		var texture: Texture2D = theme.inner_corner
-		var corner_color = cell_data.get_border_color(i).lerp(cell_data.get_border_color(j), 0.5)
+		var corner_color := get_shared_color(cell_data.get_border_color(i), cell_data.get_border_color(j), theme.default_border_color)
 		
 		canvas_item.draw_set_transform(offset * MetSys.CELL_SIZE + MetSys.CELL_SIZE * 0.5, PI * 0.5 * i, Vector2.ONE)
 		
@@ -195,6 +195,7 @@ static func draw_shared_borders():
 			corner_data |= (1 << 2) * (get_corner_bit(coords + Vector3i(0, 1, 0), MetroidvaniaSystem.R) | get_corner_bit(coords + Vector3i(1, 1, 0), MetroidvaniaSystem.L))
 			corner_data |= (1 << 3) * (get_corner_bit(coords + Vector3i(1, 0, 0), MetroidvaniaSystem.D) | get_corner_bit(coords + Vector3i(1, 1, 0), MetroidvaniaSystem.U))
 		
+		var use_default: bool
 		var color_blend: Array[Color]
 		for i in 4:
 			var color: Color
@@ -203,13 +204,17 @@ static func draw_shared_borders():
 			else:
 				color = get_shared_border_color(coords + Vector3i(1, 1, 0), i)
 			
-			if color.a > 0:
+			if color == theme.default_border_color:
+				use_default = true
+			elif color.a > 0:
 				color_blend.append(color)
 		
 		shared_corners_data[coords] = corner_data
 		if not color_blend.is_empty():
 			var ratio: float = 1.0 / color_blend.size()
-			shared_corners_colors[coords] = color_blend.reduce(func(final: Color, current: Color): return final.lerp(current, ratio))
+			shared_corners_colors[coords] = color_blend.reduce(func(final: Color, current: Color) -> Color: return final.lerp(current, ratio))
+		elif use_default:
+			shared_corners_colors[coords] = theme.default_border_color
 		
 		var border_data: Array[int] = [-1, -1]
 		var border_colors: Array[Color] = [Color(), Color()]
@@ -352,17 +357,18 @@ static func get_shared_border_color(coords: Vector3i, idx: int) -> Color:
 	cell_data = MetSys.map_data.get_cell_at(coords + fwd)
 	if cell_data:
 		if color.a > 0:
-			color = color.lerp(cell_data.get_border_color(opposite(idx)), 0.5)
+			color = get_shared_color(color, cell_data.get_border_color(opposite(idx)), MetSys.settings.theme.default_border_color)
 		else:
 			color = cell_data.get_border_color(opposite(idx))
 	
 	return color
 
-static func draw_empty(canvas_item: CanvasItem, offset: Vector2):
-	var theme: MapTheme = MetSys.settings.theme
-	if theme.empty_space_texture:
-		var ci := canvas_item.get_canvas_item()
-		theme.empty_space_texture.draw(ci, offset * MetSys.CELL_SIZE, Color.WHITE)
+static func get_shared_color(color1: Color, color2: Color, default: Color) -> Color:
+	if color1 == default:
+		return color2
+	elif color2 == default:
+		return color1
+	return color1.lerp(color2, 0.5)
 
 static func get_border_texture(theme: MapTheme, idx: int, direction: int) -> Texture2D:
 	var texture_name: StringName
@@ -403,6 +409,12 @@ static func get_border_texture(theme: MapTheme, idx: int, direction: int) -> Tex
 		return theme.get(texture_name)[idx - 2]
 	else:
 		return theme.get(texture_name)
+
+static func draw_empty(canvas_item: CanvasItem, offset: Vector2):
+	var theme: MapTheme = MetSys.settings.theme
+	if theme.empty_space_texture:
+		var ci := canvas_item.get_canvas_item()
+		theme.empty_space_texture.draw(ci, offset * MetSys.CELL_SIZE, Color.WHITE)
 
 static func get_neighbor(map_data: MetroidvaniaSystem.MapData, coords: Vector3i, offset: Vector2i) -> MetroidvaniaSystem.MapData.CellData:
 	var neighbor: Vector2i = Vector2i(coords.x, coords.y) + offset
