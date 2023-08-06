@@ -64,6 +64,67 @@ func refresh_custom_elements() -> void:
 	MetSys.settings.custom_element_script = custom_script
 	
 	MetSys.settings.theme_changed.emit()
+
+func export_json() -> void:
+	$FileDialog.popup_centered_ratio(0.6)
+
+func json_file_selected(path: String) -> void:
+	var map_data: Dictionary
+	
+	var cells: Dictionary
+	map_data[\"cells\"] = cells
+	
+	for cell in MetSys.map_data.cells:
+		var cell_to_save: Dictionary
+		cells[\"%s,%s,%s\" % [cell.x, cell.y, cell.z]] = cell_to_save
+		
+		var cell_data := MetSys.map_data.get_cell_at(cell)
+		cell_to_save[\"borders\"] = cell_data.borders
+		if cell_data.symbol > -1:
+			cell_to_save[\"symbol\"] = cell_data.symbol
+		if cell_data.color.a > 0:
+			cell_to_save[\"color\"] = cell_data.color.to_html(false)
+		if cell_data.border_colors.any(func(color: Color) -> bool: return color.a > 0):
+			cell_to_save[\"border_colors\"] = cell_data.border_colors.map(func(color: Color) -> String:
+				return \"000000\" if color.a == 0 else color.to_html(false))
+		if not cell_data.assigned_scene.is_empty():
+			cell_to_save[\"assigned_scene\"] = cell_data.assigned_scene
+	
+	var groups: Dictionary
+	
+	for group in MetSys.map_data.cell_groups:
+		var group_cells: Array[Vector3i]
+		group_cells.assign(MetSys.map_data.cell_groups[group])
+		
+		if group_cells.is_empty():
+			continue
+		
+		var group_to_save: Array
+		groups[group] = group_to_save
+		
+		for cell in group_cells:
+			group_to_save.append(\"%s,%s,%s\" % [cell.x, cell.y, cell.z])
+	
+	if not groups.is_empty():
+		map_data[\"groups\"] = groups
+	
+	var elements: Dictionary
+	
+	for element in MetSys.map_data.custom_elements:
+		var element_to_save: Dictionary
+		elements[\"%s,%s,%s\" % [element.x, element.y, element.z]] = element_to_save
+		
+		var element_data: Dictionary = MetSys.map_data.custom_elements[element]
+		element_to_save[\"name\"] = element_data[\"name\"]
+		element_to_save[\"size\"] = \"%s,%s\" % [element_data[\"size\"].x, element_data[\"size\"].y]
+		if not element_data[\"data\"].is_empty():
+			element_to_save[\"data\"] = element_data[\"data\"]
+	
+	if not elements.is_empty():
+		map_data[\"custom_elements\"] = elements
+	
+	var file := FileAccess.open(path, FileAccess.WRITE)
+	file.store_string(JSON.stringify(map_data, \"\\t\"))
 "
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6lvlf"]
@@ -327,6 +388,10 @@ text = "Validate Map Data"
 layout_mode = 2
 text = "Validate Map Theme"
 
+[node name="Button7" type="Button" parent="VBoxContainer/VBoxContainer"]
+layout_mode = 2
+text = "Export Map Data as JSON"
+
 [node name="HSeparator" type="HSeparator" parent="VBoxContainer/VBoxContainer"]
 layout_mode = 2
 
@@ -381,12 +446,19 @@ layout_mode = 2
 size_flags_horizontal = 4
 text = "Close"
 
+[node name="FileDialog" type="FileDialog" parent="."]
+size = Vector2i(483, 162)
+access = 2
+filters = PackedStringArray("*.json")
+
 [connection signal="pressed" from="VBoxContainer/VBoxContainer/Button" to="." method="edit_settings_pressed"]
 [connection signal="pressed" from="VBoxContainer/VBoxContainer/Button6" to="." method="refresh_custom_elements"]
 [connection signal="pressed" from="VBoxContainer/VBoxContainer/Button2" to="." method="force_reload"]
 [connection signal="pressed" from="VBoxContainer/VBoxContainer/Button4" to="VBoxContainer/ValidationPanel" method="validate_map_data"]
 [connection signal="pressed" from="VBoxContainer/VBoxContainer/Button5" to="VBoxContainer/ValidationPanel" method="validate_map_theme"]
+[connection signal="pressed" from="VBoxContainer/VBoxContainer/Button7" to="." method="export_json"]
 [connection signal="pressed" from="VBoxContainer/VBoxContainer/Button3" to="." method="edit_database_theme"]
 [connection signal="toggled" from="VBoxContainer/VBoxContainer/HBoxContainer/AllowReset" to="." method="toggle_allow_reset"]
 [connection signal="pressed" from="VBoxContainer/VBoxContainer/HBoxContainer/ResetButton" to="." method="reset_theme"]
 [connection signal="pressed" from="VBoxContainer/ValidationPanel/VBoxContainer/Button" to="VBoxContainer/ValidationPanel" method="dismiss"]
+[connection signal="file_selected" from="FileDialog" to="." method="json_file_selected"]

@@ -20,8 +20,7 @@ enum { R, D, L, U }
 ## TODO: get_used_squares() i dać trójkątne pomieszczenie. Czarno tam gdzie nic nie ma
 ## TODO: MetSys.meta musi być czyszczone
 ## TODO: get_unsaved_data()
-## TODO: export JSON?
-## TODO: map_overrides -> room_overrides
+## TODO: map_overrides -> scene_overrides
 ## TODO: in_game_room_size -> in_game_cell_size
 ## TODO: unexplored_display powinno być właściwością motywu raczej
 ## TODO: border overlays??? (w sensie ikonki borderów rysowane bez koloru)
