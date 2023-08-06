@@ -11,7 +11,7 @@
 script = ExtResource("7_hynsb")
 center_texture = ExtResource("4_0del7")
 player_location_scene = ExtResource("3_bjiwt")
-show_exact_player_location = true
+show_exact_player_location = false
 use_shared_borders = true
 default_center_color = Color(0, 0, 0.878431, 1)
 unexplored_center_color = Color(0.25098, 0.25098, 0.25098, 1)

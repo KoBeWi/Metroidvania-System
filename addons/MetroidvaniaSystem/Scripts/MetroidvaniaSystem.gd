@@ -16,7 +16,6 @@ const CustomElementManager = preload("res://addons/MetroidvaniaSystem/Scripts/Cu
 
 enum { R, D, L, U }
 
-## TODO: w motywach pododawać player sceny, symbole i granice
 ## TODO: do szukania: wymyślić jakoś jak wyświetlać różne ikonki w zależności od danych
 ## TODO: get_used_squares() i dać trójkątne pomieszczenie. Czarno tam gdzie nic nie ma
 ## TODO: MetSys.meta musi być czyszczone
@@ -26,6 +25,9 @@ enum { R, D, L, U }
 ## TODO: in_game_room_size -> in_game_cell_size
 ## TODO: unexplored_display powinno być właściwością motywu raczej
 ## TODO: border overlays??? (w sensie ikonki borderów rysowane bez koloru)
+## TODO: shared_borders: ignorować nieodkryte kwadraty
+## TODO: passage -> connection ??
+## TODO: color pick do borderów
 ## FIXME: shared borders zepsute na minimapie
 ## FIXME: cornery się rysują bez outline
 

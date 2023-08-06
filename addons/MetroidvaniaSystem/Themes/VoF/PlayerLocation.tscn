@@ -1,6 +1,49 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=5 format=3 uid="uid://cy5v4y4jjdq3"]
 
-[ext_resource type="Texture2D" uid="uid://b050k4i01yhlw" path="res://addons/MetroidvaniaSystem/Themes/VoF/PlayerMark.png" id="1_leswq"]
+[ext_resource type="Texture2D" uid="uid://b050k4i01yhlw" path="res://addons/MetroidvaniaSystem/Themes/VoF/PlayerLocation.png" id="1_paeov"]
+
+[sub_resource type="Animation" id="Animation_j5j13"]
+resource_name = "new_animation"
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0.0, 6.28319]
+}
+
+[sub_resource type="Animation" id="Animation_36srt"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_vk7a8"]
+_data = {
+"RESET": SubResource("Animation_36srt"),
+"new_animation": SubResource("Animation_j5j13")
+}
 
 [node name="PlayerLocation" type="Sprite2D"]
-texture = ExtResource("1_leswq")
+texture = ExtResource("1_paeov")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+autoplay = "new_animation"
+libraries = {
+"": SubResource("AnimationLibrary_vk7a8")
+}

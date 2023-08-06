@@ -4,7 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://ccsr7yljw6ph8" path="res://addons/MetroidvaniaSystem/Themes/VoF/CornerInner.png" id="1_u7wj2"]
 [ext_resource type="Texture2D" uid="uid://c40uu7og4ydpe" path="res://addons/MetroidvaniaSystem/Themes/VoF/Empty.png" id="2_2rhgh"]
 [ext_resource type="Texture2D" uid="uid://b8mwdksvhmgf" path="res://addons/MetroidvaniaSystem/Themes/VoF/CornerOuter.png" id="2_acgiy"]
-[ext_resource type="PackedScene" path="res://addons/MetroidvaniaSystem/Themes/VoF/PlayerLocation.tscn" id="3_nsuyr"]
+[ext_resource type="PackedScene" uid="uid://cy5v4y4jjdq3" path="res://addons/MetroidvaniaSystem/Themes/VoF/PlayerLocation.tscn" id="3_nsuyr"]
 [ext_resource type="Texture2D" uid="uid://carvupndufcht" path="res://addons/MetroidvaniaSystem/Themes/VoF/RoomFill.png" id="4_70pky"]
 [ext_resource type="Texture2D" uid="uid://61edyfnw5m8p" path="res://addons/MetroidvaniaSystem/Themes/VoF/BorderPassage.png" id="5_xa2wc"]
 [ext_resource type="Texture2D" uid="uid://cw1j4evd31ogo" path="res://addons/MetroidvaniaSystem/Themes/VoF/RoomSeparator.png" id="6_ye56i"]
@@ -26,6 +26,7 @@ script = ExtResource("8_xw4q1")
 center_texture = ExtResource("4_70pky")
 empty_space_texture = ExtResource("2_2rhgh")
 player_location_scene = ExtResource("3_nsuyr")
+show_exact_player_location = false
 use_shared_borders = false
 default_center_color = Color(0.960784, 0.745098, 0, 1)
 unexplored_center_color = Color(0.960784, 0.745098, 0, 1)

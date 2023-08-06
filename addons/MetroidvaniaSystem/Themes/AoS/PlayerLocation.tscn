@@ -72,5 +72,3 @@ autoplay = "Animate"
 libraries = {
 "": SubResource("AnimationLibrary_qhx6n")
 }
-
-[node name="VisibleOnScreenEnabler2D" type="VisibleOnScreenEnabler2D" parent="."]
