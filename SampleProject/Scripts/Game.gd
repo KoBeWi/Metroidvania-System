@@ -10,7 +10,7 @@ var map: Node2D
 var collectibles: int:
 	set(count):
 		collectibles = count
-		%CollectibleCount.text = "%d/6" % count
+		%CollectibleCount.text = "%d/7" % count
 
 var generated_rooms: Array[Vector3i]
 var events: Array[String]

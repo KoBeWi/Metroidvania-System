@@ -52,6 +52,12 @@ func adjust_camera_limits(camera: Camera2D):
 func get_size() -> Vector2:
 	return Vector2(max_cell - min_cell + Vector2i.ONE) * MetSys.settings.in_game_cell_size
 
+func get_local_cells() -> Array[Vector2i]:
+	var ret: Array[Vector2i]
+	ret.assign(cells.map(func(coords: Vector3i) -> Vector2i:
+		return Vector2i(coords.x - min_cell.x, coords.y - min_cell.y)))
+	return ret
+
 func _draw() -> void:
 	if not Engine.is_editor_hint() or cells.is_empty():
 		return

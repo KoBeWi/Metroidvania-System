@@ -17,8 +17,6 @@ const CustomElementManager = preload("res://addons/MetroidvaniaSystem/Scripts/Cu
 enum { R, D, L, U }
 
 ## TODO: do szukania: wymyślić jakoś jak wyświetlać różne ikonki w zależności od danych
-## TODO: get_used_squares() i dać trójkątne pomieszczenie. Czarno tam gdzie nic nie ma / get_local_cells()
-## TODO: MetSys.meta musi być czyszczone
 ## TODO: get_unsaved_data()
 ## TODO: unexplored_display powinno być właściwością motywu raczej; i w README napisać
 ## TODO???: border overlays (w sensie ikonki borderów rysowane bez koloru)
@@ -46,6 +44,9 @@ var current_layer: int:
 		
 		current_layer = layer
 		map_updated.emit()
+
+var _meta_list: Array[StringName]
+
 signal room_changed(new_room: Vector2i)
 signal map_changed(new_map: String)
 
@@ -257,3 +258,16 @@ func get_current_room_name() -> String:
 
 func get_full_room_path(room_name: String) -> String:
 	return settings.map_root_folder.path_join(room_name)
+
+func _add_meta(meta: StringName, value: Variant):
+	set_meta(meta, value)
+	
+	if _meta_list.is_empty():
+		_cleanup_meta.call_deferred()
+	
+	_meta_list.append(meta)
+
+func _cleanup_meta():
+	for meta in _meta_list:
+		remove_meta(meta)
+	return

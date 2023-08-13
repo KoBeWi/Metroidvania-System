@@ -42,7 +42,7 @@
 [-3,1,1]
 1,0,-1,0|e646ff,e68bff,e68bff,,e68bff||DarkCorridor.tscn
 [-2,1,1]
-1,0,1,0|e646ff,e68bff,e68bff,e68bff,e68bff||DarkStaircase.tscn
+1,0,1,-1|e646ff,e68bff,e68bff,e68bff,e68bff||DarkStaircase.tscn
 [-1,1,1]
 -1,0,1,0|e646ff,,e68bff,e68bff,e68bff||EndingPoint.tscn
 [0,1,1]
@@ -53,3 +53,7 @@
 0,1,0,0||1|UpperElevatorRoom.tscn
 [-1,-7,2]
 1,0,0,0|8ca1ff,3d4e99,3d4e99,3d4e99,3d4e99||DiceRoom.tscn
+[-2,0,1]
+-1,-1,0,0|e646ff,,,,||DarkStaircase.tscn
+[-1,0,1]
+0,0,-1,0|e646ff,,,,||DarkStaircase.tscn

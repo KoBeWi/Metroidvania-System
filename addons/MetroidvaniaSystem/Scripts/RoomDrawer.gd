@@ -32,8 +32,8 @@ static func draw(canvas_item: CanvasItem, offset: Vector2, coords: Vector3i, ski
 	# corners
 	if theme.use_shared_borders:
 		if not MetSys.has_meta(&"shared_borders_to_draw"):
-			MetSys.set_meta(&"shared_borders_to_draw", {})#[Vector3i, Vector2]
-			MetSys.set_meta(&"shared_borders_data", {"canvas_item": canvas_item, "display_flags": display_flags})
+			MetSys._add_meta(&"shared_borders_to_draw", {})#[Vector3i, Vector2]
+			MetSys._add_meta(&"shared_borders_data", {"canvas_item": canvas_item, "display_flags": display_flags})
 		
 		var shared_borders_to_draw: Dictionary = MetSys.get_meta(&"shared_borders_to_draw")
 		shared_borders_to_draw[coords] = offset
@@ -320,7 +320,7 @@ static func setup_custom_elements(canvas_item: CanvasItem, offset: Vector2, coor
 		var custom_element_data: Dictionary
 		if not MetSys.has_meta(&"custom_elements_data"):
 			custom_element_data["canvas_item"] = canvas_item
-			MetSys.set_meta(&"custom_elements_data", custom_element_data)
+			MetSys._add_meta(&"custom_elements_data", custom_element_data)
 
 static func draw_custom_elements(canvas_item: CanvasItem, elements: Dictionary, base_offset: Vector2, rect: Rect2i, layer: int):
 	var element_manager: MetroidvaniaSystem.CustomElementManager = MetSys.settings.custom_elements
