@@ -22,7 +22,7 @@ static func draw(canvas_item: CanvasItem, offset: Vector2, coords: Vector3i, ski
 	var theme: MapTheme = MetSys.settings.theme
 	
 	var ci := canvas_item.get_canvas_item()
-	var display_flags: int = (int(discovered == 2) * 255) | MetSys.settings.unexplored_display
+	var display_flags: int = (int(discovered == 2) * 255) | theme.unexplored_display
 	
 	# center
 	if bool(display_flags & MetroidvaniaSystem.DISPLAY_CENTER):

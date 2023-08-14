@@ -27,6 +27,7 @@ center_texture = ExtResource("4_70pky")
 empty_space_texture = ExtResource("2_2rhgh")
 player_location_scene = ExtResource("3_nsuyr")
 show_exact_player_location = false
+unexplored_display = 1
 use_shared_borders = false
 default_center_color = Color(0.960784, 0.745098, 0, 1)
 unexplored_center_color = Color(0.960784, 0.745098, 0, 1)

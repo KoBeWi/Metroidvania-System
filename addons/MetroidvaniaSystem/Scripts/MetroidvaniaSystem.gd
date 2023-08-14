@@ -18,12 +18,13 @@ enum { R, D, L, U }
 
 ## TODO: do szukania: wymyślić jakoś jak wyświetlać różne ikonki w zależności od danych
 ## TODO: get_unsaved_data()
-## TODO: unexplored_display powinno być właściwością motywu raczej; i w README napisać
+## TODO: w README napisać unexplored per theme
 ## TODO???: border overlays (w sensie ikonki borderów rysowane bez koloru)
 ## TODO???: poczwórne cornery (w sensie w środku pokoju)
 ## TODO???: symbol modulate, rotation
 ## TODO: shared_borders: ignorować nieodkryte kwadraty
 ## FIXME: shared borders zepsute na minimapie
+## FIXME: Zeric ma zepsutą windę
 
 @export var exported_settings: Resource
 

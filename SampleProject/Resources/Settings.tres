@@ -8,7 +8,6 @@
 script = ExtResource("2_r56ns")
 theme = ExtResource("3_qyjha")
 map_root_folder = "res://SampleProject/Maps/"
-unexplored_display = 3
 in_game_cell_size = Vector2(864, 480)
 collectible_list = Array[Dictionary]([{
 "element": "Collectible",
