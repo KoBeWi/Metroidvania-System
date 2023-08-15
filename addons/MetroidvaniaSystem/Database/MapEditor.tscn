@@ -68,6 +68,7 @@ func update_rooms(rect: Rect2i):
 				if y == rect.position.y:
 					cell.borders[3] = 0
 	
+	mark_modified()
 	editor.map.queue_redraw()
 
 func erase_rooms(rect: Rect2i):
@@ -92,6 +93,7 @@ func erase_rooms(rect: Rect2i):
 			
 			map_data.erase_cell(coords)
 	
+	mark_modified()
 	editor.map.queue_redraw()
 
 func close_border(pos: Vector2i, border: int):
@@ -125,9 +127,11 @@ func _editor_input(event: InputEvent):
 						%CurrentColor.color = cell_data.color
 				else:
 					cell_data.color = %CurrentColor.color
+					mark_modified()
 					editor.map.queue_redraw()
 			elif event.button_index == MOUSE_BUTTON_RIGHT:
 				cell_data.color = Color.TRANSPARENT
+				mark_modified()
 				editor.map.queue_redraw()
 	elif event is InputEventMouseMotion:
 		if event.button_mask & (MOUSE_BUTTON_MASK_LEFT | MOUSE_BUTTON_MASK_RIGHT):
@@ -141,6 +145,7 @@ func _editor_input(event: InputEvent):
 			
 			if cell_data.color != target_color:
 				cell_data.color = target_color
+				mark_modified()
 				editor.map.queue_redraw()
 "
 
@@ -180,9 +185,11 @@ func _editor_input(event: InputEvent):
 			
 			if event.button_index == MOUSE_BUTTON_LEFT:
 				cell_data.symbol = symbol_group.get_pressed_button().get_index()
+				mark_modified()
 				editor.map.queue_redraw()
 			elif event.button_index == MOUSE_BUTTON_RIGHT:
 				cell_data.symbol = -1
+				mark_modified()
 				editor.map.queue_redraw()
 
 func add_symbol(texture: Texture2D):
@@ -250,6 +257,8 @@ func draw_group():
 		
 		if not coords in cell_groups[current_group]:
 			cell_groups[current_group].append(coords)
+		
+		mark_modified()
 		editor.map_overlay.queue_redraw()
 	elif drawing & MOUSE_BUTTON_MASK_RIGHT != 0:
 		if not current_group in cell_groups:
@@ -260,6 +269,7 @@ func draw_group():
 			return
 		
 		cell_groups[current_group].erase(coords)
+		mark_modified()
 		editor.map_overlay.queue_redraw()
 "
 
@@ -318,6 +328,7 @@ func _editor_input(event: InputEvent):
 			
 			if new_border != highlighted_border:
 				highlighted_border = new_border
+				mark_modified()
 				editor.map_overlay.queue_redraw()
 				
 				if highlighted_border != -1 and event.button_mask & MOUSE_BUTTON_MASK_LEFT:
@@ -334,6 +345,7 @@ func _editor_input(event: InputEvent):
 		if event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 			var borders: Array[int] = cell_data.borders
 			cell_data.borders[highlighted_border] = border_group.get_pressed_button().get_index()
+			mark_modified()
 			editor.map.queue_redraw()
 
 func add_border(texture: Texture2D):
@@ -386,9 +398,11 @@ func _editor_input(event: InputEvent):
 				
 				if highlighted_border != -1 and event.button_mask & MOUSE_BUTTON_MASK_LEFT:
 					cell_data.border_colors[highlighted_border] = %CurrentColor.color
+					mark_modified()
 					editor.map.queue_redraw()
 				elif highlighted_border != -1 and event.button_mask & MOUSE_BUTTON_MASK_RIGHT:
 					cell_data.border_colors[highlighted_border] = Color.TRANSPARENT
+					mark_modified()
 					editor.map.queue_redraw()
 		else:
 			highlighted_border = -1
@@ -404,9 +418,11 @@ func _editor_input(event: InputEvent):
 					%CurrentColor.color = cell_data.border_colors[highlighted_border]
 			else:
 				cell_data.border_colors[highlighted_border] = %CurrentColor.color
+				mark_modified()
 				editor.map.queue_redraw()
 		elif event.pressed and event.button_index == MOUSE_BUTTON_RIGHT:
 			cell_data.border_colors[highlighted_border] = Color.TRANSPARENT
+			mark_modified()
 			editor.map.queue_redraw()
 		
 "
@@ -447,6 +463,7 @@ func _editor_input(event: InputEvent):
 				MetSys.map_data.get_cell_at(p).assigned_scene = \"\"
 				MetSys.room_assign_updated.emit()
 			
+			mark_modified()
 			editor.map_overlay.queue_redraw()
 
 func _editor_draw(map_overlay: CanvasItem):
@@ -473,6 +490,7 @@ func on_map_selected(path: String) -> void:
 		MetSys.map_data.assigned_scenes[path].append(coords)
 		MetSys.room_assign_updated.emit()
 	
+	mark_modified()
 	editor.map_overlay.queue_redraw()
 "
 
@@ -557,12 +575,14 @@ func _editor_input(event: InputEvent):
 			else:
 				var rect := get_rect_between(drag_from, get_cursor_pos())
 				add_element(rect)
+				mark_modified()
 				drag_from = EDITOR_SCRIPT.NULL_VECTOR2I
 		elif event.button_index == MOUSE_BUTTON_RIGHT:
 			if event.pressed:
 				var coords := Vector3i(get_cursor_pos().x, get_cursor_pos().y, editor.current_layer)
 				if coords in MetSys.map_data.custom_elements:
 					MetSys.map_data.custom_elements.erase(coords)
+					mark_modified()
 					editor.map.queue_redraw()
 
 func add_element(rect: Rect2i):

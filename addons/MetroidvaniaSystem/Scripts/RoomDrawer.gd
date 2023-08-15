@@ -315,6 +315,7 @@ static func draw_shared_borders():
 	
 	MetSys.remove_meta(&"shared_borders_to_draw")
 	MetSys.remove_meta(&"shared_borders_data")
+	canvas_item.draw_set_transform_matrix(Transform2D())
 
 static func setup_custom_elements(canvas_item: CanvasItem, offset: Vector2, coords: Vector3i):
 		var custom_element_data: Dictionary
@@ -343,7 +344,7 @@ static func draw_custom_elements(canvas_item: CanvasItem, elements: Dictionary, 
 					already_drawn.append(element)
 
 static func get_border_at(coords: Vector3i, idx: int) -> int:
-	var cell_data = MetSys.map_data.get_cell_at(coords)
+	var cell_data = get_discovered_cell_at(coords)
 	if not cell_data:
 		return -1
 	return cell_data.get_border(idx)
@@ -355,11 +356,11 @@ static func get_shared_border_color(coords: Vector3i, idx: int) -> Color:
 	var fwd := Vector3i(MetroidvaniaSystem.MapData.FWD[idx].x, MetroidvaniaSystem.MapData.FWD[idx].y, 0)
 	var color := Color.TRANSPARENT
 	
-	var cell_data = MetSys.map_data.get_cell_at(coords)
+	var cell_data = get_discovered_cell_at(coords)
 	if cell_data:
 		color = cell_data.get_border_color(idx)
 	
-	cell_data = MetSys.map_data.get_cell_at(coords + fwd)
+	cell_data = get_discovered_cell_at(coords + fwd)
 	if cell_data:
 		if color.a > 0:
 			color = get_shared_color(color, cell_data.get_border_color(opposite(idx)), MetSys.settings.theme.default_border_color)
@@ -367,6 +368,12 @@ static func get_shared_border_color(coords: Vector3i, idx: int) -> Color:
 			color = cell_data.get_border_color(opposite(idx))
 	
 	return color
+
+static func get_discovered_cell_at(coords: Vector3i) -> MetroidvaniaSystem.MapData.CellData:
+	var cell_data = MetSys.map_data.get_cell_at(coords)
+	if cell_data and MetSys.is_cell_discovered(coords):
+		return cell_data
+	return null
 
 static func get_shared_color(color1: Color, color2: Color, default: Color) -> Color:
 	if color1 == default:

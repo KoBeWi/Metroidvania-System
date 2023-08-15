@@ -1,9 +1,10 @@
 @tool
 extends EditorPlugin
 
-enum {TAB_EDITOR, TAB_OVERVIEW, TAB_MANAGE}
+enum { TAB_EDITOR, TAB_OVERVIEW, TAB_MANAGE }
 
 var main: Control
+var modified: bool
 
 func _has_main_screen() -> bool:
 	return true
@@ -28,3 +29,9 @@ func _make_visible(visible: bool) -> void:
 
 func _save_external_data() -> void:
 	MetSys.map_data.save_data()
+	modified = false
+
+func _get_unsaved_status(for_scene: String) -> String:
+	if modified:
+		return "MetSys map has been modified."
+	return ""

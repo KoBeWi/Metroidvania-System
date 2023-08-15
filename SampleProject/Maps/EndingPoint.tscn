@@ -23,7 +23,7 @@ size = Vector2(112, 32)
 script/source = "extends Area2D
 
 func _ready() -> void:
-	if Game.get_singleton().collectibles = 7:
+	if Game.get_singleton().collectibles == 7:
 		$\"../TileMap\".set_layer_enabled(2, false)
 
 func _on_body_entered(body: Node2D) -> void:

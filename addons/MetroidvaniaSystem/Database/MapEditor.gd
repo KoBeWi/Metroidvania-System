@@ -8,6 +8,7 @@ extends "res://addons/MetroidvaniaSystem/Scripts/MapView.gd"
 
 var mode: int
 var preview_layer := -1
+var modified: bool
 
 func _ready() -> void:
 	if not plugin:

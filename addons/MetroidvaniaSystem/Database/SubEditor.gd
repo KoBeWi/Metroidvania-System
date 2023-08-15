@@ -97,6 +97,9 @@ func get_square_border_idx(rel: Vector2) -> int:
 func get_room_at_cursor() -> MetroidvaniaSystem.MapData.CellData:
 	return MetSys.map_data.get_cell_at(get_coords(get_cursor_pos()))
 
+func mark_modified():
+	editor.plugin.modified = true
+
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_THEME_CHANGED:
 		theme_cache.highlighted_room = get_theme_color(&"highlighted_room", &"MetSys")
