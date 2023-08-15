@@ -37,7 +37,7 @@ func _make_visible(visible: bool) -> void:
 	main.visible = visible
 
 func _save_external_data() -> void:
-	Engine.get_singleton(&"MetSys").map_data.save_data()
+	get_singleton().map_data.save_data()
 	modified = false
 
 func _get_unsaved_status(for_scene: String) -> String:

@@ -233,6 +233,9 @@ var scene_overrides: Dictionary#[String, String]
 
 func load_data():
 	var file := FileAccess.open(MetSys.settings.map_root_folder.path_join("MapData.txt"), FileAccess.READ)
+	if not file:
+		push_warning("Map data file does not exist.")
+		return
 	
 	var data := file.get_as_text().split("\n")
 	var i: int
@@ -295,6 +298,9 @@ func load_data():
 
 func save_data():
 	var file := FileAccess.open(MetSys.settings.map_root_folder.path_join("MapData.txt"), FileAccess.WRITE)
+	if not file:
+		push_error("Could not open file '%s' for writing." % MetSys.settings.map_root_folder.path_join("MapData.txt"))
+		return
 	
 	for group in cell_groups:
 		if cell_groups[group].is_empty():

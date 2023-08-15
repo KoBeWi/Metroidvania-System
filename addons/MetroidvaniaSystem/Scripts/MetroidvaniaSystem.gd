@@ -53,6 +53,7 @@ func _enter_tree() -> void:
 		settings = load(settings_path)
 	else:
 		settings = Settings.new()
+		settings.theme = load("res://addons/MetroidvaniaSystem/Themes/Exquisite/Theme.tres")
 		ResourceSaver.save(settings, settings_path)
 	
 	settings.theme_changed.connect(_update_theme)

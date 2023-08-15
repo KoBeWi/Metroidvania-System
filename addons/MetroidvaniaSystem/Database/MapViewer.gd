@@ -70,7 +70,7 @@ func _on_overlay_draw() -> void:
 	if map_overlay.cursor_inside:
 		map_overlay.draw_rect(Rect2(Vector2(mouse + map_offset) * MetSys.CELL_SIZE, MetSys.CELL_SIZE), theme_cache.cursor_color, false, 2)
 	
-	if get_tree().edited_scene_root.scene_file_path.begins_with(MetSys.settings.map_root_folder):
+	if get_tree().edited_scene_root and get_tree().edited_scene_root.scene_file_path.begins_with(MetSys.settings.map_root_folder):
 		var current_scene := get_tree().edited_scene_root.scene_file_path.trim_prefix(MetSys.settings.map_root_folder)
 		
 		for coords in MetSys.map_data.get_cells_assigned_to(current_scene):
