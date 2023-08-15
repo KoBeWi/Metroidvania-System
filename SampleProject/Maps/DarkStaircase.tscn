@@ -34,9 +34,6 @@ layer_1/tile_data = PackedInt32Array(1572864, 524290, 1, 1638400, 524290, 1, 170
 
 [node name="RoomInstance" parent="." instance=ExtResource("2_h8ruc")]
 
-[node name="Collectible" parent="." instance=ExtResource("3_juw15")]
-position = Vector2(144, 592)
-
 [node name="Outside" type="Node2D" parent="."]
 z_index = 10
 script = SubResource("GDScript_r3e0s")

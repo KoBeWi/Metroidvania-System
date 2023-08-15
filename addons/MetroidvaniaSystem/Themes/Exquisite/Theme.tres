@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="MapTheme" load_steps=15 format=3 uid="uid://bt6s3nd8xo6b"]
+[gd_resource type="Resource" script_class="MapTheme" load_steps=16 format=3 uid="uid://bt6s3nd8xo6b"]
 
 [ext_resource type="Texture2D" uid="uid://6lyqjfj3vsy7" path="res://addons/MetroidvaniaSystem/Themes/Exquisite/BorderPassageHorizontal.png" id="1_hth3y"]
 [ext_resource type="Texture2D" uid="uid://c5wg3is8k5pux" path="res://addons/MetroidvaniaSystem/Themes/Exquisite/BorderWallHorizontal.png" id="2_tawyw"]
@@ -14,6 +14,7 @@
 [ext_resource type="Texture2D" uid="uid://dvp5dov6wsh2m" path="res://addons/MetroidvaniaSystem/Themes/Exquisite/Symbols/Portal.png" id="9_3gfe5"]
 [ext_resource type="Texture2D" uid="uid://bc0o6ot1koste" path="res://addons/MetroidvaniaSystem/Themes/Exquisite/Symbols/Ring.png" id="9_c11cy"]
 [ext_resource type="Texture2D" uid="uid://bcuwpuvv6bpsf" path="res://addons/MetroidvaniaSystem/Themes/Exquisite/Symbols/Collectible.png" id="11_o6efd"]
+[ext_resource type="Texture2D" uid="uid://ljjnp6f81hm" path="res://addons/MetroidvaniaSystem/Themes/Exquisite/Symbols/Collected.png" id="13_hjnmv"]
 
 [resource]
 script = ExtResource("8_gh637")
@@ -28,9 +29,9 @@ unexplored_center_color = Color(0.745098, 0.745098, 0.745098, 1)
 default_border_color = Color(1, 0.741176, 0.580392, 1)
 unexplored_border_color = Color(1, 1, 1, 1)
 room_separator_color = Color(1, 1, 1, 0.13)
-symbols = Array[Texture2D]([ExtResource("9_c11cy"), ExtResource("9_3gfe5"), ExtResource("11_o6efd")])
+symbols = Array[Texture2D]([ExtResource("9_c11cy"), ExtResource("9_3gfe5"), ExtResource("11_o6efd"), ExtResource("13_hjnmv")])
 uncollected_item_symbol = 2
-collected_item_symbol = -1
+collected_item_symbol = 3
 vertical_wall = ExtResource("7_eifkn")
 horizontal_wall = ExtResource("2_tawyw")
 vertical_passage = ExtResource("5_sn1if")
