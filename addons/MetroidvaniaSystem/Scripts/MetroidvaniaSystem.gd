@@ -16,14 +16,6 @@ const CustomElementManager = preload("res://addons/MetroidvaniaSystem/Scripts/Cu
 
 enum { R, D, L, U }
 
-## TODO: do szukania: wymyślić jakoś jak wyświetlać różne ikonki w zależności od danych
-## TODO???: border overlays (w sensie ikonki borderów rysowane bez koloru)
-## TODO???: poczwórne cornery (w sensie w środku pokoju)
-## TODO???: symbol modulate, rotation
-## FIXME???: jak się powiększy pomieszczenie to nie dołącza assigned
-
-@export var exported_settings: Resource
-
 var settings: Settings
 var CELL_SIZE: Vector2
 
@@ -51,7 +43,18 @@ signal map_updated
 signal room_assign_updated
 
 func _enter_tree() -> void:
-	settings = exported_settings
+	var settings_path := "res://MetSysSettings.tres"
+	if ProjectSettings.has_setting("metroidvania_system/settings_file"):
+		settings_path = ProjectSettings.get_setting("metroidvania_system/settings_file")
+	else:
+		ProjectSettings.set_setting("metroidvania_system/settings_file", settings_path)
+	
+	if ResourceLoader.exists(settings_path):
+		settings = load(settings_path)
+	else:
+		settings = Settings.new()
+		ResourceSaver.save(settings, settings_path)
+	
 	settings.theme_changed.connect(_update_theme)
 	_update_theme()
 	

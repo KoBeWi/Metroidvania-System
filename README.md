@@ -1,6 +1,10 @@
 # Metroidvania System
 
-Metroidvania System (abbrevated as MetSys) is a general-purpose toolkit for creating metroidvania games in Godot game engine.
+Metroidvania System (abbrevated as MetSys) is a general-purpose toolkit for creating metroidvania games in Godot game engine. It helps with map design, navigation and presentation, tracking collectibles and provides basic save data functionality related to the system. It's components can be used independently, even for games that aren't metroidvanias.
+
+## Getting started
+
+MetSys is an addon
 
 Features:
 - Map Viewer will highlight the currently opened scene on map
