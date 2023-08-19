@@ -58,6 +58,7 @@ script/source = "@tool
 extends Button
 
 @onready var scan_progress: ProgressBar = %ScanProgress
+@onready var show_on_map: CheckButton = %ShowOnMap
 @onready var summary: VBoxContainer = %Summary
 
 var thread: Thread
@@ -65,6 +66,7 @@ var found_elements: Array[Dictionary]
 
 func _ready() -> void:
 	scan_progress.hide()
+	show_on_map.hide()
 	exit()
 
 func _pressed() -> void:
@@ -104,6 +106,7 @@ func _process(delta: float) -> void:
 	thread = null
 	
 	scan_progress.hide()
+	show_on_map.show()
 	summary.show()
 	%ScanButton.disabled = false
 	
@@ -137,6 +140,7 @@ func scan_maps(element_list: Array[Dictionary]):
 	scan_progress.max_value = maps.size()
 	scan_progress.value = 0
 	scan_progress.show()
+	show_on_map.hide()
 	
 	for map in maps:
 		var lines := FileAccess.open(map, FileAccess.READ).get_as_text().split(\"\\n\")
@@ -208,6 +212,35 @@ func setup_found(data: Dictionary):
 		label.text = \"%s\" % data.map
 	
 	label.mouse_entered.connect(owner._on_item_hover.bind(label))
+
+func toggle_display_on_map(toggled_on: bool) -> void:
+	if toggled_on:
+		owner.extra_draw = draw_collectibles_on_map
+	else:
+		owner.extra_draw = Callable()
+	owner.map_overlay.queue_redraw()
+
+func draw_collectibles_on_map(canvas_item: CanvasItem):
+	for element in found_elements:
+		var icon: Texture2D = element.icon
+		var target_size := icon.get_size() * (minf(MetSys.CELL_SIZE.x, MetSys.CELL_SIZE.y) / minf(icon.get_width(), icon.get_height()) * 0.9)
+		
+		if \"coords\" in element:
+			var coords: Vector3i = element.coords
+			if coords.z != owner.current_layer:
+				continue
+			
+			var pos := Vector2(coords.x + owner.map_offset.x, coords.y + owner.map_offset.y) * MetSys.CELL_SIZE
+			canvas_item.draw_texture_rect(icon, Rect2(pos + MetSys.CELL_SIZE * 0.5 - target_size * 0.5, target_size), false)
+		else:
+			for coords in MetSys.map_data.get_cells_assigned_to(element.map):
+				if coords.z != owner.current_layer:
+					break
+				
+				var pos := Vector2(coords.x + owner.map_offset.x, coords.y + owner.map_offset.y) * MetSys.CELL_SIZE
+				canvas_item.draw_texture_rect(icon, Rect2(pos + MetSys.CELL_SIZE * 0.5 - target_size * 0.5, target_size), false)
+				break
+	
 "
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qbvjg"]
@@ -323,6 +356,12 @@ unique_name_in_owner = true
 visible = false
 layout_mode = 2
 
+[node name="ShowOnMap" type="CheckButton" parent="Panel/ScrollContainer/VBoxContainer/EditControls/Finder"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+text = "Display on Map"
+
 [node name="ScrollContainer" type="ScrollContainer" parent="Panel/ScrollContainer/VBoxContainer/EditControls/Finder"]
 layout_mode = 2
 size_flags_vertical = 3
@@ -369,3 +408,4 @@ vertical_alignment = 1
 
 [connection signal="pressed" from="Panel/ScrollContainer/VBoxContainer/EditControls/Settings/Button" to="Panel/ScrollContainer/VBoxContainer/Modes/Settings" method="add_collectible"]
 [connection signal="pressed" from="Panel/ScrollContainer/VBoxContainer/EditControls/Finder/ScanButton" to="Panel/ScrollContainer/VBoxContainer/Modes/Finder" method="start_scan"]
+[connection signal="toggled" from="Panel/ScrollContainer/VBoxContainer/EditControls/Finder/ShowOnMap" to="Panel/ScrollContainer/VBoxContainer/Modes/Finder" method="toggle_display_on_map"]

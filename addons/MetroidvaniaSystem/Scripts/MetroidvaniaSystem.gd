@@ -6,7 +6,6 @@ const VECTOR3INF = Vector3i(999999, 99999999, 99999999)
 const DEFAULT_SYMBOL = -99
 enum { DISPLAY_CENTER = 1, DISPLAY_OUTLINE = 2, DISPLAY_BORDERS = 4, DISPLAY_SYMBOLS = 8 }
 
-## TODO: show collectibles on map viewer
 ## TODO: jednak get_cell_position() by się przydało (Vector2i -> Vector2)
 
 const Settings = preload("res://addons/MetroidvaniaSystem/Scripts/Settings.gd")

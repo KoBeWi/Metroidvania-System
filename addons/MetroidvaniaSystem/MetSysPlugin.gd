@@ -31,7 +31,7 @@ func _enter_tree() -> void:
 
 func _exit_tree() -> void:
 	main.queue_free()
-	remove_autoload_singleton("MetSys")
+	#remove_autoload_singleton("MetSys")
 
 func _make_visible(visible: bool) -> void:
 	main.visible = visible

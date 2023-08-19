@@ -9,6 +9,7 @@ var theme_cache: Dictionary
 
 var room_under_cursor: MetroidvaniaSystem.MapData.CellData
 var current_hovered_item: Control
+var extra_draw: Callable
 
 func _ready() -> void:
 	if not plugin:
@@ -90,3 +91,7 @@ func _on_overlay_draw() -> void:
 					break
 				
 				map_overlay.draw_rect(Rect2(Vector2(coords.x + map_offset.x, coords.y + map_offset.y) * MetSys.CELL_SIZE, MetSys.CELL_SIZE), theme_cache.marked_collectible_room)
+				break
+	
+	if extra_draw.is_valid():
+		extra_draw.call(map_overlay)
