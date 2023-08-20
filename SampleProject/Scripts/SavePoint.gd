@@ -13,6 +13,7 @@ func on_body_entered(body: Node2D) -> void:
 	save_data.merge(MetSys.get_save_data())
 	
 	FileAccess.open("user://save_data.sav", FileAccess.WRITE).store_var(save_data)
+	Game.get_singleton().reset_map_starting_coords()
 	
 func _draw() -> void:
 	$CollisionShape2D.shape.draw(get_canvas_item(), Color.BLUE)

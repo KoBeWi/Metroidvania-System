@@ -49,7 +49,7 @@ A small, but important sub-system are object IDs. Whether it's a collectible, a 
 - A room is highlighted if it matches the currently opened scene.
 - Define a list of collectibles found in your game, each with a name and an icon.
 - Scan all scenes for collectibles from the list. They can be easily located afterwards and their total count is displayed.
-- TODO --------------
+- The collectibles can be also displayed on the world map, to get full overview.
 
 #### Customize
 
@@ -79,7 +79,8 @@ A small, but important sub-system are object IDs. Whether it's a collectible, a 
 - Register and store persistent objects to track their state using automatically or manually assigned IDs.
 - Automatically mark discovered and acquired collectibles on the map.
 - Request runtime save data in a form of a Dictionary, which contains discovered rooms, stored object IDs and customized cells.
-- Get map coordinates for any object on a scene.
+- Get world map coordinates for any object on a scene.
+- Helper method for custom drawign on map (for anything not supported by other features).
 
 ## Editor guide
 

@@ -12,4 +12,5 @@ func _on_body_entered(body: Node2D) -> void:
 		await tween.finished
 		Game.get_singleton().goto_map(MetSys.get_full_room_path(target_map))
 		get_tree().create_timer(0.05).timeout.connect(body.set.bind(&"event", false))
+		Game.get_singleton().reset_map_starting_coords()
 		

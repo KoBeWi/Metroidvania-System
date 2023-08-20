@@ -6,8 +6,6 @@ const VECTOR3INF = Vector3i(999999, 99999999, 99999999)
 const DEFAULT_SYMBOL = -99
 enum { DISPLAY_CENTER = 1, DISPLAY_OUTLINE = 2, DISPLAY_BORDERS = 4, DISPLAY_SYMBOLS = 8 }
 
-## TODO: jednak get_cell_position() by się przydało (Vector2i -> Vector2)
-
 const Settings = preload("res://addons/MetroidvaniaSystem/Scripts/Settings.gd")
 const SaveData = preload("res://addons/MetroidvaniaSystem/Scripts/SaveData.gd")
 const MapData = preload("res://addons/MetroidvaniaSystem/Scripts/MapData.gd")
@@ -28,18 +26,19 @@ var last_player_position := VECTOR3INF
 var exact_player_position: Vector2
 var current_room: RoomInstance
 
+## FIXME nie zapisują się skille??
 var current_layer: int:
 	set(layer):
 		if layer == current_layer:
 			return
 		
 		current_layer = layer
-		map_updated.emit()
+		cell_changed.emit(Vector3i(last_player_position.x, last_player_position.y, current_layer))
 
 var _meta_list: Array[StringName]
 
-signal room_changed(new_room: Vector2i)
-signal map_changed(new_map: String)
+signal cell_changed(nwe_cell: Vector3i)
+signal room_changed(new_room: String)
 
 signal map_updated
 signal room_assign_updated
@@ -84,7 +83,7 @@ func visit_cell(coords: Vector3i):
 	var previous_map := map_data.get_assigned_scene_at(Vector3i(last_player_position.x, last_player_position.y, current_layer))
 	var new_map := map_data.get_assigned_scene_at(coords)
 	if not new_map.is_empty() and not previous_map.is_empty() and new_map != previous_map:
-		map_changed.emit(new_map)
+		room_changed.emit(new_map)
 
 func is_cell_discovered(coords: Vector3i, include_mapped := true) -> bool:
 	if not save_data:
@@ -113,8 +112,8 @@ func set_player_position(position: Vector2):
 	var player_pos_3d := Vector3i(player_pos.x, player_pos.y, current_layer)
 	if player_pos_3d != last_player_position:
 		visit_cell(Vector3i(player_pos.x, player_pos.y, current_layer))
-		room_changed.emit(player_pos)
 		last_player_position = player_pos_3d
+		cell_changed.emit(player_pos_3d)
 
 func discover_cell_group(group_id: int):
 	assert(group_id in map_data.cell_groups)
@@ -205,6 +204,9 @@ func get_object_coords(object: Object) -> Vector3i:
 		return coords
 	return Vector3i()
 
+func get_cell_position(coords: Vector2i, relative := Vector2(0.5, 0.5), base_offset := Vector2()) -> Vector2:
+	return base_offset + (Vector2(coords) + relative) * MetSys.CELL_SIZE
+
 func get_cell_override(coords: Vector3i, auto_create := true) -> MapData.CellOverride:
 	var cell := map_data.get_cell_at(coords)
 	assert(cell, "Can't override non-existent cell")
@@ -247,6 +249,9 @@ func add_player_location(canvas_item: CanvasItem, offset := Vector2()) -> Node2D
 
 func get_current_coords() -> Vector3i:
 	return Vector3i(last_player_position.x, last_player_position.y, current_layer)
+
+func get_current_flat_coords() -> Vector2i:
+	return Vector2i(last_player_position.x, last_player_position.y)
 
 func get_current_room_instance() -> RoomInstance:
 	if is_instance_valid(current_room):

@@ -9,7 +9,7 @@
 resource_name = "Minimap"
 script/source = "extends Panel
 
-var current_room: Vector2i
+var current_cell: Vector2i
 
 func _ready() -> void:
 	custom_minimum_size = MetSys.CELL_SIZE * 3
@@ -17,21 +17,20 @@ func _ready() -> void:
 	$ColorRect.custom_minimum_size = MetSys.CELL_SIZE
 	$ColorRect.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
 	
-	MetSys.room_changed.connect(on_room_changed)
-	MetSys.map_updated.connect(queue_redraw)
+	MetSys.cell_changed.connect(on_cell_changed)
 
-func on_room_changed(new_room: Vector2i):
-	current_room = new_room
+func on_cell_changed(new_cell: Vector3i):
+	current_cell = Vector2i(new_cell.x, new_cell.y)
 	queue_redraw()
 
 func _draw() -> void:
 	for x in range(-1, 2):
 		for y in range(-1, 2):
-			MetSys.draw_cell(self, Vector2i(x + 1, y + 1), Vector3i(current_room.x + x, current_room.y + y, MetSys.current_layer))
+			MetSys.draw_cell(self, Vector2i(x + 1, y + 1), Vector3i(current_cell.x + x, current_cell.y + y, MetSys.current_layer))
 	
 	if MetSys.settings.theme.use_shared_borders:
 		MetSys.draw_shared_borders()
-	MetSys.draw_custom_elements(self, Rect2i(current_room.x - 1, current_room.y - 1, 3, 3))
+	MetSys.draw_custom_elements(self, Rect2i(current_cell.x - 1, current_cell.y - 1, 3, 3))
 
 func _input(event: InputEvent) -> void:
 	if event is InputEventKey:
@@ -85,17 +84,18 @@ script/source = "extends Panel
 
 var SIZE: Vector2i
 
-var current_room: Vector2i
+var starting_coords: Vector2i
 var offset: Vector2i
 var player_location: Node2D
+var show_delta: bool
 
 func _ready() -> void:
 	SIZE = size / MetSys.CELL_SIZE
 	
+	MetSys.cell_changed.connect(queue_redraw.unbind(1))
+	MetSys.cell_changed.connect(update_offset.unbind(1))
 	MetSys.map_updated.connect(queue_redraw)
-	MetSys.room_changed.connect(queue_redraw.unbind(1))
 	
-	MetSys.map_updated.connect($Percent.update)
 	player_location = MetSys.add_player_location(self)
 
 func _draw() -> void:
@@ -106,6 +106,16 @@ func _draw() -> void:
 	if MetSys.settings.theme.use_shared_borders:
 		MetSys.draw_shared_borders()
 	MetSys.draw_custom_elements(self, Rect2i(-offset.x, -offset.y, SIZE.x, SIZE.y))
+	
+	var coords := MetSys.get_current_flat_coords()
+	if show_delta and coords != starting_coords:
+		var start_pos := MetSys.get_cell_position(starting_coords + offset)
+		var current_pos := MetSys.get_cell_position(coords + offset)
+		draw_line(start_pos, current_pos, Color.WHITE, 2)
+		
+		const arrow_size = 4
+		draw_set_transform(current_pos, start_pos.angle_to_point(current_pos), Vector2.ONE)
+		draw_primitive([Vector2(-arrow_size, -arrow_size), Vector2(arrow_size, 0), Vector2(-arrow_size, arrow_size)], [Color.WHITE], [])
 
 func _input(event: InputEvent) -> void:
 	if event is InputEventKey:
@@ -113,13 +123,26 @@ func _input(event: InputEvent) -> void:
 			if event.keycode == KEY_M:
 				visible = not visible
 				if visible:
-					var coords: Vector3i = MetSys.get_current_coords()
-					offset = -Vector2i(coords.x, coords.y) + SIZE / 2
-					player_location.offset = Vector2(offset) * MetSys.CELL_SIZE
+					update_offset()
+			elif event.keycode == KEY_D:
+				show_delta = not show_delta
+				queue_redraw()
+
+func update_offset():
+	offset = -MetSys.get_current_flat_coords() + SIZE / 2
+	player_location.offset = Vector2(offset) * MetSys.CELL_SIZE
+
+func reset_starting_coords():
+	var coords := MetSys.get_current_flat_coords()
+	starting_coords = Vector2i(coords.x, coords.y)
+	queue_redraw()
 "
 
 [sub_resource type="GDScript" id="GDScript_66suq"]
 script/source = "extends Label
+
+func _ready() -> void:
+	MetSys.map_updated.connect(update)
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_VISIBILITY_CHANGED:
@@ -198,6 +221,16 @@ offset_right = 40.0
 offset_bottom = 23.0
 text = "0%"
 script = SubResource("GDScript_66suq")
+
+[node name="Label" type="Label" parent="UI/FullMap"]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -23.0
+offset_right = 40.0
+grow_vertical = 0
+text = "Press D to toggle delta vector"
 
 [node name="HBoxContainer" type="HBoxContainer" parent="UI"]
 offset_left = 8.0

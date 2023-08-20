@@ -30,8 +30,9 @@ func _ready() -> void:
 	var start := map.get_node_or_null(^"SavePoint")
 	if start:
 		player.position = start.position
-	MetSys.map_changed.connect(on_map_changed, CONNECT_DEFERRED)
+	MetSys.room_changed.connect(on_room_changed, CONNECT_DEFERRED)
 	
+	reset_map_starting_coords.call_deferred()
 	get_script().set_meta(&"singleton", self)
 
 func goto_map(map_path: String):
@@ -54,7 +55,7 @@ func goto_map(map_path: String):
 func _physics_process(delta: float) -> void:
 	MetSys.set_player_position(player.position)
 
-func on_map_changed(target_map: String):
+func on_room_changed(target_map: String):
 	if target_map.is_absolute_path():
 		goto_map(target_map)
 	else:
@@ -70,3 +71,6 @@ func get_save_data() -> Dictionary:
 		"events": events,
 		"current_room": MetSys.get_current_room_name(),
 	}
+
+func reset_map_starting_coords():
+	$UI/FullMap.reset_starting_coords()
