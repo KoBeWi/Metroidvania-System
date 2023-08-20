@@ -82,10 +82,10 @@ func _unhandled_key_input(event: InputEvent) -> void:
 		return
 	
 	if event is InputEventKey and event.pressed:
-		if event.keycode == KEY_Q:
+		if event.physical_keycode == KEY_Q:
 			current_layer_spinbox.value -= 1
 			accept_event()
-		elif event.keycode == KEY_E:
+		elif event.physical_keycode == KEY_E:
 			current_layer_spinbox.value += 1
 			accept_event()
 

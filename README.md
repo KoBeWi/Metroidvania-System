@@ -88,11 +88,44 @@ The plugin screen is called Metroidvania System Database and it has 3 tabs: Map 
 
 ![](Media/EditorDatabase.png)
 
+Map Editor is where you design your world map. Map Viewer provides overview of your map, integration with Godot editor's scenes and collectible statistics. Manage is where you manage themes and run validation.
+
+### Map Editor
+
+Map editor is divided into 2 main sections: map view and sidebar.
+
+![](Media/EditorMapEditor.png)
+
+Map view is where you interact with your map - draw cells, edit borders, symbols etc. Sidebar contains navigation options, various editing modes and, depending on the mode, some options.
+
+#### Navigation
+
+It's important to note that the map is divided into layers. Using them is optional; they can be parallel worlds, interior sub-maps or whatever use-case you come up with. The editor properly displays a single layer, that is all cells, symbols, custom elements etc. Sometimes it's desired to see another layer at the same time, to make parallel rooms and stuff. This is what Preview Layer option is for - it allows to display another layer. It will be translucent and some elements are ommited, but you will see general shape of the layer.
+
+![](Media/EditorPreviewLayer.png)
+
+You can change current layer either on the side-bar or using Q/E keys (physical).
+
+You can pan the map view using Middle Mouse Button.
+
+#### Room Layout mode
+
+This is the most basic mode and allows you to draw rooms. The rooms are drawn using rectangle tool. Use Left Mouse Button to draw a room and Right Mouse Button to erase. If you draw a rectangle that overlaps another room, they will be merged.
+
+![](Media/EditorRoomLayout.gif)
+
 ## Runtime guide
+
+can't have multiple handlers in tree
 
 ## Sample project
 
+Info co gdziej jest w przykładowym projekcie
+
 ## List of included example themes
+
+The addon comes with a few themes *inspired* by various metroidvania games.
+
 ### AoS
 ![](Media/ThemeAoS.png)
 
@@ -125,7 +158,3 @@ Inspired by Voice of Flowers (which is created by me). In fact it uses some of t
 ![](Media/ThemeZeric.png)
 
 Inspired by map guides made by user Zeric ([Example](https://gamefaqs.gamespot.com/gba/589456-castlevania-aria-of-sorrow/map/772-castle-map)). The only theme that uses all possible corner styles for shared borders. Has a few non-collectible symbols and extra border styles. Player locations is a symbol, unexplored rooms display everything.
-
-Info co gdziej jest w przykładowym projekcie
-can't have multiple handlers in tree
-separatory mogą być mniejsze niż środek
