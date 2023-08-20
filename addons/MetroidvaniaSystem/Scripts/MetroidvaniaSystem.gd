@@ -26,7 +26,6 @@ var last_player_position := VECTOR3INF
 var exact_player_position: Vector2
 var current_room: RoomInstance
 
-## FIXME nie zapisują się skille??
 var current_layer: int:
 	set(layer):
 		if layer == current_layer:

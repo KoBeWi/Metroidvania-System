@@ -17,6 +17,7 @@ func _ready() -> void:
 	$ColorRect.custom_minimum_size = MetSys.CELL_SIZE
 	$ColorRect.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
 	
+	MetSys.map_updated.connect(queue_redraw)
 	MetSys.cell_changed.connect(on_cell_changed)
 
 func on_cell_changed(new_cell: Vector3i):

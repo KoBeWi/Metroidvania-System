@@ -23,6 +23,7 @@ func _ready() -> void:
 		generated_rooms.assign(save_data.generated_rooms)
 		events.assign(save_data.events)
 		starting_map = save_data.current_room
+		player.abilities.assign(save_data.abilities)
 	else:
 		MetSys.set_save_data()
 	
@@ -70,6 +71,7 @@ func get_save_data() -> Dictionary:
 		"generated_rooms": generated_rooms,
 		"events": events,
 		"current_room": MetSys.get_current_room_name(),
+		"abilities": player.abilities,
 	}
 
 func reset_map_starting_coords():
