@@ -104,9 +104,7 @@ It's important to note that the map is divided into layers. Using them is option
 
 ![](Media/EditorPreviewLayer.png)
 
-You can change current layer either on the side-bar or using Q/E keys (physical).
-
-You can pan the map view using Middle Mouse Button.
+You can change current layer either on the side-bar or using Q/E keys (physical). You can pan the map view using Middle Mouse Button; the Recenter View button on the sidebar moves you to (0, 0) in case you get lost (the canvas is infinite). In top-left corner of the map view you can see the coordinates of the hovered cell.
 
 #### Room Layout mode
 
@@ -114,47 +112,123 @@ This is the most basic mode and allows you to draw rooms. The rooms are drawn us
 
 ![](Media/EditorRoomLayout.gif)
 
+#### Cell Color mode
+
+This mode allows overriding the default cell color. Use LMB to assign the color, RMB to clear it (so default will be used). You can pick the color using the color picker on the sidebar or by Ctrl+Clicking a colored cell.
+
+[GIF]
+
+#### Cell Symbol mode
+
+Mode that allows drawing cell symbols. A symbol may represent a save point, teleport, treasure, anything. Symbols need to be registered in the [theme] first, then you can select one from the list on the sidebar. Use LMB to draw symbol, RMB to remove. A cell may have only a single symbol.
+
+[GIF]
+
+Symbols are more useful at runtime. They can be assigned dynamically and automatically.
+
+#### Cell Group mode
+
+Assign cell groups here. Select group ID on the sidebar, use LMB to assign selected group and RMB to unassign. Cell groups are a mean to operate on multiple cells at once. The most common use case are maps items that discover a portion of the world map. A call may belong to any number of groups.
+
+[GIF]
+
+#### Border Type mode
+
+This mode allows changing room's borders. There are 2 default border types: wall and passage. More border types can be registered in the [theme]. They can be doors, special bariers or narrow passages, anything. A cell's edge will be highlighted when hovering near it with cursor. Draw borders using LMB, remove (reset to wall) with RMB. You can hold and drag to draw multiple borders; useful when you want to draw them at both sides of an edge.
+
+[GIF]
+
+#### Border Color mode
+
+Border colors can be changed separately from cell color. The process is the same - use picker or Ctrl to select color, use LMB/RMB to draw/remove color.
+
+[GIF]
+
+#### Scene Assign mode
+
+This mode allows to assign scenes to rooms on the map. The scenes are used in editor in the Map Viewer and at runtime for room switching. MetSys will automatically detect enclosed rooms; click one to open a file dialog that lets you choose a scene. Only scenes from the [designated scene directory] can be selected. Rooms with scenes assigned are highlighted and hovering them will display the assigned scene name in top-left.
+
+[GIF]
+
+#### Custom Elements mode
+
+In this mode you can draw custom elements, like special multi-cell markers, elevators, map labels, anything. They need to be first [defined in the main config]. Elements in the editor are drawn as rectangles, but they occupy only their top-left cell. Use LMB to draw an element and RMB on its origin cell to erase it. You can provide a custom String data that will be provided for the draw callback of the element.
+
+[GIF]
+
+### Map Viewer
+
+Like Map Editor, Map Viewer is divided into sidebar and map view. The top of the sidebar has the same navigation controls, minus the other layer preview.
+
+In Map Viewer you can't edit the map, instead it provides a few tools that allows you to navigate your world more easily.
+
+#### Scene integration
+
+The main feature of Map Viewer is that it's integrated with your map scenes. If you assigned scenes to your rooms, you can open tha assigned scene when clicking the room.
+
+[GIF]
+
+This works both ways. When you open a scene in the editor, it will be highlighted in the viewer.
+
+[GIF]
+
+Hovering over a room will display the assigned scene name. If there is no scene assigned, the coordinate label changes color.
+
+#### Collectible Settings
+
+#### Collectible Finder
+
+### Manage
+
+#### General Settings
+
+#### Custom Element Script
+
 ## Runtime guide
 
 can't have multiple handlers in tree
 
-## Sample project
+## Map Theme
 
-Info co gdziej jest w przykładowym projekcie
+### Properties
 
-## List of included example themes
+### List of included example themes
 
 The addon comes with a few themes *inspired* by various metroidvania games.
 
-### AoS
+#### AoS
 ![](Media/ThemeAoS.png)
 
 Inspired by Castlevania: Aria of Sorrow. Simple blue squares with white, shared borders. Notably it displays room connections as colored lines. Has no symbols. Player location is white shrinking dot, unexplored rooms display all connections.
-### BS
+#### BS
 ![](Media/ThemeBS.png)
 
 Inspired by Bloodstained: Ritual of the Night. Rectangular light-blue cells with shared borders and normal room connections (i.e. hole-like). Also no symbols. Player location is a stylized dot showing exact location and passages show normally in unexplored rooms.
-### Exquisite
+#### Exquisite
 ![](Media/ThemeExquisite.png)
 
 Original (and default) theme created for MetSys. Rectangular cells, customizes every available element of the theme to look fancy. Has a few random symbols. Player location is a rotating symbol that shows exact position. Symbols appear in unexplored rooms, but not passages.
-### MF
+#### MF
 ![](Media/ThemeMF.png)
 
 Inspired by Metroid Fusion. Simple square cells defaulting to magenta color and a texture for empty cells. Has a bunch of symbols and extra border styles for doors. Includes symbols for collected and uncollected items. Player location is a blinking square. Symbols appear in unexplored rooms, but not passages.
-### SotN
+#### SotN
 ![](Media/ThemeSotN.png)
 
 Inspired by Castlevania: Symphony of the Night. Basically the same as BS, but with square rooms. Player location similar to AoS, but animated a bit differently.
-### RR
+#### RR
 ![](Media/ThemeRR.png)
 
 Inspired by Rabi-Ribi. Unlike other themes, cell borders are colored. Has many symbols, including various collectibles. Notably, the collectible symbols are displayed only when a collectible is acquired. Player locations is a rounded square with smoothed blinking. Unexplored rooms display everything normally.
-### VoF
+#### VoF
 ![](Media/ThemeVoF.png)
 
 Inspired by Voice of Flowers (which is created by me). In fact it uses some of the old sprites from the game. Square cells with visible separators and a texture for empty space. Has a bunch of various symbols of mixed quality and an extra border style for abyss. No symbols for collectibles. Player location is a rotating head. Unexplored rooms don't display anything, just cell color without any borders.
-### Zeric
+#### Zeric
 ![](Media/ThemeZeric.png)
 
 Inspired by map guides made by user Zeric ([Example](https://gamefaqs.gamespot.com/gba/589456-castlevania-aria-of-sorrow/map/772-castle-map)). The only theme that uses all possible corner styles for shared borders. Has a few non-collectible symbols and extra border styles. Player locations is a symbol, unexplored rooms display everything.
+
+## Sample project
+
+Info co gdziej jest w przykładowym projekcie

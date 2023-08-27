@@ -331,8 +331,9 @@ func _editor_input(event: InputEvent):
 				mark_modified()
 				editor.map_overlay.queue_redraw()
 				
-				if highlighted_border != -1 and event.button_mask & MOUSE_BUTTON_MASK_LEFT:
-					cell_data.borders[highlighted_border] = border_group.get_pressed_button().get_index()
+				if highlighted_border != -1 and event.button_mask & (MOUSE_BUTTON_MASK_LEFT | MOUSE_BUTTON_MASK_RIGHT):
+					var rmb = bool(event.button_mask & MOUSE_BUTTON_MASK_RIGHT)
+					cell_data.borders[highlighted_border] = 0 if rmb else border_group.get_pressed_button().get_index()
 					editor.map.queue_redraw()
 		else:
 			highlighted_border = -1
@@ -342,9 +343,9 @@ func _editor_input(event: InputEvent):
 		if not cell_data or highlighted_border == -1:
 			return
 		
-		if event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+		if event.pressed and (event.button_index == MOUSE_BUTTON_LEFT or event.button_index == MOUSE_BUTTON_RIGHT):
 			var borders: Array[int] = cell_data.borders
-			cell_data.borders[highlighted_border] = border_group.get_pressed_button().get_index()
+			cell_data.borders[highlighted_border] = 0 if event.button_index == MOUSE_BUTTON_RIGHT else border_group.get_pressed_button().get_index()
 			mark_modified()
 			editor.map.queue_redraw()
 
@@ -470,6 +471,7 @@ func _editor_draw(map_overlay: CanvasItem):
 	super(map_overlay)
 
 	for coords in MetSys.map_data.assigned_scenes.values():
+		## tu może być errror
 		if coords[0].z != editor.current_layer:
 			continue
 		
@@ -766,6 +768,11 @@ horizontal_alignment = 1
 unique_name_in_owner = true
 layout_mode = 2
 
+[node name="Label2" type="Label" parent="PanelContainer/ScrollContainer/VBoxContainer/EditControls/Groups"]
+layout_mode = 2
+text = "Shift+Click to set for the whole room"
+autowrap_mode = 2
+
 [node name="Colors" type="VBoxContainer" parent="PanelContainer/ScrollContainer/VBoxContainer/EditControls"]
 unique_name_in_owner = true
 visible = false
@@ -779,7 +786,8 @@ edit_alpha = false
 
 [node name="Label" type="Label" parent="PanelContainer/ScrollContainer/VBoxContainer/EditControls/Colors"]
 layout_mode = 2
-text = "Ctrl+Click a cell to pick color"
+text = "Ctrl+Click a cell to pick color
+Shift+Click to set for the whole room"
 autowrap_mode = 2
 
 [node name="CustomElements" type="VBoxContainer" parent="PanelContainer/ScrollContainer/VBoxContainer/EditControls"]

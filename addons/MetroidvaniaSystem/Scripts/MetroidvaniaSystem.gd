@@ -14,6 +14,9 @@ const RoomInstance = preload("res://addons/MetroidvaniaSystem/Scripts/RoomInstan
 const RoomDrawer = preload("res://addons/MetroidvaniaSystem/Scripts/RoomDrawer.gd")
 const CustomElementManager = preload("res://addons/MetroidvaniaSystem/Scripts/CustomElementManager.gd")
 
+## TODO: shift + click ustawianie koloru/grupy dla całego pokoju
+## TODO: ##
+
 enum { R, D, L, U }
 
 var settings: Settings
