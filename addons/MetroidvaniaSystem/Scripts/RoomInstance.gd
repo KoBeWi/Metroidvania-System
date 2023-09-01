@@ -1,5 +1,6 @@
 @tool
 extends Node2D
+## TODO: chyba powinno się usuwać (MetSys.current_room = null
 
 var GRID_COLOR: Color
 var GRID_PASSAGE_COLOR: Color

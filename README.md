@@ -125,6 +125,7 @@ Mode that allows drawing cell symbols. A symbol may represent a save point, tele
 [GIF]
 
 Symbols are more useful at runtime. They can be assigned dynamically and automatically.
+If you added a new symbol and it's missing from the list, you can use Force Refresh Elements option in [Manage tab](#manage).
 
 #### Cell Group mode
 
@@ -135,6 +136,7 @@ Assign cell groups here. Select group ID on the sidebar, use LMB to assign selec
 #### Border Type mode
 
 This mode allows changing room's borders. There are 2 default border types: wall and passage. More border types can be registered in the [theme]. They can be doors, special bariers or narrow passages, anything. A cell's edge will be highlighted when hovering near it with cursor. Draw borders using LMB, remove (reset to wall) with RMB. You can hold and drag to draw multiple borders; useful when you want to draw them at both sides of an edge.
+If you added a new border type and it's missing from the list, you can use Force Refresh Elements option in [Manage tab](#manage).
 
 [GIF]
 
@@ -153,6 +155,7 @@ This mode allows to assign scenes to rooms on the map. The scenes are used in ed
 #### Custom Elements mode
 
 In this mode you can draw custom elements, like special multi-cell markers, elevators, map labels, anything. They need to be first [defined in the main config]. Elements in the editor are drawn as rectangles, but they occupy only their top-left cell. Use LMB to draw an element and RMB on its origin cell to erase it. You can provide a custom String data that will be provided for the draw callback of the element.
+If you added a new custom elemnet and it's missing from the list, you can use Force Refresh Elements option in [Manage tab](#manage).
 
 [GIF]
 
@@ -174,13 +177,37 @@ This works both ways. When you open a scene in the editor, it will be highlighte
 
 Hovering over a room will display the assigned scene name. If there is no scene assigned, the coordinate label changes color.
 
-#### Collectible Settings
+#### Collectible statistics
 
-#### Collectible Finder
+This feature allows you to locate and display all registered collectibles that you placed on your scenes. The first step is setting up your collectibles, which is done in the Collectible Settings tab.
+
+[screenshot]
+
+Press + button to add a collectible, then specify its name and icon. Name **must** match the name of the node in collectible's scene (or at least its prefix; nodes named Collectible1 and Collectible2 will be matched "Collectible"). The icon is just a representation of the collectible for the purposes of finding.
+
+Once your collectibles are set up, go to the Collectible Finder tab and press the Scan Maps button. MetSys will perform a scan of all scenes in your maps directory. Once complete, you will see a list of all found collectibles and their coordinates. Hovering on a coordinate on the list will highlight it on the map (even if it's on another layer). You can also enable Display on Map to show all the collectibles as icons on the map.
+
+[GIF]
 
 ### Manage
 
+Unlike the other 2 tabs, Manage has no map view. Instead is's a simple list of options.
+
+[screenshot]
+
 #### General Settings
+
+Selecting General Settings option will open the MetSys settings file in the inspector. By default the file is located at `res://MetSysSettings.tres`, but you can move it by modifying `metroidvania_system/settings_file` project setting.
+
+General Settings are a configuration file for MetSys plugin in your project.
+- Theme: the map theme of your project. It determines how map cells are drawn. See [Map Theme section](#map-theme) for more details.
+- Map Root Folder: the location of your world's scenes (see [scenes]). All scenes you want to assign to your rooms need to be inside this directory or its subdirectories.
+- In Game Cell Size: The size of one cell of a room as it appears in game (not on map). exact position, camera 
+- Custom Element Script: 
+
+#### Validation
+
+#### Editor Theme
 
 #### Custom Element Script
 

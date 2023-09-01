@@ -16,6 +16,7 @@ const CustomElementManager = preload("res://addons/MetroidvaniaSystem/Scripts/Cu
 
 ## TODO: shift + click ustawianie koloru/grupy dla całego pokoju
 ## TODO: ##
+## TODO: _validate_property() żeby ukryć collectible_list
 
 enum { R, D, L, U }
 
