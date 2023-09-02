@@ -15,6 +15,7 @@ The addon comes with a sample project that shows example integration of the syst
 This section explains the terminology used in this README and in the addon itself.
 - Cell: The smallest unit of the game's world, represented by a square or rectangle on the game's map.
 - Map: All of the placed cells, composing the game's world.
+- Coords: Position of a Cell on the map, expressed as Vector3i(x, y, layer). In some cases layer is omitted.
 - Border: Edge of a cell. There are 2 types of borders:
   - Wall: Solid border with no holes.
   - Passage: A border with hole or another feature that signifies passage (e.g. a door).
@@ -202,16 +203,73 @@ Selecting General Settings option will open the MetSys settings file in the insp
 General Settings are a configuration file for MetSys plugin in your project.
 - Theme: the map theme of your project. It determines how map cells are drawn. See [Map Theme section](#map-theme) for more details.
 - Map Root Folder: the location of your world's scenes (see [scenes]). All scenes you want to assign to your rooms need to be inside this directory or its subdirectories.
-- In Game Cell Size: The size of one cell of a room as it appears in game (not on map). exact position, camera 
-- Custom Element Script: 
+- In Game Cell Size: The size of one cell of a room as it appears in game (not on map). It affects how [exact player position] is display on map and also affects camera bounds (if adjusted).
+- Custom Element Script: script defining available custom elements. See [Custom Element Script section](#custom-element-script) for more details.
 
 #### Validation
 
-#### Editor Theme
+There are two kinds of validation: map data validation and map theme validation. Validation checks if the validated data is correct, to prevent errors and crashes. If it results in errors, you need to fix them, otherwise your map/theme won't work correctly. Warnings can be ignored.
+
+Map data validation checks the integrity of your world. It most importantly checks for invalid data (symbols and borders) that would make your project work incorrectly, but also gives some potential warnings. The checks are as follows (*italic* are warnings):
+- Invalid symbol: Cell's symbol index does not exist on the symbol list. It will result in an error when drawing.
+- Invalid border: Cell's border style does not exist on the border list. It will result in an error when drawing.
+- *No assigned map:* Room has no assigned map. Has no adverse effects, other than not emitting a signal when entering the room area.
+- *Passage to nowhere:* Room has a passage border with no adjacent room. Since all custom border styles are considered passage, this is prone to false-positives.
+- *Potentially unused symbol:* A symbol is not placed anywhere nor used as default for collectibles. This does not detect symbols assigned from code.
+
+Theme data validation ensures that the map theme you are using is correctly defined. This part is much more prone to error that will break your map display, so it's important to fix all found errors. Other than validation, this option will also display some inferred info about the theme, i.e. cell size and shape (square/rectangle). The checks are as follows (*italic* are warnings):
+- Missing center texture: The theme has no center texture assigned. It's the most important piece, so the validation stops if this error is found.
+- Size mismatch between empty texture and center texture: Empty texture and center texture must match in size, otherwise they wouldn't display correctly. Can only appear if empty texture is defined.
+- Number of horizontal and vertical borders do not match: In rectangle shape theme, you need to provide separate borders for horizontal and vertical edges.
+- Border has invalid height: all border sprites must be oriented vertically, including horizontal borders. It makes the rotation code simpler.
+- Border is empty: Border array has null value or invalid texture.
+- Player location scene is not a Node2D: The player location needs to be Node2D to display on map.
+- (Un)collected item symbol index is greater than number of available symbols: the default collectible symbols need to be within the defined symbols range.
+- *Symbol is bigger than center texture*: Not critical, but it makes the symbol stick outside the cell.
+- *Texture is is wider than half of the center texture*: This applies to borders. They should be thing horizontally, otherwise they won't display properly.
+- *Missing player location scene*: If player location scene is missing, the system for drawing player location on map can't be used.
+
+#### Database Theme
+
+The theme used for MetSys database. This defines colors used in various areas. You can modify them if they happen to be unreadable when used with your map theme. Here are the colors available for customization:
+- Active Custom Element - In Custom Elements editor mode, this color is used for elements on map that match the currently selected element type on the sidebar.
+- Assigned Scene - Room highlight in Scene Assign editor mode.
+- Border Highlight - Border hover highlight in border editing modes.
+- Current Scene Room - Highlight color for the Map Viewer room matched with the currently opened editor scene.
+- Cursor Color - Color of the editor cell cursor (square/rectangle).
+- Cursor Color Erase - Same as above, but used when erasing cells in Room Layout editor mode.
+- Custom Element Marker - Color of the marker denoting origin point of an element in Custom Elements editor mode.
+- Foreign Marked Collectible Room - Highlight color for the cell when hovering over a collectible in Collectible Finder list, when the collectible is on a different layer than currently selected.
+- Group Color - Highlight color for cells in Cell Group editor mode.
+- Highlighted Room - Highlight color for the hovered room in Scene Assign editor mode.
+- Inactive Custom Element - Opposite of the active element, i.e. elements with different type than selected.
+- Marked Collectible Room - Same as marked collectible above, but used for the same layer.
+- Room Assigned - Font color when hovering a room with scene assigned in Map Viewer.
+- Room Not Assigned - Same as above, but room has no scene.
+- Scene Cell Border - Used for marking room edges when a scene with room assigned is opened in the 2D editor.
+- Scene Room Exit - Same as above, but for passages.
 
 #### Custom Element Script
 
+Custom Element script must be a `@tool` script that extends `MetroidvaniaSystem.CustomElementManager`. The elements are registered in the constructor (`_init()`) using `register_element(element_name: String, callback: Callable)` (e.g. `register_element("label", draw_label)`). Once you define the list of elements and add the script in [General Settings](#general-settings) (make sure to use Force Refresh Elements option or restart the editor), you can place the elements in Custom [Elements mode in the map editor](#custom-elements-mode).
+
+For elements to draw on in-game map, you need to call `MetSys.draw_custom_elements()`, which will automatically draw relevant elements using their callbacks (note that this only applies to your in-game implementation, as MetSys Database calls this method already). The callback is as follows: `func function_name(canvas_item: CanvasItem, coords: Vector3i, pos: Vector2, size: Vector2, data: String)`.
+- `function_name`: you need to provide this name to `register_callback()`.
+- `canvas_item`: The CanvasItem node that will draw the element.
+- `coords`: Cell coordinates on the world map.
+- `pos`: Position of the top-left corner of the element, in pixels.
+- `size`: Size of the element's rectangle, in pixels.
+- `data`: The data string provided when creating the element.
+
+Using these arguments, you need to draw your element using any available custom drawing method. For example:
+```GDScript
+canvas_item.draw_texture(preload("res://icon.svg"), pos)
+```
+Note that all elements within the visible area are drawn regardless if they are discovered or not. You need to manually check if the cell occupied by element (or any related cell you want to consider) was discovered, using `MetSys.is_cell_discovered(coords)`.
+
 ## Runtime guide
+
+This section provides information about usage of MetSys features at runtime, i.e. in your game itself.
 
 can't have multiple handlers in tree
 
