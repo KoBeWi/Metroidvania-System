@@ -1,6 +1,5 @@
 @tool
 extends Node2D
-## TODO: chyba powinno się usuwać (MetSys.current_room = null
 
 var GRID_COLOR: Color
 var GRID_PASSAGE_COLOR: Color
@@ -14,6 +13,9 @@ var max_cell := Vector2i(-999999, -999999)
 var layer: int
 
 func _enter_tree() -> void:
+	if not Engine.is_editor_hint():
+		MetSys.current_room = self
+	
 	if initialized:
 		return
 	initialized = true
@@ -23,10 +25,12 @@ func _enter_tree() -> void:
 		var theme: Theme = load("res://addons/MetroidvaniaSystem/Database/DatabaseTheme.tres")
 		GRID_COLOR = theme.get_color(&"scene_cell_border", &"MetSys")
 		GRID_PASSAGE_COLOR = theme.get_color(&"scene_room_exit", &"MetSys")
-	else:
-		MetSys.current_room = self
 	
 	_update_assigned_scene()
+
+func _exit_tree() -> void:
+	if MetSys.current_room == self:
+		MetSys.current_room = null
 
 func _update_assigned_scene():
 	queue_redraw()

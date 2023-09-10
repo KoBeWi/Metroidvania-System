@@ -271,7 +271,64 @@ Note that all elements within the visible area are drawn regardless if they are 
 
 This section provides information about usage of MetSys features at runtime, i.e. in your game itself.
 
-can't have multiple handlers in tree
+### Room Instance
+
+The base bridge between MetSys and your game is RoomInstance node. You can find it under Nodes in MetroidvaniaSystem addon folder. It provides two-fold functionality: allows to identify the current room when it's visited in game and draws room boundaries in the editor. The node should be located at (0, 0), but it doesn't need to be under scene root. You should add RoomInstance to every room with assigned scene.
+
+![](Media/EditorRoomInstance.png)
+
+The white lines are borders of map cells, while the magenta lines are mark connections to adjacent rooms. You can configure the colors in [Database Theme](#database-theme). Size of the cell is defined by In Game Cell Size of [General Settings](#general-settings).
+
+The RoomInstance node can be accessed using `MetSys.current_room`. It grants access to a few useful methods:
+- `adjust_camera_limits(camera: Camera2D)`: Adjusts limit properties of the given camera to be within the room's boundaries.
+- `get_size() -> Vector2`: Returns the size size of the room's bounding rectangle.
+- `get_local_cells() -> Array[Vector2i]`: Returns the cells occupied by the room, in local coordinates, i.e. (0, 0) is the top-left coordinate. This is useful to determine shape of irregular (not-rectangle) rooms to draw stuff outside the map etc.
+- `room_name`: This property holds the name of the room (i.e. file name of the scene).
+
+Note that since RoomInstance is basically a singleton within MetSys, only one can be functional inside scene tree. When RoomInstance enters tree, it will assign itself to MetSys and automatically remove itself when left. If you happen to have multiple room instances (this should be avoided), the newest one will have priority.
+
+### Drawing the map
+
+Another important feature is drawing the world map. Usually the map is drawn in form of minimap and a full map on a separate screen. The drawing methods are basic enough to cover any use-case.
+The basic way to draw map is using `MetSys.draw_cell()` method. It takes several arguments:
+- `canvas_item`: The CanvasItem that will do the drawing (e.g. your minimap panel).
+- `offset`: Drawing offset of the cell, in map coordinates. E.g. (1, 1) will offset cell the cell by `MetSyS.CELL_SIZE`.
+- `coords`: Map coordinates to draw. Usually `offset` and `coords` need to be somewhat in sync.
+- `skip_empty` (optional): If `true`, empty cell texture as defined in [Map Theme](#map-theme) will not be drawn. Has no effect if empty texture is not set.
+- `use_save_data` (optional): If `true`, runtime save data will be used to draw the rooms (i.e. discovered cells, overrides etc.).
+
+Example call for drawing a 3x3 minimap would be:
+```GDScript
+for x in range(-1, 2):
+	for y in range(-1, 2):
+		MetSys.draw_cell(self, Vector2i(x + 1, y + 1), Vector3i(current_cell.x + x, current_cell.y + y, MetSys.current_layer))
+```
+We iterate `x` on range (-1, 1) inclusive and `y` on (-1, 1). We use `x` and `y` for the offset, but since they can be negative, we need to add `1` (otherwise the offset would be negative and the cells would be drawn outside beyond the top-left corner of our CanvasItem).
+The `coords` are `Vector3i`, because it's base coords + layer. The `current_cell` can be obtained in multiple ways. The easiest one is using `MetSys.get_current_coords()`, which returns the whole `Vector3i`. Alternative is connecting to `MetSys.cell_changed` signal (see the [section below](#tracking-player-position)). Then we add `x` and `y` to the vector to draw adjacent cells.
+
+![](Media/GameMinimap.png)
+
+If your map theme has enabled shared borders, you need to call `MetSys.draw_shared_borders()` after you finish drawing your map. And if you use custom elements, you need to use `MetSys.draw_custom_elements()`, which also takes a few arguments:
+- `canvas_item`: The CanvasItem that will draw the elements (can be the same as before).
+- `rect`: The coordinate range to draw the elements. In case of the 3x3 minimap it would be `Rect2i(current_coords - (1, 1), (3, 3))`.
+- `drawing_offset` (optional): Offset of the elements, in map coordinates.
+- `layer` (optional): The layer of elements to draw. Defaults to the current layer.
+
+Drawing map is a complex operation that takes multiple considerations. But it will draw cells accurately, as defined in the theme, while taking in consideration all symbols and whether the cells are discovered or not. You can draw any cells of your world anywhere on the screen, as the system is very flexible. Note however that it's expensive, so make sure that your map does not redraw unnecessarily (especially when using shared borders).
+
+### Tracking player position
+
+### Markers and discovering
+
+### Storable objects
+
+
+### Cell overrides
+
+### Map Builder
+
+### Saving and loading MetSys runtime data
+
 
 ## Map Theme
 

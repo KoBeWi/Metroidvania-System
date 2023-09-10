@@ -281,4 +281,4 @@ func _add_meta(meta: StringName, value: Variant):
 func _cleanup_meta():
 	for meta in _meta_list:
 		remove_meta(meta)
-	return
+	_meta_list.clear()
