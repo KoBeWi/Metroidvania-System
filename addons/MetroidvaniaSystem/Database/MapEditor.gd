@@ -18,6 +18,7 @@ func _ready() -> void:
 	mode_group.pressed.connect(mode_pressed)
 	get_current_sub_editor()._editor_enter()
 	MetSys.settings.theme_changed.connect(grid.queue_redraw)
+	map_overlay.mouse_entered.connect(map_overlay.grab_focus)
 
 func mode_pressed(button: BaseButton):
 	get_current_sub_editor()._editor_exit()

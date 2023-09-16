@@ -115,7 +115,7 @@ This is the most basic mode and allows you to draw rooms. The rooms are drawn us
 
 #### Cell Color mode
 
-This mode allows overriding the default cell color. Use LMB to assign the color, RMB to clear it (so default will be used). You can pick the color using the color picker on the sidebar or by Ctrl+Clicking a colored cell.
+This mode allows overriding the default cell color. Use LMB to assign the color, RMB to clear it (so default will be used). You can pick the color using the color picker on the sidebar or by Ctrl+Clicking a colored cell. You can also color the whole room at once by holding Shift.
 
 [GIF]
 
@@ -241,7 +241,7 @@ The theme used for MetSys database. This defines colors used in various areas. Y
 - Custom Element Marker - Color of the marker denoting origin point of an element in Custom Elements editor mode.
 - Foreign Marked Collectible Room - Highlight color for the cell when hovering over a collectible in Collectible Finder list, when the collectible is on a different layer than currently selected.
 - Group Color - Highlight color for cells in Cell Group editor mode.
-- Highlighted Room - Highlight color for the hovered room in Scene Assign editor mode.
+- Highlighted Room - Highlight color for the hovered room in Scene Assign editor mode and other modes that support full room operations.
 - Inactive Custom Element - Opposite of the active element, i.e. elements with different type than selected.
 - Marked Collectible Room - Same as marked collectible above, but used for the same layer.
 - Room Assigned - Font color when hovering a room with scene assigned in Map Viewer.
@@ -318,10 +318,27 @@ Drawing map is a complex operation that takes multiple considerations. But it wi
 
 ### Tracking player position
 
-### Markers and discovering
+Tracking player position allows for automatically discovering cells and changing scenes when player goes out of bounds. Tracking position is performed by using `MetSys.set_player_position()`. The method takes a position relative to the current scene's origin (i.e. top-left corner of the room). Unless you are moving the map's root node, you can just use player's `global_position`. The method has to be called each frame, after the player has done moving. Example:
+```GDScript
+... some input
+move_and_slide()
+MetSys.set_player_position(global_position)
+```
+MetSys will automatically detect if the current map cell is different and emit `cell_changed` signal, which you can use to update your minimap. When the position is in a different room, MetSys will emit `room_changed` signal that also contains the name of the new scene that you should load.
+
+You can display player's location on your map by using `MetSys.add_player_location()`. This method should be called once per map CanvasItem. It will add your player location scene defined in the [map theme](#map-theme) as child of that node and automatically move it when visible, based on your supplied player position. The method also optionally takes an offset, in case your map CanvasItem has some margins.
+
+### Markers
+
+A cell may have assigned any number of markers, out of the markers defined in map theme (each marker can be assigned only once). Markers assigned at runtime will override the marker assigned in Map Editor. They are stored as bitmask, which means you can define and assign only 63 markers. If multiple markers are assigned, the one being last on the theme list will be used. Markers are usually assigned based on events, manually by players on map screen, or automatically via [storable objects](#storable-objects). Assign a marker using `MetSys.add_custom_marker()`, remove it using `MetSys.remove_custom_marker()`.
+
+### Discovering
+
+Cells on the map can be in 3 states: undiscovered, discovered and visited. Undiscovered rooms don't draw at all, visited rooms draw with the default style. Discovered rooms draw with an alternate style and rules that can be specified in the [map theme](#map_theme). You can manually discover cells using `MetSys.discover_cell()` or you can discover a group of cells (e.g. when picking up a map item) by using `MetSYs.discover_cell_group()`. Cell groups can be defined in the [editor](#cell-group-mode).
 
 ### Storable objects
 
+Storable objects are anything that you'd want its state to be stored, e.g. switches, breakable walls, collectibles.
 
 ### Cell overrides
 

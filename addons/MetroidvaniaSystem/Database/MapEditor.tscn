@@ -104,9 +104,13 @@ func close_border(pos: Vector2i, border: int):
 "
 
 [sub_resource type="GDScript" id="GDScript_tlx5u"]
-resource_name = "RoomColor"
+resource_name = "CellColor"
 script/source = "@tool
 extends \"res://addons/MetroidvaniaSystem/Database/SubEditor.gd\"
+
+enum { MODE_DRAW, MODE_ERASE, MODE_PICK }
+
+var whole_room: bool
 
 func _editor_enter():
 	%Colors.show()
@@ -117,40 +121,69 @@ func _editor_exit():
 func _editor_input(event: InputEvent):
 	if event is InputEventMouseButton:
 		if event.pressed:
-			var cell_data := get_room_at_cursor()
-			if not cell_data:
-				return
-			
 			if event.button_index == MOUSE_BUTTON_LEFT:
-				if event.is_command_or_control_pressed():
-					if cell_data.color.a > 0:
-						%CurrentColor.color = cell_data.color
+				if not whole_room and event.is_command_or_control_pressed():
+					paint(MODE_PICK)
 				else:
-					cell_data.color = %CurrentColor.color
-					mark_modified()
-					editor.map.queue_redraw()
+					paint(MODE_DRAW)
 			elif event.button_index == MOUSE_BUTTON_RIGHT:
-				cell_data.color = Color.TRANSPARENT
-				mark_modified()
-				editor.map.queue_redraw()
+				paint(MODE_ERASE)
 	elif event is InputEventMouseMotion:
+		if whole_room:
+			update_hovered_room()
+		
 		if event.button_mask & (MOUSE_BUTTON_MASK_LEFT | MOUSE_BUTTON_MASK_RIGHT):
-			var cell_data := get_room_at_cursor()
-			if not cell_data:
-				return
+			var erase: bool = event.button_mask & MOUSE_BUTTON_MASK_RIGHT
+			paint(MODE_ERASE if erase else MODE_DRAW)
+	elif event is InputEventKey:
+		if not event.echo and event.keycode == KEY_SHIFT:
+			whole_room = event.pressed
+			use_cursor = not whole_room
+			if whole_room:
+				update_hovered_room()
+			else:
+				highlighted_room.clear()
 			
+			editor.map_overlay.queue_redraw()
+
+func update_hovered_room():
+	var hr := highlighted_room
+	highlighted_room = MetSys.map_data.get_whole_room(get_coords(get_cursor_pos()))
+	if highlighted_room != hr:
+		editor.map_overlay.queue_redraw()
+
+func paint(mode: int):
+	var coords_to_modify: Array[Vector3i]
+	if whole_room:
+		coords_to_modify = highlighted_room
+	else:
+		coords_to_modify.assign([get_coords(get_cursor_pos())])
+	
+	var modified: bool
+	for coords in coords_to_modify:
+		var cell_data := MetSys.map_data.get_cell_at(coords)
+		if not cell_data:
+			continue
+		
+		if mode == MODE_PICK:
+			if cell_data.color.a > 0:
+				%CurrentColor.color = cell_data.color
+		else:
 			var target_color := Color.TRANSPARENT
-			if event.button_mask & MOUSE_BUTTON_MASK_LEFT:
+			if mode == MODE_DRAW:
 				target_color = %CurrentColor.color
 			
 			if cell_data.color != target_color:
 				cell_data.color = target_color
-				mark_modified()
-				editor.map.queue_redraw()
+				modified = true
+	
+	if modified:
+		mark_modified()
+		editor.map.queue_redraw()
 "
 
 [sub_resource type="GDScript" id="GDScript_ujwfx"]
-resource_name = "RoomSymbol"
+resource_name = "CellSymbol"
 script/source = "@tool
 extends \"res://addons/MetroidvaniaSystem/Database/SubEditor.gd\"
 
@@ -205,7 +238,7 @@ func add_symbol(texture: Texture2D):
 "
 
 [sub_resource type="GDScript" id="GDScript_a80ln"]
-resource_name = "RoomGroup"
+resource_name = "CellGroup"
 script/source = "@tool
 extends \"res://addons/MetroidvaniaSystem/Database/SubEditor.gd\"
 
@@ -822,6 +855,7 @@ texture_filter = 1
 clip_contents = true
 layout_mode = 2
 size_flags_horizontal = 3
+focus_mode = 2
 script = ExtResource("2_w1wnt")
 
 [node name="ColorRect" type="ColorRect" parent="MapOverlay"]

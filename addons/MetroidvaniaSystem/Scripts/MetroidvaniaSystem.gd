@@ -14,9 +14,10 @@ const RoomInstance = preload("res://addons/MetroidvaniaSystem/Scripts/RoomInstan
 const RoomDrawer = preload("res://addons/MetroidvaniaSystem/Scripts/RoomDrawer.gd")
 const CustomElementManager = preload("res://addons/MetroidvaniaSystem/Scripts/CustomElementManager.gd")
 
-## TODO: shift + click ustawianie koloru/grupy dla całego pokoju
+## TODO: shift + click ustawianie koloru/grupy dla całego pokoju (CellGroup, BorderColor)
 ## TODO: ##
 ## TODO: _validate_property() żeby ukryć collectible_list
+## FIXME: nieścisłość z explore_cell()
 
 enum { R, D, L, U }
 
@@ -117,6 +118,10 @@ func set_player_position(position: Vector2):
 		visit_cell(Vector3i(player_pos.x, player_pos.y, current_layer))
 		last_player_position = player_pos_3d
 		cell_changed.emit(player_pos_3d)
+
+func discover_cell(coords: Vector3i):
+	save_data.discover_cell(coords)
+	map_updated.emit()
 
 func discover_cell_group(group_id: int):
 	assert(group_id in map_data.cell_groups)
