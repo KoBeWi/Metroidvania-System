@@ -228,7 +228,7 @@ class CellOverride extends CellData:
 		return str(get_string(), "|", coords.x, ",", coords.y, ",", coords.z, "|", custom_cell_coords != MetroidvaniaSystem.VECTOR3INF)
 	
 	func _queue_commit():
-		if commit_queued:
+		if commit_queued or custom_cell_coords != MetroidvaniaSystem.VECTOR3INF:
 			return
 		commit_queued = true
 		_commit.call_deferred()

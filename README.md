@@ -324,7 +324,7 @@ Tracking player position allows for automatically discovering cells and changing
 move_and_slide()
 MetSys.set_player_position(global_position)
 ```
-MetSys will automatically detect if the current map cell is different and emit `cell_changed` signal, which you can use to update your minimap. When the position is in a different room, MetSys will emit `room_changed` signal that also contains the name of the new scene that you should load.
+MetSys will automatically detect if the current map cell is different and emit `cell_changed` signal, which you can use to update your minimap. When the position is in a different room, MetSys will emit `room_changed` signal that also contains the name of the new scene that you should load. The scene name is not a full path; you can get the full path by using `MetSys.get_full_room_path()` on its name.
 
 You can display player's location on your map by using `MetSys.add_player_location()`. This method should be called once per map CanvasItem. It will add your player location scene defined in the [map theme](#map-theme) as child of that node and automatically move it when visible, based on your supplied player position. The method also optionally takes an offset, in case your map CanvasItem has some margins.
 
@@ -377,16 +377,28 @@ To override a cell, you can call `MetSys.get_cell_override()`. The method takes 
 - `set_border_color(idx, value)`: Sets the border color.
 - `set_color(value)`: Sets the cell's center color.
 - `set_symbol(value)`: Sets the cell's symbol.
-- `set_assigned_scene(value)`: Sets the cell's assigned scene. The scene should be full path (with extension) to the scen, without the root folder prefix. E.g. if your `map_root_folder` is `res://Maps` and your map is in `res://Maps/DarkWorld/Desert1.tscn`, you should assign `DarkWorld/Desert1.tscn`. Note that unlike other functions, assigning scene has effect on all cells in a room, to keep consistency.
+- `set_assigned_scene(value)`: Sets the cell's assigned scene. The scene should be full path (with extension) to the scene, without the root folder prefix. E.g. if your `map_root_folder` is `res://Maps` and your map is in `res://Maps/DarkWorld/Desert1.tscn`, you should assign `DarkWorld/Desert1.tscn`. You can also assign an absolute path to the scene, even from `user://`, but then you'll need to add special handling in your code. Note that unlike other functions, assigning scene has effect on all cells in a room, to keep consistency.
 
 Override can be deleted with `MetSys.remove_cell_override()`, which takes override's coords. The override does not need to exist, so the method is safe to call (unless the cell itself does not exist). Modifying and removing overrides will emit `MetSys.map_updated` signal.
 
 ### Map Builder
 
+Map Builder is a tool to create custom rooms at runtime. It's intended for procedurally generated maps. You can obtain a MapBuilder object using `MetSys.get_map_builder()`. The Map Builder is a very simple class. It has 2 methods: `create_cell()` and `update_map()`. `create_cell()` takes coordinates of the new cell and will return CellOverride object, the same as when overriding rooms. You can customize the cell by customizing the received override object. `update_map()` will cause MetSys to emit the `map_updated` signal (overrides from custom cells don't do it automatically). Call it when you have finished generating the desired layout.
 
+The overrides from map builder allow calling `destroy()`, which will remove the custom cell completely. You can obtain references to custom cells you have created by accessing `cells` property of the Map Builder.
 
 ### Saving and loading MetSys runtime data
 
+MetSys comes with a simple save system that allows you to serialize its runtime data. Stored things include:
+- discovered cells
+- registered storable objects
+- stored objects
+- custom markers
+- cell override data (however if you created cells with Map Builder, you need to store their coords yourself if you want to modify them in the future)
+
+This means that you don't need to worry about keeping the data of runtime MetSys operations, the system does it for you. To obtain the data, use `MetSys.get_save_data()`. It returns a Dictionary with the aforementioned contents. You need to save it yourself, e.g. using `store_var`, `var_to_str` or by adding it to your own save system. Note that using JSON is not recommended, because the data contains Godot's native types and integers.
+
+To restore the data use `MetSys.set_save_data()`, providing the saved Dictionary. It will restore all discovered cells, stored objects etc. If you give empty Dictionary (default), the data will be cleared. Useful when starting new game. 
 
 ## Map Theme
 

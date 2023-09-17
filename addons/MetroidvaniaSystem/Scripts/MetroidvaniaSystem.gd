@@ -77,6 +77,7 @@ func _ready() -> void:
 	set_physics_process(false)
 
 func get_save_data() -> Dictionary:
+	print(typeof(save_data.get_data()["discovered_cells"].keys()[0]))
 	return save_data.get_data()
 
 func set_save_data(data := {}):
