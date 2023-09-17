@@ -89,7 +89,7 @@ The plugin screen is called Metroidvania System Database and it has 3 tabs: Map 
 
 ![](Media/EditorDatabase.png)
 
-Map Editor is where you design your world map. Map Viewer provides overview of your map, integration with Godot editor's scenes and collectible statistics. Manage is where you manage themes and run validation.
+Map Editor is where you design your world map. Map Viewer provides overview of your map, integration with Godot editor's scenes and collectible statistics. Manage is where you manage themes and run validation. Interacting with map editor requires no code (aside from one feature).
 
 ### Map Editor
 
@@ -271,6 +271,12 @@ Note that all elements within the visible area are drawn regardless if they are 
 
 This section provides information about usage of MetSys features at runtime, i.e. in your game itself.
 
+### Code structure
+
+Unlike in editor, at runtime all interactions with MetSys are through code. The main code component is MetSys autoload singleton automatically added with the plugin. All interactions with the system go through the singleton, that includes methods and signals. The code is fully documented as a class called MetroidvaniaSystem. It has multiple additional components in form of preloaded scripts. Anything that doesn't have description is not intended to be called/accessed by the user (but of course it's possible if you want to do some advanced hacks).
+
+You can check the included [example project](#sample-project) if you are unsure how to implement some things.
+
 ### Room Instance
 
 The base bridge between MetSys and your game is RoomInstance node. You can find it under Nodes in MetroidvaniaSystem addon folder. It provides two-fold functionality: allows to identify the current room when it's visited in game and draws room boundaries in the editor. The node should be located at (0, 0), but it doesn't need to be under scene root. You should add RoomInstance to every room with assigned scene.
@@ -402,11 +408,48 @@ To restore the data use `MetSys.set_save_data()`, providing the saved Dictionary
 
 ## Map Theme
 
+Map theme is a very important element of MetSys (unless you don't use the map drawing component). It defines the appearance of your map. The theme is a custom resource class and it can be changed in the [database settings](#general-settings).
+
 ### Properties
+
+The theme has a long list of properties, divided into sections.
+
+#### Main properties
+
+- Center Texture: The most important texture. It draws as a base of your cells, but also defines their size and shape. The texture should be grayscale (preferrably white), because it will be modulated.
+- Empty Space Texture: Optional. Texture that draws in empty or undiscovered coordinates when drawing cells. Also drawn in Map Editor.
+- Player Location Scene: Optional. The scene instantiated when using `add_player_location()` method. The root must be Node2D-derived. If not provided, drawing player location using MetSys methods is not possible.
+- Show Exact Player Location: If enabled, the player location scene will be drawn at the exact position in cell (player position is remapped to relative position inside cell). If disabled, the player location is always drawn in the center of the cell.
+- Unexplored Display: Defines how mapped unexplored rooms are displayed.
+  - Center - If disabled, center texture will not be drawn.
+  - Outline - If disabled, room walls will not be drawn.
+  - Borders - If disabled, walls will be drawn instead of passages.
+  - Symbol - If disabled, symbols will not be visible.
+- Use Shared Borders: If enabled, borders will be shared between adjacent cells. Otherwise borders are drawn fully inside the cells.
+
+#### Colors
+
+- Default Center Color: Modulation of the center texture when it's not overriden by custom color.
+- Unexplored Center Color: Modulation of the center texture when the cell is mapped.
+- Default Border Color: Modulation of the border textures when it's not overriden by custom color.
+- Unexplored Border Color: Modulation of the border textures when the cell is mapped.
+- Room Separator Color: Color of the room separator texture, if provided.
+
+#### Symbols
+
+
+
+#### Border Textures
+
+
+
+#### Corner Textures
+
+
 
 ### List of included example themes
 
-The addon comes with a few themes *inspired* by various metroidvania games.
+The addon comes with a few themes *inspired* by various metroidvania games. They are found in the Themes directory of the addon.
 
 #### AoS
 ![](Media/ThemeAoS.png)
