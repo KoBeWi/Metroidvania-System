@@ -116,6 +116,7 @@ class CellData:
 class CellOverride extends CellData:
 	var original_room: CellData
 	var custom_cell_coords := MetroidvaniaSystem.VECTOR3INF
+	var commit_queued: bool
 	
 	func _init(from: CellData) -> void:
 		original_room = from
@@ -150,37 +151,42 @@ class CellOverride extends CellData:
 	func set_border(idx: int, value := -2):
 		assert(idx >= 0 and idx < 4)
 		borders[idx] = value
+		_queue_commit()
 	
 	func set_border_color(idx: int, value := Color.TRANSPARENT):
 		assert(idx >= 0 and idx < 4)
 		border_colors[idx] = value
+		_queue_commit()
 	
 	func set_color(value := Color.TRANSPARENT):
 		color = value
+		_queue_commit()
 	
 	func set_symbol(value := -2):
 		assert(value >= -2 and value < MetSys.settings.theme.symbols.size())
 		symbol = value
+		_queue_commit()
 	
-	func set_assigned_scene(map := "/"):
-		if map == "/":
+	func set_assigned_scene(value := "/"):
+		if value == "/":
 			_cleanup_assigned_scene()
 		else:
 			if custom_cell_coords != MetroidvaniaSystem.VECTOR3INF:
-				if not map in MetSys.map_data.assigned_scenes:
-					MetSys.map_data.assigned_scenes[map] = []
-				MetSys.map_data.assigned_scenes[map].append(custom_cell_coords)
+				if not value in MetSys.map_data.assigned_scenes:
+					MetSys.map_data.assigned_scenes[value] = []
+				MetSys.map_data.assigned_scenes[value].append(custom_cell_coords)
 			else:
-				MetSys.map_data.scene_overrides[map] = original_room.assigned_scene
+				MetSys.map_data.scene_overrides[value] = original_room.assigned_scene
 				
 				for coords in MetSys.map_data.get_whole_room(original_room.get_coords()):
 					var cell: CellData = MetSys.map_data.cells[coords]
 					if not cell.override_map.is_empty():
 						push_warning("Assigned map already overriden at: %s" % coords)
-					cell.override_map = map
+					cell.override_map = value
 		
-		assigned_scene = map
+		assigned_scene = value
 		MetSys.room_assign_updated.emit()
+		_queue_commit()
 	
 	func apply_to_group(group_id: int):
 		assert(group_id in MetSys.map_data.cell_groups)
@@ -194,6 +200,8 @@ class CellOverride extends CellData:
 			override.color = color
 			override.border_colors = border_colors
 			override.symbol = symbol
+		
+		_queue_commit()
 	
 	func destroy() -> void:
 		if custom_cell_coords == MetroidvaniaSystem.VECTOR3INF:
@@ -219,7 +227,14 @@ class CellOverride extends CellData:
 	func _get_override_string(coords: Vector3i) -> String:
 		return str(get_string(), "|", coords.x, ",", coords.y, ",", coords.z, "|", custom_cell_coords != MetroidvaniaSystem.VECTOR3INF)
 	
-	func commit() -> void:
+	func _queue_commit():
+		if commit_queued:
+			return
+		commit_queued = true
+		_commit.call_deferred()
+	
+	func _commit() -> void:
+		commit_queued = false
 		MetSys.map_updated.emit()
 
 var cells: Dictionary#[Vector3i, CellData]

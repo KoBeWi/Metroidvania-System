@@ -330,19 +330,60 @@ You can display player's location on your map by using `MetSys.add_player_locati
 
 ### Markers
 
-A cell may have assigned any number of markers, out of the markers defined in map theme (each marker can be assigned only once). Markers assigned at runtime will override the marker assigned in Map Editor. They are stored as bitmask, which means you can define and assign only 63 markers. If multiple markers are assigned, the one being last on the theme list will be used. Markers are usually assigned based on events, manually by players on map screen, or automatically via [storable objects](#storable-objects). Assign a marker using `MetSys.add_custom_marker()`, remove it using `MetSys.remove_custom_marker()`.
+A cell may have assigned any number of markers, out of the markers defined in map theme (each marker can be assigned only once). Markers assigned at runtime will override the symbol assigned in the Map Editor. They are stored as bitmask, which means you can define and assign only 63 markers. If multiple markers are assigned, the one being last on the theme list will be used. Markers are usually assigned based on events, manually by players on map screen, or automatically via [storable objects](#storable-objects). Assign a marker using `MetSys.add_custom_marker()`, remove it using `MetSys.remove_custom_marker()`.
 
 ### Discovering
 
-Cells on the map can be in 3 states: undiscovered, discovered and visited. Undiscovered rooms don't draw at all, visited rooms draw with the default style. Discovered rooms draw with an alternate style and rules that can be specified in the [map theme](#map_theme). You can manually discover cells using `MetSys.discover_cell()` or you can discover a group of cells (e.g. when picking up a map item) by using `MetSYs.discover_cell_group()`. Cell groups can be defined in the [editor](#cell-group-mode).
+Cells on the map can be in 3 states: undiscovered, discovered and visited. Undiscovered rooms don't draw at all, visited rooms draw with the default style. Discovered rooms draw with an alternate style and rules that can be specified in the [map theme](#map_theme). You can manually discover cells using `MetSys.discover_cell()` or you can discover a group of cells (e.g. when picking up a map item) by using `MetSYs.discover_cell_group()`. Cell groups can be defined in the [editor](#cell-group-mode). Discovering a cell emits `MetSys.map_updated` signal.
 
 ### Storable objects
 
-Storable objects are anything that you'd want its state to be stored, e.g. switches, breakable walls, collectibles.
+Storable objects are anything that you'd want its state to be stored (saved), e.g. switches, breakable walls, collectibles. The idea is that every object has an ID that identifies it. Mark object as storable when it's being initialized (`_ready()`), providing a callback for when the object is already stored (usually `queue_free()`). If the object was already stored, the callback will be immediately called. If it's not, call the store method on specific event (the player pulls a lever, collects an item etc.). Objects can be either stored or not, and stored state can't be reverted (using the public API). If you need more object states or toggleable states, you can take advantage of MetSys' object IDs. Example storable object implementation:
+```GDScript
+# Chest.gd
+func _ready():
+	MetSys.register_storable_object(self)
+
+func open():
+	MetSys.store_object(self)
+  $AnimationPlayer.play("Open")
+  await $AnimationPlayer.animation_finished
+  queue_free()
+```
+The above example shows a Chest object. It's initialized in the beginning. When player opens a chest, it's marked as "stored" and plays the opening animation and then disappears. When the player enters the room again, chest will disappear at start, because it was stored and the callback will be called. Few things to note:
+- `register_storable_object()` takes a callback, but defaults to `queue_free()` for Nodes and `free()` for non-RefCounted Objects.
+- The callback is called only when registering. Storing an object just toggles a flag, it doesn't do anything in itself.
+
+Alternate method for registering objects is `register_storable_object_with_marker()`. It takes object, callback and marker index. When used, the object will be be marked on map when it first appears and marked again when stored (collected etc.). You can define default markers in [map theme](#map-theme) (use the index from the symbol list). If marker index is -1, that marker will not appear. You can make marker appear only when the object is discovered or only when it's stored or both. Also you can provide a custom symbol index to the method to customize how the element is marked on the map.
+
+Separately from storable objects there exists an object ID system. It's used by storable object methods to determine whether the object was stored or not, but it can be used manually. The ID is a String and is determined ad-hoc from the object instance. If the object is a Node, the ID will be created from scene name, parent node and node name. E.g. if you have this scene structure:
+```
+Map (Forest.tscn)
+- Objects
+  - Chest
+```
+The Chest will have ID `Forest/Objects/Chest`. This system ensures that any node in your world can be identified by unique ID (conflicts are possible, but typical usage won't cause them), thus allowing for automatic saving of object's state. You can get ID of any object by using `MetSys.get_object_id(object)`
+
+If your object is not a node, or for some reason you want them to share ID, you can manually assign ID by setting `object_id` metadata, e.g. `object.set_meta(&"object_id", "my_id")`. Another alternative is implementing `_get_object_id()` in the object (the returned ID will be cached in meta). The meta and method will have priority over the auto-ID. If the ID can't be determined, `get_object_id()` will return empty String.
+
+Another related method is `get_object_coords()`. It works just like `get_object_id()` (including `object_coords` meta and `_get_object_coords()` method), but instead it returns object's coordinates on the world map. You can use it to draw custom ad-hoc stuff on the minimap or manually assign object markers. If the provided object is a Node2D, it will return an accurate coordinates. If it's a plain Node, it will return coordinates of top-left corner of the current room (note that it needs to be inside a scene assigned to some map room). If the coords can't be determined, `Vector3i()` is returned.
 
 ### Cell overrides
 
+Cell overrides allow for runtime modifications of the map. You can change any room's property, i.e. color, borders or default symbol and even the assigned scene. Typical use-cases are opening passages when destroying walls, marking hazardous rooms based on current upgrades or changing a room to a "destroyed" version (e.g. when SA-X visits it).
+
+To override a cell, you can call `MetSys.get_cell_override()`. The method takes Vector3i coords of the cell. If an override already exists, it will return existing one. If it doesn't, it will be automatically created (unless you use `false` as the second argument). The method returns an object of type CellOverride that can be used to customize the cell. The customization is done using a set of methods. Note that the `value` argument in each method is optional; using default value makes the override reset it to default.
+- `set_border(idx, value)`: Sets the border type. `0` is passage, `1` is wall, `2+` are custom styles defined in theme. You can also use `-1` for no border, but it's not recommended. `idx` is the direction of the border. Use `MetSys.R`/`D`/`L`/`U` enum constants to select border direction.
+- `set_border_color(idx, value)`: Sets the border color.
+- `set_color(value)`: Sets the cell's center color.
+- `set_symbol(value)`: Sets the cell's symbol.
+- `set_assigned_scene(value)`: Sets the cell's assigned scene. The scene should be full path (with extension) to the scen, without the root folder prefix. E.g. if your `map_root_folder` is `res://Maps` and your map is in `res://Maps/DarkWorld/Desert1.tscn`, you should assign `DarkWorld/Desert1.tscn`. Note that unlike other functions, assigning scene has effect on all cells in a room, to keep consistency.
+
+Override can be deleted with `MetSys.remove_cell_override()`, which takes override's coords. The override does not need to exist, so the method is safe to call (unless the cell itself does not exist). Modifying and removing overrides will emit `MetSys.map_updated` signal.
+
 ### Map Builder
+
+
 
 ### Saving and loading MetSys runtime data
 

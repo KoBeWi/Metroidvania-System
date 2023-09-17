@@ -23,7 +23,6 @@ func _ready() -> void:
 func on_body_entered(body: Node2D) -> void:
 	var override := MetSys.get_cell_override(MetSys.get_current_coords())
 	override.set_border(MetroidvaniaSystem.R, 1)
-	override.commit()
 	
 	MetSys.store_object(self)
 "
