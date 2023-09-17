@@ -121,29 +121,29 @@ This mode allows overriding the default cell color. Use LMB to assign the color,
 
 #### Cell Symbol mode
 
-Mode that allows drawing cell symbols. A symbol may represent a save point, teleport, treasure, anything. Symbols need to be registered in the [theme] first, then you can select one from the list on the sidebar. Use LMB to draw symbol, RMB to remove. A cell may have only a single symbol.
+Mode that allows drawing cell symbols. A symbol may represent a save point, teleport, treasure, anything. Symbols need to be registered in the [theme] first, then you can select one from the list on the sidebar or by Ctrl+Clicking a cell with a symbol. Use LMB to draw symbol, RMB to remove. A cell may have only a single symbol.
 
 [GIF]
 
-Symbols are more useful at runtime. They can be assigned dynamically and automatically.
+Symbols are more useful at runtime. They can be [assigned dynamically and automatically](#markers).
 If you added a new symbol and it's missing from the list, you can use Force Refresh Elements option in [Manage tab](#manage).
 
 #### Cell Group mode
 
-Assign cell groups here. Select group ID on the sidebar, use LMB to assign selected group and RMB to unassign. Cell groups are a mean to operate on multiple cells at once. The most common use case are maps items that discover a portion of the world map. A call may belong to any number of groups.
+Assign cell groups here. Select group ID on the sidebar, use LMB to assign selected group and RMB to unassign. Holding Shift will add or remove group to the whole room. Cell groups are a mean to operate on multiple cells at once. The most common use case are maps items that discover a portion of the world map. A call may belong to any number of groups.
 
 [GIF]
 
 #### Border Type mode
 
-This mode allows changing room's borders. There are 2 default border types: wall and passage. More border types can be registered in the [theme]. They can be doors, special bariers or narrow passages, anything. A cell's edge will be highlighted when hovering near it with cursor. Draw borders using LMB, remove (reset to wall) with RMB. You can hold and drag to draw multiple borders; useful when you want to draw them at both sides of an edge.
+This mode allows changing room's borders. There are 2 default border types: wall and passage. More border types can be registered in the [theme]. They can be doors, special bariers or narrow passages, anything. A cell's edge will be highlighted when hovering near it with cursor. You can pick a border type from the sidebar list or by Ctrl+Clicking a border. Draw borders using LMB, remove (reset to wall) with RMB. You can hold and drag to draw multiple borders; useful when you want to draw them at both sides of an edge. Also holding Shift will set the borders for the whole room.
 If you added a new border type and it's missing from the list, you can use Force Refresh Elements option in [Manage tab](#manage).
 
 [GIF]
 
 #### Border Color mode
 
-Border colors can be changed separately from cell color. The process is the same - use picker or Ctrl to select color, use LMB/RMB to draw/remove color.
+Border colors can be changed separately from cell color. The process is the same - use picker or Ctrl to select color, use LMB/RMB to draw/remove color, hold Shift to set color for all borders in a room.
 
 [GIF]
 

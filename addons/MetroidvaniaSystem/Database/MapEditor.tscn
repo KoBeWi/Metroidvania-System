@@ -106,95 +106,50 @@ func close_border(pos: Vector2i, border: int):
 [sub_resource type="GDScript" id="GDScript_tlx5u"]
 resource_name = "CellColor"
 script/source = "@tool
-extends \"res://addons/MetroidvaniaSystem/Database/SubEditor.gd\"
+extends \"res://addons/MetroidvaniaSystem/Database/CellPaintEditor.gd\"
 
-enum { MODE_DRAW, MODE_ERASE, MODE_PICK }
-
-var whole_room: bool
+func _editor_init() -> void:
+	super()
+	can_pick = true
 
 func _editor_enter():
+	super()
 	%Colors.show()
 
 func _editor_exit():
+	super()
 	%Colors.hide()
 
-func _editor_input(event: InputEvent):
-	if event is InputEventMouseButton:
-		if event.pressed:
-			if event.button_index == MOUSE_BUTTON_LEFT:
-				if not whole_room and event.is_command_or_control_pressed():
-					paint(MODE_PICK)
-				else:
-					paint(MODE_DRAW)
-			elif event.button_index == MOUSE_BUTTON_RIGHT:
-				paint(MODE_ERASE)
-	elif event is InputEventMouseMotion:
-		if whole_room:
-			update_hovered_room()
-		
-		if event.button_mask & (MOUSE_BUTTON_MASK_LEFT | MOUSE_BUTTON_MASK_RIGHT):
-			var erase: bool = event.button_mask & MOUSE_BUTTON_MASK_RIGHT
-			paint(MODE_ERASE if erase else MODE_DRAW)
-	elif event is InputEventKey:
-		if not event.echo and event.keycode == KEY_SHIFT:
-			whole_room = event.pressed
-			use_cursor = not whole_room
-			if whole_room:
-				update_hovered_room()
-			else:
-				highlighted_room.clear()
-			
-			editor.map_overlay.queue_redraw()
-
-func update_hovered_room():
-	var hr := highlighted_room
-	highlighted_room = MetSys.map_data.get_whole_room(get_coords(get_cursor_pos()))
-	if highlighted_room != hr:
-		editor.map_overlay.queue_redraw()
-
-func paint(mode: int):
-	var coords_to_modify: Array[Vector3i]
-	if whole_room:
-		coords_to_modify = highlighted_room
+func modify_cell(cell_data: MetroidvaniaSystem.MapData.CellData, mode: int) -> bool:
+	if mode == MODE_PICK:
+		if cell_data.color.a > 0:
+			%CurrentColor.color = cell_data.color
 	else:
-		coords_to_modify.assign([get_coords(get_cursor_pos())])
-	
-	var modified: bool
-	for coords in coords_to_modify:
-		var cell_data := MetSys.map_data.get_cell_at(coords)
-		if not cell_data:
-			continue
+		var target_color := Color.TRANSPARENT
+		if mode == MODE_DRAW:
+			target_color = %CurrentColor.color
 		
-		if mode == MODE_PICK:
-			if cell_data.color.a > 0:
-				%CurrentColor.color = cell_data.color
-		else:
-			var target_color := Color.TRANSPARENT
-			if mode == MODE_DRAW:
-				target_color = %CurrentColor.color
-			
-			if cell_data.color != target_color:
-				cell_data.color = target_color
-				modified = true
+		if cell_data.color != target_color:
+			cell_data.color = target_color
+			return true
 	
-	if modified:
-		mark_modified()
-		editor.map.queue_redraw()
+	return false
 "
 
 [sub_resource type="GDScript" id="GDScript_ujwfx"]
 resource_name = "CellSymbol"
 script/source = "@tool
-extends \"res://addons/MetroidvaniaSystem/Database/SubEditor.gd\"
+extends \"res://addons/MetroidvaniaSystem/Database/CellPaintEditor.gd\"
 
 var symbol_group: ButtonGroup
 
 func _editor_init() -> void:
-	room_only_cursor = true
-	symbol_group = ButtonGroup.new()
+	can_pick = true
+	super()
 	
+	symbol_group = ButtonGroup.new()
 	reload_symbols()
-	MetSys.settings.theme_changed.connect(reload_symbols, CONNECT_DEFERRED)
+	MetSys.settings.theme_changed.connect(reload_symbols, CONNECT_DEFERRED) ## tu force reload
 
 func reload_symbols():
 	for symbol in %SymbolContainer.get_children():
@@ -204,26 +159,28 @@ func reload_symbols():
 		add_symbol(symbol)
 
 func _editor_enter():
+	super()
 	%Symbols.show()
 
 func _editor_exit():
+	super()
 	%Symbols.hide()
 
-func _editor_input(event: InputEvent):
-	if event is InputEventMouseButton:
-		if event.pressed:
-			var cell_data := get_room_at_cursor()
-			if not cell_data:
-				return
-			
-			if event.button_index == MOUSE_BUTTON_LEFT:
-				cell_data.symbol = symbol_group.get_pressed_button().get_index()
-				mark_modified()
-				editor.map.queue_redraw()
-			elif event.button_index == MOUSE_BUTTON_RIGHT:
-				cell_data.symbol = -1
-				mark_modified()
-				editor.map.queue_redraw()
+func modify_cell(cell_data: MetroidvaniaSystem.MapData.CellData, mode: int) -> bool:
+	if mode == MODE_PICK:
+		if cell_data.symbol > -1:
+			symbol_group.get_buttons()[cell_data.symbol].button_pressed = true
+		return false
+	
+	var target_symbol := -1
+	if mode == MODE_DRAW:
+		target_symbol = symbol_group.get_pressed_button().get_index()
+	
+	if cell_data.symbol != target_symbol:
+		cell_data.symbol = target_symbol
+		return true
+	
+	return false
 
 func add_symbol(texture: Texture2D):
 	var button := Button.new()
@@ -240,12 +197,13 @@ func add_symbol(texture: Texture2D):
 [sub_resource type="GDScript" id="GDScript_a80ln"]
 resource_name = "CellGroup"
 script/source = "@tool
-extends \"res://addons/MetroidvaniaSystem/Database/SubEditor.gd\"
+extends \"res://addons/MetroidvaniaSystem/Database/CellPaintEditor.gd\"
 
 var cell_groups: Dictionary
 var drawing: int
 
 func _editor_init() -> void:
+	super()
 	room_only_cursor = true
 	cell_groups = MetSys.map_data.cell_groups
 
@@ -253,9 +211,11 @@ func _update_theme():
 	theme_cache.group_color = get_theme_color(&\"group_color\", &\"MetSys\")
 
 func _editor_enter():
+	super()
 	%Groups.show()
 
 func _editor_exit():
+	super()
 	%Groups.hide()
 
 func _editor_draw(map_overlay: CanvasItem):
@@ -264,14 +224,22 @@ func _editor_draw(map_overlay: CanvasItem):
 	for p in cell_groups.get(%CurrentGroup.value as int, []):
 		map_overlay.draw_rect(Rect2(Vector2(p.x, p.y) * MetSys.CELL_SIZE, MetSys.CELL_SIZE), theme_cache.group_color)
 
-func _editor_input(event: InputEvent):
-	if event is InputEventMouseMotion:
-		editor.map_overlay.queue_redraw()
-		draw_group()
+func modify_coords(coords: Vector3i, mode: int) -> bool:
+	var current_group: int = %CurrentGroup.value
 	
-	if event is InputEventMouseButton:
-		drawing = int(event.pressed) * event.button_mask
-		draw_group()
+	if mode == MODE_DRAW:
+		if not current_group in cell_groups:
+			cell_groups[current_group] = []
+		
+		if not coords in cell_groups[current_group]:
+			cell_groups[current_group].append(coords)
+			return true
+	else:
+		if coords in cell_groups[current_group]:
+			cell_groups[current_group].erase(coords)
+			return true
+	
+	return false
 
 func draw_group():
 	if drawing == 0:
@@ -309,16 +277,18 @@ func draw_group():
 [sub_resource type="GDScript" id="GDScript_ilxbw"]
 resource_name = "BorderType"
 script/source = "@tool
-extends \"res://addons/MetroidvaniaSystem/Database/SubEditor.gd\"
+extends \"res://addons/MetroidvaniaSystem/Database/BorderPaintEditor.gd\"
 
 var border_group: ButtonGroup
 
 func _editor_init() -> void:
 	use_cursor = false
+	can_pick = true
+	super()
 	border_group = ButtonGroup.new()
 	
 	reload_borders()
-	MetSys.settings.theme_changed.connect(reload_borders, CONNECT_DEFERRED)
+	MetSys.settings.theme_changed.connect(reload_borders, CONNECT_DEFERRED) ## tu force_reload
 
 func reload_borders():
 	for symbol in %BorderContainer.get_children():
@@ -338,49 +308,29 @@ func reload_borders():
 			add_border(border)
 
 func _editor_enter():
+	super()
 	%Borders.show()
 
 func _editor_exit():
+	super()
 	%Borders.hide()
 
-func _editor_input(event: InputEvent):
-	var cell_data := get_room_at_cursor()
+func modify_border(cell_data: MetroidvaniaSystem.MapData.CellData, border: int, mode: int) -> bool:
+	if cell_data.borders[border] == -1:
+		return false
 	
-	if event is InputEventMouseMotion:
-		if cell_data:
-			var rel := editor.map_overlay.get_local_mouse_position().posmodv(MetSys.CELL_SIZE)
-			var border := get_square_border_idx(rel)
-			
-			var new_border := -1
-			var borders: Array[int] = cell_data.borders
-			
-			for i in 4:
-				if border == i and borders[i] > -1:
-					new_border = border
-					break
-			
-			if new_border != highlighted_border:
-				highlighted_border = new_border
-				mark_modified()
-				editor.map_overlay.queue_redraw()
-				
-				if highlighted_border != -1 and event.button_mask & (MOUSE_BUTTON_MASK_LEFT | MOUSE_BUTTON_MASK_RIGHT):
-					var rmb = bool(event.button_mask & MOUSE_BUTTON_MASK_RIGHT)
-					cell_data.borders[highlighted_border] = 0 if rmb else border_group.get_pressed_button().get_index()
-					editor.map.queue_redraw()
-		else:
-			highlighted_border = -1
-			editor.map_overlay.queue_redraw()
-	
-	if event is InputEventMouseButton:
-		if not cell_data or highlighted_border == -1:
-			return
+	if mode == MODE_PICK:
+		border_group.get_buttons()[cell_data.borders[border]].button_pressed = true
+	else:
+		var target_border := 0
+		if mode == MODE_DRAW:
+			target_border = border_group.get_pressed_button().get_index()
 		
-		if event.pressed and (event.button_index == MOUSE_BUTTON_LEFT or event.button_index == MOUSE_BUTTON_RIGHT):
-			var borders: Array[int] = cell_data.borders
-			cell_data.borders[highlighted_border] = 0 if event.button_index == MOUSE_BUTTON_RIGHT else border_group.get_pressed_button().get_index()
-			mark_modified()
-			editor.map.queue_redraw()
+		if cell_data.borders[border] != target_border:
+			cell_data.borders[border] = target_border
+			return true
+	
+	return false
 
 func add_border(texture: Texture2D):
 	var button := Button.new()
@@ -399,66 +349,37 @@ func add_border(texture: Texture2D):
 [sub_resource type="GDScript" id="GDScript_a3fsx"]
 resource_name = "BorderColor"
 script/source = "@tool
-extends \"res://addons/MetroidvaniaSystem/Database/SubEditor.gd\"
+extends \"res://addons/MetroidvaniaSystem/Database/BorderPaintEditor.gd\"
 
-func _editor_init() -> void:
-	use_cursor = false
+func _editor_init():
+	can_pick = true
+	super()
 
 func _editor_enter():
+	super()
 	%Colors.show()
 
 func _editor_exit():
+	super()
 	%Colors.hide()
 
-func _editor_input(event: InputEvent):
-	var cell_data := get_room_at_cursor()
+func modify_border(cell_data: MetroidvaniaSystem.MapData.CellData, border: int, mode: int) -> bool:
+	if cell_data.borders[border] == -1:
+		return false
 	
-	if event is InputEventMouseMotion:
-		if cell_data:
-			var rel := editor.map_overlay.get_local_mouse_position().posmodv(MetSys.CELL_SIZE)
-			var border := get_square_border_idx(rel)
-			
-			var new_border := -1
-			var borders: Array[int] = cell_data.borders
-			
-			for i in 4:
-				if border == i and borders[i] > -1:
-					new_border = border
-					break
-			
-			if new_border != highlighted_border:
-				highlighted_border = new_border
-				editor.map_overlay.queue_redraw()
-				
-				if highlighted_border != -1 and event.button_mask & MOUSE_BUTTON_MASK_LEFT:
-					cell_data.border_colors[highlighted_border] = %CurrentColor.color
-					mark_modified()
-					editor.map.queue_redraw()
-				elif highlighted_border != -1 and event.button_mask & MOUSE_BUTTON_MASK_RIGHT:
-					cell_data.border_colors[highlighted_border] = Color.TRANSPARENT
-					mark_modified()
-					editor.map.queue_redraw()
-		else:
-			highlighted_border = -1
-			editor.map_overlay.queue_redraw()
+	if mode == MODE_PICK:
+		if cell_data.border_colors[border].a > 0:
+			%CurrentColor.color = cell_data.border_colors[border]
+	else:
+		var target_color := Color.TRANSPARENT
+		if mode == MODE_DRAW:
+			target_color = %CurrentColor.color
+		
+		if cell_data.border_colors[border] != target_color:
+			cell_data.border_colors[border] = target_color
+			return true
 	
-	if event is InputEventMouseButton:
-		if not cell_data or highlighted_border == -1:
-			return
-		
-		if event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-			if event.is_command_or_control_pressed():
-				if cell_data.border_colors[highlighted_border].a > 0:
-					%CurrentColor.color = cell_data.border_colors[highlighted_border]
-			else:
-				cell_data.border_colors[highlighted_border] = %CurrentColor.color
-				mark_modified()
-				editor.map.queue_redraw()
-		elif event.pressed and event.button_index == MOUSE_BUTTON_RIGHT:
-			cell_data.border_colors[highlighted_border] = Color.TRANSPARENT
-			mark_modified()
-			editor.map.queue_redraw()
-		
+	return false
 "
 
 [sub_resource type="GDScript" id="GDScript_p75ne"]
@@ -652,6 +573,7 @@ layout_mode = 2
 
 [node name="ScrollContainer" type="ScrollContainer" parent="PanelContainer"]
 layout_mode = 2
+scroll_vertical = 64
 
 [node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/ScrollContainer"]
 layout_mode = 2
@@ -789,7 +711,6 @@ layout_mode = 2
 
 [node name="Groups" type="VBoxContainer" parent="PanelContainer/ScrollContainer/VBoxContainer/EditControls"]
 unique_name_in_owner = true
-visible = false
 layout_mode = 2
 
 [node name="Label" type="Label" parent="PanelContainer/ScrollContainer/VBoxContainer/EditControls/Groups"]
@@ -801,11 +722,6 @@ horizontal_alignment = 1
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="Label2" type="Label" parent="PanelContainer/ScrollContainer/VBoxContainer/EditControls/Groups"]
-layout_mode = 2
-text = "Shift+Click to set for the whole room"
-autowrap_mode = 2
-
 [node name="Colors" type="VBoxContainer" parent="PanelContainer/ScrollContainer/VBoxContainer/EditControls"]
 unique_name_in_owner = true
 visible = false
@@ -816,12 +732,6 @@ unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 30)
 layout_mode = 2
 edit_alpha = false
-
-[node name="Label" type="Label" parent="PanelContainer/ScrollContainer/VBoxContainer/EditControls/Colors"]
-layout_mode = 2
-text = "Ctrl+Click a cell to pick color
-Shift+Click to set for the whole room"
-autowrap_mode = 2
 
 [node name="CustomElements" type="VBoxContainer" parent="PanelContainer/ScrollContainer/VBoxContainer/EditControls"]
 unique_name_in_owner = true
@@ -849,6 +759,21 @@ autowrap_mode = 2
 [node name="CustomElementContainer" type="VBoxContainer" parent="PanelContainer/ScrollContainer/VBoxContainer/EditControls/CustomElements"]
 unique_name_in_owner = true
 layout_mode = 2
+
+[node name="Shortcuts" type="VBoxContainer" parent="PanelContainer/ScrollContainer/VBoxContainer/EditControls"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="ShortcutPick" type="Label" parent="PanelContainer/ScrollContainer/VBoxContainer/EditControls/Shortcuts"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Ctrl+Click: pick from map"
+autowrap_mode = 2
+
+[node name="Label2" type="Label" parent="PanelContainer/ScrollContainer/VBoxContainer/EditControls/Shortcuts"]
+layout_mode = 2
+text = "Shift+Click: set for the whole room"
+autowrap_mode = 2
 
 [node name="MapOverlay" type="Control" parent="."]
 texture_filter = 1

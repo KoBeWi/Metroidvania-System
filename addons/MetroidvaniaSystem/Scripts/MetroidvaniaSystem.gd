@@ -14,10 +14,12 @@ const RoomInstance = preload("res://addons/MetroidvaniaSystem/Scripts/RoomInstan
 const RoomDrawer = preload("res://addons/MetroidvaniaSystem/Scripts/RoomDrawer.gd")
 const CustomElementManager = preload("res://addons/MetroidvaniaSystem/Scripts/CustomElementManager.gd")
 
-## TODO: shift + click ustawianie koloru/grupy dla całego pokoju (CellGroup, BorderColor)
 ## TODO: ##
 ## TODO: _validate_property() żeby ukryć collectible_list
 ## FIXME: nieścisłość z explore_cell()
+## TODO: pokazywać gdzieś unsaved
+## TODO: podgląd nieodkrytego stylu w Viewer
+## FIXME: inner corner nie koloruje się poprawnnie
 
 enum { R, D, L, U }
 

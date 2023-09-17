@@ -37,11 +37,12 @@ func _editor_input(event: InputEvent):
 	pass
 
 func _editor_draw(map_overlay: CanvasItem):
-	for p in highlighted_room:
-		map_overlay.draw_rect(Rect2(Vector2(p.x, p.y) * MetSys.CELL_SIZE, MetSys.CELL_SIZE), theme_cache.highlighted_room)
+	if highlighted_border == -1:
+		for p in highlighted_room:
+			map_overlay.draw_rect(Rect2(Vector2(p.x, p.y) * MetSys.CELL_SIZE, MetSys.CELL_SIZE), theme_cache.highlighted_room)
 	
 	if drag_from == EDITOR_SCRIPT.NULL_VECTOR2I:
-		if use_cursor and map_overlay.cursor_inside and (not room_only_cursor or get_room_at_cursor()):
+		if use_cursor and map_overlay.cursor_inside and (not room_only_cursor or get_cell_at_cursor()):
 			map_overlay.draw_rect(Rect2(get_cursor_pos() as Vector2 * MetSys.CELL_SIZE, MetSys.CELL_SIZE), theme_cache.cursor_color, false, 2)
 	else:
 		var rect := get_rect_between(drag_from, get_cursor_pos())
@@ -52,15 +53,25 @@ func _editor_draw(map_overlay: CanvasItem):
 		map_overlay.draw_rect(rect, theme_cache.cursor_color, false, 2)
 	
 	if highlighted_border > -1:
-		match highlighted_border:
+		if highlighted_room.is_empty():
+			draw_border_highlight(map_overlay, get_cursor_pos(), highlighted_border)
+		else:
+			for p in highlighted_room:
+				var cell_data := MetSys.map_data.get_cell_at(p)
+				for i in 4:
+					if cell_data.borders[i] > -1:
+						draw_border_highlight(map_overlay, Vector2(p.x, p.y), i)
+
+func draw_border_highlight(map_overlay: CanvasItem, pos: Vector2, border: int):
+		match border:
 			MetSys.R:
-				map_overlay.draw_rect(Rect2(get_cursor_pos() as Vector2 * MetSys.CELL_SIZE + Vector2(MetSys.CELL_SIZE.x * 0.667, 0), MetSys.CELL_SIZE * Vector2(0.333, 1)), theme_cache.border_highlight)
+				map_overlay.draw_rect(Rect2(pos * MetSys.CELL_SIZE + Vector2(MetSys.CELL_SIZE.x * 0.667, 0), MetSys.CELL_SIZE * Vector2(0.333, 1)), theme_cache.border_highlight)
 			MetSys.D:
-				map_overlay.draw_rect(Rect2(get_cursor_pos() as Vector2 * MetSys.CELL_SIZE + Vector2(0, MetSys.CELL_SIZE.y * 0.667), MetSys.CELL_SIZE * Vector2(1, 0.333)), theme_cache.border_highlight)
+				map_overlay.draw_rect(Rect2(pos * MetSys.CELL_SIZE + Vector2(0, MetSys.CELL_SIZE.y * 0.667), MetSys.CELL_SIZE * Vector2(1, 0.333)), theme_cache.border_highlight)
 			MetSys.L:
-				map_overlay.draw_rect(Rect2(get_cursor_pos() as Vector2 * MetSys.CELL_SIZE, MetSys.CELL_SIZE * Vector2(0.333, 1)), theme_cache.border_highlight)
+				map_overlay.draw_rect(Rect2(pos * MetSys.CELL_SIZE, MetSys.CELL_SIZE * Vector2(0.333, 1)), theme_cache.border_highlight)
 			MetSys.U:
-				map_overlay.draw_rect(Rect2(get_cursor_pos() as Vector2 * MetSys.CELL_SIZE, MetSys.CELL_SIZE * Vector2(1, 0.333)), theme_cache.border_highlight)
+				map_overlay.draw_rect(Rect2(pos * MetSys.CELL_SIZE, MetSys.CELL_SIZE * Vector2(1, 0.333)), theme_cache.border_highlight)
 
 func get_cursor_pos() -> Vector2i:
 	return editor.get_cursor_pos()
@@ -79,22 +90,22 @@ func get_rect_between(point1: Vector2, point2: Vector2) -> Rect2:
 	
 	return Rect2(start, Vector2.ONE).expand(end + Vector2.ONE)
 
-func get_square_border_idx(rel: Vector2) -> int:
-	if rel.x < MetSys.CELL_SIZE.x / 3:
+func get_square_border_idx(borders: Array[int], rel: Vector2) -> int:
+	if borders[MetSys.L] > -1 and rel.x < MetSys.CELL_SIZE.x / 3:
 		return MetSys.L
 	
-	if rel.x > MetSys.CELL_SIZE.x - MetSys.CELL_SIZE.x / 3:
+	if borders[MetSys.R] > -1 and rel.x > MetSys.CELL_SIZE.x - MetSys.CELL_SIZE.x / 3:
 		return MetSys.R
 	
-	if rel.y < MetSys.CELL_SIZE.y / 3:
+	if borders[MetSys.U] > -1 and rel.y < MetSys.CELL_SIZE.y / 3:
 		return MetSys.U
 	
-	if rel.y > MetSys.CELL_SIZE.y - MetSys.CELL_SIZE.y / 3:
+	if borders[MetSys.D] > -1 and rel.y > MetSys.CELL_SIZE.y - MetSys.CELL_SIZE.y / 3:
 		return MetSys.D
 	
 	return -1
 
-func get_room_at_cursor() -> MetroidvaniaSystem.MapData.CellData:
+func get_cell_at_cursor() -> MetroidvaniaSystem.MapData.CellData:
 	return MetSys.map_data.get_cell_at(get_coords(get_cursor_pos()))
 
 func mark_modified():
