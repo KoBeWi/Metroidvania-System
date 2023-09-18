@@ -17,8 +17,8 @@ This section explains the terminology used in this README and in the addon itsel
 - Map: All of the placed cells, composing the game's world.
 - Coords: Position of a Cell on the map, expressed as Vector3i(x, y, layer). In some cases layer is omitted.
 - Border: Edge of a cell. There are 2 types of borders:
-  - Wall: Solid border with no holes.
-  - Passage: A border with hole or another feature that signifies passage (e.g. a door).
+	- Wall: Solid border with no holes.
+	- Passage: A border with hole or another feature that signifies passage (e.g. a door).
 - Corner: Meeting point of 2 or more borders.
 - Room: A collection of multiple cells enclosed by borders on every side. In game they are tied to a scene.
 - Explored Cell: A cell visited by the player that appears normally.
@@ -348,17 +348,21 @@ Storable objects are anything that you'd want its state to be stored (saved), e.
 ```GDScript
 # Chest.gd
 func _ready():
-	MetSys.register_storable_object(self)
+	if MetSys.register_storable_object(self):
+		return
+
+	unrelated_call()
 
 func open():
 	MetSys.store_object(self)
-  $AnimationPlayer.play("Open")
-  await $AnimationPlayer.animation_finished
-  queue_free()
+	$AnimationPlayer.play("Open")
+	await $AnimationPlayer.animation_finished
+	queue_free()
 ```
 The above example shows a Chest object. It's initialized in the beginning. When player opens a chest, it's marked as "stored" and plays the opening animation and then disappears. When the player enters the room again, chest will disappear at start, because it was stored and the callback will be called. Few things to note:
 - `register_storable_object()` takes a callback, but defaults to `queue_free()` for Nodes and `free()` for non-RefCounted Objects.
 - The callback is called only when registering. Storing an object just toggles a flag, it doesn't do anything in itself.
+- `register_storable_object()` returns `true` when the object was already stored, so you can use it to stop further initialization logic.
 
 Alternate method for registering objects is `register_storable_object_with_marker()`. It takes object, callback and marker index. When used, the object will be be marked on map when it first appears and marked again when stored (collected etc.). You can define default markers in [map theme](#map-theme) (use the index from the symbol list). If marker index is -1, that marker will not appear. You can make marker appear only when the object is discovered or only when it's stored or both. Also you can provide a custom symbol index to the method to customize how the element is marked on the map.
 
@@ -421,10 +425,10 @@ The theme has a long list of properties, divided into sections.
 - Player Location Scene: Optional. The scene instantiated when using `add_player_location()` method. The root must be Node2D-derived. If not provided, drawing player location using MetSys methods is not possible.
 - Show Exact Player Location: If enabled, the player location scene will be drawn at the exact position in cell (player position is remapped to relative position inside cell). If disabled, the player location is always drawn in the center of the cell.
 - Unexplored Display: Defines how mapped unexplored rooms are displayed.
-  - Center - If disabled, center texture will not be drawn.
-  - Outline - If disabled, room walls will not be drawn.
-  - Borders - If disabled, walls will be drawn instead of passages.
-  - Symbol - If disabled, symbols will not be visible.
+	- Center - If disabled, center texture will not be drawn.
+	- Outline - If disabled, room walls will not be drawn.
+	- Borders - If disabled, walls will be drawn instead of passages.
+	- Symbol - If disabled, symbols will not be visible.
 - Use Shared Borders: If enabled, borders will be shared between adjacent cells. Otherwise borders are drawn fully inside the cells.
 
 #### Colors
@@ -437,15 +441,29 @@ The theme has a long list of properties, divided into sections.
 
 #### Symbols
 
-
+- Symbols: The list of available symbols. A symbol will always appear centered at the cell. It can be bigger than the center texture, but it's not recommended.
+- Uncollected Item Symbol: Symbol automatically displayed when calling `register_storable_object_with_marker()`. The number must be within the array defined in Symbols.
+- Collected Item Symbol: Symbol assigned when using `store_object()` on a marked object.
 
 #### Border Textures
 
+- Wall: The texture used for a 
+- Passage:
+- Separator:
+- Borders:
 
+- Vertical Wall/Passage/Separator/Borders:
+- Horizontal Wall/Passage/Separator/Borders:
 
 #### Corner Textures
 
+- Inner Corner:
+- Outer Corner:
 
+- U Corner:
+- L Corner:
+- T Corner:
+- Cross Corner:
 
 ### List of included example themes
 
@@ -487,3 +505,13 @@ Inspired by map guides made by user Zeric ([Example](https://gamefaqs.gamespot.c
 ## Sample project
 
 Info co gdziej jest w przykładowym projekcie
+
+## Closing words
+
+Please enjoy
+report bugs, missing documentation, missing features
+
+___
+You can find all my addons on my [profile page](https://github.com/KoBeWi).
+
+<a href='https://ko-fi.com/W7W7AD4W4' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://cdn.ko-fi.com/cdn/kofi1.png?v=3' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>

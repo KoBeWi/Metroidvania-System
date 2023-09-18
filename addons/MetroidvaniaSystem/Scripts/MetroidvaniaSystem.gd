@@ -140,7 +140,7 @@ func add_custom_marker(coords: Vector3i, symbol: int):
 func remove_custom_marker(coords: Vector3i, symbol: int):
 	save_data.remove_custom_marker(coords, symbol)
 
-func register_storable_object_with_marker(object: Object, stored_callback := Callable(), map_marker := DEFAULT_SYMBOL):
+func register_storable_object_with_marker(object: Object, stored_callback := Callable(), map_marker := DEFAULT_SYMBOL) -> bool:
 	if stored_callback.is_null():
 		if object is Node:
 			stored_callback = Callable(object, &"queue_free")
@@ -149,18 +149,21 @@ func register_storable_object_with_marker(object: Object, stored_callback := Cal
 	
 	if save_data.is_object_stored(object):
 		stored_callback.call()
-	else:
-		if map_marker == DEFAULT_SYMBOL:
-			map_marker = settings.theme.uncollected_item_symbol
-			object.set_meta(&"map_marker", map_marker)
-		elif map_marker > -1:
-			object.set_meta(&"map_marker", map_marker)
-		
-		if save_data.register_storable_object(object) and map_marker > -1:
-			save_data.add_custom_marker(get_object_coords(object), map_marker)
+		return true
+	
+	if map_marker == DEFAULT_SYMBOL:
+		map_marker = settings.theme.uncollected_item_symbol
+		object.set_meta(&"map_marker", map_marker)
+	elif map_marker > -1:
+		object.set_meta(&"map_marker", map_marker)
+	
+	if save_data.register_storable_object(object) and map_marker > -1:
+		save_data.add_custom_marker(get_object_coords(object), map_marker)
+	
+	return false
 
-func register_storable_object(object: Object, stored_callback := Callable()):
-	register_storable_object_with_marker(object, stored_callback, -1)
+func register_storable_object(object: Object, stored_callback := Callable()) -> bool:
+	return register_storable_object_with_marker(object, stored_callback, -1)
 
 func store_object(object: Object, map_marker := DEFAULT_SYMBOL):
 	save_data.store_object(object)
