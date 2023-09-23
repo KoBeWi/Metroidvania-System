@@ -429,7 +429,7 @@ The theme has a long list of properties, divided into sections.
 	- Outline - If disabled, room walls will not be drawn.
 	- Borders - If disabled, walls will be drawn instead of passages.
 	- Symbol - If disabled, symbols will not be visible.
-- Use Shared Borders: If enabled, borders will be shared between adjacent cells. Otherwise borders are drawn fully inside the cells.
+- Use Shared Borders: If enabled, borders will be shared between adjacent cells. Otherwise borders are drawn fully inside the cells. This option makes drawing the map more expensive in terms of performance.
 
 #### Colors
 
@@ -447,23 +447,31 @@ The theme has a long list of properties, divided into sections.
 
 #### Border Textures
 
-- Wall: The texture used for a 
-- Passage:
-- Separator:
-- Borders:
+Note that all border textures should be grayscale, preferrably white, because they are colorized.
 
-- Vertical Wall/Passage/Separator/Borders:
-- Horizontal Wall/Passage/Separator/Borders:
+- Wall: The texture used for a wall, i.e. the default impassable border. The texture is facing east (right), so it should be thin line with the same height as the center texture. Don't make it too thick to prevent overlaps.
+- Passage: The default texture used for passage, i.e. passable border. Same rules as above.
+- Separator: Optional. The texture used to draw fake border between cells. It draws inside rooms and separates them into grid. If the height is lower than center texture's, the separator will be centered. It's recommended to make it least prominent possible, otherwise it might hurt map readability and cause confusion.
+- Borders: A set of alternate borders that can be set in addition to the default wall and passage. They can be anything; usually used for doors, barriers etc.
+
+If your theme has rectangle shape (determined by the center texture), the above properties are instead split into vertical and horizontal variants.
+
+- Vertical Wall/Passage/Separator/Borders: The vertical texture for borders, which draws on sides. The height should match center texture's height, just like above.
+- Horizontal Wall/Passage/Separator/Borders: The horizontal texture for borders. For drawing simplicity it's also oriented vertically, but its height should match the *width* of the center texture.
 
 #### Corner Textures
 
-- Inner Corner:
-- Outer Corner:
+Corners draw at the connection point of borders. They can't be colored explicitly, instead their color is average color of the adjacent borders.
 
-- U Corner:
-- L Corner:
-- T Corner:
-- Cross Corner:
+- Outer Corner: The texture that draws at the outer bounds of the room.
+- Inner Corner: This texture only appears in concave (non-rectangle) rooms and draws at corners inside the room.
+
+When using shared borders mode, the above corner textures are instead replaced by this set. The coloring rules are a bit different - if multiple borders meet at the same corner, the resulting color will favor custom colors instead of the default one. Note that you can assign the same texture to all of them, which will improve drawing performance (rules for determining correct corner are complex).
+
+- U Corner: Corner of a single border that divides U-shaped room.
+- L Corner: Corner of 2 perpendicular borders.
+- T Corner: Corner of 3 borders connecting at one point.
+- Cross Corner: Corner of 4 borders.
 
 ### List of included example themes
 
