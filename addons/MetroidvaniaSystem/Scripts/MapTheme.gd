@@ -2,10 +2,10 @@
 extends Resource
 class_name MapTheme
 
-const DYNAMIC_PROPERTIES = [&"vertical_wall", &"horizontal_wall", &"vertical_passage", &"horizontal_passage",
-	&"horizontal_borders", &"vertical_borders", &"vertical_separator", &"horizontal_separator",
-	&"wall", &"passage", &"borders", &"separator", &"inner_corner", &"outer_corner",
-	&"u_corner", &"l_corner", &"t_corner", &"cross_corner"]
+const SQUARE_BORDERS = ["wall", "passage", "separator", "borders"]
+const RECTANGLE_BORDERS = ["vertical_wall", "horizontal_wall", "vertical_passage", "horizontal_passage", "vertical_separator", "horizontal_separator", "vertical_borders", "horizontal_borders"]
+const DEFAULT_CORNERS = ["inner_corner", "outer_corner"]
+const SHARED_CORNERS = ["u_corner", "l_corner", "t_corner", "cross_corner"]
 
 @export var center_texture: Texture2D:
 	set(ct):
@@ -39,62 +39,53 @@ const DYNAMIC_PROPERTIES = [&"vertical_wall", &"horizontal_wall", &"vertical_pas
 @export var uncollected_item_symbol := -1
 @export var collected_item_symbol := -1
 
-var data: Dictionary
+@export_group("Border Textures")
+@export var wall: Texture2D
+@export var passage: Texture2D
+@export var separator: Texture2D
+@export var borders: Array[Texture2D]
+
+@export var vertical_wall: Texture2D
+@export var horizontal_wall: Texture2D
+@export var vertical_passage: Texture2D
+@export var horizontal_passage: Texture2D
+@export var vertical_separator: Texture2D
+@export var horizontal_separator: Texture2D
+@export var vertical_borders: Array[Texture2D]
+@export var horizontal_borders: Array[Texture2D]
+
+@export_group("Corner Textures")
+@export var inner_corner: Texture2D
+@export var outer_corner: Texture2D
+
+@export var u_corner: Texture2D
+@export var l_corner: Texture2D
+@export var t_corner: Texture2D
+@export var cross_corner: Texture2D
+
 var rectangle: bool
 
-func _get_property_list() -> Array[Dictionary]:
-	var properties: Array[Dictionary]
-	
-	properties.append({name = &"Border Textures", type = TYPE_NIL, usage = PROPERTY_USAGE_GROUP})
-	
+func _validate_property(property: Dictionary) -> void:
 	if rectangle:
-		properties.append(_get_texture_property(&"vertical_wall"))
-		properties.append(_get_texture_property(&"horizontal_wall"))
-		properties.append(_get_texture_property(&"vertical_passage"))
-		properties.append(_get_texture_property(&"horizontal_passage"))
-		properties.append(_get_texture_property(&"vertical_separator"))
-		properties.append(_get_texture_property(&"horizontal_separator"))
-		properties.append(_get_texture_array_property(&"vertical_borders"))
-		properties.append(_get_texture_array_property(&"horizontal_borders"))
+		if property.name in SQUARE_BORDERS:
+			property.usage = 0
+			return
 	else:
-		properties.append(_get_texture_property(&"wall"))
-		properties.append(_get_texture_property(&"passage"))
-		properties.append(_get_texture_property(&"separator"))
-		properties.append(_get_texture_array_property(&"borders"))
-	
-	properties.append({name = &"Corner Textures", type = TYPE_NIL, usage = PROPERTY_USAGE_GROUP})
+		if property.name in RECTANGLE_BORDERS:
+			property.usage = 0
+			return
 	
 	if use_shared_borders:
-		properties.append(_get_texture_property(&"u_corner"))
-		properties.append(_get_texture_property(&"l_corner"))
-		properties.append(_get_texture_property(&"t_corner"))
-		properties.append(_get_texture_property(&"cross_corner"))
+		if property.name in DEFAULT_CORNERS:
+			property.usage = 0
+			return
 	else:
-		properties.append(_get_texture_property(&"inner_corner"))
-		properties.append(_get_texture_property(&"outer_corner"))
-	
-	return properties
+		if property.name in SHARED_CORNERS:
+			property.usage = 0
+			return
 
 func is_unicorner() -> bool:
 	if use_shared_borders:
-		var corner: Texture2D = get(&"u_corner")
-		return get(&"l_corner") == corner and get(&"t_corner") == corner and get(&"cross_corner") == corner
+		return l_corner == u_corner and t_corner == u_corner and cross_corner == u_corner
 	else:
-		return get(&"inner_corner") == get(&"outer_corner")
-
-func _set(property: StringName, value) -> bool:
-	if property in DYNAMIC_PROPERTIES:
-		data[property] = value
-		return true
-	return false
-
-func _get(property: StringName) -> Variant:
-	if property in DYNAMIC_PROPERTIES:
-		return data.get(property)
-	return null
-
-func _get_texture_property(property: StringName) -> Dictionary:
-	return {name = property, type = TYPE_OBJECT, hint = PROPERTY_HINT_RESOURCE_TYPE, hint_string = "Texture2D"}
-
-func _get_texture_array_property(property: StringName) -> Dictionary:
-	return {name = property, type = TYPE_ARRAY, hint = PROPERTY_HINT_ARRAY_TYPE, hint_string = str(TYPE_OBJECT, "/" , PROPERTY_HINT_RESOURCE_TYPE, ":Texture2D")}
+		return inner_corner == outer_corner

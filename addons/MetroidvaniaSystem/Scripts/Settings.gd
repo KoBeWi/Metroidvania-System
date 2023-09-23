@@ -25,3 +25,7 @@ extends Resource
 var custom_elements: MetroidvaniaSystem.CustomElementManager
 
 signal theme_changed
+
+func _validate_property(property: Dictionary) -> void:
+	if property.name == "collectible_list":
+		property.usage &= ~PROPERTY_USAGE_EDITOR

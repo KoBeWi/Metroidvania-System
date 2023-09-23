@@ -15,7 +15,6 @@ const RoomDrawer = preload("res://addons/MetroidvaniaSystem/Scripts/RoomDrawer.g
 const CustomElementManager = preload("res://addons/MetroidvaniaSystem/Scripts/CustomElementManager.gd")
 
 ## TODO: ##
-## TODO: _validate_property() żeby ukryć collectible_list
 ## FIXME: nieścisłość z explore_cell()
 ## TODO: pokazywać gdzieś unsaved
 ## TODO: podgląd nieodkrytego stylu w Viewer
