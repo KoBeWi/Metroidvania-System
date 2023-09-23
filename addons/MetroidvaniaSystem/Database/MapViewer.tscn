@@ -290,6 +290,11 @@ layout_mode = 2
 size_flags_horizontal = 4
 text = "Recenter View"
 
+[node name="CheckButton" type="CheckButton" parent="Panel/ScrollContainer/VBoxContainer/Layer"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Preview Unexplored"
+
 [node name="HSeparator" type="HSeparator" parent="Panel/ScrollContainer/VBoxContainer"]
 layout_mode = 2
 
@@ -406,6 +411,7 @@ offset_bottom = 23.0
 theme_override_styles/normal = SubResource("StyleBoxFlat_qbvjg")
 vertical_alignment = 1
 
+[connection signal="toggled" from="Panel/ScrollContainer/VBoxContainer/Layer/CheckButton" to="." method="toggle_unexplored"]
 [connection signal="pressed" from="Panel/ScrollContainer/VBoxContainer/EditControls/Settings/Button" to="Panel/ScrollContainer/VBoxContainer/Modes/Settings" method="add_collectible"]
 [connection signal="pressed" from="Panel/ScrollContainer/VBoxContainer/EditControls/Finder/ScanButton" to="Panel/ScrollContainer/VBoxContainer/Modes/Finder" method="start_scan"]
 [connection signal="toggled" from="Panel/ScrollContainer/VBoxContainer/EditControls/Finder/ShowOnMap" to="Panel/ScrollContainer/VBoxContainer/Modes/Finder" method="toggle_display_on_map"]

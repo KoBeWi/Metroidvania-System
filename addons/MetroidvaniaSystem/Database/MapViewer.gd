@@ -95,3 +95,7 @@ func _on_overlay_draw() -> void:
 	
 	if extra_draw.is_valid():
 		extra_draw.call(map_overlay)
+
+func toggle_unexplored(toggled_on: bool) -> void:
+	force_unexplored = toggled_on
+	map.queue_redraw()

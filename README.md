@@ -162,7 +162,7 @@ If you added a new custom elemnet and it's missing from the list, you can use Fo
 
 ### Map Viewer
 
-Like Map Editor, Map Viewer is divided into sidebar and map view. The top of the sidebar has the same navigation controls, minus the other layer preview.
+Like Map Editor, Map Viewer is divided into sidebar and map view. The top of the sidebar has the same navigation controls, except the other layer preview is replaced with Preview Unexplored. When that last option is enabled, the map will draw in the unexplored style, i.e. mapped, but not visited by player.
 
 In Map Viewer you can't edit the map, instead it provides a few tools that allows you to navigate your world more easily.
 

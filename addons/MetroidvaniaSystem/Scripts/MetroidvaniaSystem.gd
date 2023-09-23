@@ -15,9 +15,9 @@ const RoomDrawer = preload("res://addons/MetroidvaniaSystem/Scripts/RoomDrawer.g
 const CustomElementManager = preload("res://addons/MetroidvaniaSystem/Scripts/CustomElementManager.gd")
 
 ## TODO: ##
-## FIXME: nieścisłość z explore_cell()
+## FIXME: nieścisłość z explore_cell() /// zamienić mapped na discovered
 ## TODO: pokazywać gdzieś unsaved
-## TODO: podgląd nieodkrytego stylu w Viewer
+## TODO: podgląd nieodkrytego stylu w Viewer --> odświeżać po zmianie unexplored display
 ## FIXME: inner corner nie koloruje się poprawnnie
 
 enum { R, D, L, U }
@@ -91,6 +91,9 @@ func visit_cell(coords: Vector3i):
 		room_changed.emit(new_map)
 
 func is_cell_discovered(coords: Vector3i, include_mapped := true) -> bool:
+	if RoomDrawer.force_unexplored:
+		return include_mapped
+	
 	if not save_data:
 		return true
 	
