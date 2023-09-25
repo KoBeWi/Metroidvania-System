@@ -13,6 +13,8 @@ var modified: bool
 func _ready() -> void:
 	if not plugin:
 		return
+	
+	plugin.dirty_toggled.connect(update_name)
 	await super()
 	
 	mode_group.pressed.connect(mode_pressed)
@@ -81,3 +83,9 @@ func _on_grid_draw() -> void:
 				grid.draw_texture(empty_texture, Vector2(x, y) * MetSys.CELL_SIZE)
 			else:
 				grid.draw_rect(Rect2(Vector2(x, y) * MetSys.CELL_SIZE, MetSys.CELL_SIZE), Color(Color.WHITE, 0.1), false)
+
+func update_name(dirty: bool):
+	if dirty:
+		name = "Map Editor (*)"
+	else:
+		name = "Map Editor"

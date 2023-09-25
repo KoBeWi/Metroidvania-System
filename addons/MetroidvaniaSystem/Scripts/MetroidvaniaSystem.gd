@@ -16,9 +16,7 @@ const CustomElementManager = preload("res://addons/MetroidvaniaSystem/Scripts/Cu
 
 ## TODO: ##
 ## FIXME: nieścisłość z explore_cell() /// zamienić mapped na discovered
-## TODO: pokazywać gdzieś unsaved
 ## TODO: podgląd nieodkrytego stylu w Viewer --> odświeżać po zmianie unexplored display
-## FIXME: inner corner nie koloruje się poprawnnie
 
 enum { R, D, L, U }
 

@@ -4,7 +4,15 @@ extends EditorPlugin
 enum { TAB_EDITOR, TAB_OVERVIEW, TAB_MANAGE }
 
 var main: Control
-var modified: bool
+var modified: bool:
+	set(m):
+		if m == modified:
+			return
+		
+		modified = m
+		dirty_toggled.emit(modified)
+
+signal dirty_toggled
 
 func _has_main_screen() -> bool:
 	return true
