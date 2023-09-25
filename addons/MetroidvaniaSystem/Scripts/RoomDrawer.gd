@@ -153,7 +153,10 @@ static func draw_regular_borders(canvas_item: CanvasItem, offset: Vector2, coord
 				continue
 		
 		var texture: Texture2D = theme.inner_corner
-		var corner_color := get_shared_color(cell_data.get_border_color(i), cell_data.get_border_color(j), theme.default_border_color)
+		var color1 := get_neighbor(map_data, coords, map_data.FWD[i]).get_border_color(rotate(i))
+		var color2 := get_neighbor(map_data, coords, map_data.FWD[j]).get_border_color(rotate(j, -1))
+		
+		var corner_color := get_shared_color(color1, color2, theme.default_border_color)
 		
 		canvas_item.draw_set_transform(offset * MetSys.CELL_SIZE + MetSys.CELL_SIZE * 0.5, PI * 0.5 * i, Vector2.ONE)
 		
@@ -436,8 +439,8 @@ static func get_neighbor(map_data: MetroidvaniaSystem.MapData, coords: Vector3i,
 	var neighbor: Vector2i = Vector2i(coords.x, coords.y) + offset
 	return map_data.get_cell_at(Vector3i(neighbor.x, neighbor.y, coords.z))
 
-static func rotate(i: int) -> int:
-	return (i + 1) % 4
+static func rotate(i: int, amount := 1) -> int:
+	return (i + amount) % 4
 
 static func opposite(i: int) -> int:
 	return (i + 2) % 4
