@@ -15,7 +15,7 @@ var erase_mode: bool
 func _editor_init() -> void:
 	room_only_cursor = false
 
-func _editor_exit():
+func _update_theme():
 	theme_cache.cursor_color = get_theme_color(&\"cursor_color\", &\"MetSys\")
 
 func _editor_input(event: InputEvent):
@@ -149,7 +149,10 @@ func _editor_init() -> void:
 	
 	symbol_group = ButtonGroup.new()
 	reload_symbols()
-	MetSys.settings.theme_changed.connect(reload_symbols, CONNECT_DEFERRED) ## tu force reload
+	MetSys.settings.theme_changed.connect(reload_symbols)
+	MetSys.theme_modified.connect(func(changes: Array[String]):
+		if \"symbols\" in changes:
+			reload_symbols())
 
 func reload_symbols():
 	for symbol in %SymbolContainer.get_children():
@@ -288,7 +291,10 @@ func _editor_init() -> void:
 	border_group = ButtonGroup.new()
 	
 	reload_borders()
-	MetSys.settings.theme_changed.connect(reload_borders, CONNECT_DEFERRED) ## tu force_reload
+	MetSys.settings.theme_changed.connect(reload_borders)
+	MetSys.theme_modified.connect(func(changes: Array[String]):
+		if \"borders\" in changes or \"vertical_borders\" or \"vertical_borders\" in changes:
+			reload_borders())
 
 func reload_borders():
 	for symbol in %BorderContainer.get_children():
@@ -461,7 +467,7 @@ var custom_elements: Dictionary
 func _editor_init() -> void:
 	room_only_cursor = false
 	custom_elements = MetSys.map_data.custom_elements
-	MetSys.settings.theme_changed.connect(reload_custom_elements)
+	MetSys.settings.custom_elements_changed.connect(reload_custom_elements)
 	
 	reload_custom_elements()
 
@@ -711,6 +717,7 @@ layout_mode = 2
 
 [node name="Groups" type="VBoxContainer" parent="PanelContainer/ScrollContainer/VBoxContainer/EditControls"]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
 
 [node name="Label" type="Label" parent="PanelContainer/ScrollContainer/VBoxContainer/EditControls/Groups"]

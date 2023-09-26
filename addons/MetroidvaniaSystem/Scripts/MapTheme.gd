@@ -89,3 +89,25 @@ func is_unicorner() -> bool:
 		return l_corner == u_corner and t_corner == u_corner and cross_corner == u_corner
 	else:
 		return inner_corner == outer_corner
+
+func check_for_changes(prev_state: Array) -> Array[String]:
+	var new_state: Array
+	var changed: Array[String]
+	
+	var properties := get_property_list()
+	for property in properties:
+		new_state.append(get(property.name))
+		if changed:
+			continue
+		
+		var idx := new_state.size() - 1
+		if idx >= prev_state.size():
+			continue
+		
+		if new_state[idx] != prev_state[idx]:
+			changed.append(property.name)
+	
+	if not changed.is_empty() or prev_state.size() != new_state.size():
+		prev_state.assign(new_state)
+	
+	return changed

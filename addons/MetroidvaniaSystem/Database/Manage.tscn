@@ -62,8 +62,7 @@ func refresh_custom_elements() -> void:
 	var custom_script := MetSys.settings.custom_element_script
 	MetSys.settings.custom_element_script = null
 	MetSys.settings.custom_element_script = custom_script
-	
-	MetSys.settings.theme_changed.emit()
+	MetSys.settings.custom_elements_changed.emit()
 
 func export_json() -> void:
 	$FileDialog.popup_centered_ratio(0.6)
@@ -371,7 +370,7 @@ text = "General Settings"
 
 [node name="Button6" type="Button" parent="VBoxContainer/VBoxContainer"]
 layout_mode = 2
-text = "Force Refresh Elements"
+text = "Refresh Custom Elements"
 
 [node name="Button2" type="Button" parent="VBoxContainer/VBoxContainer"]
 layout_mode = 2

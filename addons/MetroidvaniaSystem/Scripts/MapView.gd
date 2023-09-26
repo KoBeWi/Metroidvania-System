@@ -32,7 +32,13 @@ func _ready() -> void:
 	await get_tree().process_frame
 	update_map_position()
 	map.size = MetSys.CELL_SIZE * 200
-	MetSys.settings.theme_changed.connect(func(): update_map_position(); on_layer_changed(current_layer))
+	
+	var refresh := func():
+		update_map_position()
+		on_layer_changed(current_layer)
+	
+	MetSys.settings.theme_changed.connect(refresh)
+	MetSys.theme_modified.connect(refresh.unbind(1))
 
 func get_cursor_pos() -> Vector2i:
 	var pos := (map_overlay.get_local_mouse_position() - MetSys.CELL_SIZE / 2).snapped(MetSys.CELL_SIZE) / MetSys.CELL_SIZE as Vector2i - map_offset

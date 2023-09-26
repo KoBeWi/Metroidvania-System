@@ -126,7 +126,6 @@ Mode that allows drawing cell symbols. A symbol may represent a save point, tele
 [GIF]
 
 Symbols are more useful at runtime. They can be [assigned dynamically and automatically](#markers).
-If you added a new symbol and it's missing from the list, you can use Force Refresh Elements option in [Manage tab](#manage).
 
 #### Cell Group mode
 
@@ -137,7 +136,6 @@ Assign cell groups here. Select group ID on the sidebar, use LMB to assign selec
 #### Border Type mode
 
 This mode allows changing room's borders. There are 2 default border types: wall and passage. More border types can be registered in the [theme]. They can be doors, special bariers or narrow passages, anything. A cell's edge will be highlighted when hovering near it with cursor. You can pick a border type from the sidebar list or by Ctrl+Clicking a border. Draw borders using LMB, remove (reset to wall) with RMB. You can hold and drag to draw multiple borders; useful when you want to draw them at both sides of an edge. Also holding Shift will set the borders for the whole room.
-If you added a new border type and it's missing from the list, you can use Force Refresh Elements option in [Manage tab](#manage).
 
 [GIF]
 
@@ -156,9 +154,10 @@ This mode allows to assign scenes to rooms on the map. The scenes are used in ed
 #### Custom Elements mode
 
 In this mode you can draw custom elements, like special multi-cell markers, elevators, map labels, anything. They need to be first [defined in the main config]. Elements in the editor are drawn as rectangles, but they occupy only their top-left cell. Use LMB to draw an element and RMB on its origin cell to erase it. You can provide a custom String data that will be provided for the draw callback of the element.
-If you added a new custom elemnet and it's missing from the list, you can use Force Refresh Elements option in [Manage tab](#manage).
 
 [GIF]
+
+If the custom element list does not match your theme, you can use Force Refresh Elements option in [Manage tab](#manage).
 
 ### Map Viewer
 

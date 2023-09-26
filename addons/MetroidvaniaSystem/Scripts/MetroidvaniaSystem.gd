@@ -17,6 +17,7 @@ const CustomElementManager = preload("res://addons/MetroidvaniaSystem/Scripts/Cu
 ## TODO: ##
 ## FIXME: nieścisłość z explore_cell() /// zamienić mapped na discovered
 ## TODO: podgląd nieodkrytego stylu w Viewer --> odświeżać po zmianie unexplored display
+## FIXME: dirty po zmianie collectibli
 
 enum { R, D, L, U }
 
@@ -45,6 +46,7 @@ signal room_changed(new_room: String)
 
 signal map_updated
 signal room_assign_updated
+signal theme_modified(changes: Array[String])
 
 func _enter_tree() -> void:
 	var settings_path := "res://MetSysSettings.tres"

@@ -21,10 +21,15 @@ extends Resource
 		custom_element_script = elements
 		if elements:
 			custom_elements = elements.new()
+		else:
+			custom_elements = null
+		
+		custom_elements_changed.emit()
 
 var custom_elements: MetroidvaniaSystem.CustomElementManager
 
 signal theme_changed
+signal custom_elements_changed
 
 func _validate_property(property: Dictionary) -> void:
 	if property.name == "collectible_list":
