@@ -19,7 +19,7 @@ const SHARED_CORNERS = ["u_corner", "l_corner", "t_corner", "cross_corner"]
 
 @export var player_location_scene: PackedScene
 @export var show_exact_player_location: bool
-@export_flags("Center", "Outline", "Borders", "Symbol") var unexplored_display := 3
+@export_flags("Center", "Outline", "Borders", "Symbol") var mapped_display := 3
 
 @export var use_shared_borders: bool:
 	set(usb):
@@ -29,9 +29,9 @@ const SHARED_CORNERS = ["u_corner", "l_corner", "t_corner", "cross_corner"]
 
 @export_group("Colors")
 @export var default_center_color: Color
-@export var unexplored_center_color: Color
+@export var mapped_center_color: Color
 @export var default_border_color: Color
-@export var unexplored_border_color: Color
+@export var mapped_border_color: Color
 @export var room_separator_color: Color
 
 @export_group("Symbols")

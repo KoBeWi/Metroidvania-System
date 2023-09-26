@@ -19,10 +19,11 @@ This section explains the terminology used in this README and in the addon itsel
 - Border: Edge of a cell. There are 2 types of borders:
 	- Wall: Solid border with no holes.
 	- Passage: A border with hole or another feature that signifies passage (e.g. a door).
-- Corner: Meeting point of 2 or more borders.
+- Corner: Connecting point of 2 or more non-parallel borders.
 - Room: A collection of multiple cells enclosed by borders on every side. In game they are tied to a scene.
-- Explored Cell: A cell visited by the player that appears normally.
 - Mapped Cell: An unvisited cell discovered via a mapping item that usually appears grayed-out.
+- Explored Cell: A cell visited by the player that appears normally.
+- Discovered Cell: A cell either mapped or explored.
 
 ## Quick overview
 
@@ -59,7 +60,7 @@ A small, but important sub-system are object IDs. Whether it's a collectible, a 
 - Cells can be either square or rectangular, providing separate set of borders for each shape.
 - Cells support separators, i.e. soft-borders within the same room, to make the grid more accented.
 - There is a texture for empty cells that can be drawn automatically.
-- Mapped, unexplored cells, have a separate color set. You can also define what details are displayed for such cells
+- Mapped cells, have a separate color set. You can also define what details are displayed for such cells
 - Player location on map can be customized and displayed automatically.
 - The player location can be marked per-cell or per-pixel.
 - A special drawing mode called "Shared Borders", which makes each border shared between neighboring cells, instead of each cell having a separate inner border.
@@ -157,11 +158,11 @@ In this mode you can draw custom elements, like special multi-cell markers, elev
 
 [GIF]
 
-If the custom element list does not match your theme, you can use Force Refresh Elements option in [Manage tab](#manage).
+If the custom element list does not match your theme, you can use Refresh Custom Elements option in [Manage tab](#manage).
 
 ### Map Viewer
 
-Like Map Editor, Map Viewer is divided into sidebar and map view. The top of the sidebar has the same navigation controls, except the other layer preview is replaced with Preview Unexplored. When that last option is enabled, the map will draw in the unexplored style, i.e. mapped, but not visited by player.
+Like Map Editor, Map Viewer is divided into sidebar and map view. The top of the sidebar has the same navigation controls, except the other layer preview is replaced with Preview Mapped. When that last option is enabled, the map will draw in the mapped style, i.e. discovered, but not visited by player.
 
 In Map Viewer you can't edit the map, instead it provides a few tools that allows you to navigate your world more easily.
 
@@ -248,9 +249,11 @@ The theme used for MetSys database. This defines colors used in various areas. Y
 - Scene Cell Border - Used for marking room edges when a scene with room assigned is opened in the 2D editor.
 - Scene Room Exit - Same as above, but for passages.
 
+Using the Reset Database Theme button you can restore the original colors. Note that this action is irreversible.
+
 #### Custom Element Script
 
-Custom Element script must be a `@tool` script that extends `MetroidvaniaSystem.CustomElementManager`. The elements are registered in the constructor (`_init()`) using `register_element(element_name: String, callback: Callable)` (e.g. `register_element("label", draw_label)`). Once you define the list of elements and add the script in [General Settings](#general-settings) (make sure to use Force Refresh Elements option or restart the editor), you can place the elements in Custom [Elements mode in the map editor](#custom-elements-mode).
+Custom Element script must be a `@tool` script that extends `MetroidvaniaSystem.CustomElementManager`. The elements are registered in the constructor (`_init()`) using `register_element(element_name: String, callback: Callable)` (e.g. `register_element("label", draw_label)`). Once you define the list of elements and add the script in [General Settings](#general-settings) (make sure to use Refresh Custom Elements option or restart the editor), you can place the elements in Custom [Elements mode in the map editor](#custom-elements-mode).
 
 For elements to draw on in-game map, you need to call `MetSys.draw_custom_elements()`, which will automatically draw relevant elements using their callbacks (note that this only applies to your in-game implementation, as MetSys Database calls this method already). The callback is as follows: `func function_name(canvas_item: CanvasItem, coords: Vector3i, pos: Vector2, size: Vector2, data: String)`.
 - `function_name`: you need to provide this name to `register_callback()`.
@@ -265,6 +268,12 @@ Using these arguments, you need to draw your element using any available custom 
 canvas_item.draw_texture(preload("res://icon.svg"), pos)
 ```
 Note that all elements within the visible area are drawn regardless if they are discovered or not. You need to manually check if the cell occupied by element (or any related cell you want to consider) was discovered, using `MetSys.is_cell_discovered(coords)`.
+
+#### Other options
+
+Two remaining options in the Manage tab are:
+- Reload and Cleanup Map Data: As the name says, this will force reload map data from file and also cleanup invalid data like scenes assigned to non-existent cells etc. (note such data can be created only as a result of a bug or manual tampering with the map data file).
+- Export Map as JSON: Exports the contents of MapData.txt as JSON, in case you want to use it in external tools or just not rely on custom format (MetSys itself does not support JSON).
 
 ## Runtime guide
 
@@ -339,7 +348,9 @@ A cell may have assigned any number of markers, out of the markers defined in ma
 
 ### Discovering
 
-Cells on the map can be in 3 states: undiscovered, discovered and visited. Undiscovered rooms don't draw at all, visited rooms draw with the default style. Discovered rooms draw with an alternate style and rules that can be specified in the [map theme](#map_theme). You can manually discover cells using `MetSys.discover_cell()` or you can discover a group of cells (e.g. when picking up a map item) by using `MetSYs.discover_cell_group()`. Cell groups can be defined in the [editor](#cell-group-mode). Discovering a cell emits `MetSys.map_updated` signal.
+Cells on the map can be in 3 states: undiscovered, mapped and explored. Undiscovered rooms don't draw at all, explored rooms draw with the default style. Mapped rooms draw with an alternate style and rules that can be specified in the [map theme](#map_theme). You can manually discover cells using `MetSys.discover_cell()` or you can discover a group of cells (e.g. when picking up a map item) by using `MetSYs.discover_cell_group()`. Cell groups can be defined in the [editor](#cell-group-mode). Discovering a cell emits `MetSys.map_updated` signal.
+
+You can use `is_cell_discovered()` to check if cell is discovered and `get_discovered_ratio()` to get ratio of discovered cells vs all cells.
 
 ### Storable objects
 
@@ -423,7 +434,7 @@ The theme has a long list of properties, divided into sections.
 - Empty Space Texture: Optional. Texture that draws in empty or undiscovered coordinates when drawing cells. Also drawn in Map Editor.
 - Player Location Scene: Optional. The scene instantiated when using `add_player_location()` method. The root must be Node2D-derived. If not provided, drawing player location using MetSys methods is not possible.
 - Show Exact Player Location: If enabled, the player location scene will be drawn at the exact position in cell (player position is remapped to relative position inside cell). If disabled, the player location is always drawn in the center of the cell.
-- Unexplored Display: Defines how mapped unexplored rooms are displayed.
+- Mapped Display: Defines how mapped rooms are displayed.
 	- Center - If disabled, center texture will not be drawn.
 	- Outline - If disabled, room walls will not be drawn.
 	- Borders - If disabled, walls will be drawn instead of passages.
@@ -433,9 +444,9 @@ The theme has a long list of properties, divided into sections.
 #### Colors
 
 - Default Center Color: Modulation of the center texture when it's not overriden by custom color.
-- Unexplored Center Color: Modulation of the center texture when the cell is mapped.
+- Mapped Center Color: Modulation of the center texture when the cell is mapped.
 - Default Border Color: Modulation of the border textures when it's not overriden by custom color.
-- Unexplored Border Color: Modulation of the border textures when the cell is mapped.
+- Mapped Border Color: Modulation of the border textures when the cell is mapped.
 - Room Separator Color: Color of the room separator texture, if provided.
 
 #### Symbols
@@ -479,19 +490,19 @@ The addon comes with a few themes *inspired* by various metroidvania games. They
 #### AoS
 ![](Media/ThemeAoS.png)
 
-Inspired by Castlevania: Aria of Sorrow. Simple blue squares with white, shared borders. Notably it displays room connections as colored lines. Has no symbols. Player location is white shrinking dot, unexplored rooms display all connections.
+Inspired by Castlevania: Aria of Sorrow. Simple blue squares with white, shared borders. Notably it displays room connections as colored lines. Has no symbols. Player location is white shrinking dot, mapped rooms display all connections.
 #### BS
 ![](Media/ThemeBS.png)
 
-Inspired by Bloodstained: Ritual of the Night. Rectangular light-blue cells with shared borders and normal room connections (i.e. hole-like). Also no symbols. Player location is a stylized dot showing exact location and passages show normally in unexplored rooms.
+Inspired by Bloodstained: Ritual of the Night. Rectangular light-blue cells with shared borders and normal room connections (i.e. hole-like). Also no symbols. Player location is a stylized dot showing exact location and passages show normally in mapped rooms.
 #### Exquisite
 ![](Media/ThemeExquisite.png)
 
-Original (and default) theme created for MetSys. Rectangular cells, customizes every available element of the theme to look fancy. Has a few random symbols. Player location is a rotating symbol that shows exact position. Symbols appear in unexplored rooms, but not passages.
+Original (and default) theme created for MetSys. Rectangular cells, customizes every available element of the theme to look fancy. Has a few random symbols. Player location is a rotating symbol that shows exact position. Symbols appear in mapped rooms, but not passages.
 #### MF
 ![](Media/ThemeMF.png)
 
-Inspired by Metroid Fusion. Simple square cells defaulting to magenta color and a texture for empty cells. Has a bunch of symbols and extra border styles for doors. Includes symbols for collected and uncollected items. Player location is a blinking square. Symbols appear in unexplored rooms, but not passages.
+Inspired by Metroid Fusion. Simple square cells defaulting to magenta color and a texture for empty cells. Has a bunch of symbols and extra border styles for doors. Includes symbols for collected and uncollected items. Player location is a blinking square. Symbols appear in mapped rooms, but not passages.
 #### SotN
 ![](Media/ThemeSotN.png)
 
@@ -499,15 +510,15 @@ Inspired by Castlevania: Symphony of the Night. Basically the same as BS, but wi
 #### RR
 ![](Media/ThemeRR.png)
 
-Inspired by Rabi-Ribi. Unlike other themes, cell borders are colored. Has many symbols, including various collectibles. Notably, the collectible symbols are displayed only when a collectible is acquired. Player locations is a rounded square with smoothed blinking. Unexplored rooms display everything normally.
+Inspired by Rabi-Ribi. Unlike other themes, cell borders are colored. Has many symbols, including various collectibles. Notably, the collectible symbols are displayed only when a collectible is acquired. Player locations is a rounded square with smoothed blinking. Mapped rooms display everything normally.
 #### VoF
 ![](Media/ThemeVoF.png)
 
-Inspired by Voice of Flowers (which is created by me). In fact it uses some of the old sprites from the game. Square cells with visible separators and a texture for empty space. Has a bunch of various symbols of mixed quality and an extra border style for abyss. No symbols for collectibles. Player location is a rotating head. Unexplored rooms don't display anything, just cell color without any borders.
+Inspired by Voice of Flowers (which is created by me). In fact it uses some of the old sprites from the game. Square cells with visible separators and a texture for empty space. Has a bunch of various symbols of mixed quality and an extra border style for abyss. No symbols for collectibles. Player location is a rotating head. Mapped rooms don't display anything, just cell color without any borders.
 #### Zeric
 ![](Media/ThemeZeric.png)
 
-Inspired by map guides made by user Zeric ([Example](https://gamefaqs.gamespot.com/gba/589456-castlevania-aria-of-sorrow/map/772-castle-map)). The only theme that uses all possible corner styles for shared borders. Has a few non-collectible symbols and extra border styles. Player locations is a symbol, unexplored rooms display everything.
+Inspired by map guides made by user Zeric ([Example](https://gamefaqs.gamespot.com/gba/589456-castlevania-aria-of-sorrow/map/772-castle-map)). The only theme that uses all possible corner styles for shared borders. Has a few non-collectible symbols and extra border styles. Player locations is a symbol, mapped rooms display everything.
 
 ## Sample project
 

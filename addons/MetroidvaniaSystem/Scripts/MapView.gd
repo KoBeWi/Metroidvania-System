@@ -13,7 +13,7 @@ var view_drag: Vector4
 var map_offset := Vector2i(10, 10)
 
 var current_layer: int
-var force_unexplored: bool
+var force_mapped: bool
 
 func _enter_tree() -> void:
 	if owner:
@@ -105,7 +105,7 @@ func _on_map_draw() -> void:
 	if not plugin:
 		return
 	
-	MetroidvaniaSystem.RoomDrawer.force_unexplored = force_unexplored
+	MetroidvaniaSystem.RoomDrawer.force_mapped = force_mapped
 	for x in range(-100, 100):
 		for y in range(-100, 100):
 			MetSys.draw_cell(map, Vector2i(x, y) + Vector2i(100, 100), Vector3i(x, y, current_layer), true, false)
@@ -113,7 +113,7 @@ func _on_map_draw() -> void:
 	if MetSys.settings.theme.use_shared_borders:
 		MetSys.draw_shared_borders()
 	
-	MetroidvaniaSystem.RoomDrawer.force_unexplored = false
+	MetroidvaniaSystem.RoomDrawer.force_mapped = false
 
 func _on_overlay_draw() -> void:
 	MetSys.draw_custom_elements(map_overlay, Rect2i(-map_offset, map_overlay.size / MetSys.CELL_SIZE + Vector2.ONE), Vector2(), current_layer)

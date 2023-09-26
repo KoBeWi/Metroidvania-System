@@ -1,6 +1,6 @@
 extends RefCounted
 
-static var force_unexplored: bool
+static var force_mapped: bool
 
 static func draw(canvas_item: CanvasItem, offset: Vector2, coords: Vector3i, skip_empty: bool, map_data: MetroidvaniaSystem.MapData, save_data: MetroidvaniaSystem.SaveData):
 	if MetSys.settings.custom_elements and not map_data.custom_elements.is_empty():
@@ -15,7 +15,7 @@ static func draw(canvas_item: CanvasItem, offset: Vector2, coords: Vector3i, ski
 	var discovered := 2
 	if save_data:
 		discovered = save_data.is_cell_discovered(coords)
-	elif force_unexplored:
+	elif force_mapped:
 		discovered = 1
 	
 	if discovered == 0:
@@ -26,12 +26,12 @@ static func draw(canvas_item: CanvasItem, offset: Vector2, coords: Vector3i, ski
 	var theme: MapTheme = MetSys.settings.theme
 	
 	var ci := canvas_item.get_canvas_item()
-	var display_flags: int = (int(discovered == 2) * 255) | theme.unexplored_display
+	var display_flags: int = (int(discovered == 2) * 255) | theme.mapped_display
 	
 	# center
 	if bool(display_flags & MetroidvaniaSystem.DISPLAY_CENTER):
 		var room_color := cell_data.get_color()
-		theme.center_texture.draw(ci, offset * MetSys.CELL_SIZE, room_color if discovered == 2 else theme.unexplored_center_color)
+		theme.center_texture.draw(ci, offset * MetSys.CELL_SIZE, room_color if discovered == 2 else theme.mapped_center_color)
 	
 	# corners
 	if theme.use_shared_borders:
@@ -101,7 +101,7 @@ static func draw_regular_borders(canvas_item: CanvasItem, offset: Vector2, coord
 			if discovered == 2:
 				color = cell_data.get_border_color(i)
 			else:
-				color = theme.unexplored_border_color
+				color = theme.mapped_border_color
 		
 		if not texture:
 			continue
@@ -127,7 +127,7 @@ static func draw_regular_borders(canvas_item: CanvasItem, offset: Vector2, coord
 		if discovered == 2:
 			corner_color = get_shared_color(cell_data.get_border_color(i), cell_data.get_border_color(j), theme.default_border_color)
 		else:
-			corner_color = theme.unexplored_border_color
+			corner_color = theme.mapped_border_color
 		
 		canvas_item.draw_set_transform(offset * MetSys.CELL_SIZE + MetSys.CELL_SIZE * 0.5, PI * 0.5 * i, Vector2.ONE)
 		
