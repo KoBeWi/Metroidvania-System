@@ -57,11 +57,24 @@ func on_recenter_view() -> void:
 func _on_overlay_input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion:
 		if view_drag != Vector4():
+			if event.position.x >= map_overlay.size.x:
+				map_overlay.warp_mouse(Vector2(event.position.x - map_overlay.size.x, event.position.y))
+				view_drag.x -= map_overlay.size.x
+			elif event.position.x < 0:
+				map_overlay.warp_mouse(Vector2(map_overlay.size.x + event.position.x, event.position.y))
+				view_drag.x += map_overlay.size.x
+			
+			if event.position.y >= map_overlay.size.y:
+				map_overlay.warp_mouse(Vector2(event.position.x, event.position.y - map_overlay.size.y))
+				view_drag.y -= map_overlay.size.y
+			elif event.position.y < 0:
+				map_overlay.warp_mouse(Vector2(event.position.x, map_overlay.size.y + event.position.y))
+				view_drag.y += map_overlay.size.y
+			
 			map_offset = Vector2(view_drag.z, view_drag.w) + (map_overlay.get_local_mouse_position() - Vector2(view_drag.x, view_drag.y)) / MetSys.CELL_SIZE
 			update_map_position()
 			map_overlay.queue_redraw()
 			_on_drag()
-			## TODO: wrapping
 		else:
 			map_overlay.queue_redraw()
 		
