@@ -160,7 +160,7 @@ In this mode you can draw custom elements, like special multi-cell markers, elev
 
 ![](Media/EditorCustomElements.gif)
 
-If the custom element list does not match your theme, you can use Refresh Custom Elements option in [Manage tab](#manage).
+If the custom element list does not match your theme, you can use Refresh Custom Elements option in the [Manage tab](#manage).
 
 ### Map Viewer
 
@@ -172,31 +172,27 @@ In Map Viewer you can't edit the map, instead it provides a few tools that allow
 
 The main feature of Map Viewer is that it's integrated with your map scenes. If you assigned scenes to your rooms, you can open tha assigned scene when clicking the room.
 
-[GIF]
+![](Media/ViewerScenes.gif)
 
-This works both ways. When you open a scene in the editor, it will be highlighted in the viewer.
-
-[GIF]
-
-Hovering over a room will display the assigned scene name. If there is no scene assigned, the coordinate label changes color.
+This works both ways. When you open a scene in the editor, it will be highlighted in the viewer. Hovering over a room will display the assigned scene name. If there is no scene assigned, the coordinate label changes color.
 
 #### Collectible statistics
 
 This feature allows you to locate and display all registered collectibles that you placed on your scenes. The first step is setting up your collectibles, which is done in the Collectible Settings tab.
 
-[screenshot]
+![](Media/ViewerCollectibleSettings.gif)
 
 Press + button to add a collectible, then specify its name and icon. Name **must** match the name of the node in collectible's scene (or at least its prefix; nodes named Collectible1 and Collectible2 will be matched "Collectible"). The icon is just a representation of the collectible for the purposes of finding.
 
 Once your collectibles are set up, go to the Collectible Finder tab and press the Scan Maps button. MetSys will perform a scan of all scenes in your maps directory. Once complete, you will see a list of all found collectibles and their coordinates. Hovering on a coordinate on the list will highlight it on the map (even if it's on another layer). You can also enable Display on Map to show all the collectibles as icons on the map.
 
-[GIF]
+![](Media/ViewerFinder.gif)
 
 ### Manage
 
 Unlike the other 2 tabs, Manage has no map view. Instead is's a simple list of options.
 
-[screenshot]
+![](Media/ManageMain.png)
 
 #### General Settings
 
@@ -204,7 +200,7 @@ Selecting General Settings option will open the MetSys settings file in the insp
 
 General Settings are a configuration file for MetSys plugin in your project.
 - Theme: the map theme of your project. It determines how map cells are drawn. See [Map Theme section](#map-theme) for more details.
-- Map Root Folder: the location of your world's scenes (see [scenes]). All scenes you want to assign to your rooms need to be inside this directory or its subdirectories.
+- Map Root Folder: the location of your world's scenes (see [scene assign](#scene-assign-mode)). All scenes you want to assign to your rooms need to be inside this directory or its subdirectories.
 - In Game Cell Size: The size of one cell of a room as it appears in game (not on map). It affects how [exact player position] is display on map and also affects camera bounds (if adjusted).
 - Custom Element Script: script defining available custom elements. See [Custom Element Script section](#custom-element-script) for more details.
 
