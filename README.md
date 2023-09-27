@@ -1,4 +1,4 @@
-# Metroidvania System
+# <img src="Media/Icon.png" width="64" height="64"> Metroidvania System
 
 Metroidvania System (abbrevated as MetSys) is a general-purpose toolkit for creating metroidvania games in Godot game engine. It helps with map design, navigation and presentation, tracking collectibles and provides basic save data functionality related to the system. Its components can be used independently, even for games that aren't metroidvanias.
 
