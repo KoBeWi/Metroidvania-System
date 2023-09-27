@@ -7,7 +7,7 @@ Supports Godot **4.2** or newer.
 ---
 **!!! NOTE !!!**
 
-This is a soft release, which means the addon is technically *not* fully finished and not officially released yet. Missing things are the sample project readme section and code comments and API documentation. The API itself is more or less finished, but I might do some breaking changes if I spot something is still wrong. Once I wrap things up and make a trailer, I'll make a proper announcement. Feel free to submit early feedback.
+This is a soft release, which means the addon is technically *not* fully finished and not officially released yet. Missing things are the Sample Project README section and code comments, and API documentation. The API itself is more or less finished, but I might do some breaking changes if I spot something is still wrong. Once I wrap things up and make a trailer, I'll make a proper announcement. Feel free to submit early feedback.
 
 **END OF NOTE**
 
