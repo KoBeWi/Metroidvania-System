@@ -120,45 +120,45 @@ Note that any modifications to a room will remove its assigned scene.
 
 This mode allows overriding the default cell color. Use LMB to assign the color, RMB to clear it (so default will be used). You can pick the color using the color picker on the sidebar or by Ctrl+Clicking a colored cell. You can also color the whole room at once by holding Shift.
 
-[GIF]
+![](Media/EditorCellColor.gif)
 
 #### Cell Symbol mode
 
-Mode that allows drawing cell symbols. A symbol may represent a save point, teleport, treasure, anything. Symbols need to be registered in the [theme] first, then you can select one from the list on the sidebar or by Ctrl+Clicking a cell with a symbol. Use LMB to draw symbol, RMB to remove. A cell may have only a single symbol.
+Mode that allows drawing cell symbols. A symbol may represent a save point, teleport, treasure, anything. Symbols need to be registered in the [theme](#map-theme) first, then you can select one from the list on the sidebar or by Ctrl+Clicking a cell with a symbol. Use LMB to draw symbol, RMB to remove. A cell may have only a single symbol.
 
-[GIF]
+![](Media/EditorCellSymbol.gif)
 
 Symbols are more useful at runtime. They can be [assigned dynamically and automatically](#markers).
 
 #### Cell Group mode
 
-Assign cell groups here. Select group ID on the sidebar, use LMB to assign selected group and RMB to unassign. Holding Shift will add or remove group to the whole room. Cell groups are a mean to operate on multiple cells at once. The most common use case are maps items that discover a portion of the world map. A call may belong to any number of groups.
+Assign cell groups here. Select group ID on the sidebar, use LMB to assign selected group and RMB to unassign. Holding Shift will add or remove group to the whole room. Cell groups are a mean to operate on multiple cells at once. The most common use case are [maps items that discover a portion of the world map](#discovering). A call may belong to any number of groups.
 
-[GIF]
+![](Media/EditorCellGroup.gif)
 
 #### Border Type mode
 
-This mode allows changing room's borders. There are 2 default border types: wall and passage. More border types can be registered in the [theme]. They can be doors, special bariers or narrow passages, anything. A cell's edge will be highlighted when hovering near it with cursor. You can pick a border type from the sidebar list or by Ctrl+Clicking a border. Draw borders using LMB, remove (reset to wall) with RMB. You can hold and drag to draw multiple borders; useful when you want to draw them at both sides of an edge. Also holding Shift will set the borders for the whole room.
+This mode allows changing room's borders. There are 2 default border types: wall and passage. More border types can be registered in the [theme](#map-theme). They can be doors, special bariers or narrow passages, anything. A cell's edge will be highlighted when hovering near it with cursor. You can pick a border type from the sidebar list or by Ctrl+Clicking a border. Draw borders using LMB, remove (reset to wall) with RMB. You can hold and drag to draw multiple borders; useful when you want to draw them at both sides of an edge. Also holding Shift will set the borders for the whole room.
 
-[GIF]
+![](Media/EditorBorderType.gif)
 
 #### Border Color mode
 
 Border colors can be changed separately from cell color. The process is the same - use picker or Ctrl to select color, use LMB/RMB to draw/remove color, hold Shift to set color for all borders in a room.
 
-[GIF]
+![](Media/EditorBorderColor.gif)
 
 #### Scene Assign mode
 
 This mode allows to assign scenes to rooms on the map. The scenes are used in editor in the Map Viewer and at runtime for room switching. MetSys will automatically detect enclosed rooms; click one to open a file dialog that lets you choose a scene. Only scenes from the [designated scene directory] can be selected. Rooms with scenes assigned are highlighted and hovering them will display the assigned scene name in top-left.
 
-[GIF]
+![](Media/EditorSceneAssign.gif)
 
 #### Custom Elements mode
 
 In this mode you can draw custom elements, like special multi-cell markers, elevators, map labels, anything. They need to be first [defined in the main config]. Elements in the editor are drawn as rectangles, but they occupy only their top-left cell. Use LMB to draw an element and RMB on its origin cell to erase it. You can provide a custom String data that will be provided for the draw callback of the element.
 
-[GIF]
+![](Media/EditorCustomElements.gif)
 
 If the custom element list does not match your theme, you can use Refresh Custom Elements option in [Manage tab](#manage).
 
