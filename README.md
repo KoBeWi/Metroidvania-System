@@ -114,6 +114,8 @@ This is the most basic mode and allows you to draw rooms. The rooms are drawn us
 
 ![](Media/EditorRoomLayout.gif)
 
+Note that any modifications to a room will remove its assigned scene.
+
 #### Cell Color mode
 
 This mode allows overriding the default cell color. Use LMB to assign the color, RMB to clear it (so default will be used). You can pick the color using the color picker on the sidebar or by Ctrl+Clicking a colored cell. You can also color the whole room at once by holding Shift.

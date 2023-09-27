@@ -400,7 +400,7 @@ func get_assigned_scene_at(coords: Vector3i) -> String:
 
 func erase_cell(coords: Vector3i):
 	var assigned_scene: String = cells[coords].assigned_scene
-	MetSys.map_data.assigned_scenes[assigned_scene] = []
+	assigned_scenes.erase(assigned_scene)
 	
 	cells.erase(coords)
 	

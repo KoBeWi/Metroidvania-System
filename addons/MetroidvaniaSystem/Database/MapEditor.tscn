@@ -49,6 +49,8 @@ func update_rooms(rect: Rect2i):
 			
 			var cell = map_data.get_cell_at(coords)
 			if cell:
+				remove_assign(coords)
+				
 				if x != rect.end.x - 1:
 					cell.borders[0] = -1
 				if y != rect.end.y - 1:
@@ -95,6 +97,10 @@ func erase_rooms(rect: Rect2i):
 	
 	mark_modified()
 	editor.map.queue_redraw()
+
+func remove_assign(coords: Vector3i):
+	var assigned_scene: String = MetSys.map_data.cells[coords].assigned_scene
+	MetSys.map_data.assigned_scenes.erase(assigned_scene)
 
 func close_border(pos: Vector2i, border: int):
 	var cell: MetroidvaniaSystem.MapData.CellData = MetSys.map_data.get_cell_at(get_coords(pos))
@@ -431,7 +437,6 @@ func _editor_draw(map_overlay: CanvasItem):
 	super(map_overlay)
 
 	for coords in MetSys.map_data.assigned_scenes.values():
-		## tu może być errror
 		if coords[0].z != editor.current_layer:
 			continue
 		

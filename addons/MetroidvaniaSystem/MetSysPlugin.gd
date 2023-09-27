@@ -63,7 +63,7 @@ func _save_external_data() -> void:
 	modified = false
 
 func _get_unsaved_status(for_scene: String) -> String:
-	if modified:
+	if modified and for_scene.is_empty():
 		return "MetSys map has been modified."
 	return ""
 
