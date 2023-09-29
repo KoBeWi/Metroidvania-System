@@ -1,8 +1,6 @@
 @tool
 class_name MetroidvaniaSystem extends Node
 
-const VECTOR2INF = Vector2i(999999, 99999999)
-const VECTOR3INF = Vector3i(999999, 99999999, 99999999)
 const DEFAULT_SYMBOL = -99
 enum { DISPLAY_CENTER = 1, DISPLAY_OUTLINE = 2, DISPLAY_BORDERS = 4, DISPLAY_SYMBOLS = 8 }
 
@@ -22,7 +20,7 @@ var CELL_SIZE: Vector2
 var map_data: MapData
 var save_data: SaveData
 
-var last_player_position := VECTOR3INF
+var last_player_position := Vector3i.MAX
 var exact_player_position: Vector2
 var current_room: RoomInstance
 

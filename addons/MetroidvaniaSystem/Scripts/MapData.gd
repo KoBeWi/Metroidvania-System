@@ -115,7 +115,7 @@ class CellData:
 
 class CellOverride extends CellData:
 	var original_room: CellData
-	var custom_cell_coords := MetroidvaniaSystem.VECTOR3INF
+	var custom_cell_coords := Vector3i.MAX
 	var commit_queued: bool
 	
 	func _init(from: CellData) -> void:
@@ -171,7 +171,7 @@ class CellOverride extends CellData:
 		if value == "/":
 			_cleanup_assigned_scene()
 		else:
-			if custom_cell_coords != MetroidvaniaSystem.VECTOR3INF:
+			if custom_cell_coords != Vector3i.MAX:
 				if not value in MetSys.map_data.assigned_scenes:
 					MetSys.map_data.assigned_scenes[value] = []
 				MetSys.map_data.assigned_scenes[value].append(custom_cell_coords)
@@ -204,7 +204,7 @@ class CellOverride extends CellData:
 		_queue_commit()
 	
 	func destroy() -> void:
-		if custom_cell_coords == MetroidvaniaSystem.VECTOR3INF:
+		if custom_cell_coords == Vector3i.MAX:
 			push_error("Only custom cell can be destroyed.")
 			return
 		
@@ -225,10 +225,10 @@ class CellOverride extends CellData:
 			MetSys.map_data.cells[coords].override_map = ""
 	
 	func _get_override_string(coords: Vector3i) -> String:
-		return str(get_string(), "|", coords.x, ",", coords.y, ",", coords.z, "|", custom_cell_coords != MetroidvaniaSystem.VECTOR3INF)
+		return str(get_string(), "|", coords.x, ",", coords.y, ",", coords.z, "|", custom_cell_coords != Vector3i.MAX)
 	
 	func _queue_commit():
-		if commit_queued or custom_cell_coords != MetroidvaniaSystem.VECTOR3INF:
+		if commit_queued or custom_cell_coords != Vector3i.MAX:
 			return
 		commit_queued = true
 		_commit.call_deferred()
