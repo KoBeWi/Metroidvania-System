@@ -361,7 +361,7 @@ A cell may have assigned any number of markers, out of the markers defined in ma
 
 Cells on the map can be in 3 states: undiscovered, mapped and explored. Undiscovered rooms don't draw at all, explored rooms draw with the default style. Mapped rooms draw with an alternate style and rules that can be specified in the [map theme](#map_theme). You can manually discover cells using `MetSys.discover_cell()` or you can discover a group of cells (e.g. when picking up a map item) by using `MetSys.discover_cell_group()`. Cell groups can be defined in the [editor](#cell-group-mode). Discovering a cell emits `MetSys.map_updated` signal.
 
-You can use `is_cell_discovered()` to check if a cell is discovered and `get_discovered_ratio()` to get ratio of discovered cells vs all cells.
+You can use `is_cell_discovered()` to check if a cell is discovered and `get_explored_ratio()` to get ratio of explored cells vs all cells.
 
 ### Storable objects
 
@@ -541,6 +541,7 @@ This section describes the features of the included sample project and where to 
 
 ## Closing words
 
+**TODO**
 Please enjoy
 report bugs, missing documentation, missing features
 

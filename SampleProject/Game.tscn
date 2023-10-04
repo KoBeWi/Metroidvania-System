@@ -151,7 +151,7 @@ func _notification(what: int) -> void:
 
 func update():
 	if is_visible_in_tree():
-		text = \"%03d%%\" % int(MetSys.get_discovered_ratio() * 100)
+		text = \"%03d%%\" % int(MetSys.get_explored_ratio() * 100)
 "
 
 [node name="Game" type="Node2D"]

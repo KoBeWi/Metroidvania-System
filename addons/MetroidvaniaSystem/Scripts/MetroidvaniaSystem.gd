@@ -12,9 +12,11 @@ const RoomInstance = preload("res://addons/MetroidvaniaSystem/Scripts/RoomInstan
 const RoomDrawer = preload("res://addons/MetroidvaniaSystem/Scripts/RoomDrawer.gd")
 const CustomElementManager = preload("res://addons/MetroidvaniaSystem/Scripts/CustomElementManager.gd")
 
+## Direction constants used by various systems, e.g. `CellOverride.set_border()`.
 enum { R, D, L, U }
 
 var settings: Settings
+## The size of a map cell. Automatically set to the size of [member MapTheme.center_texture].
 var CELL_SIZE: Vector2
 
 var map_data: MapData
@@ -24,6 +26,7 @@ var last_player_position := Vector3i.MAX
 var exact_player_position: Vector2
 var current_room: RoomInstance
 
+## The current layer, for purpose of visiting with [method set_player_position]. MetSys does not modify it automatically in any way. Modifying it emits [signal cell_changed].
 var current_layer: int:
 	set(layer):
 		if layer == current_layer:
@@ -34,9 +37,12 @@ var current_layer: int:
 
 var _meta_list: Array[StringName]
 
-signal cell_changed(nwe_cell: Vector3i)
+## Emitted when the player crosses the cell boundary and visits another cell as a result of [method set_player_position]. The new cell is provided as an argument.
+signal cell_changed(new_cell: Vector3i)
+## Emitted when the player enters a new room, i.e. using [method set_player_position] results in a cell that has a different assigned scene. The new scene is provided as an argument, you can use it to easily make room transitions.
 signal room_changed(new_room: String)
 
+## Emitted when a map cell was added, deleted or modified. This includes cell overrides and MapBuilder commits.
 signal map_updated
 signal room_assign_updated
 signal theme_modified(changes: Array[String])
@@ -68,9 +74,11 @@ func _update_theme():
 func _ready() -> void:
 	set_physics_process(false)
 
+## Returns a [Dictionary] containing the MetSys' runtime data, like discovered cells or stored objects. You need to serialize it yourself, e.g. using [method FileAccess.store_var].
 func get_save_data() -> Dictionary:
 	return save_data.get_data()
 
+## Pass it the data from [method get_save_data] to restore the saved state of MetSys. Calling this method with the default parameter will clear the data, allowing to start new game session.
 func set_save_data(data := {}):
 	save_data = SaveData.new()
 	save_data.set_data(data)
@@ -83,6 +91,7 @@ func visit_cell(coords: Vector3i):
 	if not new_map.is_empty() and not previous_map.is_empty() and new_map != previous_map:
 		room_changed.emit(new_map)
 
+## Returns [code]true[/code] if the call was discovered, either mapped (if [param include_mapped] is [code]true[/code]) or explored.
 func is_cell_discovered(coords: Vector3i, include_mapped := true) -> bool:
 	if RoomDrawer.force_mapped:
 		return include_mapped
@@ -93,7 +102,8 @@ func is_cell_discovered(coords: Vector3i, include_mapped := true) -> bool:
 	var discovered := save_data.is_cell_discovered(coords)
 	return discovered == 2 or include_mapped and discovered == 1
 
-func get_discovered_ratio(layer := -1):
+## Returns the ratio of explored cells vs all cells. Cells created with MapBuilder are also included.
+func get_explored_ratio(layer := -1):
 	var all: float
 	var discovered: float
 	
@@ -106,6 +116,8 @@ func get_discovered_ratio(layer := -1):
 	
 	return discovered / all
 
+## Sets the position of the player to be tracked by MetSys. Automatically calls [method visit_cell] when crossing cell boundary and emits [signal cell_changed] and [signal room_changed] signals.
+## [param position] should be position in the room's coordinates, i.e. with [code](0, 0)[/code] being the top-left corner of the scene assigned to the room (which in most cases simply equals to global position of the player).
 func set_player_position(position: Vector2):
 	exact_player_position = position
 	
@@ -116,10 +128,14 @@ func set_player_position(position: Vector2):
 		last_player_position = player_pos_3d
 		cell_changed.emit(player_pos_3d)
 
+## Discovers (maps) the cell at the given [param coords]. Fails if the cell does not exist.
 func discover_cell(coords: Vector3i):
+	assert(coords in map_data.cells)
+	
 	save_data.discover_cell(coords)
 	map_updated.emit()
 
+## Discovers (maps) all cells that belong to the specified group. The group id must exist (i.e. have at least a single cell with it assigned).
 func discover_cell_group(group_id: int):
 	assert(group_id in map_data.cell_groups)
 	
@@ -128,13 +144,19 @@ func discover_cell_group(group_id: int):
 	
 	map_updated.emit()
 
-func add_custom_marker(coords: Vector3i, symbol: int):
-	assert(symbol >= 0 and symbol < mini(MetSys.settings.theme.symbols.size(), 63))
-	save_data.add_custom_marker(coords, symbol)
+## Assigns a custom symbol to the given cell that will override the symbol set in the editor. You can assign any number of symbols and the one with highest id will be displayed. [param symbol_id] must be within the symbols defined in [MapTheme.symbols].
+func add_custom_marker(coords: Vector3i, symbol_id: int):
+	assert(symbol_id >= 0 and symbol_id < mini(MetSys.settings.theme.symbols.size(), 63))
+	save_data.add_custom_marker(coords, symbol_id)
 
-func remove_custom_marker(coords: Vector3i, symbol: int):
-	save_data.remove_custom_marker(coords, symbol)
+## Removes a custom symbol assigned in [method add_custom_marker]. Does nothing if the given [param symbol_id] was not assigned to the cell.
+func remove_custom_marker(coords: Vector3i, symbol_id: int):
+	save_data.remove_custom_marker(coords, symbol_id)
 
+## Registers a storable object, i.e. object whose state is supposed to be saved, and automatically leaves a marker on the map. Useful for collectibles.
+## [param object] is the object that needs storing, [param stored_callback] is the callback that will be automatically called by this method when the object was already stored (defaults to [method Node.queue_free] for nodes). [param map_marker] is the ID of the symbol that will be added to the cell. If no symbol is provided, [member MapTheme.uncollected_item_symbol] will be used.
+## [b]Note:[/b] [method get_object_id] is used to determine object's ID. You can make the same object appear in multiple places if you assign them custom ID (e.g. to make a collectible that changes its location after an event).
+## [b]Note:[/b] [method get_object_coords] is used to determine where the marker should appear.
 func register_storable_object_with_marker(object: Object, stored_callback := Callable(), map_marker := DEFAULT_SYMBOL) -> bool:
 	if stored_callback.is_null():
 		if object is Node:
@@ -157,9 +179,12 @@ func register_storable_object_with_marker(object: Object, stored_callback := Cal
 	
 	return false
 
+## Same as [method register_storable_object_with_marker], but doesn't assign any marker. Useful for things like buttons, breakable walls etc.
 func register_storable_object(object: Object, stored_callback := Callable()) -> bool:
 	return register_storable_object_with_marker(object, stored_callback, -1)
 
+## Stores the given object. Using [method register_storable_object] aftewards will call its callback. [param map_marker] is the ID of the symbol that will be added to the cell. If no symbol is provided, [member MapTheme.collected_item_symbol] will be used.
+## [b]Note:[/b] The marker will be ignored if the object was not registered with a marker.
 func store_object(object: Object, map_marker := DEFAULT_SYMBOL):
 	save_data.store_object(object)
 	if object.has_meta(&"map_marker"):
@@ -173,6 +198,8 @@ func store_object(object: Object, map_marker := DEFAULT_SYMBOL):
 	if map_marker > -1:
 		save_data.add_custom_marker(get_object_coords(object), map_marker)
 
+## Returns the game-unique ID of an object. It's used to identify instances of objects in the game's world. It can be used manually when stored objects are insufficient for whatever reason.
+## The ID is first determined from [code]object_id[/code] metadata (see [method Object.set_meta]), then using [code]_get_object_id()[/code] method and finally using a heuristic based on the current scene and node's path in scene. If the [param object] is not a [Node] and no custom ID is provided, this method returns empty string.
 func get_object_id(object: Object) -> String:
 	if object.has_meta(&"object_id"):
 		return object.get_meta(&"object_id")
@@ -186,6 +213,8 @@ func get_object_id(object: Object) -> String:
 		return id
 	return ""
 
+## Returns the map coordinates of an object on the scene. It can be used e.g. to place custom markers for non-storable objects.
+## Similar to [method get_object_id], the method will first use [code]object_coords[/code] metadata and [code]_get_object_coords()[/code] method. If the [param object] is a [Node], the top-left coordinate of the current scene's location on map will be used. If the object is a [CanvasItem], it will return a precise coordinate based on the object's position on the scene.
 func get_object_coords(object: Object) -> Vector3i:
 	if object.has_meta(&"object_coords"):
 		return object.get_meta(&"object_coords")
@@ -212,6 +241,8 @@ func get_object_coords(object: Object) -> Vector3i:
 		return coords
 	return Vector3i()
 
+## Translates map coordinates to 2D pixel coordinates. Can be used for custom drawing on the map.
+## [param relative] allows to specify precise position inside the cell, with [code](0.5, 0.5)[/code] being the cell's center. [param base_offset] is offset in pixels (in case your map has margins).
 func get_cell_position(coords: Vector2i, relative := Vector2(0.5, 0.5), base_offset := Vector2()) -> Vector2:
 	return base_offset + (Vector2(coords) + relative) * MetSys.CELL_SIZE
 
