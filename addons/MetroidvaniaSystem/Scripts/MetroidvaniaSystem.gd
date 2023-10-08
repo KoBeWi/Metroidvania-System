@@ -1,4 +1,7 @@
 @tool
+## The class behind the MetSys singleton. It provides almost all of the public API of the addon.
+##
+## MetroidvaniaSystem class has various method for interacting with various MetSys sub-systems at runtime. All methods and members with a description are "public", while anything that doesn't have a description is supposed to be used only internally. There are a couple of sub-classes that you can use; you can access their documentation from the methods that return them.
 class_name MetroidvaniaSystem extends Node
 
 const DEFAULT_SYMBOL = -99
@@ -117,7 +120,7 @@ func get_explored_ratio(layer := -1):
 	return discovered / all
 
 ## Sets the position of the player to be tracked by MetSys. Automatically calls [method visit_cell] when crossing cell boundary and emits [signal cell_changed] and [signal room_changed] signals.
-## [param position] should be position in the room's coordinates, i.e. with [code](0, 0)[/code] being the top-left corner of the scene assigned to the room (which in most cases simply equals to global position of the player).
+## [br][br][param position] should be position in the room's coordinates, i.e. with [code](0, 0)[/code] being the top-left corner of the scene assigned to the room (which in most cases simply equals to global position of the player).
 func set_player_position(position: Vector2):
 	exact_player_position = position
 	
@@ -154,9 +157,9 @@ func remove_custom_marker(coords: Vector3i, symbol_id: int):
 	save_data.remove_custom_marker(coords, symbol_id)
 
 ## Registers a storable object, i.e. object whose state is supposed to be saved, and automatically leaves a marker on the map. Useful for collectibles.
-## [param object] is the object that needs storing, [param stored_callback] is the callback that will be automatically called by this method when the object was already stored (defaults to [method Node.queue_free] for nodes). [param map_marker] is the ID of the symbol that will be added to the cell. If no symbol is provided, [member MapTheme.uncollected_item_symbol] will be used.
-## [b]Note:[/b] [method get_object_id] is used to determine object's ID. You can make the same object appear in multiple places if you assign them custom ID (e.g. to make a collectible that changes its location after an event).
-## [b]Note:[/b] [method get_object_coords] is used to determine where the marker should appear.
+## [br][br][param object] is the object that needs storing, [param stored_callback] is the callback that will be automatically called by this method when the object was already stored (defaults to [method Node.queue_free] for nodes). [param map_marker] is the ID of the symbol that will be added to the cell. If no symbol is provided, [member MapTheme.uncollected_item_symbol] will be used.
+## [br][br][b]Note:[/b] [method get_object_id] is used to determine object's ID. You can make the same object appear in multiple places if you assign them custom ID (e.g. to make a collectible that changes its location after an event).
+## [br][br][b]Note:[/b] [method get_object_coords] is used to determine where the marker should appear.
 func register_storable_object_with_marker(object: Object, stored_callback := Callable(), map_marker := DEFAULT_SYMBOL) -> bool:
 	if stored_callback.is_null():
 		if object is Node:
@@ -184,7 +187,7 @@ func register_storable_object(object: Object, stored_callback := Callable()) -> 
 	return register_storable_object_with_marker(object, stored_callback, -1)
 
 ## Stores the given object. Using [method register_storable_object] aftewards will call its callback. [param map_marker] is the ID of the symbol that will be added to the cell. If no symbol is provided, [member MapTheme.collected_item_symbol] will be used.
-## [b]Note:[/b] The marker will be ignored if the object was not registered with a marker.
+## [br][br][b]Note:[/b] The marker will be ignored if the object was not registered with a marker.
 func store_object(object: Object, map_marker := DEFAULT_SYMBOL):
 	save_data.store_object(object)
 	if object.has_meta(&"map_marker"):
@@ -199,7 +202,7 @@ func store_object(object: Object, map_marker := DEFAULT_SYMBOL):
 		save_data.add_custom_marker(get_object_coords(object), map_marker)
 
 ## Returns the game-unique ID of an object. It's used to identify instances of objects in the game's world. It can be used manually when stored objects are insufficient for whatever reason.
-## The ID is first determined from [code]object_id[/code] metadata (see [method Object.set_meta]), then using [code]_get_object_id()[/code] method and finally using a heuristic based on the current scene and node's path in scene. If the [param object] is not a [Node] and no custom ID is provided, this method returns empty string.
+## [br][br]The ID is first determined from [code]object_id[/code] metadata (see [method Object.set_meta]), then using [code]_get_object_id()[/code] method and finally using a heuristic based on the current scene and node's path in scene. If the [param object] is not a [Node] and no custom ID is provided, this method returns empty string.
 func get_object_id(object: Object) -> String:
 	if object.has_meta(&"object_id"):
 		return object.get_meta(&"object_id")
@@ -214,7 +217,7 @@ func get_object_id(object: Object) -> String:
 	return ""
 
 ## Returns the map coordinates of an object on the scene. It can be used e.g. to place custom markers for non-storable objects.
-## Similar to [method get_object_id], the method will first use [code]object_coords[/code] metadata and [code]_get_object_coords()[/code] method. If the [param object] is a [Node], the top-left coordinate of the current scene's location on map will be used. If the object is a [CanvasItem], it will return a precise coordinate based on the object's position on the scene.
+## [br][br]Similar to [method get_object_id], the method will first use [code]object_coords[/code] metadata and [code]_get_object_coords()[/code] method. If the [param object] is a [Node], the top-left coordinate of the current scene's location on map will be used. If the object is a [CanvasItem], it will return a precise coordinate based on the object's position on the scene.
 func get_object_coords(object: Object) -> Vector3i:
 	if object.has_meta(&"object_coords"):
 		return object.get_meta(&"object_coords")
@@ -242,10 +245,13 @@ func get_object_coords(object: Object) -> Vector3i:
 	return Vector3i()
 
 ## Translates map coordinates to 2D pixel coordinates. Can be used for custom drawing on the map.
-## [param relative] allows to specify precise position inside the cell, with [code](0.5, 0.5)[/code] being the cell's center. [param base_offset] is offset in pixels (in case your map has margins).
+## [br][br][param relative] allows to specify precise position inside the cell, with [code](0.5, 0.5)[/code] being the cell's center. [param base_offset] is offset in pixels (in case your map has margins).
 func get_cell_position(coords: Vector2i, relative := Vector2(0.5, 0.5), base_offset := Vector2()) -> Vector2:
 	return base_offset + (Vector2(coords) + relative) * MetSys.CELL_SIZE
 
+## Returns a cell override at position [param coords]. If it doesn't exist, it will be created (unless [param auto_create] is [code]false[/code]). A cell must exist at the given [param coords].
+## [br][br]Cell overrides allow to modify any cell's data at runtime. They are included with the data returned in [method get_save_data]. Creating an override and doing any modifications with emit [signal map_updated].
+## [br][br]Click this method's return value for more info.
 func get_cell_override(coords: Vector3i, auto_create := true) -> MapData.CellOverride:
 	var cell := map_data.get_cell_at(coords)
 	assert(cell, "Can't override non-existent cell")
@@ -259,18 +265,31 @@ func get_cell_override(coords: Vector3i, auto_create := true) -> MapData.CellOve
 		push_error("No override found at %s" % coords)
 		return null
 
+## Removes an override created with [method get_cell_override], reverting the cell to its original appearance, and emits [signal map_updated]. Does nothing if the override didn't exist.
+## [br][br][b]Note:[/b] If the override was created with MapBuilder, use the [code]destroy()[/code] method instead.
 func remove_cell_override(coords: Vector3i):
 	var cell = MetSys.map_data.get_cell_at(coords)
 	assert(cell, "Can't remove override of non-existent cell")
 	if save_data.remove_cell_override(cell):
 		map_updated.emit()
 
+## Returns a MapBuilder object. It can be used to create custom cells at runtime (for procedural maps etc.). The created cells can be customized with overrides, which are created automatically.
+## [br][br]Click this method's return value for more info.
 func get_map_builder() -> MapBuilder:
 	return MapBuilder.new()
 
+## Draws a single map cell. [param canvas_item] is the [CanvasItem] responsible for drawing, [param offset] is the drawing offset in map coordinates. [param coords] is the coordinate of the map cell that's going to be drawn (does not need to exist). If [param skip_empty] is [code]false[/code], [member MapTheme.empty_space_texture] will be drawn in place of empty cells, if available. If [param use_save_data] is [code]true[/code], the discovered rooms data will be used for drawing the map.
+## [br][br]Example of drawing a 3x3 minimap where center is at [code]current_cell[/code]:
+## [codeblock]
+## for x in range(-1, 2):
+##     for y in range(-1, 2):
+##         MetSys.draw_cell(self, Vector2i(x + 1, y + 1), Vector3i(current_cell.x + x, current_cell.y + y, MetSys.current_layer))
+## [/codeblock]
+## [br][br][b]Note:[/b] Drawing a cell is an expensive operation, so avoid performing it too often (you can take advantage of the [signal map_updated] signal).
 func draw_cell(canvas_item: CanvasItem, offset: Vector2, coords: Vector3i, skip_empty := false, use_save_data := true):
 	RoomDrawer.draw(canvas_item, offset, coords, skip_empty, map_data, save_data if use_save_data else null)
 
+## Performs a second drawing pass after all cells were drawn, for drawing the shared borders. Only required if [member MapTheme.use_shared_borders] is enabled.
 func draw_shared_borders():
 	RoomDrawer.draw_shared_borders()
 

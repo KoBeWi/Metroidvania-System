@@ -194,10 +194,10 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="UI/Minimap/ColorRect"]
-autoplay = "Flash"
 libraries = {
 "": SubResource("AnimationLibrary_kkw8m")
 }
+autoplay = "Flash"
 
 [node name="FullMap" type="Panel" parent="UI"]
 visible = false

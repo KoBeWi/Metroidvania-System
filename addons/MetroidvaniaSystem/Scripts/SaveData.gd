@@ -47,7 +47,11 @@ func add_cell_override(room: MetroidvaniaSystem.MapData.CellData) -> Metroidvani
 func remove_cell_override(room: MetroidvaniaSystem.MapData.CellData) -> bool:
 	var override := cell_overrides.get(room)
 	if override:
+		if override.custom_cell_coords != Vector3i.MAX:
+			push_error("Can't delete override of a custom cell. Use destroy() instead.")
+			return false
 		override._cleanup_assigned_scene()
+	
 	cell_overrides.erase(room)
 	return override != null
 
