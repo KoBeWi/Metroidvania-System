@@ -113,6 +113,9 @@ class CellData:
 	func get_coords() -> Vector3i:
 		return MetSys.map_data.cells.find_key(self)
 
+## A runtime override for the cell's properties that allows to modify it's default appearance designed in the editor.
+##
+## CellOverride can be obtained from [method MetroidvaniaSystem.get_cell_override] or using the MapBuilder. It comes with a set of methods that allows customizing the cells. [MetroidvaniaSystem.map_updated] signal is automatically emitted after modifications, unless the cell comes from MapBuilder.
 class CellOverride extends CellData:
 	var original_room: CellData
 	var custom_cell_coords := Vector3i.MAX
@@ -148,25 +151,30 @@ class CellOverride extends CellData:
 		
 		return override
 	
+	## Sets a border of the cell. [param idx] is the direction index of the cell. Use [constant MetroidvaniaSystem.R], [constant MetroidvaniaSystem.D], [constant MetroidvaniaSystem.L], [constant MetroidvaniaSystem.U] constants here. The [param value] must be within the [MapTheme.borders] array bounds + 2 (0 and 1 are the default wall and passage). Use the default to reset to the border assigned in the editor. Value of [code]-1[/code] will remove the border, but it's not recommended.
 	func set_border(idx: int, value := -2):
 		assert(idx >= 0 and idx < 4)
 		borders[idx] = value
 		_queue_commit()
 	
+	## Sets the color of a border's cell. [param idx] is the direction index of the cell (see [method set_border]). If the default [param value] is used (or any color with [code]0[/code] alpha), the border will be reset to the default color.
 	func set_border_color(idx: int, value := Color.TRANSPARENT):
 		assert(idx >= 0 and idx < 4)
 		border_colors[idx] = value
 		_queue_commit()
 	
+	## Sets the color of the cell's center.
 	func set_color(value := Color.TRANSPARENT):
 		color = value
 		_queue_commit()
 	
+	## Sets the cell's assigned symbol. Value of [code]-1[/code] will remove the symbol. The markers assigned from [method MetroidvaniaSystem.set_custom_marker] still have priority.
 	func set_symbol(value := -2):
 		assert(value >= -2 and value < MetSys.settings.theme.symbols.size())
 		symbol = value
 		_queue_commit()
 	
+	## Changes the scene assigned to the cell. Unlike other methods, this has effect on the whole room that contains this cell. Using the default value will reset it to the scene assigned in the editor.
 	func set_assigned_scene(value := "/"):
 		if value == "/":
 			_cleanup_assigned_scene()
@@ -188,6 +196,7 @@ class CellOverride extends CellData:
 		MetSys.room_assign_updated.emit()
 		_queue_commit()
 	
+	## Applies the values from this CellOverride to all cells that belong to the specified [param group_id]. You need to apply your customization [i]before[/i] calling this method.
 	func apply_to_group(group_id: int):
 		assert(group_id in MetSys.map_data.cell_groups)
 		
@@ -198,11 +207,12 @@ class CellOverride extends CellData:
 			
 			override.borders = borders.duplicate()
 			override.color = color
-			override.border_colors = border_colors
+			override.border_colors = border_colors.duplicate()
 			override.symbol = symbol
 		
 		_queue_commit()
 	
+	## Destroys the cell. This method can only be used on overrides from MapBuilder.
 	func destroy() -> void:
 		if custom_cell_coords == Vector3i.MAX:
 			push_error("Only custom cell can be destroyed.")

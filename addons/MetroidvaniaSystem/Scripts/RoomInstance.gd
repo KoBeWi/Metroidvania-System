@@ -48,15 +48,18 @@ func _update_assigned_scene():
 		max_cell.x = maxi(max_cell.x, p.x)
 		max_cell.y = maxi(max_cell.y, p.y)
 
+## Adjusts the limits of the given [param camera] to be within this room's rectangular bounds.
 func adjust_camera_limits(camera: Camera2D):
 	camera.limit_left = 0
 	camera.limit_top = 0
 	camera.limit_right = get_size().x
 	camera.limit_bottom = get_size().y
 
+## Returns the full size of this room, based on the cells and [code]in_game_cell_size[/code] defined in MetSys Settings.
 func get_size() -> Vector2:
 	return Vector2(max_cell - min_cell + Vector2i.ONE) * MetSys.settings.in_game_cell_size
 
+## Returns this rooms cells in local coordinates, i.e. with (0, 0) being the top-left cell.
 func get_local_cells() -> Array[Vector2i]:
 	var ret: Array[Vector2i]
 	ret.assign(cells.map(func(coords: Vector3i) -> Vector2i:

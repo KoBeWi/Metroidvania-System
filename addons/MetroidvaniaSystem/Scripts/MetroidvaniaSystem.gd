@@ -15,8 +15,11 @@ const RoomInstance = preload("res://addons/MetroidvaniaSystem/Scripts/RoomInstan
 const RoomDrawer = preload("res://addons/MetroidvaniaSystem/Scripts/RoomDrawer.gd")
 const CustomElementManager = preload("res://addons/MetroidvaniaSystem/Scripts/CustomElementManager.gd")
 
-## Direction constants used by various systems, e.g. `CellOverride.set_border()`.
-enum { R, D, L, U }
+enum { R, ## Right border.
+		D, ## Bottom border.
+		L, ## Left border.
+		U, ## Top border.
+		}
 
 var settings: Settings
 ## The size of a map cell. Automatically set to the size of [member MapTheme.center_texture].
@@ -250,7 +253,7 @@ func get_cell_position(coords: Vector2i, relative := Vector2(0.5, 0.5), base_off
 	return base_offset + (Vector2(coords) + relative) * MetSys.CELL_SIZE
 
 ## Returns a cell override at position [param coords]. If it doesn't exist, it will be created (unless [param auto_create] is [code]false[/code]). A cell must exist at the given [param coords].
-## [br][br]Cell overrides allow to modify any cell's data at runtime. They are included with the data returned in [method get_save_data]. Creating an override and doing any modifications with emit [signal map_updated].
+## [br][br]Cell overrides allow to modify any cell's data at runtime. They are included with the data returned in [method get_save_data]. Creating an override and doing any modifications with emit [signal map_updated]. The signal emitted with modifications is deferred, i.e. multiple modifications will do only single emission, at the end of the current frame.
 ## [br][br]Click this method's return value for more info.
 func get_cell_override(coords: Vector3i, auto_create := true) -> MapData.CellOverride:
 	var cell := map_data.get_cell_at(coords)
@@ -293,11 +296,15 @@ func draw_cell(canvas_item: CanvasItem, offset: Vector2, coords: Vector3i, skip_
 func draw_shared_borders():
 	RoomDrawer.draw_shared_borders()
 
+## Performs another drawing pass after all cells were draw, for drawing the custom elements. Only required if [code]custom_element_script[/code] is assigned in MetSyS Settings.
+## [br][br][param canvas_item] is the [CanvasItem] responsible for drawing. [param rect] is the portion of the world map that's going to be drawn. All elements whose rects intersect this rectangle will be drawn. [param drawing_offset] is an offset in pixels, in case your map has a margin etc. You can draw elements from another layer or leave [param layer] default to use the current one.
 func draw_custom_elements(canvas_item: CanvasItem, rect: Rect2i, drawing_offset := Vector2(), layer := current_layer):
 	if not settings.custom_elements or map_data.custom_elements.is_empty():
 		return
 	RoomDrawer.draw_custom_elements(canvas_item, map_data.custom_elements, drawing_offset, rect, layer)
 
+## Creates an instance of [member MapTheme.player_location_scene] and adds it as a child of the specified [param canvas_item]. The location scene will be moved to the player's location, respecting [member MapTheme.show_exact_player_location]. [param offset] is the offset in pixels for drawing the location. Use it if your map doesn't use (0, 0) as origin point.
+## [br][br][b]Note:[/b] The scene automatically disables processing if it's not visible, so you don't need to worry about having animations and such. They will not run in the background.
 func add_player_location(canvas_item: CanvasItem, offset := Vector2()) -> Node2D:
 	var location_instance: Node2D = settings.theme.player_location_scene.instantiate()
 	location_instance.set_script(load("res://addons/MetroidvaniaSystem/Scripts/PlayerLocationInstance.gd"))
@@ -305,23 +312,29 @@ func add_player_location(canvas_item: CanvasItem, offset := Vector2()) -> Node2D
 	canvas_item.add_child(location_instance)
 	return location_instance
 
+## Returns the current world coordinates of the player, as determined from [method set_player_position].
 func get_current_coords() -> Vector3i:
 	return Vector3i(last_player_position.x, last_player_position.y, current_layer)
 
+## Same as [method get_current_coords], but does not include layer.
 func get_current_flat_coords() -> Vector2i:
 	return Vector2i(last_player_position.x, last_player_position.y)
 
+## Returns the currently active RoomInstance object.
+## [br][br]Click this method's return value for more info.
 func get_current_room_instance() -> RoomInstance:
 	if is_instance_valid(current_room):
 		return current_room
 	return null
 
+## Returns the name of the current room, or empty string if there is no active RoomInstance. Use together with [method get_full_room_path] to get the full path.
 func get_current_room_name() -> String:
 	if current_room:
 		return current_room.room_name
 	else:
 		return ""
 
+## Returns the full path to the current room's assigned scene. This method assumes that the scene is inside the base map folder.
 func get_full_room_path(room_name: String) -> String:
 	return settings.map_root_folder.path_join(room_name)
 
