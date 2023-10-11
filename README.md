@@ -541,9 +541,11 @@ This section describes the features of the included sample project and where to 
 
 ## Closing words
 
-**TODO**
-Please enjoy
-report bugs, missing documentation, missing features
+MetSys is the most complex system I have designed and written. It's a result of my years of experience in making and playing different metroidvania games. Hopefully it helps someone make a great metroidvania and I'll be able to play it in the future ;)
+
+The addon is fully open-source, so feel free to dive into the code and adapt it to your needs. If you find bugs or shortcomings in some features, or maybe something is not properly explained, feel free to open an issue. Feature requests are also welcome, but I can't promise I'll be implementing them.
+
+Have fun.
 
 ___
 You can find all my addons on my [profile page](https://github.com/KoBeWi).
