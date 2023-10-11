@@ -37,5 +37,5 @@ collected_item_symbol = 6
 wall = ExtResource("7_s5fc5")
 passage = ExtResource("3_6c7r1")
 borders = Array[Texture2D]([])
-inner_corner = ExtResource("1_uvvyp")
 outer_corner = ExtResource("2_xnnlu")
+inner_corner = ExtResource("1_uvvyp")
