@@ -539,17 +539,60 @@ The project is a little metroidvania game. The target is to collect 6 orbs and r
 
 **DISCLAIMER:** The sample project is not by any means a legit game. It's full of hacks and questionable approaches. The point is to show an example integration with the MetSys, not how to make a good project. As Godot contributors would say - TIWAGOS.
 
-### Game scene (room transitions, map and minimap)
+### Main elements
+
+Top-level elements of the project, not related to specific rooms.
+
+#### Game scene - room transitions, map and minimap
 
 `Game.tscn` is the main scene of the project. It contains player with camera and UI. Player is a separate scene with CharacterBody2D root. It uses the default template controller, with some modifications like double jump and reset position. UI elements are Minimap, FullMap (with Percent) and CollectibleCount. Their logic is contained inside built-in scripts. The CollectibleCount is managed by Game, which has the only external script in this scene.
 
 Game scene manages room transitions and project-specific save data. Check the comments in `Game.gd` for more details. Other functions in this scene are Minimap, Map Window and discovered percentage label.
 
-### Custom elements
+#### Collectibles
+
+Orb collectible is scene `Collectible.tscn`. It's a storable object - collecting it will make it never appear again. It shows a marker when discovered and when collected. It also increases the Game's collectible counter. `MapItem.tscn` is the same, but instead of increasing a counter it discovers a room group.
+
+#### Custom elements
 
 `CustomElements.gd` shows an example implementation of `CustomElementManager`. The available elements are elevator and label.
 
-### TODO
+### Specific rooms
+
+Room-specific things that show various features.
+
+#### Right Staircase - map collectible, secret wall
+
+`RightStaircase.tscn` has a map item collectible that discovers part of the world's map. It also has a secret, which is a storable object without marker and creates a cell override to show a newly discovered path. Notice how the map updates when you enter the fake wall area (it's located on bottom right of the room).
+
+TileMap node has a script that disables collision on the Fakeground layer (i.e. fake wall). MapItem is it's own scene, Secret node handles the override.
+
+#### Lava Corridor - room group override, scene assign override
+
+TODO
+
+#### Left Staircase - unlocking shortcut, one-time switches
+
+TODO
+
+#### Portal Room - moving between map layers
+
+TODO
+
+#### Dark Staircase - irregular room with offmap drawing
+
+TODO
+
+#### Dice Room - procedurally generated rooms
+
+TODO
+
+### Misc
+
+Stuff not directly related to MetSys.
+
+- `ElevatorRoom.tscn` shows how to make a Metroid-esque elevator to move between rooms.
+- `EndingPoint.tscn` has example ability and an ending point based on collectibles.
 
 ## Closing words
 

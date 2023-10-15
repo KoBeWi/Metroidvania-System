@@ -3,7 +3,8 @@
 [ext_resource type="Texture2D" uid="uid://l42te86waali" path="res://SampleProject/Sprites/MapItem.png" id="1_gov3o"]
 
 [sub_resource type="GDScript" id="GDScript_5wqrn"]
-script/source = "extends Area2D
+script/source = "# Almost the same code as Collectible.tscn.
+extends Area2D
 
 @export var room_group: int
 
@@ -12,6 +13,7 @@ func _ready() -> void:
 
 func collect(body: Node2D) -> void:
 	MetSys.store_object(self)
+	# Discover the assigned cell group. They will appear as mapped.
 	MetSys.discover_cell_group(room_group)
 	queue_free()
 "

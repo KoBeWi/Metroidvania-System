@@ -5,25 +5,33 @@
 [ext_resource type="PackedScene" uid="uid://d0hyimq1tkfa2" path="res://SampleProject/Objects/MapItem.tscn" id="3_j1w80"]
 
 [sub_resource type="GDScript" id="GDScript_ecs00"]
-script/source = "extends TileMap
-
+resource_name = "TileMap"
+script/source = "# This script makes the secret fake wall possible.
+extends TileMap
+# Layer 2 is Fakeground
 func _use_tile_data_runtime_update(layer: int, coords: Vector2i) -> bool:
 	return layer == 2
-
+# Disable collisions.
 func _tile_data_runtime_update(layer: int, coords: Vector2i, tile_data: TileData) -> void:
 	tile_data.set_collision_polygons_count(0, 0)
 "
 
 [sub_resource type="GDScript" id="GDScript_ft7fx"]
-script/source = "extends Area2D
+resource_name = "Secret"
+script/source = "# A one-time secret. Once discovered it creates a cell override that shows a newly discovered passage.
+extends Area2D
 
 func _ready() -> void:
+	# Register this node as storable, but without marker.
+	# After store_object() was called, this will automatically queue_free() the object.
 	MetSys.register_storable_object(self)
 
 func on_body_entered(body: Node2D) -> void:
+	# Create override.
 	var override := MetSys.get_cell_override(MetSys.get_current_coords())
+	# Change right wall to passage.
 	override.set_border(MetroidvaniaSystem.R, 1)
-	
+	# Store the object.
 	MetSys.store_object(self)
 "
 
