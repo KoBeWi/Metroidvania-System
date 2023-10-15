@@ -1,4 +1,4 @@
-# This script is based on the default CharacterBody2D template. Nothing much interesting happening here.
+# This script is based on the default CharacterBody2D template. Not much interesting happening here.
 extends CharacterBody2D
 
 const SPEED = 300.0
@@ -8,6 +8,7 @@ var gravity: int = ProjectSettings.get_setting("physics/2d/default_gravity")
 var animation: String
 
 var reset_position: Vector2
+# Indicates that the player has an event happening and can't be controlled.
 var event: bool
 
 var abilities: Array[StringName]
