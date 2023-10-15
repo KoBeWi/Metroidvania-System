@@ -1,3 +1,4 @@
+# This script is based on the default CharacterBody2D template. Nothing much interesting happening here.
 extends CharacterBody2D
 
 const SPEED = 300.0
@@ -23,6 +24,7 @@ func _physics_process(delta: float) -> void:
 	if not is_on_floor():
 		velocity.y += gravity * delta
 	elif not prev_on_floor and &"double_jump" in abilities:
+		# Some simple double jump implementation.
 		double_jump = true
 	
 	if Input.is_action_just_pressed("ui_accept") and (is_on_floor() or double_jump):
@@ -61,7 +63,9 @@ func _physics_process(delta: float) -> void:
 		$Sprite2D.flip_h = true
 
 func kill():
+	# Player dies, reset the position to the entrance.
 	position = reset_position
 
 func on_enter():
+	# Position for kill system. Assigned when entering new room (see Game.gd).
 	reset_position = position

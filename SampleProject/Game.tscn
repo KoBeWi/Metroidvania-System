@@ -7,33 +7,45 @@
 
 [sub_resource type="GDScript" id="GDScript_4div8"]
 resource_name = "Minimap"
-script/source = "extends Panel
+script/source = "# The minimap panel. It draws a 3x3 minimap with player's position in the center. Note that the position is drawn differently from the MetSys player position.
+extends Panel
 
+# The cell coords in the center.
 var current_cell: Vector2i
 
 func _ready() -> void:
+	# Set minimum size to 3 times the cell size.
 	custom_minimum_size = MetSys.CELL_SIZE * 3
+	# Reset position after setting size.
 	set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT, Control.PRESET_MODE_MINSIZE, 16)
+	# Same for the center rect, which indicates current position.
 	$ColorRect.custom_minimum_size = MetSys.CELL_SIZE
 	$ColorRect.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
 	
+	# Connect signals.
 	MetSys.map_updated.connect(queue_redraw)
 	MetSys.cell_changed.connect(on_cell_changed)
 
 func on_cell_changed(new_cell: Vector3i):
+	# On cell changed update the position and redraw.
 	current_cell = Vector2i(new_cell.x, new_cell.y)
 	queue_redraw()
 
 func _draw() -> void:
+	# Draw the 3x3 cells, i.e. (-1, -1) to (1, 1).
 	for x in range(-1, 2):
 		for y in range(-1, 2):
+			# Draw the cell.
 			MetSys.draw_cell(self, Vector2i(x + 1, y + 1), Vector3i(current_cell.x + x, current_cell.y + y, MetSys.current_layer))
 	
+	# Draw shared borders, if used by the theme.
 	if MetSys.settings.theme.use_shared_borders:
 		MetSys.draw_shared_borders()
+	# Draw custom elements.
 	MetSys.draw_custom_elements(self, Rect2i(current_cell.x - 1, current_cell.y - 1, 3, 3))
 
 func _input(event: InputEvent) -> void:
+	# Toggle visibility when pressing M.
 	if event is InputEventKey:
 		if event.pressed:
 			if event.keycode == KEY_M:
@@ -78,79 +90,101 @@ _data = {
 }
 
 [sub_resource type="GDScript" id="GDScript_u7odr"]
-resource_name = "FullMap"
-script/source = "extends Panel
+resource_name = "MapWindow"
+script/source = "# The window that contains a bigger map overview than minimap. Toggled with M.
+extends Panel
 
-@export var exact_player_location: bool
-
+# The size of the window in cells.
 var SIZE: Vector2i
 
+# The position where the player started (for the vector feature).
 var starting_coords: Vector2i
+# The offset for drawing the cells. Allows map panning.
 var offset: Vector2i
+# The player location node from MetSys.add_player_location()
 var player_location: Node2D
+# The vector feature, toggled with D. It displays an arrow from player's starting point to the current position.
+# It's purely to show custom drawing on the map.
 var show_delta: bool
 
 func _ready() -> void:
+	# Cellular size is total size divided by cell size.
 	SIZE = size / MetSys.CELL_SIZE
-	
+	# Connect some signals.
 	MetSys.cell_changed.connect(queue_redraw.unbind(1))
-	MetSys.cell_changed.connect(update_offset.unbind(1))
+	MetSys.cell_changed.connect(update_offset.unbind(1)) # When player moves to another cell, move the map.
 	MetSys.map_updated.connect(queue_redraw)
-	
+	# Create player location. We need a reference to update its offset.
 	player_location = MetSys.add_player_location(self)
 
 func _draw() -> void:
 	for x in SIZE.x:
 		for y in SIZE.y:
+			# Draw cells. Note how offset is used.
 			MetSys.draw_cell(self, Vector2i(x, y), Vector3i(x - offset.x, y - offset.y, MetSys.current_layer))
-	
+	# Draw shared borders and custom elements.
 	if MetSys.settings.theme.use_shared_borders:
 		MetSys.draw_shared_borders()
 	MetSys.draw_custom_elements(self, Rect2i(-offset.x, -offset.y, SIZE.x, SIZE.y))
-	
+	# Get the current player coordinates.
 	var coords := MetSys.get_current_flat_coords()
+	# If the delta vector (D) is enabled and player isn't on the starting position...
 	if show_delta and coords != starting_coords:
 		var start_pos := MetSys.get_cell_position(starting_coords + offset)
 		var current_pos := MetSys.get_cell_position(coords + offset)
+		# draw the vector...
 		draw_line(start_pos, current_pos, Color.WHITE, 2)
 		
 		const arrow_size = 4
+		# and arrow. This code shows how to draw custom stuff on the map outside the MetSys functions.
 		draw_set_transform(current_pos, start_pos.angle_to_point(current_pos), Vector2.ONE)
 		draw_primitive([Vector2(-arrow_size, -arrow_size), Vector2(arrow_size, 0), Vector2(-arrow_size, arrow_size)], [Color.WHITE], [])
 
 func _input(event: InputEvent) -> void:
 	if event is InputEventKey:
 		if event.pressed:
+			# Toggle visibility when pressing M.
 			if event.keycode == KEY_M:
 				visible = not visible
 				if visible:
 					update_offset()
 			elif event.keycode == KEY_D:
+				# D toggles position tracking (delta vector).
 				show_delta = not show_delta
 				queue_redraw()
 
 func update_offset():
+	# Update the map offset based on the current position.
+	# Normally the offset is interactive and the player is able to move freely around the map.
+	# But in this demo, the map can overlay the game and thus is updated in real time.
 	offset = -MetSys.get_current_flat_coords() + SIZE / 2
 	player_location.offset = Vector2(offset) * MetSys.CELL_SIZE
 
 func reset_starting_coords():
+	# Starting position for the delta vector.
 	var coords := MetSys.get_current_flat_coords()
 	starting_coords = Vector2i(coords.x, coords.y)
 	queue_redraw()
 "
 
 [sub_resource type="GDScript" id="GDScript_66suq"]
-script/source = "extends Label
+resource_name = "PercentLabel"
+script/source = "# Displays map completion percentage
+extends Label
 
 func _ready() -> void:
+	# The percentage may change when map is updated.
 	MetSys.map_updated.connect(update)
 
 func _notification(what: int) -> void:
+	# Update when the label is made visible. This happens when the map is toggled.
 	if what == NOTIFICATION_VISIBILITY_CHANGED:
 		update()
 
 func update():
+	# Only update when visible.
 	if is_visible_in_tree():
+		# Show the percentage.
 		text = \"%03d%%\" % int(MetSys.get_explored_ratio() * 100)
 "
 
@@ -199,7 +233,7 @@ libraries = {
 }
 autoplay = "Flash"
 
-[node name="FullMap" type="Panel" parent="UI"]
+[node name="MapWindow" type="Panel" parent="UI"]
 visible = false
 clip_contents = true
 anchors_preset = 8
@@ -214,16 +248,15 @@ offset_bottom = 160.0
 grow_horizontal = 2
 grow_vertical = 2
 script = SubResource("GDScript_u7odr")
-exact_player_location = true
 
-[node name="Percent" type="Label" parent="UI/FullMap"]
+[node name="Percent" type="Label" parent="UI/MapWindow"]
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 23.0
 text = "0%"
 script = SubResource("GDScript_66suq")
 
-[node name="Label" type="Label" parent="UI/FullMap"]
+[node name="Label" type="Label" parent="UI/MapWindow"]
 layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0

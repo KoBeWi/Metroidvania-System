@@ -535,7 +535,14 @@ Inspired by map guides made by user Zeric ([Example](https://gamefaqs.gamespot.c
 
 This section describes the features of the included sample project and where to find them. You can find more details in the code comments.
 
-### TODO
+The project is a little metroidvania game. The target is to collect 6 orbs and reach the ending point. The world is composed of 3 layers and in different rooms it shows various system's capabilities.
+
+### Game scene
+
+`Game.tscn` is the main scene of the project. It contains player with camera and UI. Player is a separate scene with CharacterBody2D root. It uses the default template controller, with some modifications like double jump and reset position. UI elements are Minimap, FullMap (with Percent) and CollectibleCount. Their logic is contained inside built-in scripts. The CollectibleCount is managed by Game, which has the only external script in this scene.
+
+Game scene manages room transitions and project-specific save data. Check the comments in `Game.gd` for more details. Other functions in this scene are Minimap, Map Window and discovered percentage label.
+
 ### TODO
 ### TODO
 

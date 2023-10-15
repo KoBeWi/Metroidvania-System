@@ -22,7 +22,7 @@ enum { R, ## Right border.
 		}
 
 var settings: Settings
-## The size of a map cell. Automatically set to the size of [member MapTheme.center_texture].
+## The size of a map cell. Automatically set to the size of [member MapTheme.center_texture]. Read only.
 var CELL_SIZE: Vector2
 
 var map_data: MapData

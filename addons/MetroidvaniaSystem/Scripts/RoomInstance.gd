@@ -69,6 +69,14 @@ func get_local_cells() -> Array[Vector2i]:
 		return Vector2i(coords.x - min_cell.x, coords.y - min_cell.y)))
 	return ret
 
+## Returns the top-left cell flat coordinates within the room.
+func get_base_coords() -> Vector2i:
+	return min_cell
+
+## Returns the room's layer.
+func get_layer() -> int:
+	return layer
+
 func _draw() -> void:
 	if not Engine.is_editor_hint() or cells.is_empty():
 		return
