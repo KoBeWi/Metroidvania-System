@@ -9,6 +9,7 @@
 script/source = "extends Line2D
 
 func _ready() -> void:
+	# Fill the pipe. This could be baked into the scene, but whatever.
 	$Water.flow(500)
 	$Water.flow(1)
 	$Water.flow(500)

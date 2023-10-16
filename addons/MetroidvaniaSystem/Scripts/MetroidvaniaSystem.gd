@@ -267,6 +267,12 @@ func get_cell_override(coords: Vector3i, auto_create := true) -> MapData.CellOve
 		push_error("No override found at %s" % coords)
 		return null
 
+## Returns an override for the first cell assigned to the given [param group_id]. The group ID must exist (i.e. have at least a single cell with it assigned).
+## [br][br]Useful for applying override to a group.
+func get_cell_override_from_group(group_id: int, auto_create := true) -> MapData.CellOverride:
+	assert(group_id in map_data.cell_groups)
+	return get_cell_override(map_data.cell_groups[group_id].front(), auto_create)
+
 ## Removes an override created with [method get_cell_override], reverting the cell to its original appearance, and emits [signal map_updated] signal. Does nothing if the override didn't exist.
 ## [br][br][b]Note:[/b] If the override was created with MapBuilder, use the [code]destroy()[/code] method instead.
 func remove_cell_override(coords: Vector3i):

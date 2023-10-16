@@ -567,13 +567,17 @@ Room-specific things that show various features.
 
 TileMap node has a script that disables collision on the Fakeground layer (i.e. fake wall). MapItem is it's own scene, Secret node handles the override.
 
-#### Lava Corridor - room group override, scene assign override
+#### Lava Corridor - room group override, scene assign override, custom object IDs
 
-TODO
+A corridor with lava. The interesting fact about it is that it uses 2 scenes: `LavaCorridor.tscn` and `LavaCorridorAfterwater.tscn`. After a certain condition is met, the assigned scene is changed to the latter one, so entering this room's cell will switch to a different scene without lava. The color of the cells on the map also changes.
+
+Overrides are performed in `LeftStaircase.tscn`, but another interesting thing is the orb in this room. It exists in both scenes, yet MetSys can correctly deduce that you collected the orb previously registered in another scene (the orb is inaccessible until you get rid of the lava). It's thanks to `object_id` metadata, which for both orbs is `lava_orb`. This allows to register and store the same object in different scenes.
 
 #### Left Staircase - unlocking shortcut, one-time switches
 
-TODO
+`LeftStaircase.tscn` shows how to make a persistent event button. When the player touches the blue button, it will switch to pressed state and emit the pressed signal. The button is a storable object; it's stored on the first press, so when entering the room afterwards, it's pressed immediately (it still emits the signal to notify other objects).
+
+The receivers of the signal is GateOpen node and Pipe. GateOpen will disable the Gate TileMap layer, opening the shortcut. The pipe will start animation when it receives the signal. However it keeps a separate event (in an event array unrelated to MetSys), so when the button notifies it again when entering the room, the animation will be skipped.
 
 #### Portal Room - moving between map layers
 
@@ -586,6 +590,8 @@ TODO
 #### Dice Room - procedurally generated rooms
 
 TODO
+
+Important to remember is that while the MetSys editor works with scene paths relative to the map root directory, when assigning an override you can assign it any absolute path (e.g. from `user://`). Do note that for RoomInstance to work correctly, the path still needs to point to a valid, unique scene resource.
 
 ### Misc
 

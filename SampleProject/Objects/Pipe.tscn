@@ -4,7 +4,9 @@
 [ext_resource type="Texture2D" uid="uid://dav4phd4q7vv3" path="res://SampleProject/Sprites/PipeWater.png" id="2_dls1c"]
 
 [sub_resource type="GDScript" id="GDScript_366bh"]
-script/source = "extends Line2D
+resource_name = "Water"
+script/source = "# Water flow code. It's completely irrelevant for MetSys and this project, so try to decipher it yourself.
+extends Line2D
 
 const FLOW_SPEED = 100.0
 
@@ -17,7 +19,7 @@ func _ready() -> void:
 	add_point(current_point)
 	add_point(current_point)
 	set_process(false)
-
+# Manually progresses the water (used to initialize pipes).
 func flow(delta: float):
 	_process(delta  / FLOW_SPEED)
 

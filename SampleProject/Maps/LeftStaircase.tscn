@@ -6,38 +6,48 @@
 [ext_resource type="PackedScene" uid="uid://cuo3rbw43trj4" path="res://SampleProject/Objects/Pipe.tscn" id="4_5yvvy"]
 
 [sub_resource type="GDScript" id="GDScript_7ce5k"]
-script/source = "extends Node
-
+resource_name = "GateOpen"
+script/source = "# Helper node that modifies the TileMap.
+extends Node
+# Gate layer index.
 @export var layer: int
 
 func open():
+	# Disable the Gate layer.
 	get_parent().set_layer_enabled(layer, false)
 "
 
 [sub_resource type="GDScript" id="GDScript_1dhgs"]
-script/source = "extends Line2D
+resource_name = "Pipe"
+script/source = "# Script for handling water flow in the pipe.
+extends Line2D
 
 func _ready() -> void:
+	# Initialize the water up to the gate. For water code check the Pipe.tscn.
 	$Water.flow(300)
 	$Water.flow(1)
 	$Water.flow(48)
-	
-	await get_tree().process_frame
-	
+	# If the water was previously released, complete the flow.
 	if Game.get_singleton().events.has(\"left_water\"):
 		$Water.flow(1)
 		$Water.flow(176)
 
+# Called when button is pressed (either by player or from storable callback).
 func start_water() -> void:
+	# Don't start more than once.
 	if Game.get_singleton().events.has(\"left_water\"):
 		return
-	
+	# Enable water flow.
 	$Water.set_process(true)
+	# Set the event flag, to remember that water was enabled.
 	Game.get_singleton().events.append(\"left_water\")
-	
-	var override := MetSys.get_cell_override(Vector3i(0, -1, 0))
+	# Create override for the group that contains Lava Corridor.
+	var override := MetSys.get_cell_override_from_group(1)
+	# Changes assigned scene to the one with extinguished lava and changes the cell color.
+	# The latter is immediately visible on the map, because map_updated signal is emitted.
 	override.set_assigned_scene(\"LavaCorridorAfterwater.tscn\")
 	override.set_color(Color.BLUE)
+	# Applies the override to all cells in group.
 	override.apply_to_group(1)
 "
 

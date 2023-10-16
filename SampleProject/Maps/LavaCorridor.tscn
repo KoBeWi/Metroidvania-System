@@ -13,12 +13,14 @@ script/source = "extends Node2D
 
 func _ready() -> void:
 	for i in repeat:
+		# Fill the pool with lava.
 		var lava := get_child(0).duplicate()
 		lava.position.x += (i + 1) * 64
 		add_child(lava)
 
 func lava_enter(body: Node2D) -> void:
 	if body.is_in_group(&\"player\"):
+		# Kill the player when entering lava.
 		body.kill()
 "
 
@@ -99,10 +101,10 @@ texture = ExtResource("3_8xchv")
 hframes = 3
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="LavaPool/Lava"]
-autoplay = "Lava"
 libraries = {
 "": SubResource("AnimationLibrary_xn1en")
 }
+autoplay = "Lava"
 
 [node name="Collectible" parent="." instance=ExtResource("4_qtkhd")]
 position = Vector2(1176, 424)
