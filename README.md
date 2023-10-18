@@ -213,7 +213,7 @@ Selecting General Settings option will open the MetSys settings file in the insp
 
 General Settings are a configuration file for MetSys plugin in your project.
 - Theme: the map theme of your project. It determines how map cells are drawn. See [Map Theme section](#map-theme) for more details.
-- Map Root Folder: the location of your world's scenes (see [scene assign](#scene-assign-mode)). All scenes you want to assign to your rooms need to be inside this directory or its subdirectories.
+- Map Root Folder: the location of your world's scenes (see [scene assign](#scene-assign-mode)). All scenes you want to assign to your rooms need to be inside this directory or its subdirectories. `MapData.txt`, which stores the map information, is also located in this folder.
 - In Game Cell Size: The size of one cell of a room as it appears in game (not on map). It affects how [exact player position](#tracking-player-position) is display on map and also affects camera bounds (if adjusted).
 - Custom Element Script: script defining available custom elements. See [Custom Element Script section](#custom-element-script) for more details.
 
@@ -537,7 +537,7 @@ This section describes the features of the included sample project and where to 
 
 The project is a little metroidvania game. The target is to collect 6 orbs and reach the ending point. The world is composed of 3 layers and in different rooms it shows various system's capabilities.
 
-**DISCLAIMER:** The sample project is not by any means a legit game. It's full of hacks and questionable approaches. The point is to show an example integration with the MetSys, not how to make a good project. As Godot contributors would say - TIWAGOS.
+**DISCLAIMER:** The sample project is not by any means a legit game. It's full of hacks and questionable solutions. The point is to show an example integration with the MetSys, not how to make a good project. As a Godot contributor would say - TIWAGOS.
 
 ### Main elements
 
@@ -581,13 +581,15 @@ The receivers of the signal is GateOpen node and Pipe. GateOpen will disable the
 
 #### Portal Room - moving between map layers
 
-TODO
+`PortalRoom.tscn` is one of the portal rooms. It has the Portal node responsible for changing layers. Although in fact the layer changing comes indirectly. What the portal does is changing the scene, the actual layer is assigned in `Game.gd` in `goto_map()` method.
 
 #### Dark Staircase - irregular room with offmap drawing
 
-TODO
+When a room is not rectangular, there will be space where camera can go outside the map. This can be handled in multiple ways. The simplest one is just drawing tiles outside the map, so that player won't see empty space. This approach can be unreliable. Other ways involve drawing a plain color/pattern outside the map or constraining the camera to be only within the used cells. Both can be achieved by using `get_local_cells()` method. `DarkStaircase.tscn` shows the former approach, i.e. drawing plain color; the code is in Outside node.
 
 #### Dice Room - procedurally generated rooms
+
+`DiceRoom.tscn` and the related `Junction.tscn` contain the most complex logic in the sample project. Touching the dice in dice room will generate a couple of procedural rooms and put a collectible into furthest one of them.
 
 TODO
 
@@ -597,8 +599,8 @@ Important to remember is that while the MetSys editor works with scene paths rel
 
 Stuff not directly related to MetSys.
 
-- `ElevatorRoom.tscn` shows how to make a Metroid-esque elevator to move between rooms.
-- `EndingPoint.tscn` has example ability and an ending point based on collectibles.
+- `ElevatorRoom.tscn` shows how to make a Metroid-esque elevator to move between rooms. TODO
+- `EndingPoint.tscn` has example ability and an ending point based on collectibles. TODO
 
 ## Closing words
 

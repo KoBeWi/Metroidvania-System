@@ -5,14 +5,22 @@
 [ext_resource type="PackedScene" uid="uid://c8j6i3fx8p758" path="res://SampleProject/Objects/Collectible.tscn" id="3_juw15"]
 
 [sub_resource type="GDScript" id="GDScript_r3e0s"]
-script/source = "extends Node2D
+resource_name = "Outside"
+script/source = "# This node draws black rectangle outside the map, i.e. in area that doesn't belong to this room.
+# It's written in a generic way, you can copy it to any non-rectangle room.
+extends Node2D
 
 func _draw() -> void:
-	var instance := MetSys.current_room
+	# Get room instance and local cells.
+	var instance := MetSys.get_current_room_instance()
 	var local_cells := instance.get_local_cells()
 	
-	for y in instance.max_cell.y - instance.min_cell.y + 1:
-		for x in instance.max_cell.x - instance.min_cell.x + 1:
+	# Iterate over the rooms rectangle. get_base_coords() returns the top-left corner, get_end_coords() returns the bottom-right corner.
+	# Subtracting end from base returns the room's size. Note that if the room is not rectangle, not all cells will be used.
+	# In case of this room, both loops will go with 0-1 inclusive range.
+	for y in instance.get_end_coords().y - instance.get_base_coords().y + 1:
+		for x in instance.get_end_coords().x - instance.get_base_coords().x + 1:
+			# If a cell does not belong to the room, draw a rectangle that covers the whole in-game cell.
 			if not Vector2i(x, y) in local_cells:
 				draw_rect(Rect2(Vector2(x, y) * MetSys.settings.in_game_cell_size, MetSys.settings.in_game_cell_size), Color.BLACK)
 "
