@@ -599,8 +599,8 @@ Important to remember is that while the MetSys editor works with scene paths rel
 
 Stuff not directly related to MetSys.
 
-- `ElevatorRoom.tscn` shows how to make a Metroid-esque elevator to move between rooms. TODO
-- `EndingPoint.tscn` has example ability and an ending point based on collectibles. TODO
+- `ElevatorRoom.tscn` shows how to make a Metroid-esque elevator to move between rooms. Related: `Elevator.tscn`.
+- `EndingPoint.tscn` has example ability and an ending point based on collectibles.
 
 ## Closing words
 
