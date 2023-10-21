@@ -45,11 +45,10 @@ func _enter_tree() -> void:
 	get_editor_interface().get_editor_main_screen().add_child(main)
 	main.hide()
 	
-	MetSys.settings.theme_changed.connect(func(): prev_theme_state.clear())
+	get_singleton().settings.theme_changed.connect(func(): prev_theme_state.clear())
 
 func _exit_tree() -> void:
 	main.queue_free()
-	#remove_autoload_singleton("MetSys")
 
 func _make_visible(visible: bool) -> void:
 	main.visible = visible
@@ -71,7 +70,7 @@ func get_singleton() -> MetroidvaniaSystem:
 	return get_tree().root.get_node_or_null(^"MetSys")
 
 func check_theme():
-	var theme := MetSys.settings.theme
+	var theme := get_singleton().settings.theme
 	var changed := theme.check_for_changes(prev_theme_state)
 	if not changed.is_empty():
-		MetSys.theme_modified.emit(changed)
+		get_singleton().theme_modified.emit(changed)
