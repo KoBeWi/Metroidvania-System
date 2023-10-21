@@ -591,7 +591,7 @@ When a room is not rectangular, there will be space where camera can go outside 
 
 `DiceRoom.tscn` and the related `Junction.tscn` contain the most complex logic in the sample project. Touching the dice in dice room will generate a couple of procedural rooms and put a collectible into furthest one of them.
 
-TODO
+The whole script for generating rooms is in the Dice node. The general idea is that it "generates" and saves scenes, puts them on the map and picks the further room to insert an orb. Check the Dice script for details. The `Junction.tscn` has an orb with a custom ID.
 
 Important to remember is that while the MetSys editor works with scene paths relative to the map root directory, when assigning an override you can assign it any absolute path (e.g. from `user://`). Do note that for RoomInstance to work correctly, the path still needs to point to a valid, unique scene resource.
 
