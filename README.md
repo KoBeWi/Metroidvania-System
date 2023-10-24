@@ -477,7 +477,7 @@ Corners draw at the connection point of borders and will overlap the border text
 - Outer Corner: The texture that draws at the outer bounds of the room.
 - Inner Corner: This texture only appears in concave (non-rectangle) rooms and draws at the corners inside the room.
 
-When using shared borders mode, the above corner textures are instead replaced by this set. The coloring rules are a bit different - if multiple borders meet at the same corner, the resulting color will favor custom colors instead of the default one. Note that you can assign the same texture to all of them, which will improve drawing performance (rules for determining correct corner are complex).
+When using shared borders mode, the above corner textures are instead replaced by this set. The coloring rules are a bit different - if multiple borders meet at the same corner, the resulting color will favor custom colors instead of the default one.
 
 - U Corner: Corner of a single border that divides U-shaped room.
 - L Corner: Corner of 2 perpendicular borders.

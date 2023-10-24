@@ -199,13 +199,13 @@ static func draw_shared_borders():
 	shared_borders_to_draw.merge(additional_corners)
 	for coords in shared_borders_to_draw:
 		var corner_data := 0
+		corner_data |= (1 << 0) * (get_corner_bit(coords, MetroidvaniaSystem.R) | get_corner_bit(coords + Vector3i(1, 0, 0), MetroidvaniaSystem.L))
+		corner_data |= (1 << 1) * (get_corner_bit(coords, MetroidvaniaSystem.D) | get_corner_bit(coords + Vector3i(0, 1, 0), MetroidvaniaSystem.U))
+		corner_data |= (1 << 2) * (get_corner_bit(coords + Vector3i(0, 1, 0), MetroidvaniaSystem.R) | get_corner_bit(coords + Vector3i(1, 1, 0), MetroidvaniaSystem.L))
+		corner_data |= (1 << 3) * (get_corner_bit(coords + Vector3i(1, 0, 0), MetroidvaniaSystem.D) | get_corner_bit(coords + Vector3i(1, 1, 0), MetroidvaniaSystem.U))
+		
 		if theme.is_unicorner():
-			corner_data = 15
-		else:
-			corner_data |= (1 << 0) * (get_corner_bit(coords, MetroidvaniaSystem.R) | get_corner_bit(coords + Vector3i(1, 0, 0), MetroidvaniaSystem.L))
-			corner_data |= (1 << 1) * (get_corner_bit(coords, MetroidvaniaSystem.D) | get_corner_bit(coords + Vector3i(0, 1, 0), MetroidvaniaSystem.U))
-			corner_data |= (1 << 2) * (get_corner_bit(coords + Vector3i(0, 1, 0), MetroidvaniaSystem.R) | get_corner_bit(coords + Vector3i(1, 1, 0), MetroidvaniaSystem.L))
-			corner_data |= (1 << 3) * (get_corner_bit(coords + Vector3i(1, 0, 0), MetroidvaniaSystem.D) | get_corner_bit(coords + Vector3i(1, 1, 0), MetroidvaniaSystem.U))
+			corner_data = signi(corner_data) * 15
 		
 		var use_default: bool
 		var color_blend: Array[Color]
