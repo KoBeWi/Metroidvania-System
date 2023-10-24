@@ -449,7 +449,6 @@ The theme has a long list of properties, divided into sections.
 - Mapped Center Color: Modulation of the center texture when the cell is mapped.
 - Default Border Color: Modulation of the border textures when it's not overriden by custom color.
 - Mapped Border Color: Modulation of the border textures when the cell is mapped.
-- Room Separator Color: Color of the room separator texture, if available.
 
 #### Symbols
 

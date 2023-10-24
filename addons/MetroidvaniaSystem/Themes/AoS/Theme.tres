@@ -18,7 +18,6 @@ default_center_color = Color(0, 0, 0.878431, 1)
 mapped_center_color = Color(0.25098, 0.25098, 0.25098, 1)
 default_border_color = Color(1, 1, 1, 1)
 mapped_border_color = Color(0.533333, 0.533333, 0.533333, 1)
-room_separator_color = Color(0, 0, 0, 1)
 symbols = Array[Texture2D]([])
 uncollected_item_symbol = -1
 collected_item_symbol = -1

@@ -90,7 +90,7 @@ static func draw_regular_borders(canvas_item: CanvasItem, offset: Vector2, coord
 		if borders[i] == -1:
 			if display_outlines:
 				texture = get_border_texture(theme, -1, i)
-				color = theme.room_separator_color
+				color = Color.WHITE
 		else:
 			var border: int = borders[i]
 			
@@ -248,7 +248,7 @@ static func draw_shared_borders():
 			var rotation := PI * 0.5 * i
 			if borders[i] == -1:
 				texture = get_border_texture(theme, -1, i)
-				color = theme.room_separator_color
+				color = Color.WHITE
 			else:
 				var border: int = borders[i]
 				

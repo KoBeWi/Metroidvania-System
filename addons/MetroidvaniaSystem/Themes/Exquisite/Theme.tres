@@ -28,7 +28,6 @@ default_center_color = Color(0.5, 0.25, 0.25, 1)
 mapped_center_color = Color(0.745098, 0.745098, 0.745098, 1)
 default_border_color = Color(1, 0.741176, 0.580392, 1)
 mapped_border_color = Color(1, 1, 1, 1)
-room_separator_color = Color(1, 1, 1, 0.13)
 symbols = Array[Texture2D]([ExtResource("9_c11cy"), ExtResource("9_3gfe5"), ExtResource("11_o6efd"), ExtResource("13_hjnmv")])
 uncollected_item_symbol = 2
 collected_item_symbol = 3

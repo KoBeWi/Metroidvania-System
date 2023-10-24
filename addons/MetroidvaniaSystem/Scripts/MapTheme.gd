@@ -45,8 +45,6 @@ const SHARED_CORNERS = ["u_corner", "l_corner", "t_corner", "cross_corner"]
 @export var default_border_color: Color
 ## Modulation of the cell's border textures when the cell is only mapped.
 @export var mapped_border_color: Color
-## Modulation of the [member separator] texture.
-@export var room_separator_color: Color
 
 @export_group("Symbols")
 ## The list of symbols that can be assigned to cells, either from editor, using [method MetroidvaniaSystem.add_custom_marker] or from storable objects.
