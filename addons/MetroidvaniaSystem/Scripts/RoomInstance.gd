@@ -1,7 +1,7 @@
 @tool
 ## A node representing MetSys room.
 ##
-## RoomInstance is a node that allows for integration between scenes and MetSys database. In editor it will provide drawing for room bounds and in game it provides some helper methods for interacting with the map data. [code]RoomInstance.tscn[/code] scene is provided for convenience. You should add it to every scene used as MetSys room. The node should be at [code](0, 0)[/code] global coordinates.
+## RoomInstance is a node that allows for integration between scenes and MetSys database. In editor it will provide drawing for room bounds and in game it provides some helper methods for interacting with the map data. [code]RoomInstance.tscn[/code] scene is provided for convenience. You should add it to every scene used as MetSys room. It's recommended to put the node at [code](0, 0)[/code] global coordinates.
 extends Node2D
 
 var GRID_COLOR: Color

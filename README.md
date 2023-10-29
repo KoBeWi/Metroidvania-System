@@ -289,7 +289,7 @@ You can check the included [example project](#sample-project) if you are unsure 
 
 ### Room Instance
 
-The base bridge between MetSys and your game is RoomInstance node. You can find it under Nodes in MetroidvaniaSystem addon folder. It provides two-fold functionality: allows to identify the current room when it's visited in game and draws room boundaries in the editor. The node should be located at (0, 0), but it doesn't need to be under the scene root. You should add RoomInstance to every room with assigned scene.
+The base bridge between MetSys and your game is RoomInstance node. You can find it under Nodes in MetroidvaniaSystem addon folder. It provides two-fold functionality: allows to identify the current room when it's visited in game and draws room boundaries in the editor. You can put this node anywhere in the scene, but keep in mind that the position affects where the bounds are drawn. You should add RoomInstance to every room with assigned scene.
 
 ![](Media/EditorRoomInstance.png)
 
