@@ -601,6 +601,8 @@ The addon is fully open-source, so feel free to dive into the code and adapt it 
 Have fun.
 
 ___
+You can support my metroidvania game by [adding it to your wishlist on Steam](https://store.steampowered.com/app/2609560?utm_source=GitHub&utm_medium=README&utm_campaign=MetSys#game_area_purchase).
+
 You can find all my addons on my [profile page](https://github.com/KoBeWi).
 
 <a href='https://ko-fi.com/W7W7AD4W4' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://cdn.ko-fi.com/cdn/kofi1.png?v=3' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
