@@ -6,7 +6,7 @@ Supports Godot **4.2** or newer.
 
 ## Getting started
 
-MetSys is an addon and you install it normally - by copying the "addons/MetroidvaniaSystem" folder from this repository to the "addons/" directory in your project (create it if it doesn't exists). Once you copy the folder, go to Project -> Project Settings -> Plugins and tick the checkbox next to MetSys. Note that when the plugin is enabled for the first time, the editor will restart to properly setup the singleton. Once the plguin is activated, you will see MetSys button at the top of the Godot editor, next to 2D/3D views.
+MetSys is an addon and you install it normally - by copying the "addons/MetroidvaniaSystem" folder from this repository to the "addons/" directory in your project (create it if it doesn't exists). Once you copy the folder, go to Project -> Project Settings -> Plugins and tick the checkbox next to MetSys. Note that when the plugin is enabled for the first time, the editor will restart to properly setup the singleton. Once the plugin is activated, you will see MetSys button at the top of the Godot editor, next to 2D/3D views.
 
 ![](Media/IntroductionButton.png)
 
