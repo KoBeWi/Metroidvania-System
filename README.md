@@ -79,7 +79,7 @@ A small but important sub-system are object IDs. Whether it's a collectible, a s
 - Specify in-game cell size, i.e. how a single cell size on the minimap relates to in-game world.
 - Player position tracking using a single method, which automatically discovers cells and sends scene change requests.
 - Override existing cells, assigning them different colors, borders, symbols or even scenes.
-- Create and customize new ad-hoc cells to make random map generators.
+- Create and customize new ad hoc cells to make random map generators.
 - Register and store persistent objects to track their state using automatically or manually assigned IDs.
 - Automatically mark discovered and acquired collectibles on the map.
 - Request runtime save data in a form of a Dictionary, which contains discovered rooms, stored object IDs and customized cells. It can be loaded back at any time.
@@ -104,7 +104,7 @@ Map view is where you interact with your map - draw cells, edit borders, symbols
 
 #### Navigation
 
-It's important to note that the map is divided into layers. Using them is optional; they can be parallel worlds, interior sub-maps or whatever use-case you come up with. The editor properly displays a single layer, that is all cells, symbols, custom elements etc. Sometimes it's desired to see another layer at the same time, to make parallel rooms and stuff. This is what Preview Layer option is for - it allows to display another layer. It will be translucent and some elements are ommited, but you will see general shape of the layer.
+It's important to note that the map is divided into layers. Using them is optional; they can be parallel worlds, interior sub-maps or whatever use-case you come up with. The editor properly displays a single layer, that is all cells, symbols, custom elements etc. Sometimes it's desired to see another layer at the same time, to make parallel rooms and stuff. This is what Preview Layer option is for - it allows to display another layer. It will be translucent and some elements are omitted, but you will see general shape of the layer.
 
 ![](Media/EditorLayers.gif)
 
@@ -140,7 +140,7 @@ Assign cell groups here. Select group ID on the sidebar, use LMB to assign selec
 
 #### Border Type mode
 
-This mode allows changing room's borders. There are 2 default border types: wall and passage. More border types can be registered in the [theme](#map-theme). They can be doors, special bariers or narrow passages, anything. A cell's edge will be highlighted when hovering near it with cursor. You can pick a border type from the sidebar list or by Ctrl+Clicking a border. Draw borders using LMB, remove (reset to wall) with RMB. You can hold and drag to draw multiple borders; useful when you want to draw them at both sides of an edge. Also holding Shift will set the borders for the whole room.
+This mode allows changing room's borders. There are 2 default border types: wall and passage. More border types can be registered in the [theme](#map-theme). They can be doors, special barriers or narrow passages, anything. A cell's edge will be highlighted when hovering near it with cursor. You can pick a border type from the sidebar list or by Ctrl+Clicking a border. Draw borders using LMB, remove (reset to wall) with RMB. You can hold and drag to draw multiple borders; useful when you want to draw them at both sides of an edge. Also holding Shift will set the borders for the whole room.
 
 ![](Media/EditorBorderType.gif)
 
@@ -194,7 +194,7 @@ Once your collectibles are set up, go to the Collectible Finder tab and press th
 
 ### Manage
 
-Unlike the other 2 tabs, Manage has no map view. Instead is's a simple list of options.
+Unlike the other 2 tabs, Manage has no map view. Instead it's a simple list of options.
 
 ![](Media/ManageMain.png)
 
@@ -378,7 +378,7 @@ The above example shows a Chest object. It's initialized in the beginning. When 
 
 Alternate method for registering objects is `register_storable_object_with_marker()`. It takes object, callback and marker index. When used, the object will be be marked on map when it first appears and marked again when stored (collected etc.). You can define default markers in [map theme](#map-theme) (use the index from the symbol list). If marker index is -1, that marker will not appear. You can make marker appear only when the object is discovered or only when it's stored or both. Also you can provide a custom symbol index to the method to customize how the element is marked on the map.
 
-Separately from the storable objects there exists an object ID system. It's used by storable object methods to determine whether the object was stored or not, but it can be used manually. The ID is a String and is determined ad-hoc from the object instance. If the object is a Node, the ID will be created from scene name, parent node and node name. E.g. if you have this scene structure:
+Separately from the storable objects there exists an object ID system. It's used by storable object methods to determine whether the object was stored or not, but it can be used manually. The ID is a String and is determined ad hoc from the object instance. If the object is a Node, the ID will be created from scene name, parent node and node name. E.g. if you have this scene structure:
 ```
 Map (Forest.tscn)
 - Objects
@@ -388,7 +388,7 @@ The Chest will have ID `Forest/Objects/Chest`. This system ensures that any node
 
 If your object is not a node, or for some reason you want them to share ID, you can manually assign ID by setting `object_id` metadata, e.g. `object.set_meta(&"object_id", "my_id")`. Another alternative is implementing `_get_object_id()` in the object (the returned ID will be cached in meta). The meta and method will have priority over the auto-ID. If the ID can't be determined, `get_object_id()` will return empty String.
 
-Another related method is `get_object_coords()`. It works just like `get_object_id()` (including `object_coords` meta and `_get_object_coords()` method), but instead it returns object's coordinates on the world map. You can use it to draw custom ad-hoc stuff on the minimap or manually assign object markers. If the provided object is a Node2D, it will return an accurate coordinates. If it's a plain Node, it will return coordinates of the top-left corner of the current room (note that it needs to be inside a scene assigned to some map room). If the coords can't be determined, `Vector3i()` is returned.
+Another related method is `get_object_coords()`. It works just like `get_object_id()` (including `object_coords` meta and `_get_object_coords()` method), but instead it returns object's coordinates on the world map. You can use it to draw custom ad hoc stuff on the minimap or manually assign object markers. If the provided object is a Node2D, it will return an accurate coordinates. If it's a plain Node, it will return coordinates of the top-left corner of the current room (note that it needs to be inside a scene assigned to some map room). If the coords can't be determined, `Vector3i()` is returned.
 
 ### Cell overrides
 
@@ -432,7 +432,7 @@ The theme has a long list of properties, divided into sections.
 
 #### Main properties
 
-- Center Texture: The most important texture. It draws as a base of your cells, but also defines their size and shape. The texture should be grayscale (preferrably white), because it will be modulated.
+- Center Texture: The most important texture. It draws as a base of your cells, but also defines their size and shape. The texture should be grayscale (preferably white), because it will be modulated.
 - Empty Space Texture: Optional. Texture that draws in empty or undiscovered coordinates when drawing cells. Also drawn in Map Editor.
 - Player Location Scene: Optional. The scene instantiated when using `add_player_location()` method. The root must be Node2D-derived. If not provided, drawing player location using MetSys methods is not possible.
 - Show Exact Player Location: If enabled, the player location scene will be drawn at the exact position in the cell (player position is remapped to relative position inside a cell). If disabled, the player location is always drawn in the center of the cell.
@@ -458,7 +458,7 @@ The theme has a long list of properties, divided into sections.
 
 #### Border Textures
 
-Note that all border textures should be grayscale, preferrably white, because they are colorized.
+Note that all border textures should be grayscale, preferably white, because they are colorized.
 
 - Wall: The texture used for a wall, i.e. the default impassable border. The texture is facing east (right), so it should be thin line with the same height as the center texture. Don't make it too thick to prevent overlaps.
 - Passage: The default texture used for passage, i.e. passable border. Same rules as above.
@@ -573,7 +573,7 @@ The receivers of the signal is GateOpen node and Pipe. GateOpen will disable the
 
 `PortalRoom.tscn` is one of the portal rooms. It has the Portal node responsible for changing layers. Although in fact the layer changing comes indirectly. What the portal does is changing the scene, the actual layer is assigned in `Game.gd` in `goto_map()` method.
 
-#### Dark Staircase - irregular room with offmap drawing
+#### Dark Staircase - irregular room with off-map drawing
 
 When a room is not rectangular, there will be space where camera can go outside the map. This can be handled in multiple ways. The simplest one is just drawing tiles outside the map, so that player won't see empty space. This approach can be unreliable. Other ways involve drawing a plain color/pattern outside the map or constraining the camera to be only within the used cells. Both can be achieved by using `get_local_cells()` method. `DarkStaircase.tscn` shows the former approach, i.e. drawing plain color; the code is in Outside node.
 
