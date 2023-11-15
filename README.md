@@ -2,6 +2,8 @@
 
 Metroidvania System (abbrevated as MetSys) is a general-purpose toolkit for creating metroidvania games in Godot game engine. It helps with map design, navigation and presentation, tracking collectibles and provides basic save data functionality related to the system. Its components can be used independently, even for games that aren't metroidvanias.
 
+This plugin evolved from various tools I made for my metroidvania game, [Voice of Flowers](https://store.steampowered.com/app/2609560?utm_source=GitHub&utm_medium=README_TOP&utm_campaign=MetSys). They were quite useful, so I decided to make them into a separate project that can be used in other games too.
+
 Supports Godot **4.2** or newer.
 
 ## Getting started
