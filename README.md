@@ -422,7 +422,7 @@ MetSys comes with a simple save system that allows you to serialize its runtime 
 
 This means that you don't need to worry about keeping the data of runtime MetSys operations, the system does it for you. To obtain the data, use `MetSys.get_save_data()`. It returns a Dictionary with the aforementioned contents. You need to save it yourself, e.g. using `store_var()`, `var_to_str()` or by adding it to your own save system. Note that using JSON is not recommended, because the data contains Godot's native types and integers.
 
-To restore the data use `MetSys.set_save_data()`, passing the saved Dictionary. It will restore all discovered cells, stored objects etc. If you give empty Dictionary (default), the data will be cleared. Useful when starting new game. 
+To restore the data use `MetSys.set_save_data()`, passing the saved Dictionary. It will restore all discovered cells, stored objects etc. If you give empty Dictionary (default), the data will be cleared. When starting a new game session, you should always call `MetSys.reset_state()` and `MetSys.set_save_data()`. The former will reset the singleton to make sure player position and other variables are properly cleared. The latter will initialize the save data; you should always call it if you want to use save data, as otherwise the data is `null`.
 
 ## Map Theme
 

@@ -19,7 +19,7 @@ enum { R, ## Right border.
 		D, ## Bottom border.
 		L, ## Left border.
 		U, ## Top border.
-		}
+	}
 
 var settings: Settings
 ## The size of a map cell. Automatically set to the size of [member MapTheme.center_texture]. Read only.
@@ -80,11 +80,21 @@ func _update_theme():
 func _ready() -> void:
 	set_physics_process(false)
 
+## Resets the state of MetSys singleton to initial one. This means clearing save data, player position, current room and layer.
+## [br][br]You should call it every time you start a new game session. This does [i]not[/i] initialize the save data. In fact, it sets it to [code]null[/code], which means that you need to call [method set_save_data] to initialize save data.
+func reset_state():
+	save_data = null
+	last_player_position = Vector3i.MAX
+	exact_player_position = Vector2()
+	current_room = null
+	current_layer = 0
+
 ## Returns a [Dictionary] containing the MetSys' runtime data, like discovered cells or stored objects. You need to serialize it yourself, e.g. using [method FileAccess.store_var].
 func get_save_data() -> Dictionary:
 	return save_data.get_data()
 
-## Pass it the data from [method get_save_data] to restore the saved state of MetSys. Calling this method with the default parameter will clear the data, allowing to start new game session.
+## Initializes and loads a save data. Pass it the data from [method get_save_data] to restore the saved state of MetSys. Calling this method with the default parameter will clear the data, allowing to start new game session.
+## [br][br]Note that this only resets the save data. You still need to call [method reset_state] [i]before[/i] this method to make sure the singleton is clean.
 func set_save_data(data := {}):
 	save_data = SaveData.new()
 	save_data.set_data(data)
