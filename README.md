@@ -12,7 +12,7 @@ MetSys is an addon and you install it normally - by copying the "addons/Metroidv
 
 ![](Media/IntroductionButton.png)
 
-The addon comes with a sample project that shows example integration of the system. You can find more detailed instructions in this README.
+**Important:** Don't use MetSys with Godot 4.1 or older. The system uses some features available only in Godot 4.2 and if the scripts can't compile, enabling the addon will result in infinite editor restart loop.
 
 ### Terminology
 
@@ -28,6 +28,30 @@ This section explains the terminology used in this README and in the addon itsel
 - Mapped Cell: An unvisited cell. Usually discovered via a mapping item and appears grayed-out.
 - Explored Cell: A cell visited by the player that appears normally.
 - Discovered Cell: A cell either mapped or explored.
+
+### Quick Start
+
+There are 2 ways to start using MetSys: implementing the integration from scratch and using the example project as base. Note that while the system provides lots of different functionality, integrating it in the project does require some quite a bit of code. The latter approach of starting off the sample project is recommended.
+
+#### Starting from scratch
+
+After adding the plugin and enabling it, a file called `MetSysSettings.tres` will appear in your project. It contains settings for the plugin. You can move it to any directory, but you should modify `addons/metroidvania_system/settings_file` to point to the new path. Next thing to do is edit the settings file and customize all the fields (see [here](#general-settings) for more info). The most important one is `map_root_folder`, which defines where will your map scenes go. This is also the location of your `MapData.txt` file, which stores the world layout.
+
+Whenever you start the game, you should call `MetSys.reset_state()` and `MetSys.set_save_data()` to make sure the singleton is in the initial state and save data exists. Then you have to call `MetSys.set_player_position()` every time the player moves (or simply every frame, the method is not expensive). This will cause the  `MetSys.cell_changed` signal to be emitted when player moves to another map cell and `MetSys.room_changed` when player moves to another room (this is when you are supposed to load a new scene). See [here](#tracking-player-position) for more info.
+
+Create your map layout in the Map Editor and assign the scenes from your map folder. Every room should have instance of `RoomInstance.tscn` scene to properly tie it to the system. When you start your game in such scene, MetSys will automatically detect which room you are in and the position tracking will handle the rest. To draw the map use `MetSys.draw_cell()` method. See [here](#drawing-the-map) for more info.
+
+These are the basics that allow you to craft the world and move within it. For more information read this manual and/or the documentation.
+
+#### Starting from sample project
+
+Sample project comes with many systems in place. They aren't fully optimized, but it's still a good starter.
+
+When adding MetSys to existing project make sure to setup the plugin as described in the previous section, that is `addons/metroidvania_system/settings_file` should point to the `MetSysSettings.tres` file (called `Settings.tres` in example project) and the map directory configured in the settings must be valid.
+
+The project comes with the default room size, so you may want to change that too. The most relevant piece for you will be the `Game.tscn` scene. You should remove the map scenes and remove all cells in the Map Editor (or just open `MapData.txt` and clear it, then press "Reload and Cleanup Map Data" in Manage tab). Modify `Game.tscn` to adapt it to your game (or just copy the code you want to use, as the scene has minimap and barebones map screen).
+
+With that setup you should have a nice base to continue your project.
 
 ## Quick overview
 
