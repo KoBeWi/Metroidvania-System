@@ -55,10 +55,21 @@ signal theme_modified(changes: Array[String])
 
 func _enter_tree() -> void:
 	var settings_path := "res://MetSysSettings.tres"
-	if ProjectSettings.has_setting("metroidvania_system/settings_file"):
-		settings_path = ProjectSettings.get_setting("metroidvania_system/settings_file")
+	
+	if ProjectSettings.has_setting("addons/metroidvania_system/settings_file"):
+		settings_path = ProjectSettings.get_setting("addons/metroidvania_system/settings_file")
+	elif ProjectSettings.has_setting("metroidvania_system/settings_file"):
+		# Compatibility. Will be removed.
+		var legacy_settings_path: String = ProjectSettings.get_setting("metroidvania_system/settings_file")
+		if legacy_settings_path != settings_path:
+			push_warning("Detected MetSys settings path under \"metroidvania_system/settings_file\" project setting. Migrating it to the new setting: \"addons/metroidvania_system/settings_file\".")
+		
+		settings_path = legacy_settings_path
+		ProjectSettings.set_setting("addons/metroidvania_system/settings_file", settings_path)
 	else:
-		ProjectSettings.set_setting("metroidvania_system/settings_file", settings_path)
+		ProjectSettings.set_setting("addons/metroidvania_system/settings_file", settings_path)
+	
+	ProjectSettings.add_property_info({"name": "addons/metroidvania_system/settings_file", "type": TYPE_STRING, "hint": PROPERTY_HINT_FILE, "hint_string": "*.tres"})
 	
 	if ResourceLoader.exists(settings_path):
 		settings = load(settings_path)

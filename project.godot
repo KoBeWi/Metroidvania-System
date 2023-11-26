@@ -8,6 +8,10 @@
 
 config_version=5
 
+[addons]
+
+metroidvania_system/settings_file="res://SampleProject/Resources/Settings.tres"
+
 [application]
 
 config/name="Metroidvania System"
@@ -48,7 +52,3 @@ enabled=PackedStringArray("res://addons/MetroidvaniaSystem/plugin.cfg")
 [filesystem]
 
 import/blender/enabled=false
-
-[metroidvania_system]
-
-settings_file="res://SampleProject/Resources/Settings.tres"

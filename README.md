@@ -202,7 +202,7 @@ Unlike the other 2 tabs, Manage has no map view. Instead it's a simple list of o
 
 #### General Settings
 
-Selecting General Settings option will open the MetSys settings file in the inspector. By default the file is located at `res://MetSysSettings.tres`, but you can move it by modifying `metroidvania_system/settings_file` project setting.
+Selecting General Settings option will open the MetSys settings file in the inspector. By default the file is located at `res://MetSysSettings.tres`, but you can move it by modifying `addons/metroidvania_system/settings_file` project setting.
 
 General Settings are a configuration file for MetSys plugin in your project.
 - Theme: the map theme of your project. It determines how map cells are drawn. See [Map Theme section](#map-theme) for more details.
