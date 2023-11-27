@@ -20,6 +20,8 @@ func _enter_tree() -> void:
 		plugin = owner.plugin
 
 func _ready() -> void:
+	$Sidebar.custom_minimum_size.x = 200 * EditorInterface.get_editor_scale()
+	
 	map.draw.connect(_on_map_draw)
 	map_overlay.mouse_exited.connect(status_label.hide)
 	map_overlay.gui_input.connect(_on_overlay_input)
