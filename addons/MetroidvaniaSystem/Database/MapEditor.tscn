@@ -894,7 +894,6 @@ vertical_alignment = 1
 unique_name_in_owner = true
 title = "Open a File"
 size = Vector2i(345, 162)
-ok_button_text = "Open"
 file_mode = 0
 filters = PackedStringArray("*.tscn")
 
