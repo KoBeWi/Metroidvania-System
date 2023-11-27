@@ -420,15 +420,8 @@ func _editor_input(event: InputEvent):
 						%FileDialog.root_subfolder = MetSys.settings.map_root_folder.trim_prefix(\"res://\")
 					%FileDialog.popup_centered_ratio(0.6)
 		elif event.button_index == MOUSE_BUTTON_RIGHT:
-			var first := true
-			for p in highlighted_room:
-				if first:
-					var assigned_scene: String = MetSys.map_data.get_cell_at(p).assigned_scene
-					MetSys.map_data.assigned_scenes.erase(assigned_scene)
-					first = false
-				
-				MetSys.map_data.get_cell_at(p).assigned_scene = \"\"
-				MetSys.room_assign_updated.emit()
+			clear_scene(highlighted_room)
+			MetSys.room_assign_updated.emit()
 			
 			mark_modified()
 			editor.map_overlay.queue_redraw()
@@ -448,16 +441,35 @@ func _editor_draw(map_overlay: CanvasItem):
 		map_overlay.draw_string(get_theme_font(&\"font\", &\"Label\"), Vector2(0, 40),
 				MetSys.map_data.get_cell_at(highlighted_room.front()).assigned_scene)
 
+func clear_scene(from: Array[Vector3i]):
+	if from.is_empty():
+		return
+	
+	var current_assigned: String = MetSys.map_data.get_cell_at(from[0]).assigned_scene
+	if current_assigned.is_empty():
+		return
+	else:
+		MetSys.map_data.assigned_scenes.erase(current_assigned)
+	
+	for p in from:
+		MetSys.map_data.get_cell_at(p).assigned_scene = \"\"
+
 func on_map_selected(path: String) -> void:
 	path = path.trim_prefix(MetSys.settings.map_root_folder)
+	
+	clear_scene(highlighted_room)
+	
+	var current_assigned: Array[Vector3i]
+	current_assigned.assign(MetSys.map_data.assigned_scenes.get(path, []))
+	clear_scene(current_assigned)
 	
 	MetSys.map_data.assigned_scenes[path] = []
 	for coords in highlighted_room:
 		MetSys.map_data.get_cell_at(coords).assigned_scene = path
 		MetSys.map_data.assigned_scenes[path].append(coords)
-		MetSys.room_assign_updated.emit()
 	
 	mark_modified()
+	MetSys.room_assign_updated.emit()
 	editor.map_overlay.queue_redraw()
 "
 

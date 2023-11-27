@@ -182,6 +182,8 @@ This mode allows to assign scenes to rooms on the map. The scenes are used in ed
 
 ![](Media/EditorSceneAssign.gif)
 
+Each scene can be assigned to a single room only. When a scene is already assigned to a room and you try to assign it to another one, the previous room assignment will be removed.
+
 #### Custom Elements mode
 
 In this mode you can draw custom elements, like special multi-cell markers, elevators, map labels, anything. They need to be first [defined in the main config](#general-settings). Elements in the editor are drawn as rectangles, but they occupy only their top-left cell. Use LMB to draw an element and RMB on its origin cell to erase it. You can provide a custom String data that will be passed to the draw callback of the element.
