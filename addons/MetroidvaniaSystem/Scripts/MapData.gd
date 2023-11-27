@@ -273,7 +273,7 @@ func load_data():
 	
 	var current_section := 0 # groups, custom_elements, cells
 	while i < data.size():
-		var line := data[i]
+		var line := data[i].strip_edges()
 		if line.begins_with("["):
 			current_section = 2
 			line = line.trim_prefix("[").trim_suffix("]")
