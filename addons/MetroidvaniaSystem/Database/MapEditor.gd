@@ -14,6 +14,8 @@ func _ready() -> void:
 	if not plugin:
 		return
 	
+	%Shortcuts.hide()
+	
 	plugin.dirty_toggled.connect(update_name)
 	await super()
 	
