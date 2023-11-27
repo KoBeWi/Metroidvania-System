@@ -1,19 +1,21 @@
 extends Control
 
-@onready var map_overlay: Control = $MapOverlay
+@onready var map_view: Control = $MapView
+@onready var map_overlay: Control = %OverlayLayer
 @onready var map: Control = %Map
 @onready var current_layer_spinbox: SpinBox = %CurrentLayer
 @onready var status_label: Label = %StatusLabel
+@onready var zoom_slider: HSlider = %ZoomSlider
+@onready var zoom_value_label: Label = %ZoomValue
 
-const NULL_VECTOR2I = Vector2i(-9999999, -9999999)
 var plugin: EditorPlugin
 
-var drag_from: Vector2i = NULL_VECTOR2I
 var view_drag: Vector4
 var map_offset := Vector2i(10, 10)
 
 var current_layer: int
 var force_mapped: bool
+var cursor_inside: bool
 
 func _enter_tree() -> void:
 	if owner:
@@ -29,6 +31,15 @@ func _ready() -> void:
 	
 	current_layer_spinbox.value_changed.connect(on_layer_changed)
 	%RecenterButton.pressed.connect(on_recenter_view)
+	zoom_slider.value_changed.connect(on_zoom_changed)
+	
+	map_view.mouse_entered.connect(func():
+		cursor_inside = true
+		map_overlay.queue_redraw())
+	
+	map_view.mouse_exited.connect(func():
+		cursor_inside = false
+		map_overlay.queue_redraw())
 	
 	status_label.hide()
 	await get_tree().process_frame
@@ -56,21 +67,28 @@ func on_recenter_view() -> void:
 	map_overlay.queue_redraw()
 	update_map_position()
 
+func on_zoom_changed(new_zoom: float):
+	zoom_value_label.text = "x%0.1f" % new_zoom
+	var new_zoom_vector := Vector2.ONE * new_zoom
+	map_overlay.scale = new_zoom_vector
+	map.scale = new_zoom_vector
+	update_map_position()
+
 func _on_overlay_input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion:
 		if view_drag != Vector4():
 			if event.position.x >= map_overlay.size.x:
-				map_overlay.warp_mouse(Vector2(event.position.x - map_overlay.size.x, event.position.y))
+				map_view.warp_mouse(Vector2(event.position.x - map_overlay.size.x, event.position.y))
 				view_drag.x -= map_overlay.size.x
 			elif event.position.x < 0:
-				map_overlay.warp_mouse(Vector2(map_overlay.size.x + event.position.x, event.position.y))
+				map_view.warp_mouse(Vector2(map_overlay.size.x + event.position.x, event.position.y))
 				view_drag.x += map_overlay.size.x
 			
 			if event.position.y >= map_overlay.size.y:
-				map_overlay.warp_mouse(Vector2(event.position.x, event.position.y - map_overlay.size.y))
+				map_view.warp_mouse(Vector2(event.position.x, event.position.y - map_overlay.size.y))
 				view_drag.y -= map_overlay.size.y
 			elif event.position.y < 0:
-				map_overlay.warp_mouse(Vector2(event.position.x, map_overlay.size.y + event.position.y))
+				map_view.warp_mouse(Vector2(event.position.x, map_overlay.size.y + event.position.y))
 				view_drag.y += map_overlay.size.y
 			
 			map_offset = Vector2(view_drag.z, view_drag.w) + (map_overlay.get_local_mouse_position() - Vector2(view_drag.x, view_drag.y)) / MetSys.CELL_SIZE
@@ -91,6 +109,9 @@ func _on_overlay_input(event: InputEvent) -> void:
 				view_drag.w = map_offset.y
 			else:
 				view_drag = Vector4()
+		elif event.button_index == MOUSE_BUTTON_WHEEL_UP or event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
+			if event.pressed and event.is_command_or_control_pressed():
+				zoom_slider.value += zoom_slider.step * (-1 if event.button_index == MOUSE_BUTTON_WHEEL_DOWN else 1)
 
 func _on_drag():
 	pass
@@ -134,4 +155,4 @@ func _on_overlay_draw() -> void:
 	MetSys.draw_custom_elements(map_overlay, Rect2i(-map_offset, map_overlay.size / MetSys.CELL_SIZE + Vector2.ONE), Vector2(), current_layer)
 
 func update_map_position():
-	map.position = Vector2(map_offset - Vector2i(100, 100)) * MetSys.CELL_SIZE
+	map.position = Vector2(map_offset - Vector2i(100, 100)) * MetSys.CELL_SIZE * map.scale

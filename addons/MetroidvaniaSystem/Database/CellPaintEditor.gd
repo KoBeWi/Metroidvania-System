@@ -47,13 +47,13 @@ func _editor_input(event: InputEvent):
 			else:
 				highlighted_room.clear()
 			
-			editor.map_overlay.queue_redraw()
+			redraw_overlay()
 
 func update_hovered_room():
 	var hr := highlighted_room
 	highlighted_room = MetSys.map_data.get_whole_room(get_coords(get_cursor_pos()))
 	if highlighted_room != hr:
-		editor.map_overlay.queue_redraw()
+		redraw_overlay()
 
 func paint(mode: int):
 	var coords_to_modify: Array[Vector3i]
@@ -73,7 +73,7 @@ func paint(mode: int):
 	
 	if modified:
 		mark_modified()
-		editor.map.queue_redraw()
+		redraw_map()
 
 func modify_cell(cell_data: MetroidvaniaSystem.MapData.CellData, mode: int) -> bool:
 	return false

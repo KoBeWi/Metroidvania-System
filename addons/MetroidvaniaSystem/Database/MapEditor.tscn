@@ -1,7 +1,6 @@
-[gd_scene load_steps=13 format=3 uid="uid://dfbykrvyqnqr5"]
+[gd_scene load_steps=12 format=3 uid="uid://dfbykrvyqnqr5"]
 
 [ext_resource type="Script" path="res://addons/MetroidvaniaSystem/Database/MapEditor.gd" id="1_i7yda"]
-[ext_resource type="Script" path="res://addons/MetroidvaniaSystem/Database/MapOverlay.gd" id="2_w1wnt"]
 
 [sub_resource type="ButtonGroup" id="ButtonGroup_pv7fp"]
 
@@ -26,19 +25,19 @@ func _editor_input(event: InputEvent):
 			else:
 				var rect := get_rect_between(drag_from, get_cursor_pos())
 				update_rooms(rect)
-				drag_from = EDITOR_SCRIPT.NULL_VECTOR2I
+				drag_from = Vector2i.MAX
 		elif event.button_index == MOUSE_BUTTON_RIGHT:
 			if event.pressed:
 				drag_from = get_cursor_pos()
 				erase_mode = true
 				theme_cache.cursor_color = get_theme_color(&\"cursor_color_erase\", &\"MetSys\")
-				queue_redraw()
+				redraw_overlay()
 			else:
 				var rect := get_rect_between(drag_from, get_cursor_pos())
 				erase_rooms(rect)
 				erase_mode = false
 				theme_cache.cursor_color = get_theme_color(&\"cursor_color\", &\"MetSys\")
-				drag_from = EDITOR_SCRIPT.NULL_VECTOR2I
+				drag_from = Vector2i.MAX
 
 func update_rooms(rect: Rect2i):
 	var map_data: MetroidvaniaSystem.MapData = MetSys.map_data
@@ -49,7 +48,7 @@ func update_rooms(rect: Rect2i):
 			
 			var cell = map_data.get_cell_at(coords)
 			if cell:
-				remove_assign(coords)
+				#remove_assign(coords)
 				
 				if x != rect.end.x - 1:
 					cell.borders[0] = -1
@@ -71,7 +70,7 @@ func update_rooms(rect: Rect2i):
 					cell.borders[3] = 0
 	
 	mark_modified()
-	editor.map.queue_redraw()
+	redraw_map()
 
 func erase_rooms(rect: Rect2i):
 	var map_data: MetroidvaniaSystem.MapData = MetSys.map_data
@@ -96,7 +95,7 @@ func erase_rooms(rect: Rect2i):
 			map_data.erase_cell(coords)
 	
 	mark_modified()
-	editor.map.queue_redraw()
+	redraw_map()
 
 func remove_assign(coords: Vector3i):
 	var assigned_scene: String = MetSys.map_data.cells[coords].assigned_scene
@@ -269,7 +268,7 @@ func draw_group():
 			cell_groups[current_group].append(coords)
 		
 		mark_modified()
-		editor.map_overlay.queue_redraw()
+		redraw_overlay()
 	elif drawing & MOUSE_BUTTON_MASK_RIGHT != 0:
 		if not current_group in cell_groups:
 			return
@@ -280,7 +279,7 @@ func draw_group():
 		
 		cell_groups[current_group].erase(coords)
 		mark_modified()
-		editor.map_overlay.queue_redraw()
+		redraw_overlay()
 "
 
 [sub_resource type="GDScript" id="GDScript_ilxbw"]
@@ -410,7 +409,7 @@ func _editor_input(event: InputEvent):
 		var hr := highlighted_room
 		highlighted_room = MetSys.map_data.get_whole_room(get_coords(get_cursor_pos()))
 		if highlighted_room != hr:
-			editor.map_overlay.queue_redraw()
+			redraw_overlay()
 
 	if event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_LEFT:
@@ -424,7 +423,7 @@ func _editor_input(event: InputEvent):
 			MetSys.room_assign_updated.emit()
 			
 			mark_modified()
-			editor.map_overlay.queue_redraw()
+			redraw_overlay()
 
 func _editor_draw(map_overlay: CanvasItem):
 	super(map_overlay)
@@ -470,7 +469,7 @@ func on_map_selected(path: String) -> void:
 	
 	mark_modified()
 	MetSys.room_assign_updated.emit()
-	editor.map_overlay.queue_redraw()
+	redraw_overlay()
 "
 
 [sub_resource type="GDScript" id="GDScript_gb3rf"]
@@ -525,7 +524,7 @@ func _editor_exit():
 
 func set_current_element(element: String):
 	current_element = element
-	editor.map_overlay.queue_redraw()
+	redraw_overlay()
 
 func _editor_draw(map_overlay: CanvasItem):
 	super(map_overlay)
@@ -555,14 +554,14 @@ func _editor_input(event: InputEvent):
 				var rect := get_rect_between(drag_from, get_cursor_pos())
 				add_element(rect)
 				mark_modified()
-				drag_from = EDITOR_SCRIPT.NULL_VECTOR2I
+				drag_from = Vector2i.MAX
 		elif event.button_index == MOUSE_BUTTON_RIGHT:
 			if event.pressed:
 				var coords := Vector3i(get_cursor_pos().x, get_cursor_pos().y, editor.current_layer)
 				if coords in MetSys.map_data.custom_elements:
 					MetSys.map_data.custom_elements.erase(coords)
 					mark_modified()
-					editor.map.queue_redraw()
+					redraw_map()
 
 func add_element(rect: Rect2i):
 	var element: Dictionary
@@ -572,7 +571,7 @@ func add_element(rect: Rect2i):
 	
 	var coords := Vector3i(rect.position.x, rect.position.y, editor.current_layer)
 	MetSys.map_data.custom_elements[coords] = element
-	editor.map.queue_redraw()
+	redraw_map()
 "
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xiyo8"]
@@ -635,6 +634,28 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 4
 text = "Recenter View"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Sidebar/ScrollContainer/VBoxContainer/Layer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Sidebar/ScrollContainer/VBoxContainer/Layer/HBoxContainer"]
+layout_mode = 2
+text = "Zoom"
+
+[node name="ZoomSlider" type="HSlider" parent="Sidebar/ScrollContainer/VBoxContainer/Layer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+min_value = 1.0
+max_value = 3.0
+step = 0.5
+value = 1.0
+
+[node name="ZoomValue" type="Label" parent="Sidebar/ScrollContainer/VBoxContainer/Layer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "x1.0"
 
 [node name="HSeparator" type="HSeparator" parent="Sidebar/ScrollContainer/VBoxContainer"]
 layout_mode = 2
@@ -800,28 +821,23 @@ layout_mode = 2
 text = "Shift+Click: set for the whole room"
 autowrap_mode = 2
 
-[node name="MapOverlay" type="Control" parent="."]
+[node name="MapView" type="Control" parent="."]
 texture_filter = 1
 clip_contents = true
 layout_mode = 2
 size_flags_horizontal = 3
-focus_mode = 2
-script = ExtResource("2_w1wnt")
 
-[node name="ColorRect" type="ColorRect" parent="MapOverlay"]
+[node name="ColorRect" type="ColorRect" parent="MapView"]
 modulate = Color(0, 0, 0, 0.12549)
-show_behind_parent = true
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-mouse_filter = 2
 
-[node name="Grid" type="Control" parent="MapOverlay"]
+[node name="Grid" type="Control" parent="MapView"]
 unique_name_in_owner = true
-show_behind_parent = true
 clip_contents = true
 layout_mode = 1
 anchors_preset = 15
@@ -830,11 +846,9 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
-mouse_filter = 2
 
-[node name="Map" type="Control" parent="MapOverlay"]
+[node name="Map" type="Control" parent="MapView"]
 unique_name_in_owner = true
-show_behind_parent = true
 clip_contents = true
 layout_mode = 1
 anchors_preset = 15
@@ -843,12 +857,10 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
-mouse_filter = 2
 
-[node name="GhostMap" type="Control" parent="MapOverlay"]
+[node name="GhostMap" type="Control" parent="MapView"]
 unique_name_in_owner = true
 modulate = Color(1, 1, 1, 0.12549)
-show_behind_parent = true
 clip_contents = true
 layout_mode = 1
 anchors_preset = 15
@@ -857,13 +869,24 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
-mouse_filter = 2
 
-[node name="StatusLabel" type="Label" parent="MapOverlay"]
+[node name="OverlayLayer" type="Control" parent="MapView"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+focus_mode = 2
+mouse_filter = 1
+
+[node name="StatusLabel" type="Label" parent="MapView"]
 unique_name_in_owner = true
 layout_mode = 0
 offset_right = 1.0
 offset_bottom = 23.0
+mouse_filter = 1
 theme_override_styles/normal = SubResource("StyleBoxFlat_xiyo8")
 vertical_alignment = 1
 
@@ -871,11 +894,12 @@ vertical_alignment = 1
 unique_name_in_owner = true
 title = "Open a File"
 size = Vector2i(345, 162)
+ok_button_text = "Open"
 file_mode = 0
 filters = PackedStringArray("*.tscn")
 
 [connection signal="value_changed" from="Sidebar/ScrollContainer/VBoxContainer/Layer/SpinBox2" to="." method="preview_layer_changed"]
-[connection signal="value_changed" from="Sidebar/ScrollContainer/VBoxContainer/EditControls/Groups/CurrentGroup" to="MapOverlay" method="queue_redraw" unbinds=1]
-[connection signal="draw" from="MapOverlay/Grid" to="." method="_on_grid_draw"]
-[connection signal="draw" from="MapOverlay/GhostMap" to="." method="_on_ghost_map_draw"]
+[connection signal="value_changed" from="Sidebar/ScrollContainer/VBoxContainer/EditControls/Groups/CurrentGroup" to="MapView" method="queue_redraw" unbinds=1]
+[connection signal="draw" from="MapView/Grid" to="." method="_on_grid_draw"]
+[connection signal="draw" from="MapView/GhostMap" to="." method="_on_ghost_map_draw"]
 [connection signal="file_selected" from="FileDialog" to="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign" method="on_map_selected"]

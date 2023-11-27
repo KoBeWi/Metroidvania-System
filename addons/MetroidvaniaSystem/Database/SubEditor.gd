@@ -8,7 +8,7 @@ var theme_cache: Dictionary
 var use_cursor := true
 var room_only_cursor := true
 
-var drag_from: Vector2i = EDITOR_SCRIPT.NULL_VECTOR2I
+var drag_from: Vector2i = Vector2i.MAX
 var highlighted_room: Array[Vector3i]
 var highlighted_border := -1
 
@@ -41,8 +41,8 @@ func _editor_draw(map_overlay: CanvasItem):
 		for p in highlighted_room:
 			map_overlay.draw_rect(Rect2(Vector2(p.x, p.y) * MetSys.CELL_SIZE, MetSys.CELL_SIZE), theme_cache.highlighted_room)
 	
-	if drag_from == EDITOR_SCRIPT.NULL_VECTOR2I:
-		if use_cursor and map_overlay.cursor_inside and (not room_only_cursor or get_cell_at_cursor()):
+	if drag_from == Vector2i.MAX:
+		if use_cursor and editor.cursor_inside and (not room_only_cursor or get_cell_at_cursor()):
 			map_overlay.draw_rect(Rect2(get_cursor_pos() as Vector2 * MetSys.CELL_SIZE, MetSys.CELL_SIZE), theme_cache.cursor_color, false, 2)
 	else:
 		var rect := get_rect_between(drag_from, get_cursor_pos())
@@ -110,6 +110,12 @@ func get_cell_at_cursor() -> MetroidvaniaSystem.MapData.CellData:
 
 func mark_modified():
 	editor.plugin.modified = true
+
+func redraw_map():
+	editor.map.queue_redraw()
+
+func redraw_overlay():
+	editor.map_overlay.queue_redraw()
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_THEME_CHANGED:

@@ -72,7 +72,7 @@ func _on_ghost_map_draw() -> void:
 	
 	for x in range(-100, 100):
 		for y in range(-100, 100):
-			MetSys.draw_cell(ghost_map, Vector2i(x, y) + map_offset, Vector3i(x, y, preview_layer))
+			MetSys.draw_cell(ghost_map, Vector2i(x, y) + map_offset, Vector3i(x, y, preview_layer), true, false)
 
 func _on_grid_draw() -> void:
 	if not plugin:
@@ -85,6 +85,12 @@ func _on_grid_draw() -> void:
 				grid.draw_texture(empty_texture, Vector2(x, y) * MetSys.CELL_SIZE)
 			else:
 				grid.draw_rect(Rect2(Vector2(x, y) * MetSys.CELL_SIZE, MetSys.CELL_SIZE), Color(Color.WHITE, 0.1), false)
+
+func on_zoom_changed(new_zoom: float):
+	super(new_zoom)
+	var new_zoom_vector := Vector2.ONE * new_zoom
+	ghost_map.scale = new_zoom_vector
+	grid.scale = new_zoom_vector
 
 func update_name(dirty: bool):
 	if dirty:

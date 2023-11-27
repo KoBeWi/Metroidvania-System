@@ -1,7 +1,6 @@
-[gd_scene load_steps=8 format=3 uid="uid://df5fuj4vjr11p"]
+[gd_scene load_steps=7 format=3 uid="uid://df5fuj4vjr11p"]
 
 [ext_resource type="Script" path="res://addons/MetroidvaniaSystem/Database/MapViewer.gd" id="1_s16ok"]
-[ext_resource type="Script" path="res://addons/MetroidvaniaSystem/Database/MapOverlay.gd" id="2_pgyha"]
 [ext_resource type="Script" path="res://addons/MetroidvaniaSystem/Scripts/EditorIconButton.gd" id="2_tjngl"]
 
 [sub_resource type="ButtonGroup" id="ButtonGroup_lmh17"]
@@ -291,6 +290,28 @@ layout_mode = 2
 size_flags_horizontal = 4
 text = "Recenter View"
 
+[node name="HBoxContainer" type="HBoxContainer" parent="Sidebar/ScrollContainer/VBoxContainer/Layer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Sidebar/ScrollContainer/VBoxContainer/Layer/HBoxContainer"]
+layout_mode = 2
+text = "Zoom"
+
+[node name="ZoomSlider" type="HSlider" parent="Sidebar/ScrollContainer/VBoxContainer/Layer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+min_value = 1.0
+max_value = 3.0
+step = 0.5
+value = 1.0
+
+[node name="ZoomValue" type="Label" parent="Sidebar/ScrollContainer/VBoxContainer/Layer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "x1.0"
+
 [node name="CheckButton" type="CheckButton" parent="Sidebar/ScrollContainer/VBoxContainer/Layer"]
 layout_mode = 2
 size_flags_horizontal = 4
@@ -380,15 +401,13 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 0
 
-[node name="MapOverlay" type="Control" parent="."]
+[node name="MapView" type="Control" parent="."]
 clip_contents = true
 layout_mode = 2
 size_flags_horizontal = 3
-script = ExtResource("2_pgyha")
 
-[node name="ColorRect" type="ColorRect" parent="MapOverlay"]
+[node name="ColorRect" type="ColorRect" parent="MapView"]
 modulate = Color(0, 0, 0, 0.12549)
-show_behind_parent = true
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -397,18 +416,29 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="Map" type="Control" parent="MapOverlay"]
+[node name="Map" type="Control" parent="MapView"]
 unique_name_in_owner = true
-show_behind_parent = true
 anchors_preset = 0
 size_flags_horizontal = 3
 mouse_filter = 2
 
-[node name="StatusLabel" type="Label" parent="MapOverlay"]
+[node name="OverlayLayer" type="Control" parent="MapView"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+focus_mode = 2
+mouse_filter = 1
+
+[node name="StatusLabel" type="Label" parent="MapView"]
 unique_name_in_owner = true
 layout_mode = 0
 offset_right = 1.0
 offset_bottom = 23.0
+mouse_filter = 1
 theme_override_styles/normal = SubResource("StyleBoxFlat_qbvjg")
 vertical_alignment = 1
 

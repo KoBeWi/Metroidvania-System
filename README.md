@@ -136,6 +136,10 @@ It's important to note that the map is divided into layers. Using them is option
 
 You can change current layer either on the side-bar or using Q/E keys (physical). You can pan the map view using Middle Mouse Button; the Recenter View button on the sidebar moves you to (0, 0) in case you get lost (the canvas is infinite). In the top-left corner of the map view you can see the coordinates of the hovered cell.
 
+There is also a zoom feature. It's very basic and simply scales the map view, but it's useful if you have high display resolution and find the map too small.
+
+![](Media/EditorZoom.gif)
+
 #### Room Layout mode
 
 This is the most basic mode and allows you to draw rooms. The rooms are drawn using rectangle tool. Use Left Mouse Button to draw a room and Right Mouse Button to erase. If you draw a rectangle that overlaps another room, they will be merged.

@@ -23,7 +23,7 @@ func _editor_input(event: InputEvent):
 			
 			if new_border != highlighted_border:
 				highlighted_border = new_border
-				editor.map_overlay.queue_redraw()
+				redraw_overlay()
 		else:
 			highlighted_border = -1
 	

@@ -68,7 +68,7 @@ func _on_overlay_draw() -> void:
 	super()
 	var mouse := get_cursor_pos()
 	
-	if map_overlay.cursor_inside:
+	if cursor_inside:
 		map_overlay.draw_rect(Rect2(Vector2(mouse + map_offset) * MetSys.CELL_SIZE, MetSys.CELL_SIZE), theme_cache.cursor_color, false, 2)
 	
 	if get_tree().edited_scene_root and get_tree().edited_scene_root.scene_file_path.begins_with(MetSys.settings.map_root_folder):
