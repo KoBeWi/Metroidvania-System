@@ -398,6 +398,8 @@ resource_name = "SceneAssign"
 script/source = "@tool
 extends \"res://addons/MetroidvaniaSystem/Database/SubEditor.gd\"
 
+@onready var file_dialog: FileDialog = $FileDialog
+
 func _editor_init() -> void:
 	use_cursor = false
 
@@ -415,9 +417,14 @@ func _editor_input(event: InputEvent):
 		if event.button_index == MOUSE_BUTTON_LEFT:
 			if event.pressed:
 				if not highlighted_room.is_empty():
-					if %FileDialog.root_subfolder.is_empty():
-						%FileDialog.root_subfolder = MetSys.settings.map_root_folder.trim_prefix(\"res://\")
-					%FileDialog.popup_centered_ratio(0.6)
+					var settings_root_folder := MetSys.settings.map_root_folder
+					if file_dialog.root_subfolder != settings_root_folder:
+						if settings_root_folder.ends_with(\"//\"):
+							file_dialog.root_subfolder = MetSys.settings.map_root_folder
+						else:
+							file_dialog.root_subfolder = MetSys.settings.map_root_folder.trim_suffix(\"/\")
+					
+					file_dialog.popup_centered_ratio(0.6)
 		elif event.button_index == MOUSE_BUTTON_RIGHT:
 			clear_scene(highlighted_room)
 			MetSys.room_assign_updated.emit()
@@ -719,6 +726,11 @@ button_group = SubResource("ButtonGroup_pv7fp")
 text = "Scene Assign"
 script = SubResource("GDScript_p75ne")
 
+[node name="FileDialog" type="FileDialog" parent="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign"]
+size = Vector2i(345, 162)
+file_mode = 0
+filters = PackedStringArray("*.tscn")
+
 [node name="CustomElements" type="Button" parent="Sidebar/ScrollContainer/VBoxContainer/Modes"]
 layout_mode = 2
 toggle_mode = true
@@ -890,15 +902,8 @@ mouse_filter = 1
 theme_override_styles/normal = SubResource("StyleBoxFlat_xiyo8")
 vertical_alignment = 1
 
-[node name="FileDialog" type="FileDialog" parent="."]
-unique_name_in_owner = true
-title = "Open a File"
-size = Vector2i(345, 162)
-file_mode = 0
-filters = PackedStringArray("*.tscn")
-
 [connection signal="value_changed" from="Sidebar/ScrollContainer/VBoxContainer/Layer/SpinBox2" to="." method="preview_layer_changed"]
+[connection signal="file_selected" from="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign/FileDialog" to="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign" method="on_map_selected"]
 [connection signal="value_changed" from="Sidebar/ScrollContainer/VBoxContainer/EditControls/Groups/CurrentGroup" to="MapView" method="queue_redraw" unbinds=1]
 [connection signal="draw" from="MapView/Grid" to="." method="_on_grid_draw"]
 [connection signal="draw" from="MapView/GhostMap" to="." method="_on_ghost_map_draw"]
-[connection signal="file_selected" from="FileDialog" to="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign" method="on_map_selected"]

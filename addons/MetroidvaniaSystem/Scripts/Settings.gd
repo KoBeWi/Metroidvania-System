@@ -10,8 +10,14 @@ extends Resource
 		theme = t
 		theme_changed.emit()
 
-## The root directory where room scenes are located. All scenes used for MetSys editor should be within this folder or its subfolders.
-@export_dir var map_root_folder: String = "res://"
+## The root directory where room scenes are located. All scenes used for MetSys editor should be within this folder or its subfolders. The name should end with [code]/[/code].
+@export_dir var map_root_folder: String = "res://":
+	set(mrf):
+		if mrf.ends_with("/"):
+			map_root_folder = mrf
+		else:
+			map_root_folder = mrf + "/"
+
 ## The size of a map cell within an in-game room, i.e. this is the real game size of your map cells. Usually equal to the screen size.
 @export var in_game_cell_size := Vector2(1152, 648)
 @export var collectible_list: Array[Dictionary]
