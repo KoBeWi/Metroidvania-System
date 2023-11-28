@@ -81,6 +81,22 @@ func get_end_coords() -> Vector2i:
 func get_layer() -> int:
 	return layer
 
+## Returns the names of rooms connected to the current room instance. The rooms are determined based on border passages and adjacent cells. Useful for preloading adjacent rooms.
+func get_neighbor_rooms() -> Array[String]:
+	var ret: Array[String]
+	
+	for coords in cells:
+		var cell_data: MetroidvaniaSystem.MapData.CellData = MetSys.map_data.get_cell_at(coords)
+		assert(cell_data)
+		for i in 4:
+			if cell_data.borders[i] > 0:
+				var fwd: Vector2i = MetroidvaniaSystem.MapData.FWD[i]
+				var scene: String = MetSys.map_data.get_assigned_scene_at(coords + Vector3i(fwd.x, fwd.y, 0))
+				if not scene.is_empty() and scene != room_name and not scene in ret:
+					ret.append(scene)
+	
+	return ret
+
 func _draw() -> void:
 	if not Engine.is_editor_hint() or cells.is_empty():
 		return

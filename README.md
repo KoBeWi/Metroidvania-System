@@ -331,6 +331,7 @@ The RoomInstance node can be accessed using `MetSys.current_room`. It grants acc
 - `adjust_camera_limits(camera: Camera2D)`: Adjusts limit properties of the given camera to be within the room's boundaries.
 - `get_size() -> Vector2`: Returns the size size of the room's bounding rectangle.
 - `get_local_cells() -> Array[Vector2i]`: Returns the cells occupied by the room, in local coordinates, i.e. (0, 0) is the top-left coordinate. This is useful to determine shape of irregular (not-rectangle) rooms to draw stuff outside the map etc.
+- `get_neighbor_rooms() -> Array[String]`: Returns names of the rooms from cells adjacent to the current room and connected via passages. This method can be used to preload these rooms (likely in a thread) for smoother transitions.
 - `room_name`: This property holds the name of the room (i.e. file name of the scene).
 
 Note that since RoomInstance is basically a singleton within MetSys, only one can be functional inside scene tree. When RoomInstance enters tree, it will assign itself to MetSys and automatically remove itself when left. If you happen to have multiple room instances (which should be avoided), the newest one will have priority.
