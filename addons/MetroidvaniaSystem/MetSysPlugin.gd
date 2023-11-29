@@ -34,11 +34,26 @@ func _enter_tree() -> void:
 	
 	await get_tree().process_frame
 	if not get_singleton():
+		if FileAccess.file_exists("user://MetSysFail"):
+			var dialog := ConfirmationDialog.new()
+			dialog.title = "Error!"
+			dialog.dialog_text = "MetSys restart failed, the singleton still can't be loaded. Make sure the \"MetroidvaniaSystem.gd\" script has no errors.\n\nCommon cause of errors are:\n- Using Godot version older than 4.2.\n- Name conflicts with one of the classes.\n\nThe plugin will be now disabled. Fix the errors and try again."
+			get_editor_interface().get_base_control().add_child(dialog)
+			dialog.popup_centered()
+			get_editor_interface().set_plugin_enabled("res://addons/MetroidvaniaSystem/plugin.cfg", false)
+			
+			DirAccess.remove_absolute("user://MetSysFail")
+			return
+		
+		FileAccess.open("user://MetSysFail", FileAccess.WRITE)
+		
 		add_autoload_singleton("MetSys", "res://addons/MetroidvaniaSystem/Nodes/Singleton.tscn")
 		ProjectSettings.save()
 		OS.set_restart_on_exit(true, ["-e"])
 		get_tree().quit()
 		return
+	else:
+		DirAccess.remove_absolute("user://MetSysFail")
 	
 	main = preload("res://addons/MetroidvaniaSystem/Database/Main.tscn").instantiate()
 	main.plugin = self
