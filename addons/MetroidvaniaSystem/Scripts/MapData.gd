@@ -369,6 +369,9 @@ func create_cell_at(coords: Vector3i) -> CellData:
 	cells[coords] = CellData.new("")
 	return cells[coords]
 
+func insert_cell_at(coords: Vector3i, cell: CellData):
+	cells[coords] = cell
+
 func create_custom_cell(coords: Vector3i) -> CellOverride:
 	assert(not coords in cells, "A cell already exists at this position")
 	var cell := create_cell_at(coords)

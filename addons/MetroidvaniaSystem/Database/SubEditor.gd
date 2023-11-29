@@ -117,6 +117,36 @@ func redraw_map():
 func redraw_overlay():
 	editor.map_overlay.queue_redraw()
 
+func undo_begin():
+	editor.undo_redo.create_action("MetSys")
+
+func undo_handle_cell_property(cell: Object, property: StringName, old_value: Variant) -> bool:
+	var new_value: Variant = cell.get(property)
+	if new_value == old_value:
+		return false
+	
+	editor.undo_redo.add_do_property(cell, property, new_value)
+	editor.undo_redo.add_undo_property(cell, property, old_value)
+	# TODO: handle assigned scenes
+	return true
+
+func undo_handle_cell_spawn(coords: Vector3i, cell: Object):
+	editor.undo_redo.add_do_method(MetSys.map_data.insert_cell_at.bind(coords, cell))
+	editor.undo_redo.add_undo_method(MetSys.map_data.erase_cell.bind(coords))
+
+func undo_handle_cell_erase(coords: Vector3i, cell: Object):
+	editor.undo_redo.add_do_method(MetSys.map_data.erase_cell.bind(coords))
+	editor.undo_redo.add_undo_method(MetSys.map_data.insert_cell_at.bind(coords, cell))
+	# TODO: handle groups and scene assigns when re-inserting
+
+func undo_end():
+	editor.undo_redo.commit_action(false)
+
+func undo_end_with_redraw():
+	editor.undo_redo.add_do_method(redraw_map)
+	editor.undo_redo.add_undo_method(redraw_map)
+	undo_end()
+
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_THEME_CHANGED:
 		theme_cache.highlighted_room = get_theme_color(&"highlighted_room", &"MetSys")

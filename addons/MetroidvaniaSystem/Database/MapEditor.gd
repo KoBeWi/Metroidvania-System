@@ -10,10 +10,13 @@ var mode: int
 var preview_layer := -1
 var modified: bool
 
+var undo_redo: UndoRedo
+
 func _ready() -> void:
 	if not plugin:
 		return
 	
+	undo_redo = UndoRedo.new()
 	%Shortcuts.hide()
 	
 	plugin.dirty_toggled.connect(update_name)
@@ -45,6 +48,17 @@ func get_current_sub_editor() -> Control:
 func _on_overlay_input(event: InputEvent) -> void:
 	super(event)
 	get_current_sub_editor()._editor_input(event)
+	
+	if event is InputEventKey:
+		if event.pressed and event.is_command_or_control_pressed():
+			if event.keycode == KEY_Z:
+				if undo_redo.undo():
+					print("MetSys undo")
+				accept_event()
+			elif event.keycode == KEY_Y:
+				if undo_redo.redo():
+					print("MetSys redo")
+				accept_event()
 
 func _on_drag():
 	ghost_map.queue_redraw()
@@ -94,6 +108,10 @@ func on_zoom_changed(new_zoom: float):
 
 func update_name(dirty: bool):
 	if dirty:
-		name = "Map Editor (*)"
+		name = "Map Editor(*)"
 	else:
 		name = "Map Editor"
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_PREDELETE:
+		undo_redo.free()

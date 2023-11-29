@@ -41,6 +41,7 @@ func _editor_input(event: InputEvent):
 
 func update_rooms(rect: Rect2i):
 	var map_data: MetroidvaniaSystem.MapData = MetSys.map_data
+	undo_begin()
 	
 	for x in range(rect.position.x, rect.end.x):
 		for y in range(rect.position.y, rect.end.y):
@@ -48,7 +49,7 @@ func update_rooms(rect: Rect2i):
 			
 			var cell = map_data.get_cell_at(coords)
 			if cell:
-				#remove_assign(coords)
+				var prev_borders = cell.borders.duplicate()
 				
 				if x != rect.end.x - 1:
 					cell.borders[0] = -1
@@ -58,6 +59,11 @@ func update_rooms(rect: Rect2i):
 					cell.borders[2] = -1
 				if y != rect.position.y:
 					cell.borders[3] = -1
+				
+				if undo_handle_cell_property(cell, &\"borders\", prev_borders):
+					var prev_assign: String = MetSys.map_data.cells[coords].assigned_scene
+					remove_assign(coords)
+					undo_handle_cell_property(cell, &\"assigned_scene\", prev_assign)
 			else:
 				cell = map_data.create_cell_at(coords)
 				if x == rect.end.x - 1:
@@ -68,12 +74,15 @@ func update_rooms(rect: Rect2i):
 					cell.borders[2] = 0
 				if y == rect.position.y:
 					cell.borders[3] = 0
+				
+				undo_handle_cell_spawn(coords, cell)
 	
-	mark_modified()
+	undo_end_with_redraw()
 	redraw_map()
 
 func erase_rooms(rect: Rect2i):
 	var map_data: MetroidvaniaSystem.MapData = MetSys.map_data
+	undo_begin()
 	
 	for x in range(rect.position.x, rect.end.x):
 		for y in range(rect.position.y, rect.end.y):
@@ -92,20 +101,28 @@ func erase_rooms(rect: Rect2i):
 			if y == rect.position.y:
 				close_border(Vector2i(x, y - 1), 1)
 			
+			undo_handle_cell_erase(coords, cell_data)
 			map_data.erase_cell(coords)
 	
-	mark_modified()
+	undo_end_with_redraw()
 	redraw_map()
 
 func remove_assign(coords: Vector3i):
 	var assigned_scene: String = MetSys.map_data.cells[coords].assigned_scene
+	if assigned_scene.is_empty():
+		return
+	
+	for coords2 in MetSys.map_data.assigned_scenes[assigned_scene]:
+		MetSys.map_data.cells[coords2].assigned_scene = \"\"
 	MetSys.map_data.assigned_scenes.erase(assigned_scene)
 
 func close_border(pos: Vector2i, border: int):
 	var cell: MetroidvaniaSystem.MapData.CellData = MetSys.map_data.get_cell_at(get_coords(pos))
 	
 	if cell:
+		var old: Variant = cell.borders.duplicate()
 		cell.borders[border] = 0
+		undo_handle_cell_property(cell, &\"borders\", old)
 "
 
 [sub_resource type="GDScript" id="GDScript_tlx5u"]
