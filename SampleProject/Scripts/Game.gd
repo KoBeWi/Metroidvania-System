@@ -57,10 +57,10 @@ func _ready() -> void:
 
 # Loads a room scene and removes the current one if exists.
 func goto_map(map_path: String):
-	var prev_map_position := Vector2i.MAX
+	var prev_map: Node2D
 	if map:
-		# If some map is already loaded (which is true anytime other than the beginning), remember its position and free it.
-		prev_map_position = MetSys.get_current_room_instance().get_base_coords()
+		# If some map is already loaded (which is true anytime other than the beginning), keep a reference to the old instance and queue free it.
+		prev_map = MetSys.get_current_room_instance()
 		map.queue_free()
 		map = null
 	
@@ -73,8 +73,8 @@ func goto_map(map_path: String):
 	MetSys.current_layer = MetSys.get_current_room_instance().get_layer()
 	
 	# If previous map has existed, teleport the player based on map position difference.
-	if prev_map_position != Vector2i.MAX:
-		player.position -= Vector2(MetSys.get_current_room_instance().get_base_coords() - prev_map_position) * MetSys.settings.in_game_cell_size
+	if prev_map:
+		player.position -= MetSys.get_current_room_instance().get_room_position_offset(prev_map)
 		player.on_enter()
 
 func _physics_process(delta: float) -> void:

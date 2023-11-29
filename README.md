@@ -37,7 +37,7 @@ There are 2 ways to start using MetSys: implementing the integration from scratc
 
 After adding the plugin and enabling it, a file called `MetSysSettings.tres` will appear in your project. It contains settings for the plugin. You can move it to any directory, but you should modify `addons/metroidvania_system/settings_file` to point to the new path. Next thing to do is edit the settings file and customize all the fields (see [here](#general-settings) for more info). The most important one is `map_root_folder`, which defines where will your map scenes go. This is also the location of your `MapData.txt` file, which stores the world layout.
 
-Whenever you start the game, you should call `MetSys.reset_state()` and `MetSys.set_save_data()` to make sure the singleton is in the initial state and save data exists. Then you have to call `MetSys.set_player_position()` every time the player moves (or simply every frame, the method is not expensive). This will cause the  `MetSys.cell_changed` signal to be emitted when player moves to another map cell and `MetSys.room_changed` when player moves to another room (this is when you are supposed to load a new scene). See [here](#tracking-player-position) for more info.
+Whenever you start the game, you should call `MetSys.reset_state()` and `MetSys.set_save_data()` to make sure the singleton is in the initial state and save data exists. Then you have to call `MetSys.set_player_position()` every time the player moves (or simply every frame, the method is not expensive). This will cause the  `MetSys.cell_changed` signal to be emitted when player moves to another map cell and `MetSys.room_changed` when player moves to another room (this is when you are supposed to load a new scene). When changing rooms, you can use `get_room_position_offset()` method to adjust the player position. See [here](#tracking-player-position) for more info.
 
 Create your map layout in the Map Editor and assign the scenes from your map folder. Every room should have instance of `RoomInstance.tscn` scene to properly tie it to the system. When you start your game in such scene, MetSys will automatically detect which room you are in and the position tracking will handle the rest. To draw the map use `MetSys.draw_cell()` method. See [here](#drawing-the-map) for more info.
 
@@ -139,6 +139,8 @@ You can change current layer either on the side-bar or using Q/E keys (physical)
 There is also a zoom feature. It's very basic and simply scales the map view, but it's useful if you have high display resolution and find the map too small.
 
 ![](Media/EditorZoom.gif)
+
+You can also zoom using Ctrl + mouse wheel.
 
 #### Room Layout mode
 
@@ -331,6 +333,7 @@ The RoomInstance node can be accessed using `MetSys.current_room`. It grants acc
 - `adjust_camera_limits(camera: Camera2D)`: Adjusts limit properties of the given camera to be within the room's boundaries.
 - `get_size() -> Vector2`: Returns the size size of the room's bounding rectangle.
 - `get_local_cells() -> Array[Vector2i]`: Returns the cells occupied by the room, in local coordinates, i.e. (0, 0) is the top-left coordinate. This is useful to determine shape of irregular (not-rectangle) rooms to draw stuff outside the map etc.
+- `get_room_position_offset(other: RoomInstance) -> Array[String]`: Returns the difference of positions of 2 RoomInstance nodes. When changing scenes, you can use this method to teleport player to the entrance of the new room by subtracting offset between new room and old room.
 - `get_neighbor_rooms() -> Array[String]`: Returns names of the rooms from cells adjacent to the current room and connected via passages. This method can be used to preload these rooms (likely in a thread) for smoother transitions.
 - `room_name`: This property holds the name of the room (i.e. file name of the scene).
 

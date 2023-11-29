@@ -81,6 +81,10 @@ func get_end_coords() -> Vector2i:
 func get_layer() -> int:
 	return layer
 
+## Returns the position difference between this RoomInstance and another one, based on their base coords and the in-game cell size. Useful for positioning the player after room transition.
+func get_room_position_offset(other: Node2D) -> Vector2:
+	return Vector2(get_base_coords() - other.get_base_coords()) * MetSys.settings.in_game_cell_size
+
 ## Returns the names of rooms connected to the current room instance. The rooms are determined based on border passages and adjacent cells. Useful for preloading adjacent rooms.
 func get_neighbor_rooms() -> Array[String]:
 	var ret: Array[String]
