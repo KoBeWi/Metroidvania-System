@@ -2,7 +2,7 @@ extends RefCounted
 
 static var force_mapped: bool
 
-static func draw(canvas_item: CanvasItem, offset: Vector2, coords: Vector3i, skip_empty: bool, map_data: MetroidvaniaSystem.MapData, save_data: MetroidvaniaSystem.SaveData):
+static func draw(canvas_item: CanvasItem, offset: Vector2, coords: Vector3i, skip_empty: bool, map_data: MetroidvaniaSystem.MapData, save_data: MetroidvaniaSystem.MetSysSaveData):
 	if MetSys.settings.custom_elements and not map_data.custom_elements.is_empty():
 		setup_custom_elements(canvas_item, offset, coords)
 	

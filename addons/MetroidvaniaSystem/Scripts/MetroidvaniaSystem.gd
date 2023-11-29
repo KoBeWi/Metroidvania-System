@@ -7,8 +7,8 @@ class_name MetroidvaniaSystem extends Node
 const DEFAULT_SYMBOL = -99
 enum { DISPLAY_CENTER = 1, DISPLAY_OUTLINE = 2, DISPLAY_BORDERS = 4, DISPLAY_SYMBOLS = 8 }
 
-const Settings = preload("res://addons/MetroidvaniaSystem/Scripts/Settings.gd")
-const SaveData = preload("res://addons/MetroidvaniaSystem/Scripts/SaveData.gd")
+const MetSysSettings = preload("res://addons/MetroidvaniaSystem/Scripts/Settings.gd")
+const MetSysSaveData = preload("res://addons/MetroidvaniaSystem/Scripts/SaveData.gd")
 const MapData = preload("res://addons/MetroidvaniaSystem/Scripts/MapData.gd")
 const MapBuilder = preload("res://addons/MetroidvaniaSystem/Scripts/MapBuilder.gd")
 const RoomInstance = preload("res://addons/MetroidvaniaSystem/Scripts/RoomInstance.gd")
@@ -21,12 +21,12 @@ enum { R, ## Right border.
 		U, ## Top border.
 	}
 
-var settings: Settings
+var settings: MetSysSettings
 ## The size of a map cell. Automatically set to the size of [member MapTheme.center_texture]. Read only.
 var CELL_SIZE: Vector2
 
 var map_data: MapData
-var save_data: SaveData
+var save_data: MetSysSaveData
 
 var last_player_position := Vector3i.MAX
 var exact_player_position: Vector2
@@ -74,7 +74,7 @@ func _enter_tree() -> void:
 	if ResourceLoader.exists(settings_path):
 		settings = load(settings_path)
 	else:
-		settings = Settings.new()
+		settings = MetSysSettings.new()
 		settings.theme = load("res://addons/MetroidvaniaSystem/Themes/Exquisite/Theme.tres")
 		ResourceSaver.save(settings, settings_path)
 	
@@ -107,7 +107,7 @@ func get_save_data() -> Dictionary:
 ## Initializes and loads a save data. Pass it the data from [method get_save_data] to restore the saved state of MetSys. Calling this method with the default parameter will clear the data, allowing to start new game session.
 ## [br][br]Note that this only resets the save data. You still need to call [method reset_state] [i]before[/i] this method to make sure the singleton is clean.
 func set_save_data(data := {}):
-	save_data = SaveData.new()
+	save_data = MetSysSaveData.new()
 	save_data.set_data(data)
 
 func visit_cell(coords: Vector3i):
