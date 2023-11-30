@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://dfbykrvyqnqr5"]
+[gd_scene load_steps=13 format=3 uid="uid://dfbykrvyqnqr5"]
 
 [ext_resource type="Script" path="res://addons/MetroidvaniaSystem/Database/MapEditor.gd" id="1_i7yda"]
 
@@ -470,6 +470,16 @@ func on_map_selected(path: String) -> void:
 	redraw_overlay()
 "
 
+[sub_resource type="GDScript" id="GDScript_5yej3"]
+script/source = "@tool
+extends FileDialog
+
+func _validate_property(property: Dictionary) -> void:
+	# Hack until Godot handles this properly.
+	if property.name == \"ok_button_text\" or property.name == \"title\":
+		property.usage = 0
+"
+
 [sub_resource type="GDScript" id="GDScript_gb3rf"]
 resource_name = "CustomElements"
 script/source = "@tool
@@ -721,6 +731,7 @@ script = SubResource("GDScript_p75ne")
 size = Vector2i(345, 162)
 file_mode = 0
 filters = PackedStringArray("*.tscn")
+script = SubResource("GDScript_5yej3")
 
 [node name="CustomElements" type="Button" parent="Sidebar/ScrollContainer/VBoxContainer/Modes"]
 layout_mode = 2
