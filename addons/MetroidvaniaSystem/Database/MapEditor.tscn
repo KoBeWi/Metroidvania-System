@@ -561,14 +561,15 @@ func _editor_input(event: InputEvent):
 			else:
 				var rect := get_rect_between(drag_from, get_cursor_pos())
 				add_element(rect)
-				mark_modified()
+				undo_end_with_redraw()
 				drag_from = Vector2i.MAX
 		elif event.button_index == MOUSE_BUTTON_RIGHT:
 			if event.pressed:
 				var coords := Vector3i(get_cursor_pos().x, get_cursor_pos().y, editor.current_layer)
 				if coords in MetSys.map_data.custom_elements:
+					undo_handle_element_remove(coords, MetSys.map_data.custom_elements[coords])
 					MetSys.map_data.custom_elements.erase(coords)
-					mark_modified()
+					undo_end_with_redraw()
 					redraw_map()
 
 func add_element(rect: Rect2i):
@@ -580,6 +581,8 @@ func add_element(rect: Rect2i):
 	var coords := Vector3i(rect.position.x, rect.position.y, editor.current_layer)
 	MetSys.map_data.custom_elements[coords] = element
 	redraw_map()
+	
+	undo_handle_element_add(coords, element)
 "
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xiyo8"]

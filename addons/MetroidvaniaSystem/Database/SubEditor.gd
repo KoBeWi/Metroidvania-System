@@ -172,6 +172,22 @@ func undo_handle_group_remove(coords: Vector3i, group_id: int):
 	editor.undo_redo.add_undo_method((func(coords: Vector3i, group_id: int): MetSys.map_data.cell_groups[group_id].append(coords)).bind(coords, group_id))
 	had_undo_change = true
 
+func undo_handle_element_add(coords: Vector3i, element: Dictionary):
+	if not undo_active:
+		undo_begin()
+	
+	editor.undo_redo.add_do_method((func(coords: Vector3i, element: Dictionary): MetSys.map_data.custom_elements[coords] = element).bind(coords, element))
+	editor.undo_redo.add_undo_method((func(coords: Vector3i): MetSys.map_data.custom_elements.erase(coords)).bind(coords))
+	had_undo_change = true
+
+func undo_handle_element_remove(coords: Vector3i, element: Dictionary):
+	if not undo_active:
+		undo_begin()
+	
+	editor.undo_redo.add_do_method((func(coords: Vector3i): MetSys.map_data.custom_elements.erase(coords)).bind(coords))
+	editor.undo_redo.add_undo_method((func(coords: Vector3i, element: Dictionary): MetSys.map_data.custom_elements[coords] = element).bind(coords, element))
+	had_undo_change = true
+
 func undo_end():
 	if not undo_active:
 		return
