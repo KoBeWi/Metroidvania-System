@@ -41,7 +41,6 @@ func _editor_input(event: InputEvent):
 
 func update_rooms(rect: Rect2i):
 	var map_data: MetroidvaniaSystem.MapData = MetSys.map_data
-	undo_begin()
 	
 	for x in range(rect.position.x, rect.end.x):
 		for y in range(rect.position.y, rect.end.y):
@@ -82,7 +81,6 @@ func update_rooms(rect: Rect2i):
 
 func erase_rooms(rect: Rect2i):
 	var map_data: MetroidvaniaSystem.MapData = MetSys.map_data
-	undo_begin()
 	
 	for x in range(rect.position.x, rect.end.x):
 		for y in range(rect.position.y, rect.end.y):
@@ -152,7 +150,9 @@ func modify_cell(cell_data: MetroidvaniaSystem.MapData.CellData, mode: int) -> b
 			target_color = %CurrentColor.color
 		
 		if cell_data.color != target_color:
+			var old := cell_data.color
 			cell_data.color = target_color
+			undo_handle_cell_property(cell_data, &\"color\", old)
 			return true
 	
 	return false
@@ -202,7 +202,9 @@ func modify_cell(cell_data: MetroidvaniaSystem.MapData.CellData, mode: int) -> b
 		target_symbol = symbol_group.get_pressed_button().get_index()
 	
 	if cell_data.symbol != target_symbol:
+		var old := cell_data.symbol
 		cell_data.symbol = target_symbol
+		undo_handle_cell_property(cell_data, &\"symbol\", old)
 		return true
 	
 	return false

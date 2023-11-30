@@ -51,13 +51,13 @@ func _on_overlay_input(event: InputEvent) -> void:
 	
 	if event is InputEventKey:
 		if event.pressed and event.is_command_or_control_pressed():
-			if event.keycode == KEY_Z:
-				if undo_redo.undo():
-					print("MetSys undo")
-				accept_event()
-			elif event.keycode == KEY_Y:
+			if event.keycode == KEY_Y or (event.keycode == KEY_Z and event.shift_pressed):
 				if undo_redo.redo():
 					print("MetSys redo")
+				accept_event()
+			elif event.keycode == KEY_Z:
+				if undo_redo.undo():
+					print("MetSys undo")
 				accept_event()
 
 func _on_drag():

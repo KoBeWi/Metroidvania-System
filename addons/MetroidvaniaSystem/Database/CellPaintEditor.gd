@@ -71,8 +71,9 @@ func paint(mode: int):
 		if modify_cell(cell_data, mode) or modify_coords(coords, mode):
 			modified = true
 	
+	undo_end_with_redraw()
+	
 	if modified:
-		mark_modified()
 		redraw_map()
 
 func modify_cell(cell_data: MetroidvaniaSystem.MapData.CellData, mode: int) -> bool:
