@@ -1,6 +1,8 @@
 @tool
 extends "res://addons/MetroidvaniaSystem/Database/CellPaintEditor.gd"
 
+var border_property = &"borders"
+
 func _editor_init() -> void:
 	use_cursor = false
 	super()
@@ -40,12 +42,16 @@ func modify_cell(cell_data: MetroidvaniaSystem.MapData.CellData, mode: int) -> b
 	if highlighted_border == -1:
 		return false
 	
+	var old: Variant = cell_data.get(border_property).duplicate()
 	var modified: bool
 	if whole_room:
 		for i in 4:
 			modified = modify_border(cell_data, i, mode) or modified
 	else:
 		modified = modify_border(cell_data, highlighted_border, mode)
+	
+	if modified:
+		undo_handle_cell_property(cell_data, border_property, old)
 	
 	return modified
 

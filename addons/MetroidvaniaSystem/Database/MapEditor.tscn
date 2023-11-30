@@ -232,6 +232,7 @@ var drawing: int
 func _editor_init() -> void:
 	super()
 	room_only_cursor = true
+	overlay_mode = true
 	cell_groups = MetSys.map_data.cell_groups
 
 func _update_theme():
@@ -260,45 +261,15 @@ func modify_coords(coords: Vector3i, mode: int) -> bool:
 		
 		if not coords in cell_groups[current_group]:
 			cell_groups[current_group].append(coords)
+			undo_handle_group_add(coords, current_group)
 			return true
 	else:
 		if coords in cell_groups[current_group]:
 			cell_groups[current_group].erase(coords)
+			undo_handle_group_remove(coords, current_group)
 			return true
 	
 	return false
-
-func draw_group():
-	if drawing == 0:
-		return
-	
-	var coords := get_coords(get_cursor_pos())
-	var current_group: int = %CurrentGroup.value
-	
-	if drawing & MOUSE_BUTTON_MASK_LEFT != 0:
-		var cell_data: MetroidvaniaSystem.MapData.CellData = MetSys.map_data.get_cell_at(coords)
-		if not cell_data:
-			return
-		
-		if not current_group in cell_groups:
-			cell_groups[current_group] = []
-		
-		if not coords in cell_groups[current_group]:
-			cell_groups[current_group].append(coords)
-		
-		mark_modified()
-		redraw_overlay()
-	elif drawing & MOUSE_BUTTON_MASK_RIGHT != 0:
-		if not current_group in cell_groups:
-			return
-		
-		var cell_data: MetroidvaniaSystem.MapData.CellData = MetSys.map_data.get_cell_at(coords)
-		if not cell_data:
-			return
-		
-		cell_groups[current_group].erase(coords)
-		mark_modified()
-		redraw_overlay()
 "
 
 [sub_resource type="GDScript" id="GDScript_ilxbw"]
@@ -383,6 +354,7 @@ extends \"res://addons/MetroidvaniaSystem/Database/BorderPaintEditor.gd\"
 
 func _editor_init():
 	can_pick = true
+	border_property = &\"border_colors\"
 	super()
 
 func _editor_enter():

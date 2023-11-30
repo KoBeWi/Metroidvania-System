@@ -10,6 +10,7 @@ var had_undo_change: bool
 
 var use_cursor := true
 var room_only_cursor := true
+var overlay_mode: bool
 
 var drag_from: Vector2i = Vector2i.MAX
 var highlighted_room: Array[Vector3i]
@@ -155,6 +156,22 @@ func undo_handle_cell_erase(coords: Vector3i, cell: Object):
 	had_undo_change = true
 	# TODO: handle groups and scene assigns when re-inserting
 
+func undo_handle_group_add(coords: Vector3i, group_id: int):
+	if not undo_active:
+		undo_begin()
+	
+	editor.undo_redo.add_do_method((func(coords: Vector3i, group_id: int): MetSys.map_data.cell_groups[group_id].append(coords)).bind(coords, group_id))
+	editor.undo_redo.add_undo_method((func(coords: Vector3i, group_id: int): MetSys.map_data.cell_groups[group_id].erase(coords)).bind(coords, group_id))
+	had_undo_change = true
+
+func undo_handle_group_remove(coords: Vector3i, group_id: int):
+	if not undo_active:
+		undo_begin()
+	
+	editor.undo_redo.add_do_method((func(coords: Vector3i, group_id: int): MetSys.map_data.cell_groups[group_id].erase(coords)).bind(coords, group_id))
+	editor.undo_redo.add_undo_method((func(coords: Vector3i, group_id: int): MetSys.map_data.cell_groups[group_id].append(coords)).bind(coords, group_id))
+	had_undo_change = true
+
 func undo_end():
 	if not undo_active:
 		return
@@ -165,8 +182,12 @@ func undo_end():
 
 func undo_end_with_redraw():
 	if had_undo_change:
-		editor.undo_redo.add_do_method(redraw_map)
-		editor.undo_redo.add_undo_method(redraw_map)
+		if overlay_mode:
+			editor.undo_redo.add_do_method(redraw_overlay)
+			editor.undo_redo.add_undo_method(redraw_overlay)
+		else:
+			editor.undo_redo.add_do_method(redraw_map)
+			editor.undo_redo.add_undo_method(redraw_map)
 	undo_end()
 
 func _notification(what: int) -> void:

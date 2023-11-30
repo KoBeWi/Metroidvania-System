@@ -74,7 +74,10 @@ func paint(mode: int):
 	undo_end_with_redraw()
 	
 	if modified:
-		redraw_map()
+		if overlay_mode:
+			redraw_overlay()
+		else:
+			redraw_map()
 
 func modify_cell(cell_data: MetroidvaniaSystem.MapData.CellData, mode: int) -> bool:
 	return false
