@@ -75,6 +75,7 @@ A small but important sub-system are object IDs. Whether it's a collectible, a s
 - Cells are automatically grouped into rooms and can have assigned scenes.
 - You can define custom elements that draw arbitrary things on map (like elevators or location names).
 - Add a special RoomInstance node to your scene to display the borders of currently edited room inside the 2D editor view.
+- Full undo/redo support.
 
 #### Map Viewer
 
@@ -132,19 +133,23 @@ Map editor is divided into 2 main sections: map view and sidebar.
 
 Map view is where you interact with your map - draw cells, edit borders, symbols etc. Sidebar contains navigation options, various editing modes and, depending on the mode, some options.
 
+The editor supports undo/redo. <kbd>Ctrl + Z</kbd> is undo, <kbd>Ctrl + Y</kbd>/<kbd>Ctrl + Shift + Z</kbd> is redo. Right now these shortcuts can't be changed.
+
+![](Media/EditorUndo.gif)
+
 #### Navigation
 
 It's important to note that the map is divided into layers. Using them is optional; they can be parallel worlds, interior sub-maps or whatever use-case you come up with. The editor properly displays a single layer, that is all cells, symbols, custom elements etc. Sometimes it's desired to see another layer at the same time, to make parallel rooms and stuff. This is what Preview Layer option is for - it allows to display another layer. It will be translucent and some elements are omitted, but you will see general shape of the layer.
 
 ![](Media/EditorLayers.gif)
 
-You can change current layer either on the side-bar or using Q/E keys (physical). You can pan the map view using Middle Mouse Button; the Recenter View button on the sidebar moves you to (0, 0) in case you get lost (the canvas is infinite). In the top-left corner of the map view you can see the coordinates of the hovered cell.
+You can change current layer either on the side-bar or using <kbd>Q</kbd>/<kbd>E</kbd> keys (physical). You can pan the map view using Middle Mouse Button; the Recenter View button on the sidebar moves you to (0, 0) in case you get lost (the canvas is infinite). In the top-left corner of the map view you can see the coordinates of the hovered cell.
 
 There is also a zoom feature. It's very basic and simply scales the map view, but it's useful if you have high display resolution and find the map too small.
 
 ![](Media/EditorZoom.gif)
 
-You can also zoom using Ctrl + mouse wheel.
+You can also zoom using <kbd>Ctrl</kbd> + mouse wheel.
 
 #### Room Layout mode
 

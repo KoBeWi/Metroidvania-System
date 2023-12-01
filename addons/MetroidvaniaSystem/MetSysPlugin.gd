@@ -4,18 +4,10 @@ extends EditorPlugin
 enum { TAB_EDITOR, TAB_OVERVIEW, TAB_MANAGE }
 
 var main: Control
-var modified: bool:
-	set(m):
-		if m == modified:
-			return
-		
-		modified = m
-		dirty_toggled.emit(modified)
-
 var theme_scanner: Timer
 var prev_theme_state: Array
 
-signal dirty_toggled
+signal saved
 
 func _has_main_screen() -> bool:
 	return true
@@ -73,12 +65,15 @@ func _make_visible(visible: bool) -> void:
 		theme_scanner.stop()
 
 func _save_external_data() -> void:
+	if not is_inside_tree():
+		return
+	
 	get_singleton().map_data.save_data()
-	modified = false
+	saved.emit()
 
 func _get_unsaved_status(for_scene: String) -> String:
-	if modified and for_scene.is_empty():
-		return "MetSys map has been modified."
+	if for_scene.is_empty() and main.tabs.get_child(0).is_unsaved():
+		return "MetSys map has been modified.\nDo you want to save?"
 	return ""
 
 func get_singleton() -> MetroidvaniaSystem:

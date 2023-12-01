@@ -8,9 +8,9 @@ extends "res://addons/MetroidvaniaSystem/Scripts/MapView.gd"
 
 var mode: int
 var preview_layer := -1
-var modified: bool
 
 var undo_redo: UndoRedo
+var saved_version := 1
 
 func _ready() -> void:
 	if not plugin:
@@ -19,7 +19,7 @@ func _ready() -> void:
 	undo_redo = UndoRedo.new()
 	%Shortcuts.hide()
 	
-	plugin.dirty_toggled.connect(update_name)
+	plugin.saved.connect(mark_saved)
 	await super()
 	
 	mode_group.pressed.connect(mode_pressed)
@@ -53,10 +53,12 @@ func _on_overlay_input(event: InputEvent) -> void:
 		if event.pressed and event.is_command_or_control_pressed():
 			if event.keycode == KEY_Y or (event.keycode == KEY_Z and event.shift_pressed):
 				if undo_redo.redo():
+					update_name()
 					print("MetSys redo")
 				accept_event()
 			elif event.keycode == KEY_Z:
 				if undo_redo.undo():
+					update_name()
 					print("MetSys undo")
 				accept_event()
 
@@ -106,12 +108,21 @@ func on_zoom_changed(new_zoom: float):
 	ghost_map.scale = new_zoom_vector
 	grid.scale = new_zoom_vector
 
-func update_name(dirty: bool):
-	if dirty:
+func update_name():
+	if is_unsaved():
 		name = "Map Editor(*)"
 	else:
 		name = "Map Editor"
 
+func is_unsaved() -> bool:
+	return undo_redo.get_version() != saved_version
+
+func mark_saved():
+	saved_version = undo_redo.get_version()
+	update_name()
+
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_PREDELETE:
-		undo_redo.free()
+		if undo_redo:
+			undo_redo.free()
+			undo_redo = null

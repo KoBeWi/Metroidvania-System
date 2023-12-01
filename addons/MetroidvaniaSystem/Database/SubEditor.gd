@@ -242,6 +242,7 @@ func undo_end():
 	editor.undo_redo.commit_action(false)
 	had_undo_change = false
 	undo_active = false
+	editor.update_name()
 
 func undo_end_with_redraw():
 	if had_undo_change:
