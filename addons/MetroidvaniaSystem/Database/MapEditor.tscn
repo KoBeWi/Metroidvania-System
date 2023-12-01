@@ -61,8 +61,9 @@ func update_rooms(rect: Rect2i):
 				
 				if undo_handle_cell_property(cell, &\"borders\", prev_borders):
 					var prev_assign: String = MetSys.map_data.cells[coords].assigned_scene
-					remove_assign(coords)
-					undo_handle_cell_property(cell, &\"assigned_scene\", prev_assign)
+					if not prev_assign.is_empty():
+						var prev_room := remove_assign(coords)
+						undo_handle_scene_add(prev_room, prev_assign)
 			else:
 				cell = map_data.create_cell_at(coords)
 				if x == rect.end.x - 1:
@@ -90,6 +91,8 @@ func erase_rooms(rect: Rect2i):
 			if not cell_data:
 				continue
 			
+			undo_handle_cell_erase(coords, cell_data)
+			
 			if x == rect.end.x - 1:
 				close_border(Vector2i(x + 1, y), 2)
 			if y == rect.end.y - 1:
@@ -99,28 +102,39 @@ func erase_rooms(rect: Rect2i):
 			if y == rect.position.y:
 				close_border(Vector2i(x, y - 1), 1)
 			
-			undo_handle_cell_erase(coords, cell_data)
 			map_data.erase_cell(coords)
 	
 	undo_end_with_redraw()
 	redraw_map()
 
-func remove_assign(coords: Vector3i):
+func remove_assign(coords: Vector3i) -> Array[Vector3i]:
+	var ret: Array[Vector3i]
+	
 	var assigned_scene: String = MetSys.map_data.cells[coords].assigned_scene
 	if assigned_scene.is_empty():
-		return
+		return ret
 	
-	for coords2 in MetSys.map_data.assigned_scenes[assigned_scene]:
+	ret.assign(MetSys.map_data.assigned_scenes[assigned_scene].duplicate())
+	
+	for coords2 in ret:
 		MetSys.map_data.cells[coords2].assigned_scene = \"\"
 	MetSys.map_data.assigned_scenes.erase(assigned_scene)
+	
+	return ret
 
 func close_border(pos: Vector2i, border: int):
-	var cell: MetroidvaniaSystem.MapData.CellData = MetSys.map_data.get_cell_at(get_coords(pos))
+	var coords := get_coords(pos)
+	var cell: MetroidvaniaSystem.MapData.CellData = MetSys.map_data.get_cell_at(coords)
 	
 	if cell:
 		var old: Variant = cell.borders.duplicate()
 		cell.borders[border] = 0
-		undo_handle_cell_property(cell, &\"borders\", old)
+		
+		if undo_handle_cell_property(cell, &\"borders\", old):
+			var prev_assign: String = MetSys.map_data.cells[coords].assigned_scene
+			if not prev_assign.is_empty():
+				var prev_room := remove_assign(coords)
+				undo_handle_scene_add(prev_room, prev_assign, true)
 "
 
 [sub_resource type="GDScript" id="GDScript_tlx5u"]
@@ -393,6 +407,7 @@ extends \"res://addons/MetroidvaniaSystem/Database/SubEditor.gd\"
 
 func _editor_init() -> void:
 	use_cursor = false
+	overlay_mode = true
 
 func _update_theme():
 	theme_cache.assigned_scene = get_theme_color(&\"assigned_scene\", &\"MetSys\")
@@ -417,11 +432,15 @@ func _editor_input(event: InputEvent):
 					
 					file_dialog.popup_centered_ratio(0.6)
 		elif event.button_index == MOUSE_BUTTON_RIGHT:
-			clear_scene(highlighted_room)
-			MetSys.room_assign_updated.emit()
-			
-			mark_modified()
-			redraw_overlay()
+			if event.pressed:
+				var prev_scene := clear_scene(highlighted_room)
+				if prev_scene.is_empty():
+					return
+				
+				undo_handle_scene_remove(highlighted_room.duplicate(), prev_scene)
+				undo_end_with_redraw()
+				MetSys.room_assign_updated.emit()
+				redraw_overlay()
 
 func _editor_draw(map_overlay: CanvasItem):
 	super(map_overlay)
@@ -438,34 +457,41 @@ func _editor_draw(map_overlay: CanvasItem):
 		map_overlay.draw_string(get_theme_font(&\"font\", &\"Label\"), Vector2(0, 40),
 				MetSys.map_data.get_cell_at(highlighted_room.front()).assigned_scene)
 
-func clear_scene(from: Array[Vector3i]):
+func clear_scene(from: Array[Vector3i]) -> String:
 	if from.is_empty():
-		return
+		return \"\"
 	
 	var current_assigned: String = MetSys.map_data.get_cell_at(from[0]).assigned_scene
 	if current_assigned.is_empty():
-		return
+		return \"\"
 	else:
 		MetSys.map_data.assigned_scenes.erase(current_assigned)
 	
 	for p in from:
 		MetSys.map_data.get_cell_at(p).assigned_scene = \"\"
+	
+	return current_assigned
 
 func on_map_selected(path: String) -> void:
 	path = path.trim_prefix(MetSys.settings.map_root_folder)
 	
-	clear_scene(highlighted_room)
+	var prev_scene := clear_scene(highlighted_room)
 	
 	var current_assigned: Array[Vector3i]
 	current_assigned.assign(MetSys.map_data.assigned_scenes.get(path, []))
-	clear_scene(current_assigned)
+	
+	if not current_assigned.is_empty():
+		var other_prev_scene := clear_scene(current_assigned)
+		undo_handle_scene_remove(current_assigned, other_prev_scene)
 	
 	MetSys.map_data.assigned_scenes[path] = []
 	for coords in highlighted_room:
 		MetSys.map_data.get_cell_at(coords).assigned_scene = path
 		MetSys.map_data.assigned_scenes[path].append(coords)
 	
-	mark_modified()
+	undo_handle_scene_add(highlighted_room.duplicate(), prev_scene)
+	undo_end_with_redraw()
+	
 	MetSys.room_assign_updated.emit()
 	redraw_overlay()
 "

@@ -121,6 +121,10 @@ func redraw_map():
 func redraw_overlay():
 	editor.map_overlay.queue_redraw()
 
+func redraw_overlay_if_needed():
+	if editor.get_current_sub_editor().overlay_mode:
+		redraw_overlay()
+
 func undo_begin():
 	editor.undo_redo.create_action("MetSys")
 	undo_active = true
@@ -136,7 +140,6 @@ func undo_handle_cell_property(cell: Object, property: StringName, old_value: Va
 	editor.undo_redo.add_do_property(cell, property, new_value)
 	editor.undo_redo.add_undo_property(cell, property, old_value)
 	had_undo_change = true
-	# TODO: handle assigned scenes
 	return true
 
 func undo_handle_cell_spawn(coords: Vector3i, cell: Object):
@@ -153,8 +156,11 @@ func undo_handle_cell_erase(coords: Vector3i, cell: Object):
 	
 	editor.undo_redo.add_do_method(MetSys.map_data.erase_cell.bind(coords))
 	editor.undo_redo.add_undo_method(MetSys.map_data.insert_cell_at.bind(coords, cell))
+	for group_id in MetSys.map_data.cell_groups:
+		if coords in MetSys.map_data.cell_groups[group_id]:
+			undo_handle_group_remove(coords, group_id)
+	
 	had_undo_change = true
-	# TODO: handle groups and scene assigns when re-inserting
 
 func undo_handle_group_add(coords: Vector3i, group_id: int):
 	if not undo_active:
@@ -188,6 +194,47 @@ func undo_handle_element_remove(coords: Vector3i, element: Dictionary):
 	editor.undo_redo.add_undo_method(func(): MetSys.map_data.custom_elements[coords] = element)
 	had_undo_change = true
 
+func undo_handle_scene_add(room: Array[Vector3i], old_scene: String, undo_only := false):
+	if not undo_active:
+		undo_begin()
+	
+	var new_scene := MetSys.map_data.get_cell_at(room[0]).assigned_scene
+	
+	if not undo_only:
+		editor.undo_redo.add_do_method(switch_scene.bind(room, new_scene, old_scene))
+	editor.undo_redo.add_undo_method(switch_scene.bind(room, old_scene, new_scene))
+	had_undo_change = true
+
+func undo_handle_scene_remove(room: Array[Vector3i], old_scene: String):
+	if not undo_active:
+		undo_begin()
+	
+	editor.undo_redo.add_do_method(switch_scene.bind(room, "", old_scene))
+	editor.undo_redo.add_undo_method(switch_scene.bind(room, old_scene, ""))
+	had_undo_change = true
+
+func switch_scene(room: Array[Vector3i], new_scene: String, old_scene: String):
+	for coords in room:
+		var cell_data := MetSys.map_data.get_cell_at(coords)
+		if not cell_data:
+			continue
+		
+		cell_data.assigned_scene = new_scene
+		
+		if not new_scene.is_empty():
+			if not new_scene in MetSys.map_data.assigned_scenes:
+				MetSys.map_data.assigned_scenes[new_scene] = []
+			MetSys.map_data.assigned_scenes[new_scene].append(coords)
+	
+	if not old_scene.is_empty():
+		for coords in room:
+			MetSys.map_data.assigned_scenes[old_scene].erase(coords)
+		
+		if MetSys.map_data.assigned_scenes[old_scene].is_empty():
+			MetSys.map_data.assigned_scenes.erase(old_scene)
+	
+	MetSys.room_assign_updated.emit()
+
 func undo_end():
 	if not undo_active:
 		return
@@ -198,10 +245,9 @@ func undo_end():
 
 func undo_end_with_redraw():
 	if had_undo_change:
-		if overlay_mode:
-			editor.undo_redo.add_do_method(redraw_overlay)
-			editor.undo_redo.add_undo_method(redraw_overlay)
-		else:
+		editor.undo_redo.add_do_method(redraw_overlay_if_needed)
+		editor.undo_redo.add_undo_method(redraw_overlay_if_needed)
+		if not overlay_mode:
 			editor.undo_redo.add_do_method(redraw_map)
 			editor.undo_redo.add_undo_method(redraw_map)
 	undo_end()
