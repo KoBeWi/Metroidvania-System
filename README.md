@@ -53,6 +53,10 @@ The project comes with the default room size, so you may want to change that too
 
 With that setup you should have a nice base to continue your project.
 
+#### Exporting
+
+Exporting the project is the same as normally, however remember to include `*.txt` in the include filters of Resources tab. Map data is stored in this format.
+
 ## Quick overview
 
 Metroidvania System is designed as a general-purpose addon, mainly focused on 2D grid-based metroidvania games (either platformer or top-down). Grid-based, i.e. it assumes that the map is composed of rooms that fit on a square or rectangular grid. The main feature is the Map Editor, which helps designing the world layout by placing the map cells and customizing them. The map, while it's only representation of the game's world, can be integrated with the game by associating scenes with rooms on the map, making the room transitions much easier to implement and the general overview of the world is more convenient.
