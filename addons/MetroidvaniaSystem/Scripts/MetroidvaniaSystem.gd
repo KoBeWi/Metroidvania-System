@@ -147,6 +147,8 @@ func get_explored_ratio(layer := -1):
 ## [br][br][param position] should be position in the room's coordinates, i.e. with [code](0, 0)[/code] being the top-left corner of the scene assigned to the room (which in most cases simply equals to global position of the player).
 func set_player_position(position: Vector2):
 	exact_player_position = position
+	if not current_room:
+		return
 	
 	var player_pos := Vector2i((position / settings.in_game_cell_size).floor()) + current_room.min_cell
 	var player_pos_3d := Vector3i(player_pos.x, player_pos.y, current_layer)

@@ -154,28 +154,43 @@ class CellOverride extends CellData:
 	## Sets a border of the cell. [param idx] is the direction index of the cell. Use [constant MetroidvaniaSystem.R], [constant MetroidvaniaSystem.D], [constant MetroidvaniaSystem.L], [constant MetroidvaniaSystem.U] constants here. The [param value] must be within the [member MapTheme.borders] array bounds + 2 (0 and 1 are the default wall and passage). Use the default to reset to the border assigned in the editor. Value of [code]-1[/code] will remove the border, but it's not recommended.
 	func set_border(idx: int, value := -2):
 		assert(idx >= 0 and idx < 4)
+		if value == borders[idx]:
+			return
+		
 		borders[idx] = value
 		_queue_commit()
 	
 	## Sets the color of a cell's border. [param idx] is the direction index of the cell (see [method set_border]). If the default [param value] is used (or any color with [code]0[/code] alpha), the border will be reset to the default color.
 	func set_border_color(idx: int, value := Color.TRANSPARENT):
 		assert(idx >= 0 and idx < 4)
+		if value == border_colors[idx]:
+			return
+		
 		border_colors[idx] = value
 		_queue_commit()
 	
 	## Sets the color of the cell's center texture.
 	func set_color(value := Color.TRANSPARENT):
+		if value == color:
+			return
+		
 		color = value
 		_queue_commit()
 	
 	## Sets the cell's assigned symbol. Value of [code]-1[/code] will remove the symbol. The markers assigned from [method MetroidvaniaSystem.set_custom_marker] still have a priority.
 	func set_symbol(value := -2):
 		assert(value >= -2 and value < MetSys.settings.theme.symbols.size())
+		if value == symbol:
+			return
+		
 		symbol = value
 		_queue_commit()
 	
 	## Changes the scene assigned to the cell. Unlike other methods, this has effect on the whole room that contains this cell. Using the default value will reset it to the scene assigned in the editor.
 	func set_assigned_scene(value := "/"):
+		if value == assigned_scene:
+			return
+		
 		if value == "/":
 			_cleanup_assigned_scene()
 		else:
