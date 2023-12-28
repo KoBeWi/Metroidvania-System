@@ -188,7 +188,7 @@ func remove_custom_marker(coords: Vector3i, symbol_id: int):
 func register_storable_object_with_marker(object: Object, stored_callback := Callable(), map_marker := DEFAULT_SYMBOL) -> bool:
 	if stored_callback.is_null():
 		if object is Node:
-			stored_callback = Callable(object, &"queue_free")
+			stored_callback = object.queue_free
 		elif not object is RefCounted:
 			stored_callback = Callable(object, &"free")
 	

@@ -11,13 +11,17 @@ var cells: Array[Vector3i]
 var initialized: bool
 var room_name: String
 
-var min_cell := Vector2i(999999, 999999)
-var max_cell := Vector2i(-999999, -999999)
+var min_cell := Vector2i.MAX
+var max_cell := Vector2i.MIN
 var layer: int
 
 func _enter_tree() -> void:
 	if not Engine.is_editor_hint():
 		MetSys.current_room = self
+	else:
+		if owner.get_meta(&"fake_map", false):
+			queue_free()
+			return
 	
 	if initialized:
 		return
@@ -30,6 +34,9 @@ func _enter_tree() -> void:
 		GRID_PASSAGE_COLOR = theme.get_color(&"scene_room_exit", &"MetSys")
 	
 	_update_assigned_scene()
+	
+	if Engine.is_editor_hint():
+		_update_neighbor_previews()
 
 func _exit_tree() -> void:
 	if MetSys.current_room == self:
@@ -50,6 +57,38 @@ func _update_assigned_scene():
 		min_cell.y = mini(min_cell.y, p.y)
 		max_cell.x = maxi(max_cell.x, p.x)
 		max_cell.y = maxi(max_cell.y, p.y)
+
+func _update_neighbor_previews():
+	for coords in cells:
+		var cell_data: MetroidvaniaSystem.MapData.CellData = MetSys.map_data.get_cell_at(coords)
+		assert(cell_data)
+		for i in 4:
+			## TODO: zrobić to wszystko wewnątrz ViewportContainer, żeby nie pokazywało całości
+			## TODO: trzeba to aktualizować jak się zmienia coś
+			var fwd: Vector2i = MetroidvaniaSystem.MapData.FWD[i]
+			
+			if cell_data.borders[i] > 0:
+				var next_coords := coords + Vector3i(fwd.x, fwd.y, 0)
+				var scene: String = MetSys.map_data.get_assigned_scene_at(next_coords)
+				
+				if scene.is_empty() or scene == room_name:
+					continue
+				
+				var next_cells: Array[Vector3i] = MetSys.map_data.get_whole_room(next_coords)
+				var next_min_cell := Vector2i.MAX
+				
+				for p in next_cells:
+					next_min_cell.x = mini(next_min_cell.x, p.x)
+					next_min_cell.y = mini(next_min_cell.y, p.y)
+				
+				var temp_map: Node2D = load(MetSys.get_full_room_path(scene)).instantiate()
+				temp_map.modulate.a = 0.5
+				temp_map.set_meta(&"fake_map", true)
+				
+				var offset := Vector2i(next_coords.x, next_coords.y) - min_cell
+				offset -= Vector2i(next_coords.x, next_coords.y) - next_min_cell
+				temp_map.position = Vector2(offset) * MetSys.settings.in_game_cell_size
+				add_child(temp_map)
 
 ## Adjusts the limits of the given [param camera] to be within this room's rectangular bounds.
 func adjust_camera_limits(camera: Camera2D):
@@ -93,8 +132,9 @@ func get_neighbor_rooms() -> Array[String]:
 		var cell_data: MetroidvaniaSystem.MapData.CellData = MetSys.map_data.get_cell_at(coords)
 		assert(cell_data)
 		for i in 4:
+			var fwd: Vector2i = MetroidvaniaSystem.MapData.FWD[i]
+			
 			if cell_data.borders[i] > 0:
-				var fwd: Vector2i = MetroidvaniaSystem.MapData.FWD[i]
 				var scene: String = MetSys.map_data.get_assigned_scene_at(coords + Vector3i(fwd.x, fwd.y, 0))
 				if not scene.is_empty() and scene != room_name and not scene in ret:
 					ret.append(scene)
