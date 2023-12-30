@@ -18,6 +18,12 @@ func _get_plugin_name() -> String:
 func _get_plugin_icon() -> Texture2D:
 	return preload("res://addons/MetroidvaniaSystem/Icon.png")
 
+func _enable_plugin() -> void:
+	EditorInterface.set_plugin_enabled("MetroidvaniaSystem/EditorExtension", true)
+
+func _disable_plugin() -> void:
+	EditorInterface.set_plugin_enabled("MetroidvaniaSystem/EditorExtension", false)
+
 func _enter_tree() -> void:
 	theme_scanner = Timer.new()
 	theme_scanner.wait_time = 0.6
@@ -30,9 +36,9 @@ func _enter_tree() -> void:
 			var dialog := ConfirmationDialog.new()
 			dialog.title = "Error!"
 			dialog.dialog_text = "MetSys restart failed, the singleton still can't be loaded. Make sure the \"MetroidvaniaSystem.gd\" script has no errors.\n\nCommon cause of errors are:\n- Using Godot version older than 4.2.\n- Name conflicts with one of the classes.\n\nThe plugin will be now disabled. Fix the errors and try again."
-			get_editor_interface().get_base_control().add_child(dialog)
+			EditorInterface.get_base_control().add_child(dialog)
 			dialog.popup_centered()
-			get_editor_interface().set_plugin_enabled("res://addons/MetroidvaniaSystem/plugin.cfg", false)
+			EditorInterface.set_plugin_enabled("MetroidvaniaSystem", false)
 			
 			DirAccess.remove_absolute("user://MetSysFail")
 			return
@@ -49,7 +55,7 @@ func _enter_tree() -> void:
 	
 	main = preload("res://addons/MetroidvaniaSystem/Database/Main.tscn").instantiate()
 	main.plugin = self
-	get_editor_interface().get_editor_main_screen().add_child(main)
+	EditorInterface.get_editor_main_screen().add_child(main)
 	main.hide()
 	
 	get_singleton().settings.theme_changed.connect(func(): prev_theme_state.clear())

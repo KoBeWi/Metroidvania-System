@@ -15,6 +15,8 @@ var min_cell := Vector2i.MAX
 var max_cell := Vector2i.MIN
 var layer: int
 
+signal previews_updated
+
 func _enter_tree() -> void:
 	if not Engine.is_editor_hint():
 		MetSys.current_room = self
@@ -22,6 +24,9 @@ func _enter_tree() -> void:
 		if owner.get_meta(&"fake_map", false):
 			queue_free()
 			return
+		
+		if initialized:
+			_update_neighbor_previews.call_deferred()
 	
 	if initialized:
 		return
@@ -59,6 +64,8 @@ func _update_assigned_scene():
 		max_cell.y = maxi(max_cell.y, p.y)
 
 func _update_neighbor_previews():
+	get_tree().call_group(&"_MetSys_RoomPreview_", &"queue_free")
+	
 	for coords in cells:
 		var cell_data: MetroidvaniaSystem.MapData.CellData = MetSys.map_data.get_cell_at(coords)
 		assert(cell_data)
@@ -79,9 +86,10 @@ func _update_neighbor_previews():
 					next_min_cell.x = mini(next_min_cell.x, p.x)
 					next_min_cell.y = mini(next_min_cell.y, p.y)
 				
-				var preview := preload("res://addons/MetroidvaniaSystem/Nodes/RoomPreview.tscn").instantiate()
+				var preview: Control = load("res://addons/MetroidvaniaSystem/Nodes/RoomPreview.tscn").instantiate()
 				preview.position = Vector2i(next_coords.x, next_coords.y) - min_cell
 				preview.position *= MetSys.settings.in_game_cell_size
+				preview.tooltip_text = scene
 				add_child(preview)
 				
 				var temp_map: Node2D = load(MetSys.get_full_room_path(scene)).instantiate()
@@ -89,6 +97,8 @@ func _update_neighbor_previews():
 				temp_map.set_meta(&"fake_map", true)
 				
 				preview.add_room(temp_map, i, next_min_cell - Vector2i(next_coords.x, next_coords.y))
+	
+	previews_updated.emit()
 
 ## Adjusts the limits of the given [param camera] to be within this room's rectangular bounds.
 func adjust_camera_limits(camera: Camera2D):

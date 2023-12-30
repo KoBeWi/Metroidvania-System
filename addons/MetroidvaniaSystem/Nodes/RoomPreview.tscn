@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=3 uid="uid://bx8a6r0ee0l1b"]
+[gd_scene load_steps=6 format=3 uid="uid://bx8a6r0ee0l1b"]
 
 [sub_resource type="Shader" id="Shader_jk80p"]
 code = "shader_type canvas_item;
@@ -25,7 +25,12 @@ shader_parameter/direction = 0
 
 [sub_resource type="GDScript" id="GDScript_rf8ul"]
 script/source = "@tool
-extends SubViewportContainer
+extends Control
+
+@onready var hover: ReferenceRect = $Hover
+
+func _ready() -> void:
+	%Label.text = tooltip_text
 
 func add_room(room: Node2D, direction: int, offset: Vector2):
 	var cell_size := MetSys.settings.in_game_cell_size
@@ -45,19 +50,65 @@ func add_room(room: Node2D, direction: int, offset: Vector2):
 			position.y += size.y * 4
 			room.position.y -= size.y * 4
 	
-	material.set_shader_parameter(&\"direction\", direction)
-	
-	$SubViewport.add_child(room)
+	$SubViewportContainer.material.set_shader_parameter(&\"direction\", direction)
+	%SubViewport.add_child(room)
+
+func set_hovered(hovered: bool):
+	hover.visible = hovered
 "
 
-[node name="RoomPreview" type="SubViewportContainer"]
+[sub_resource type="Shader" id="Shader_bavq6"]
+code = "shader_type canvas_item;
+
+uniform int direction : hint_range(0, 3);
+
+void fragment() {
+	if (direction == 0) {
+		COLOR.a = 1.0 - max(UV.x - 0.5, 0.0) * 2.0;
+	} else if (direction == 1) {
+		COLOR.a = 1.0 - max(UV.y - 0.5, 0.0) * 2.0;
+	} else if (direction == 2) {
+		COLOR.a = min(UV.x * 2.0, 1.0);
+	} else if (direction == 3) {
+		COLOR.a = min(UV.y * 2.0, 1.0);
+	}
+}
+"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_r6wrf"]
+resource_local_to_scene = true
+shader = SubResource("Shader_bavq6")
+shader_parameter/direction = 0
+
+[node name="RoomPreview" type="MarginContainer" groups=["_MetSys_RoomPreview_"]]
 material = SubResource("ShaderMaterial_4y0d4")
 offset_right = 100.0
 offset_bottom = 100.0
-stretch = true
 script = SubResource("GDScript_rf8ul")
 
-[node name="SubViewport" type="SubViewport" parent="."]
+[node name="SubViewportContainer" type="SubViewportContainer" parent="."]
+material = SubResource("ShaderMaterial_r6wrf")
+layout_mode = 2
+stretch = true
+
+[node name="SubViewport" type="SubViewport" parent="SubViewportContainer"]
+unique_name_in_owner = true
 handle_input_locally = false
 size = Vector2i(100, 100)
 render_target_update_mode = 4
+
+[node name="Hover" type="ReferenceRect" parent="."]
+visible = false
+layout_mode = 2
+border_color = Color(1, 1, 0, 1)
+border_width = 2.0
+
+[node name="Label" type="Label" parent="Hover"]
+unique_name_in_owner = true
+z_index = 1
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_top = -26.0
+grow_horizontal = 2
+horizontal_alignment = 1
