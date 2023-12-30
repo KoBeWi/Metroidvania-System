@@ -1,0 +1,63 @@
+[gd_scene load_steps=4 format=3 uid="uid://bx8a6r0ee0l1b"]
+
+[sub_resource type="Shader" id="Shader_jk80p"]
+code = "shader_type canvas_item;
+
+uniform int direction : hint_range(0, 3, 1);
+
+void fragment() {
+	if (direction == 0) {
+		COLOR.a = 1.0 - max(UV.x - 0.5, 0.0) * 2.0;
+	} else if (direction == 1) {
+		COLOR.a = 1.0 - max(UV.y - 0.5, 0.0) * 2.0;
+	} else if (direction == 2) {
+		COLOR.a = min(UV.x * 2.0, 1.0);
+	} else if (direction == 3) {
+		COLOR.a = min(UV.y * 2.0, 1.0);
+	}
+}
+"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_4y0d4"]
+resource_local_to_scene = true
+shader = SubResource("Shader_jk80p")
+shader_parameter/direction = 0
+
+[sub_resource type="GDScript" id="GDScript_rf8ul"]
+script/source = "@tool
+extends SubViewportContainer
+
+func add_room(room: Node2D, direction: int, offset: Vector2):
+	var cell_size := MetSys.settings.in_game_cell_size
+	room.position = offset * cell_size
+	
+	match direction:
+		MetroidvaniaSystem.R:
+			size = Vector2(cell_size.x * 0.2, cell_size.y)
+		MetroidvaniaSystem.D:
+			size = Vector2(cell_size.x, cell_size.y * 0.2)
+		MetroidvaniaSystem.L:
+			size = Vector2(cell_size.x * 0.2, cell_size.y)
+			position.x += size.x * 4
+			room.position.x -= size.x * 4
+		MetroidvaniaSystem.U:
+			size = Vector2(cell_size.x, cell_size.y * 0.2)
+			position.y += size.y * 4
+			room.position.y -= size.y * 4
+	
+	material.set_shader_parameter(&\"direction\", direction)
+	
+	$SubViewport.add_child(room)
+"
+
+[node name="RoomPreview" type="SubViewportContainer"]
+material = SubResource("ShaderMaterial_4y0d4")
+offset_right = 100.0
+offset_bottom = 100.0
+stretch = true
+script = SubResource("GDScript_rf8ul")
+
+[node name="SubViewport" type="SubViewport" parent="."]
+handle_input_locally = false
+size = Vector2i(100, 100)
+render_target_update_mode = 4

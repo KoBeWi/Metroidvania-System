@@ -63,8 +63,6 @@ func _update_neighbor_previews():
 		var cell_data: MetroidvaniaSystem.MapData.CellData = MetSys.map_data.get_cell_at(coords)
 		assert(cell_data)
 		for i in 4:
-			## TODO: zrobić to wszystko wewnątrz ViewportContainer, żeby nie pokazywało całości
-			## TODO: trzeba to aktualizować jak się zmienia coś
 			var fwd: Vector2i = MetroidvaniaSystem.MapData.FWD[i]
 			
 			if cell_data.borders[i] > 0:
@@ -81,14 +79,16 @@ func _update_neighbor_previews():
 					next_min_cell.x = mini(next_min_cell.x, p.x)
 					next_min_cell.y = mini(next_min_cell.y, p.y)
 				
+				var preview := preload("res://addons/MetroidvaniaSystem/Nodes/RoomPreview.tscn").instantiate()
+				preview.position = Vector2i(next_coords.x, next_coords.y) - min_cell
+				preview.position *= MetSys.settings.in_game_cell_size
+				add_child(preview)
+				
 				var temp_map: Node2D = load(MetSys.get_full_room_path(scene)).instantiate()
 				temp_map.modulate.a = 0.5
 				temp_map.set_meta(&"fake_map", true)
 				
-				var offset := Vector2i(next_coords.x, next_coords.y) - min_cell
-				offset -= Vector2i(next_coords.x, next_coords.y) - next_min_cell
-				temp_map.position = Vector2(offset) * MetSys.settings.in_game_cell_size
-				add_child(temp_map)
+				preview.add_room(temp_map, i, next_min_cell - Vector2i(next_coords.x, next_coords.y))
 
 ## Adjusts the limits of the given [param camera] to be within this room's rectangular bounds.
 func adjust_camera_limits(camera: Camera2D):
