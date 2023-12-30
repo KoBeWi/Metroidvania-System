@@ -1,54 +1,16 @@
-[gd_scene load_steps=10 format=3 uid="uid://c3xqaietfgs7l"]
+[gd_scene load_steps=11 format=3 uid="uid://c3xqaietfgs7l"]
 
 [ext_resource type="Script" path="res://SampleProject/Scripts/Game.gd" id="1_xdpfu"]
 [ext_resource type="PackedScene" uid="uid://xpbhai8nlgtx" path="res://SampleProject/Player.tscn" id="2_bam1a"]
+[ext_resource type="PackedScene" uid="uid://dch8dyylb7526" path="res://Template/Nodes/Minimap.tscn" id="3_a3gfy"]
 [ext_resource type="Texture2D" uid="uid://wiq0mic5m6is" path="res://SampleProject/Sprites/Collectible.png" id="3_kng3d"]
 
-[sub_resource type="GDScript" id="GDScript_4div8"]
-resource_name = "Minimap"
-script/source = "# The minimap panel. It draws a 3x3 minimap with player's position in the center. Note that the position is drawn differently from the MetSys player position.
-extends Panel
-
-# The cell coords in the center.
-var current_cell: Vector2i
+[sub_resource type="GDScript" id="GDScript_kcm6q"]
+resource_name = "PlayerIndicator"
+script/source = "extends ColorRect
 
 func _ready() -> void:
-	# Set minimum size to 3 times the cell size.
-	custom_minimum_size = MetSys.CELL_SIZE * 3
-	# Reset position after setting size.
-	set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT, Control.PRESET_MODE_MINSIZE, 16)
-	# Same for the center rect, which indicates current position.
-	$ColorRect.custom_minimum_size = MetSys.CELL_SIZE
-	$ColorRect.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
-	
-	# Connect signals.
-	MetSys.map_updated.connect(queue_redraw)
-	MetSys.cell_changed.connect(on_cell_changed)
-
-func on_cell_changed(new_cell: Vector3i):
-	# On cell changed update the position and redraw.
-	current_cell = Vector2i(new_cell.x, new_cell.y)
-	queue_redraw()
-
-func _draw() -> void:
-	# Draw the 3x3 cells, i.e. (-1, -1) to (1, 1).
-	for x in range(-1, 2):
-		for y in range(-1, 2):
-			# Draw the cell.
-			MetSys.draw_cell(self, Vector2i(x + 1, y + 1), Vector3i(current_cell.x + x, current_cell.y + y, MetSys.current_layer))
-	
-	# Draw shared borders, if used by the theme.
-	if MetSys.settings.theme.use_shared_borders:
-		MetSys.draw_shared_borders()
-	# Draw custom elements.
-	MetSys.draw_custom_elements(self, Rect2i(current_cell.x - 1, current_cell.y - 1, 3, 3))
-
-func _input(event: InputEvent) -> void:
-	# Toggle visibility when pressing M.
-	if event is InputEventKey:
-		if event.pressed:
-			if event.keycode == KEY_M:
-				visible = not visible
+	custom_minimum_size = get_parent_control().size / 3
 "
 
 [sub_resource type="Animation" id="Animation_lgykt"]
@@ -198,19 +160,18 @@ position = Vector2(368, 248)
 
 [node name="UI" type="CanvasLayer" parent="."]
 
-[node name="Minimap" type="Panel" parent="UI"]
-clip_contents = true
+[node name="Minimap" parent="UI" instance=ExtResource("3_a3gfy")]
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -112.0
-offset_top = 16.0
-offset_right = -16.0
-offset_bottom = 112.0
+offset_left = -152.0
+offset_top = 8.0
+offset_right = -8.0
+offset_bottom = 104.0
 grow_horizontal = 0
-script = SubResource("GDScript_4div8")
+track_position = true
 
-[node name="ColorRect" type="ColorRect" parent="UI/Minimap"]
+[node name="PlayerIndicator" type="ColorRect" parent="UI/Minimap"]
 modulate = Color(1, 1, 1, 0.752941)
 layout_mode = 1
 anchors_preset = 8
@@ -224,12 +185,22 @@ offset_right = 16.0
 offset_bottom = 16.0
 grow_horizontal = 2
 grow_vertical = 2
+script = SubResource("GDScript_kcm6q")
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="UI/Minimap/ColorRect"]
+[node name="AnimationPlayer" type="AnimationPlayer" parent="UI/Minimap/PlayerIndicator"]
 libraries = {
 "": SubResource("AnimationLibrary_kkw8m")
 }
 autoplay = "Flash"
+
+[node name="Background" type="Panel" parent="UI/Minimap"]
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="MapWindow" type="Panel" parent="UI"]
 visible = false

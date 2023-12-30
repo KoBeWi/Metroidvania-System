@@ -1,4 +1,4 @@
-extends "res://Template/MetSysModule.gd"
+extends "res://Template/Scripts/MetSysModule.gd"
 
 var prev_cell: Vector3i
 

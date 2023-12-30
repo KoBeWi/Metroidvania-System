@@ -15,7 +15,7 @@ func _on_body_entered(body: Node2D) -> void:
 		# After tween finished, change the map.
 		Game.get_singleton().goto_map(MetSys.get_full_room_path(target_map))
 		# A trick to reset player's event variable when it's safe to do so (i.e. after some frames).
-		get_tree().create_timer(0.05).timeout.connect(body.set.bind(&"event", false))
+		get_tree().create_timer(0.2).timeout.connect(body.set.bind(&"event", false))
 		# Delta vector feature again.
 		Game.get_singleton().reset_map_starting_coords()
 		

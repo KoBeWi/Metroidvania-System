@@ -1,6 +1,6 @@
 extends Node
 
-const MetSysModule = preload("res://Template/MetSysModule.gd")
+const MetSysModule = preload("res://Template/Scripts/MetSysModule.gd")
 
 var player: Node2D
 var map: Node2D

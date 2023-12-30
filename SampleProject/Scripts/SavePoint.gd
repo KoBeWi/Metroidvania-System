@@ -10,12 +10,8 @@ func _ready() -> void:
 func on_body_entered(body: Node2D) -> void:
 	if Time.get_ticks_msec() - start_time < 1000:
 		return # Small hack to prevent saving at the game start.
-	# Get the game-specific save data Dictionary.
-	var save_data := Game.get_singleton().get_save_data()
-	# Merge it with the Dicionary from MetSys.
-	save_data.merge(MetSys.get_save_data())
-	# Save the file.
-	FileAccess.open("user://save_data.sav", FileAccess.WRITE).store_var(save_data)
+	# Make Game save the data.
+	Game.get_singleton().save_game()
 	# Starting coords for the delta vector feature.
 	Game.get_singleton().reset_map_starting_coords()
 	
