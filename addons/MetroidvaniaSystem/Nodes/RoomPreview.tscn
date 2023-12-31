@@ -29,6 +29,8 @@ extends Control
 
 @onready var hover: ReferenceRect = $Hover
 
+var offset: Vector2
+
 func _ready() -> void:
 	%Label.text = tooltip_text
 
@@ -94,7 +96,7 @@ stretch = true
 [node name="SubViewport" type="SubViewport" parent="SubViewportContainer"]
 unique_name_in_owner = true
 handle_input_locally = false
-size = Vector2i(2, 2)
+size = Vector2i(100, 100)
 render_target_update_mode = 4
 
 [node name="Hover" type="ReferenceRect" parent="."]

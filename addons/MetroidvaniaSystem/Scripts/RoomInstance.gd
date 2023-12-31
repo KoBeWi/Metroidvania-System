@@ -90,6 +90,8 @@ func _update_neighbor_previews():
 				preview.position = Vector2i(next_coords.x, next_coords.y) - min_cell
 				preview.position *= MetSys.settings.in_game_cell_size
 				preview.tooltip_text = scene
+				preview.offset = Vector2(next_coords.x, next_coords.y) - Vector2(min_cell)
+				preview.offset -= Vector2(next_coords.x, next_coords.y) - Vector2(next_min_cell)
 				add_child(preview)
 				
 				var temp_map: Node2D = load(MetSys.get_full_room_path(scene)).instantiate()

@@ -68,7 +68,34 @@ func _forward_canvas_gui_input(event: InputEvent) -> bool:
 	
 	elif event is InputEventMouseButton:
 		if hovered_preview and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+			var zoom := EditorInterface.get_editor_viewport_2d().global_canvas_transform.get_scale().x
+			var pos: Vector2
+			
+			var editor = EditorInterface.get_base_control().find_child("@CanvasItemEditorViewport*", true, false)
+			var scroll = editor.find_child("@HScrollBar*", true, false)
+			pos.x = scroll.value
+			scroll = editor.find_child("@VScrollBar*", true, false)
+			pos.y = scroll.value
+			
+			pos -= hovered_preview.offset * MetSys.settings.in_game_cell_size
+			
 			EditorInterface.open_scene_from_path(MetSys.get_full_room_path(hovered_preview.tooltip_text))
+			await get_tree().process_frame
+			
+			var zoomer = EditorInterface.get_base_control().find_child("@EditorZoomWidget*", true, false)
+			zoomer.set_zoom(zoom)
+			zoomer.zoom_changed.emit(zoomer.get_zoom())
+			scroll = editor.find_child("@HScrollBar*", true, false)
+			scroll.value = pos.x
+			scroll = editor.find_child("@VScrollBar*", true, false)
+			scroll.value = pos.y
+			
+			var instance := EditorInterface.get_edited_scene_root().find_child("RoomInstance")
+			
+			var sel := EditorInterface.get_selection()
+			sel.clear()
+			sel.add_node(instance)
+			
 			return true
 	
 	return false
