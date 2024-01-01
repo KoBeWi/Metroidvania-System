@@ -440,3 +440,19 @@ func erase_cell(coords: Vector3i):
 	
 	for group in cell_groups.values():
 		group.erase(coords)
+
+func transfer_cell(from_coords: Vector3i, to_coords: Vector3i):
+	var cell_data := get_cell_at(from_coords)
+	
+	var assigned_scene: String = cells[from_coords].assigned_scene
+	if not assigned_scene.is_empty():
+		assigned_scenes[assigned_scene].erase(from_coords)
+		assigned_scenes[assigned_scene].append(to_coords)
+	
+	cells.erase(from_coords)
+	cells[to_coords] = cell_data
+	
+	for group in cell_groups.values():
+		if from_coords in group:
+			group.erase(from_coords)
+			group.append(to_coords)

@@ -11,8 +11,24 @@ extends \"res://addons/MetroidvaniaSystem/Database/SubEditor.gd\"
 
 var erase_mode: bool
 
+var dragging_room_from: Vector2i
+var dragging_room: Array[Vector3i]
+
 func _editor_init() -> void:
 	room_only_cursor = false
+
+func _editor_enter():
+	super()
+	%Shortcuts.show()
+	%ShortcutPick.hide()
+	%ShortcutWhole.hide()
+	%ShortcutDrag.show()
+
+func _editor_exit():
+	super()
+	%Shortcuts.hide()
+	%ShortcutWhole.show()
+	%ShortcutDrag.hide()
 
 func _update_theme():
 	theme_cache.cursor_color = get_theme_color(&\"cursor_color\", &\"MetSys\")
@@ -21,11 +37,39 @@ func _editor_input(event: InputEvent):
 	if event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_LEFT:
 			if event.pressed:
-				drag_from = get_cursor_pos()
+				if event.shift_pressed:
+					var under := get_cell_at_cursor()
+					if under:
+						dragging_room = MetSys.map_data.get_whole_room(get_coords(get_cursor_pos()))
+						dragging_room_from = get_cursor_pos()
+						editor.skip_cells = dragging_room
+						redraw_map()
+						redraw_overlay()
+				else:
+					drag_from = get_cursor_pos()
 			else:
-				var rect := get_rect_between(drag_from, get_cursor_pos())
-				update_rooms(rect)
-				drag_from = Vector2i.MAX
+				if drag_from != Vector2i.MAX:
+					var rect := get_rect_between(drag_from, get_cursor_pos())
+					update_rooms(rect)
+					drag_from = Vector2i.MAX
+				elif not dragging_room.is_empty():
+					var drop_valid := true
+					for coords in dragging_room:
+						var offset := get_cell_dragging_offset(coords)
+						var offset3 := get_coords(offset)
+						
+						if not offset3 in dragging_room and MetSys.map_data.get_cell_at(offset3):
+							drop_valid = false
+					
+					if drop_valid:
+						for old_coords in dragging_room:
+							var new_coords := get_coords(get_cell_dragging_offset(old_coords))
+							MetSys.map_data.transfer_cell(old_coords, new_coords)
+							undo_handle_transfer(old_coords, new_coords)
+					
+					dragging_room.clear()
+					undo_end_with_redraw()
+					redraw_map()
 		elif event.button_index == MOUSE_BUTTON_RIGHT:
 			if event.pressed:
 				drag_from = get_cursor_pos()
@@ -38,6 +82,22 @@ func _editor_input(event: InputEvent):
 				erase_mode = false
 				theme_cache.cursor_color = get_theme_color(&\"cursor_color\", &\"MetSys\")
 				drag_from = Vector2i.MAX
+
+func _editor_draw(map_overlay: CanvasItem):
+	super(map_overlay)
+	
+	if not dragging_room.is_empty():
+		top_draw = func(map_overlay: CanvasItem):
+			map_overlay.draw_set_transform_matrix(Transform2D())
+			
+			for coords in dragging_room:
+				var offset := get_cell_dragging_offset(coords)
+				var offset3 := get_coords(offset)
+				
+				if not offset3 in dragging_room and MetSys.map_data.get_cell_at(offset3):
+					map_overlay.draw_rect(Rect2(Vector2(editor.map_offset + offset) * MetSys.CELL_SIZE, MetSys.CELL_SIZE), Color.RED)
+				else:
+					MetSys.draw_cell(map_overlay, editor.map_offset + offset, coords, true, false)
 
 func update_rooms(rect: Rect2i):
 	var map_data: MetroidvaniaSystem.MapData = MetSys.map_data
@@ -135,6 +195,9 @@ func close_border(pos: Vector2i, border: int):
 			if not prev_assign.is_empty():
 				var prev_room := remove_assign(coords)
 				undo_handle_scene_add(prev_room, prev_assign, true)
+
+func get_cell_dragging_offset(coords: Vector3i) -> Vector2i:
+	return get_cursor_pos() + Vector2i(coords.x, coords.y) - dragging_room_from
 "
 
 [sub_resource type="GDScript" id="GDScript_tlx5u"]
@@ -995,7 +1058,15 @@ layout_mode = 2
 text = "Ctrl+Click: pick from map"
 autowrap_mode = 2
 
-[node name="Label2" type="Label" parent="Sidebar/ScrollContainer/VBoxContainer/EditControls/Shortcuts"]
+[node name="ShortcutDrag" type="Label" parent="Sidebar/ScrollContainer/VBoxContainer/EditControls/Shortcuts"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+text = "Shift+Drag: move rooms"
+autowrap_mode = 2
+
+[node name="ShortcutWhole" type="Label" parent="Sidebar/ScrollContainer/VBoxContainer/EditControls/Shortcuts"]
+unique_name_in_owner = true
 layout_mode = 2
 text = "Shift+Click: set for the whole room"
 autowrap_mode = 2

@@ -12,6 +12,7 @@ var plugin: EditorPlugin
 
 var view_drag: Vector4
 var map_offset := Vector2i(10, 10)
+var skip_cells: Array[Vector3i]
 
 var current_layer: int
 var force_mapped: bool
@@ -144,7 +145,11 @@ func _on_map_draw() -> void:
 	MetroidvaniaSystem.RoomDrawer.force_mapped = force_mapped
 	for x in range(-100, 100):
 		for y in range(-100, 100):
-			MetSys.draw_cell(map, Vector2i(x, y) + Vector2i(100, 100), Vector3i(x, y, current_layer), true, false)
+			var coords := Vector3i(x, y, current_layer)
+			if coords in skip_cells:
+				continue
+			
+			MetSys.draw_cell(map, Vector2i(x, y) + Vector2i(100, 100), coords, true, false)
 	
 	if MetSys.settings.theme.use_shared_borders:
 		MetSys.draw_shared_borders()
