@@ -59,7 +59,7 @@ func _on_overlay_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_LEFT:
 			if event.pressed and room_under_cursor and not room_under_cursor.assigned_scene.is_empty():
-				plugin.get_editor_interface().open_scene_from_path(MetSys.settings.map_root_folder.path_join(room_under_cursor.assigned_scene))
+				EditorInterface.open_scene_from_path(MetSys.settings.map_root_folder.path_join(room_under_cursor.assigned_scene))
 
 func _on_overlay_draw() -> void:
 	if not plugin:

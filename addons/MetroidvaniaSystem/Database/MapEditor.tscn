@@ -404,10 +404,18 @@ script/source = "@tool
 extends \"res://addons/MetroidvaniaSystem/Database/SubEditor.gd\"
 
 @onready var file_dialog: FileDialog = $FileDialog
+@onready var create_dialog: ConfirmationDialog = $CreateDialog
+
+@onready var scene_name: LineEdit = %SceneName
+@onready var scene_extension: OptionButton = %SceneExtension
+@onready var root_name: LineEdit = %RootName
+@onready var error_label: Label = %ErrorLabel
+@onready var ok_button := create_dialog.get_ok_button()
 
 func _editor_init() -> void:
 	use_cursor = false
 	overlay_mode = true
+	create_dialog.register_text_enter(scene_name)
 
 func _update_theme():
 	theme_cache.assigned_scene = get_theme_color(&\"assigned_scene\", &\"MetSys\")
@@ -494,6 +502,67 @@ func on_map_selected(path: String) -> void:
 	
 	MetSys.room_assign_updated.emit()
 	redraw_overlay()
+
+func create_new_scene() -> void:
+	file_dialog.hide()
+	create_dialog.popup_centered()
+	
+	scene_name.clear()
+	validate_scene()
+
+func validate_scene():
+	var scene_name_text := scene_name.text
+	
+	if scene_name_text.is_empty():
+		set_error(\"Scene name can't be empty.\")
+		return
+	elif not scene_name_text.is_valid_filename():
+		set_error(\"Scene name contains invalid characters.\")
+		return
+	elif not root_name.text.is_empty() and not root_name.text.is_valid_identifier():
+		set_error(\"Root node invalid.\")
+		return
+	
+	var path := file_dialog.current_dir.path_join(scene_name_text)
+	if FileAccess.file_exists(path):
+		set_error(\"File already exists.\")
+		return
+	
+	set_error(\"\")
+
+func set_error(error: String):
+	error_label.text = error
+	ok_button.disabled = not error.is_empty()
+
+func create_scene_confirm() -> void:
+	var root := Node2D.new()
+	if root_name.text.is_empty():
+		root.name = &\"Map\"
+	else:
+		root.name = root_name.text
+	
+	var instance: MetroidvaniaSystem.RoomInstance = load(\"res://addons/MetroidvaniaSystem/Nodes/RoomInstance.tscn\").instantiate()
+	root.add_child(instance)
+	
+	add_child(root)
+	instance.owner = root
+	
+	var scene := PackedScene.new()
+	scene.pack(root)
+	
+	var scene_nejm := scene_name.text
+	if not scene_nejm.ends_with(\".\"):
+		scene_nejm += \".\"
+	scene_nejm += scene_extension.get_item_text(scene_extension.selected)
+	
+	var scene_path := file_dialog.root_subfolder.path_join(file_dialog.current_dir).path_join(scene_nejm)
+	ResourceSaver.save(scene, scene_path)
+	
+	root.queue_free()
+	
+	EditorInterface.get_resource_filesystem().scan()
+	EditorInterface.open_scene_from_path(scene_path)
+	on_map_selected(scene_path)
 "
 
 [sub_resource type="GDScript" id="GDScript_5yej3"]
@@ -757,10 +826,77 @@ text = "Scene Assign"
 script = SubResource("GDScript_p75ne")
 
 [node name="FileDialog" type="FileDialog" parent="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign"]
-size = Vector2i(345, 162)
+size = Vector2i(600, 400)
 file_mode = 0
 filters = PackedStringArray("*.tscn")
 script = SubResource("GDScript_5yej3")
+
+[node name="MarginContainer" type="MarginContainer" parent="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign/FileDialog"]
+offset_left = 4.0
+offset_top = 4.0
+offset_right = 596.0
+offset_bottom = 358.0
+theme_override_constants/margin_top = 31
+
+[node name="Button" type="Button" parent="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign/FileDialog/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 0
+text = "Create New Scene"
+
+[node name="CreateDialog" type="ConfirmationDialog" parent="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign"]
+title = "Create New Scene"
+position = Vector2i(300, 25)
+size = Vector2i(400, 166)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign/CreateDialog"]
+offset_left = 4.0
+offset_top = 4.0
+offset_right = 396.0
+offset_bottom = 124.0
+
+[node name="GridContainer" type="GridContainer" parent="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign/CreateDialog/VBoxContainer"]
+layout_mode = 2
+columns = 2
+
+[node name="Label" type="Label" parent="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign/CreateDialog/VBoxContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 8
+text = "Scene Name"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign/CreateDialog/VBoxContainer/GridContainer"]
+layout_mode = 2
+
+[node name="SceneName" type="LineEdit" parent="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign/CreateDialog/VBoxContainer/GridContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="SceneExtension" type="OptionButton" parent="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign/CreateDialog/VBoxContainer/GridContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+item_count = 2
+selected = 0
+popup/item_0/text = "tscn"
+popup/item_0/id = 0
+popup/item_1/text = "scn"
+popup/item_1/id = 1
+
+[node name="Label2" type="Label" parent="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign/CreateDialog/VBoxContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 8
+text = "Root Name"
+
+[node name="RootName" type="LineEdit" parent="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign/CreateDialog/VBoxContainer/GridContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Map"
+
+[node name="ErrorLabel" type="Label" parent="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign/CreateDialog/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0, 0, 1)
 
 [node name="CustomElements" type="Button" parent="Sidebar/ScrollContainer/VBoxContainer/Modes"]
 layout_mode = 2
@@ -935,6 +1071,9 @@ vertical_alignment = 1
 
 [connection signal="value_changed" from="Sidebar/ScrollContainer/VBoxContainer/Layer/SpinBox2" to="." method="preview_layer_changed"]
 [connection signal="file_selected" from="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign/FileDialog" to="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign" method="on_map_selected"]
+[connection signal="pressed" from="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign/FileDialog/MarginContainer/Button" to="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign" method="create_new_scene"]
+[connection signal="confirmed" from="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign/CreateDialog" to="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign" method="create_scene_confirm"]
+[connection signal="text_changed" from="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign/CreateDialog/VBoxContainer/GridContainer/HBoxContainer/SceneName" to="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign" method="validate_scene" unbinds=1]
 [connection signal="value_changed" from="Sidebar/ScrollContainer/VBoxContainer/EditControls/Groups/CurrentGroup" to="MapView" method="queue_redraw" unbinds=1]
 [connection signal="draw" from="MapView/Grid" to="." method="_on_grid_draw"]
 [connection signal="draw" from="MapView/GhostMap" to="." method="_on_ghost_map_draw"]

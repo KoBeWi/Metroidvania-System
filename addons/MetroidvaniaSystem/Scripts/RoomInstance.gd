@@ -21,6 +21,9 @@ func _enter_tree() -> void:
 	if not Engine.is_editor_hint():
 		MetSys.current_room = self
 	else:
+		if not owner:
+			return
+		
 		if owner.get_meta(&"fake_map", false):
 			queue_free()
 			return

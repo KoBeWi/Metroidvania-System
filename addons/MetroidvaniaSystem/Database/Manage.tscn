@@ -18,7 +18,7 @@ func _notification(what: int) -> void:
 		%ValidationPanel.add_theme_stylebox_override(&\"panel\", get_theme_stylebox(&\"panel\", &\"Tree\"))
 
 func edit_settings_pressed():
-	plugin.get_editor_interface().edit_resource(MetSys.settings)
+	EditorInterface.edit_resource(MetSys.settings)
 
 func force_reload() -> void:
 	MetSys.map_data = MetSys.MapData.new()
@@ -33,7 +33,7 @@ func force_reload() -> void:
 				group.remove_at(i)
 
 func edit_database_theme() -> void:
-	plugin.get_editor_interface().edit_resource(owner.theme)
+	EditorInterface.edit_resource(owner.theme)
 
 func reset_theme() -> void:
 	%AllowReset.button_pressed = false
