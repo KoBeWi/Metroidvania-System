@@ -82,9 +82,10 @@ func _forward_canvas_gui_input(event: InputEvent) -> bool:
 			EditorInterface.open_scene_from_path(MetSys.get_full_room_path(hovered_preview.tooltip_text))
 			await get_tree().process_frame
 			
-			var zoomer = EditorInterface.get_base_control().find_child("@EditorZoomWidget*", true, false)
+			var zoomer = editor.find_child("@EditorZoomWidget*", true, false)
 			zoomer.set_zoom(zoom)
-			zoomer.zoom_changed.emit(zoomer.get_zoom())
+			zoomer.zoom_changed.emit(zoom)
+			
 			scroll = editor.find_child("@HScrollBar*", true, false)
 			scroll.value = pos.x
 			scroll = editor.find_child("@VScrollBar*", true, false)
