@@ -1,6 +1,6 @@
 extends RefCounted
 
-const MetSysGame = preload("res://Template/Scripts/MetSysGame.gd")
+const MetSysGame = preload("res://addons/MetroidvaniaSystem/Template/Scripts/MetSysGame.gd")
 
 var game: MetSysGame
 

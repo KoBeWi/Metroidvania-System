@@ -1,8 +1,8 @@
 # This is the main script of the game. It manages the current map and some other stuff.
-extends "res://Template/Scripts/MetSysGame.gd"
+extends "res://addons/MetroidvaniaSystem/Template/Scripts/MetSysGame.gd"
 class_name Game
 
-const SaveManager = preload("res://Template/Scripts/SaveManager.gd")
+const SaveManager = preload("res://addons/MetroidvaniaSystem/Template/Scripts/SaveManager.gd")
 
 # The game starts in this map. Note that it's scene name only, just like MetSys refers to rooms.
 @export var starting_map: String
@@ -21,6 +21,8 @@ var events: Array[String]
 var custom_run: bool
 
 func _ready() -> void:
+	# A trick for static object reference (before static vars were a thing).
+	get_script().set_meta(&"singleton", self)
 	# Make sure MetSys is in initial state.
 	# Does not matter in this project, but normally this ensures that the game works correctly when you exit to menu and start again.
 	MetSys.reset_state()
@@ -55,14 +57,8 @@ func _ready() -> void:
 	
 	# Reset position tracking (feature specific to this project).
 	reset_map_starting_coords.call_deferred()
-	# A trick for static object reference (before static vars were a thing).
-	get_script().set_meta(&"singleton", self)
-	
-	add_module(load("res://Template/Scripts/Modules/RoomTransitions.gd"))
-
-func _physics_process(delta: float) -> void:
-	# Notify MetSys about the player's current position.
-	MetSys.set_player_position(player.position)
+	# Add module for room transitions.
+	add_module("RoomTransitions.gd")
 
 # Returns this node from anywhere.
 static func get_singleton() -> Game:

@@ -1,6 +1,6 @@
 extends Node
 
-const MetSysModule = preload("res://Template/Scripts/MetSysModule.gd")
+const MetSysModule = preload("res://addons/MetroidvaniaSystem/Template/Scripts/MetSysModule.gd")
 
 var player: Node2D
 var map: Node2D
@@ -13,8 +13,9 @@ func set_player(p_player: Node2D):
 	player = p_player
 	player.get_tree().physics_frame.connect(physics_tick, CONNECT_DEFERRED)
 
-func add_module(module_script: Script):
-	var module: MetSysModule = module_script.new(self)
+func add_module(module_name: String):
+	module_name = "res://addons/MetroidvaniaSystem/Template/Scripts/Modules/".path_join(module_name)
+	var module: MetSysModule = load(module_name).new(self)
 	modules.append(module)
 
 func physics_tick():

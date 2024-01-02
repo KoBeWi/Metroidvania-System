@@ -12,8 +12,6 @@ MetSys is an addon and you install it normally - by copying the "addons/Metroidv
 
 ![](Media/IntroductionButton.png)
 
-**Important:** Don't use MetSys with Godot 4.1 or older. The system uses some features available only in Godot 4.2 and if the scripts can't compile, enabling the addon will result in infinite editor restart loop.
-
 ### Terminology
 
 This section explains the terminology used in this README and in the addon itself.
@@ -31,27 +29,21 @@ This section explains the terminology used in this README and in the addon itsel
 
 ### Quick Start
 
-There are 2 ways to start using MetSys: implementing the integration from scratch and using the example project as base. Note that while the system provides lots of different functionality, integrating it in the project does require some quite a bit of code. The latter approach of starting off the sample project is recommended.
+#### Starting sample project
 
-#### Starting from scratch
+To start the sample project, simply unzip it and open `project.godot` in Godot editor. **Do not** run the example project from AssetLib download as it skips some configuration files. It's better to download the ZIP from GitHub. Note that the editor will restart after first launch, because the plugin needs to be properly set up.
+
+#### Creating new project
 
 After adding the plugin and enabling it, a file called `MetSysSettings.tres` will appear in your project. It contains settings for the plugin. You can move it to any directory, but you should modify `addons/metroidvania_system/settings_file` *project setting* to point to the new path (make sure to enable Advanced Settings to see it). Next thing to do is edit the settings file and customize all the fields (see [here](#general-settings) for more info). The most important one is `map_root_folder`, which defines where will your map scenes go. This is also the location of your `MapData.txt` file, which stores the world layout.
 
-Whenever you start the game, you should call `MetSys.reset_state()` and `MetSys.set_save_data()` to make sure the singleton is in the initial state and save data exists. Then you have to call `MetSys.set_player_position()` every time the player moves (or simply every frame, the method is not expensive). This will cause the  `MetSys.cell_changed` signal to be emitted when player moves to another map cell and `MetSys.room_changed` when player moves to another room (this is when you are supposed to load a new scene). When changing rooms, you can use `get_room_position_offset()` method to adjust the player position. See [here](#tracking-player-position) for more info.
-
 Create your map layout in the Map Editor and assign the scenes from your map folder. Every room should have instance of `RoomInstance.tscn` scene to properly tie it to the system. When you start your game in such scene, MetSys will automatically detect which room you are in and the position tracking will handle the rest. To draw the map use `MetSys.draw_cell()` method. See [here](#drawing-the-map) for more info.
 
+For convenience, MetSys comes with some scripts that can be used as basis for running the game. The easiest way to start is using them. Your main scene should inherit/include `MetSysGame.gd` located in `Template/Scripts` folder. That class is responsible for game and map management. Whenever you start the game, you should call `MetSys.reset_state()` and `MetSys.set_save_data()` to make sure the singleton is in the initial state and save data exists. Then set your player node with `set_player()` and use `load_room()` to load a scene. For room transitions, you can add transition module (using `add_module("RoomTransitions.gd")` in your game script). Refer to [system template](#system-template) section for more info.
+
+If you don't want to use the provided scene management system, you can make a custom one. Check [here](#tracking-player-position) for info on how to manually track player position.
+
 These are the basics that allow you to craft the world and move within it. For more information read this manual and/or the documentation.
-
-#### Starting from sample project
-
-Sample project comes with many systems in place. They aren't fully optimized, but it's still a good starter.
-
-When adding MetSys to existing project make sure to setup the plugin as described in the previous section, that is `addons/metroidvania_system/settings_file` should point to the `MetSysSettings.tres` file (called `Settings.tres` in example project) and the map directory configured in the settings must be valid.
-
-The project comes with the default room size, so you may want to change that too. The most relevant piece for you will be the `Game.tscn` scene. You should remove the map scenes and remove all cells in the Map Editor (or just open `MapData.txt` and clear it, then press "Reload and Cleanup Map Data" in Manage tab). Modify `Game.tscn` to adapt it to your game (or just copy the code you want to use, as the scene has minimap and barebones map screen).
-
-With that setup you should have a nice base to continue your project.
 
 #### Exporting
 
@@ -86,6 +78,12 @@ A small but important sub-system are object IDs. Whether it's a collectible, a s
 - Scan all scenes for collectibles from the list. They can be easily located afterwards and their total count is displayed.
 - The collectibles can be also displayed on the world map, to get full overview.
 
+#### Godot Editor integration
+
+- Room borders are displayed directly in your scene.
+- If there is a connected adjacent room, its scene preview will be displayed at the borders.
+- You can click the previews to navigate to connected scenes.
+
 #### Customize
 
 - All map visual properties are stored in a custom resource - MapTheme, which can be swapped at any time (even at runtime).
@@ -115,7 +113,8 @@ A small but important sub-system are object IDs. Whether it's a collectible, a s
 - Automatically mark discovered and acquired collectibles on the map.
 - Request runtime save data in a form of a Dictionary, which contains discovered rooms, stored object IDs and customized cells. It can be loaded back at any time.
 - Get world map coordinates for any object on a scene.
-- Helper method for custom drawign on map (for anything not supported by other features).
+- Helper method for custom drawing on map (for anything not supported by other features).
+- Template scripts and scenes for common functionality, including scene transitions, connection automapping, save management and minimaps.
 
 ## Editor guide
 
@@ -159,6 +158,10 @@ This is the most basic mode and allows you to draw rooms. The rooms are drawn us
 
 Note that any modifications to a room will remove its assigned scene.
 
+You can rearrange rooms by holding Shift and drag and dropping them. You can't drop a room into a space occupied by another room.
+
+![](Media/EditorRearrange.gif)
+
 #### Cell Color mode
 
 This mode allows overriding the default cell color. Use LMB to assign the color, RMB to clear it (so default will be used). You can pick the color using the color picker on the sidebar or by Ctrl+Clicking a colored cell. You can also color the whole room at once by holding Shift.
@@ -197,7 +200,18 @@ This mode allows to assign scenes to rooms on the map. The scenes are used in ed
 
 ![](Media/EditorSceneAssign.gif)
 
+From this view you can also create new scenes, by using the Create New Scene button in the top-right corner of the file dialog:
+
+![](Media/EditorCreateNewScene.png)
+
+Clicking it will open a dialog similar to Godot's own scene creation dialog:
+
+![](Media/EditorNewDialog.png)
+
+You can configure scene name and root node name here (by default root is called Map). The created scene is always Node2D, and [RoomInstance](#room-instance) is added automatically.
+
 Each scene can be assigned to a single room only. When a scene is already assigned to a room and you try to assign it to another one, the previous room assignment will be removed.
+
 
 #### Custom Elements mode
 
@@ -320,6 +334,26 @@ Two remaining options in the Manage tab are:
 - Reload and Cleanup Map Data: As the name says, this will force reload map data from file and also cleanup invalid data like scenes assigned to non-existent cells etc. (note that such data can be created only as a result of a bug or manual tampering with the map data file).
 - Export Map as JSON: Exports the contents of MapData.txt as JSON, in case you want to use it in external tools or just not rely on custom format (MetSys itself does not support JSON).
 
+### Scene editor integration
+
+MetSys comes with some features that enhance editing scenes.
+
+#### Room Instance (editor)
+
+The base bridge between MetSys and your game is RoomInstance node. You can find it under Nodes in MetroidvaniaSystem addon folder. It provides two-fold functionality: allows to identify the current room when it's visited in game and draws room boundaries in the editor. You can put this node anywhere in the scene, but keep in mind that the position affects where the bounds are drawn. You should add RoomInstance to every room with assigned scene.
+
+![](Media/EditorRoomInstance.png)
+
+The white lines are borders of map cells, while the magenta lines are mark connections to adjacent rooms. You can configure the colors in [Database Theme](#database-theme). Size of the cell is defined by In Game Cell Size of [General Settings](#general-settings).
+
+When a room is connected to another one at the border, it's scene's preview will be displayed:
+
+![](Media/EditorPreviews.png)
+
+If you select the RoomInstance node, you can interact with the previews. Clicking the preview will go to that scene, while preserving the current editor view.
+
+![](Media/EditorPreviewInteractions.gif)
+
 ## Runtime guide
 
 This section provides information about usage of MetSys features at runtime, i.e. in your game itself.
@@ -330,23 +364,17 @@ Unlike in the editor, at runtime all interactions with MetSys are through code. 
 
 You can check the included [example project](#sample-project) if you are unsure how to implement some things.
 
-### Room Instance
+### Room Instance (runtime)
 
-The base bridge between MetSys and your game is RoomInstance node. You can find it under Nodes in MetroidvaniaSystem addon folder. It provides two-fold functionality: allows to identify the current room when it's visited in game and draws room boundaries in the editor. You can put this node anywhere in the scene, but keep in mind that the position affects where the bounds are drawn. You should add RoomInstance to every room with assigned scene.
-
-![](Media/EditorRoomInstance.png)
-
-The white lines are borders of map cells, while the magenta lines are mark connections to adjacent rooms. You can configure the colors in [Database Theme](#database-theme). Size of the cell is defined by In Game Cell Size of [General Settings](#general-settings).
-
-The RoomInstance node can be accessed using `MetSys.current_room`. It grants access to a few useful methods:
+The currently active RoomInstance node can be accessed at runtime using `MetSys.get_current_room_instance()`. It grants access to a few useful methods:
 - `adjust_camera_limits(camera: Camera2D)`: Adjusts limit properties of the given camera to be within the room's boundaries.
 - `get_size() -> Vector2`: Returns the size size of the room's bounding rectangle.
 - `get_local_cells() -> Array[Vector2i]`: Returns the cells occupied by the room, in local coordinates, i.e. (0, 0) is the top-left coordinate. This is useful to determine shape of irregular (not-rectangle) rooms to draw stuff outside the map etc.
 - `get_room_position_offset(other: RoomInstance) -> Array[String]`: Returns the difference of positions of 2 RoomInstance nodes. When changing scenes, you can use this method to teleport player to the entrance of the new room by subtracting offset between new room and old room.
 - `get_neighbor_rooms() -> Array[String]`: Returns names of the rooms from cells adjacent to the current room and connected via passages. This method can be used to preload these rooms (likely in a thread) for smoother transitions.
-- `room_name`: This property holds the name of the room (i.e. file name of the scene).
+- `get_room_position_offset(other: Node2D) -> Vector2`: By using another RoomInstance node passed as an argument, the method returns the absolute offset between two instances, based on their map coordinates. This is useful for implementing transitions.
 
-Note that since RoomInstance is basically a singleton within MetSys, only one can be functional inside scene tree. When RoomInstance enters tree, it will assign itself to MetSys and automatically remove itself when left. If you happen to have multiple room instances (which should be avoided), the newest one will have priority.
+Note that since RoomInstance is basically a singleton within MetSys; only one can be active inside scene tree. When RoomInstance enters tree, it will assign itself to MetSys and automatically remove itself when left. If you happen to have multiple room instances (which should be avoided), the newest one will have priority.
 
 ### Drawing the map
 
@@ -467,6 +495,40 @@ This means that you don't need to worry about keeping the data of runtime MetSys
 
 To restore the data use `MetSys.set_save_data()`, passing the saved Dictionary. It will restore all discovered cells, stored objects etc. If you give empty Dictionary (default), the data will be cleared. When starting a new game session, you should always call `MetSys.reset_state()` and `MetSys.set_save_data()`. The former will reset the singleton to make sure player position and other variables are properly cleared. The latter will initialize the save data; you should always call it if you want to use save data, as otherwise the data is `null`.
 
+## System Template
+
+System template, located in the `Template` folder, is a collection of prebuilt scripts and scenes that you can reuse in your project.
+
+### MetSys Game
+
+Script to use for your main game scene. It provides map management and can automatically track player position. If you call `set_player()`, the provided Node2D will be used for `MetSys.set_player_position()` called at the end of every physics frame. `load_room()` allows to load a new map and add it to scene tree. If previous map already exists, it's automatically removed before the new one is loaded. You can use scene name (located in the map root folder) or an absolute path to the scene. There is also `add_module()` method that adds a module to your Game. Modules do not require additional setup.
+
+The script is located at `Template/Scripts/MetSysGame.gd` inside the addon's folder.
+
+### Room Transitions module
+
+Listens for `room_changed` signal and automatically changes scenes and moves the player to a correct position. For example if you exit a room to the right, the module will load the connected scene and teleport the player on the left side of the entered room.
+
+Call `add_module("RoomTransitions.gd")` in your Game script to include the module.
+
+### Passage Automapper module
+
+Tracks the player position and automatically adds passages that don't exist on the original map. Whenever you cross a border that's marked as a wall, this module will add a CellOverride that changes the border to a passage.
+
+Call `add_module("PassageAutomapper.gd")` in your Game script to include the module.
+
+### Save Manager
+
+Saves and loads game data. Automatically includes MetSys save data and allows to load custom Resources in a safe way. To use the manager, you need to instantiate the script directly using `new()` (it's located in `Template/Scripts/SaveManager.gd` inside addon's folder). You can store data using `manager.set_data(field, value)`, which will store the value in the internal Dictionary under the given key. You can store a custom Resource using `manager.store_resource(res, field)`. It will store Resource's properties as Dictionary, so it avoids the usual security risk. The field is optional, if you don't provide it, the Resource's properties will be merged with other data in the Dictionary (not recommended when storing multiple resources). To save the data, use `manager.save_as_text()` or `manager.save_as_binary()`.
+
+Loading game data involves the same steps, but in reverse and different methods. Use `manager.load_from_text()` or `manager.load_from_binar()` to load your data. Then you can get values using `manager.get_value(field, default)` (`default` is optional, the method returns `null` if the value does not exist). Use `manager.retrieve_resource(res, field)` to load the data into an existing resource. The manager will iterate resource's properties and load matching data. The `field` must match the one you provided for `store_resource()`.
+
+### Minimap
+
+A Control-based node that draws part of the map. Comes with a few properties that allow automatic position tracking, specifying the center point and layer. `area` property specifies the size of minimap, in cells. Odd values recommended. It can be used both as minimap or for use in a map screen. Note that the minimap does not draw player position, you need to add it yourself.
+
+Instantiate the minimap from `Template/Nodes/Minimap.tscn` inside the addon's folder.
+
 ## Map Theme
 
 Map theme is a very important element of MetSys (unless you don't use the map drawing component). It defines the appearance of your map. The theme is a custom resource class and it can be changed in the [database settings](#general-settings).
@@ -537,10 +599,12 @@ The addon comes with a few themes *inspired* by various metroidvania games. They
 ![](Media/ThemeAoS.png)
 
 Inspired by Castlevania: Aria of Sorrow. Simple blue squares with white, shared borders. Notably it displays room connections as colored lines. Has no symbols. Player location is white shrinking dot, mapped rooms display all connections.
+
 #### BS
 ![](Media/ThemeBS.png)
 
 Inspired by Bloodstained: Ritual of the Night. Rectangular light-blue cells with shared borders and normal room connections (i.e. hole-like). Also no symbols. Player location is a stylized dot showing exact location and passages show normally in mapped rooms.
+
 #### Exquisite
 ![](Media/ThemeExquisite.png)
 
@@ -549,18 +613,22 @@ Original (and default) theme created for MetSys. Rectangular cells, customizes e
 ![](Media/ThemeMF.png)
 
 Inspired by Metroid Fusion. Simple square cells defaulting to magenta color and a texture for empty cells. Has a bunch of symbols and extra border styles for doors. Includes symbols for collected and uncollected items. Player location is a blinking square. Symbols appear in mapped rooms, but not passages.
+
 #### SotN
 ![](Media/ThemeSotN.png)
 
 Inspired by Castlevania: Symphony of the Night. Basically the same as BS, but with square rooms. Player location similar to AoS, but animated a bit differently.
+
 #### RR
 ![](Media/ThemeRR.png)
 
 Inspired by Rabi-Ribi. Unlike other themes, cell borders are colored. Has many symbols, including various collectibles. Notably, the collectible symbols are displayed only when a collectible is acquired. Player locations is a rounded square with smoothed blinking. Mapped rooms display everything normally.
+
 #### VoF
 ![](Media/ThemeVoF.png)
 
 Inspired by Voice of Flowers (which is created by me). In fact it uses some of the old sprites from the game. Square cells with visible separators and a texture for empty space. Has a bunch of various symbols of mixed quality and an extra border style for abyss. No symbols for collectibles. Player location is a rotating head. Mapped rooms don't display anything, just cell color without any borders.
+
 #### Zeric
 ![](Media/ThemeZeric.png)
 
@@ -582,7 +650,7 @@ Top-level elements of the project, not related to specific rooms.
 
 `Game.tscn` is the main scene of the project. It contains player with camera and UI. Player is a separate scene with CharacterBody2D root. It uses the default template controller, with some modifications like double jump and reset position. UI elements are Minimap, FullMap (with Percent) and CollectibleCount. Their logic is contained inside built-in scripts. The CollectibleCount is managed by Game, which has the only external script in this scene.
 
-Game scene manages room transitions and project-specific save data. Check the comments in `Game.gd` for more details. Other functions in this scene are Minimap, Map Window and discovered percentage label.
+Game scene manages room transitions and project-specific save data. Check the comments in `Game.gd` for more details. Other functions in this scene are Minimap (using the Template minimap), Map Window and discovered percentage label. The script inherits [MetSys Game](#metsys-game).
 
 #### Collectibles
 
@@ -618,9 +686,11 @@ The receivers of the signal is GateOpen node and Pipe. GateOpen will disable the
 
 `PortalRoom.tscn` is one of the portal rooms. It has the Portal node responsible for changing layers. Although in fact the layer changing comes indirectly. What the portal does is changing the scene, the actual layer is assigned in `Game.gd` in `goto_map()` method.
 
-#### Dark Staircase - irregular room with off-map drawing
+#### Dark Staircase - irregular room with off-map drawing, teleport between rooms
 
 When a room is not rectangular, there will be space where camera can go outside the map. This can be handled in multiple ways. The simplest one is just drawing tiles outside the map, so that player won't see empty space. This approach can be unreliable. Other ways involve drawing a plain color/pattern outside the map or constraining the camera to be only within the used cells. Both can be achieved by using `get_local_cells()` method. `DarkStaircase.tscn` shows the former approach, i.e. drawing plain color; the code is in Outside node.
+
+In that room there is also a small portal. When you enter it, you get teleported to another room on the same layer. This is done simply by loading the other room, but ensuring proper player position after exiting is not obvious, because the previous map is freed before the new one is loaded. The trick is to use a static method to perform something after changing maps.
 
 #### Dice Room - procedurally generated rooms
 
@@ -636,6 +706,14 @@ Stuff not directly related to MetSys.
 
 - `ElevatorRoom.tscn` shows how to make a Metroid-esque elevator to move between rooms. Related: `Elevator.tscn`.
 - `EndingPoint.tscn` has example ability and an ending point based on collectibles.
+
+#### Custom Runner integration
+
+The sample project supports [Custom Runner](https://github.com/KoBeWi/Godot-Custom-Runner) addon. It allows to quickly run the scenes from the editor:
+
+![](Media/GameCustomRunner.gif)
+
+See [the other README](SampleProject/CustomRunnerIntegration/README.md) located in the SampleProject directory for more details.
 
 ## Closing words
 

@@ -44,26 +44,53 @@ func retrieve_resource(res: Resource, field := ""):
 		res.set(property_name, subdata[property_name])
 
 func save_as_text(path: String):
+	var file := _setup_save(path)
+	if not file:
+		return
+	file.store_string(var_to_str(data))
+
+func load_from_text(path: String):
+	var file := _setup_load(path)
+	if not file:
+		return
+	
+	var loaded_data = str_to_var(file.get_as_text())
+	if not loaded_data is Dictionary:
+		push_error("Failed to load text data from file \"%s\"." % path)
+		return
+	
+	data = loaded_data
+	MetSys.set_save_data(data)
+
+func save_as_binary(path: String):
+	var file := _setup_save(path)
+	if not file:
+		return
+	file.store_var(data)
+
+func load_from_binary(path: String):
+	var file := _setup_load(path)
+	if not file:
+		return
+	
+	var loaded_data = file.get_var()
+	if not loaded_data is Dictionary:
+		push_error("Failed to load binary data from file \"%s\"." % path)
+		return
+	
+	data = loaded_data
+	MetSys.set_save_data(data)
+
+func _setup_save(path: String) -> FileAccess:
 	data.merge(MetSys.get_save_data())
 	
 	var file := FileAccess.open(path, FileAccess.WRITE)
 	if not file:
 		push_error("Failed to write save file \"%s\"! Error %d." % [path, FileAccess.get_open_error()])
-		return
-	
-	file.store_string(var_to_str(data))
+	return file
 
-func load_from_text(path: String):
+func _setup_load(path: String) -> FileAccess:
 	var file := FileAccess.open(path, FileAccess.READ)
 	if not file:
 		push_error("Failed to load save file \"%s\"! Error %d." % [path, FileAccess.get_open_error()])
-		return
-	
-	data = str_to_var(file.get_as_text())
-	MetSys.set_save_data(data)
-
-func save_as_binary(path: String):
-	FileAccess.open(path, FileAccess.WRITE).store_var(data)
-
-func load_from_binary(path: String):
-	pass
+	return file

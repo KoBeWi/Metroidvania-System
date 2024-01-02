@@ -1,4 +1,4 @@
-extends "res://Template/Scripts/MetSysModule.gd"
+extends "res://addons/MetroidvaniaSystem/Template/Scripts/MetSysModule.gd"
 
 var player: Node2D
 

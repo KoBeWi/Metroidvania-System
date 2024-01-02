@@ -12,26 +12,21 @@ func _on_body_entered(body: Node2D) -> void:
 	# If player entered and isn't doing an event (event in this case is entering the portal).
 	if body.is_in_group(&\"player\") and not body.event:
 		body.event = true
-		# Hack to teleport player to the exit portal position after the room has changed.
-		Game.get_singleton().room_loaded.connect(PortalHandler.new().move_to_portal)
+		# Teleport player to the exit portal position after the room has changed.
+		Game.get_singleton().room_loaded.connect(move_to_portal)
 		# Load the new room.
 		Game.get_singleton().load_room(target_map)
 
-class PortalHandler extends Object:
-	func move_to_portal():
-		var map := Game.get_singleton().map
-		# Get the portal node.
-		var portal: Node2D = map.get_node(^\"MiniPortal\")
-		# Move the player to portal.
-		Game.get_singleton().player.position = portal.position
-		# Need to wait 3 frames, because 2 is apparently not enough.
-		await map.get_tree().physics_frame
-		await map.get_tree().physics_frame
-		await map.get_tree().physics_frame
-		# Disable player's \"event\". It's delayed to prevent re-entering the portal.
-		Game.get_singleton().player.event = false
-		# THe object needs to be freed, but it can't free itself.
-		map.get_tree().queue_delete(self)
+# Needs to be static, because the old portal disappears before the new scene is loaded.
+static func move_to_portal():
+	var map := Game.get_singleton().map
+	# Get the portal node.
+	var portal: Node2D = map.get_node(^\"MiniPortal\")
+	# Move the player to portal.
+	Game.get_singleton().player.position = portal.position
+	# Disable player's \"event\". It's delayed to prevent re-entering the portal.
+	map.get_tree().create_timer(0.1).timeout.connect(func():
+		Game.get_singleton().player.event = false)
 "
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_vq33u"]
