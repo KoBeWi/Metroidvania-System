@@ -27,7 +27,7 @@ func _physics_process(delta: float) -> void:
 		
 		# Detect when the elevator goes out of the screen and teleport appropriately.
 		if moving == -1 and position.y < -64:
-			Game.get_singleton().goto_map(MetSys.get_full_room_path(target_map))
+			await Game.get_singleton().load_room(target_map)
 			# Activate the elevator in the next room.
 			Game.get_singleton().map.get_node(^\"Elevator\").enter()
 		elif moving == -2 and position.y < start_y:
@@ -36,7 +36,7 @@ func _physics_process(delta: float) -> void:
 			player.event = false
 			moving = 0
 		elif moving == 1 and position.y > MetSys.current_room.get_size().y:
-			Game.get_singleton().goto_map(MetSys.get_full_room_path(target_map))
+			await Game.get_singleton().load_room(target_map)
 			Game.get_singleton().map.get_node(^\"Elevator\").enter()
 		elif moving == 2 and position.y > start_y:
 			position.y = start_y

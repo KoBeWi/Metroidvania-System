@@ -3,6 +3,7 @@ extends "res://addons/MetroidvaniaSystem/Template/Scripts/MetSysGame.gd"
 class_name Game
 
 const SaveManager = preload("res://addons/MetroidvaniaSystem/Template/Scripts/SaveManager.gd")
+const SAVE_PATH = "user://example_save_data.sav"
 
 # The game starts in this map. Note that it's scene name only, just like MetSys refers to rooms.
 @export var starting_map: String
@@ -29,10 +30,10 @@ func _ready() -> void:
 	# Assign player for MetSysGame.
 	set_player($Player)
 	
-	if FileAccess.file_exists("user://save_data.sav"):
+	if FileAccess.file_exists(SAVE_PATH):
 		# If save data exists, load it using MetSys SaveManager.
 		var save_manager := SaveManager.new()
-		save_manager.load_from_text("user://save_data.sav")
+		save_manager.load_from_text(SAVE_PATH)
 		# Assign loaded values.
 		collectibles = save_manager.get_value("collectible_count")
 		generated_rooms.assign(save_manager.get_value("generated_rooms"))
@@ -46,7 +47,7 @@ func _ready() -> void:
 		MetSys.set_save_data()
 	
 	# Initialize room when it changes.
-	room_loaded.connect(init_room)
+	room_loaded.connect(init_room, CONNECT_DEFERRED)
 	# Load the starting room.
 	load_room(starting_map)
 	
@@ -72,7 +73,7 @@ func save_game():
 	save_manager.set_value("events", events)
 	save_manager.set_value("current_room", MetSys.get_current_room_name())
 	save_manager.set_value("abilities", player.abilities)
-	save_manager.save_as_text("user://save_data.sav")
+	save_manager.save_as_text(SAVE_PATH)
 
 func reset_map_starting_coords():
 	$UI/MapWindow.reset_starting_coords()
