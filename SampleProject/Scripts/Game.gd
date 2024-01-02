@@ -53,7 +53,7 @@ func _ready() -> void:
 	
 	# Find the save point and teleport the player to it, to start at the save point.
 	var start := map.get_node_or_null(^"SavePoint")
-	if start:
+	if start and not custom_run:
 		player.position = start.position
 	
 	# Reset position tracking (feature specific to this project).
