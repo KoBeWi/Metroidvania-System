@@ -1,19 +1,26 @@
+## A [Control] node that displays a part of the world map.
+##
+## Instantiate [code]Minimap.tscn[/code] in your GUI scene and it just works™, even in the editor. You can use it as a minimap or as a basis for a map screen.
 @tool
 extends Control
 
+## If [code]true[/code], [member center] and [member layer] will be automatically updated when [signal MetroidvaniaSystem.cell_changed] is received.
 @export var track_position := true
 
+## Size of the minimap in cells. Avoid even numbers if you want to display the player position in the middle.
 @export var area: Vector2i = Vector2i(3, 3):
 	set(value):
 		area = value
 		update_configuration_warnings()
 		update_minimum_size()
 
+## Center coordinates shown on the minimap. Corresponds to the position on the world map.
 @export var center: Vector2i:
 	set(value):
 		center = value
 		queue_redraw()
 
+## Layer displayed by the minimap.
 @export var layer: int:
 	set(value):
 		layer = value
@@ -25,9 +32,9 @@ func _ready() -> void:
 	
 	MetSys.map_updated.connect(queue_redraw)
 	if track_position:
-		MetSys.cell_changed.connect(on_cell_changed)
+		MetSys.cell_changed.connect(_on_cell_changed)
 
-func on_cell_changed(new_cell: Vector3i):
+func _on_cell_changed(new_cell: Vector3i):
 	center = Vector2i(new_cell.x, new_cell.y)
 	layer = new_cell.z
 

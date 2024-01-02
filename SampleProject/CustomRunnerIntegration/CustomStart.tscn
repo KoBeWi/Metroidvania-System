@@ -5,7 +5,7 @@ script/source = "extends Node
 
 func _ready() -> void:
 	var game = preload(\"res://SampleProject/Game.tscn\").instantiate()
-	game.starting_map = CustomRunner.get_variable(\"scene\").get_file()
+	game.starting_map = CustomRunner.get_variable(\"room\")
 	game.custom_run = true
 	game.get_node(\"Player\").position = CustomRunner.get_variable(\"mouse_pos\")
 	get_tree().root.add_child.call_deferred(game)

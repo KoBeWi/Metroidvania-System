@@ -497,7 +497,7 @@ To restore the data use `MetSys.set_save_data()`, passing the saved Dictionary. 
 
 ## System Template
 
-System template, located in the `Template` folder, is a collection of prebuilt scripts and scenes that you can reuse in your project.
+System template, located in the `Template` folder, is a collection of prebuilt scripts and scenes that you can reuse in your project. The scripts have documentation available.
 
 ### MetSys Game
 
@@ -521,11 +521,11 @@ Call `add_module("PassageAutomapper.gd")` in your Game script to include the mod
 
 Saves and loads game data. Automatically includes MetSys save data and allows to load custom Resources in a safe way. To use the manager, you need to instantiate the script directly using `new()` (it's located in `Template/Scripts/SaveManager.gd` inside addon's folder). You can store data using `manager.set_data(field, value)`, which will store the value in the internal Dictionary under the given key. You can store a custom Resource using `manager.store_resource(res, field)`. It will store Resource's properties as Dictionary, so it avoids the usual security risk. The field is optional, if you don't provide it, the Resource's properties will be merged with other data in the Dictionary (not recommended when storing multiple resources). To save the data, use `manager.save_as_text()` or `manager.save_as_binary()`.
 
-Loading game data involves the same steps, but in reverse and different methods. Use `manager.load_from_text()` or `manager.load_from_binar()` to load your data. Then you can get values using `manager.get_value(field, default)` (`default` is optional, the method returns `null` if the value does not exist). Use `manager.retrieve_resource(res, field)` to load the data into an existing resource. The manager will iterate resource's properties and load matching data. The `field` must match the one you provided for `store_resource()`.
+Loading game data involves the same steps, but in reverse and different methods. Use `manager.load_from_text()` or `manager.load_from_binar()` to load your data. Then you can get values using `manager.get_value(field, default)` (`default` is optional, the method returns `null` if the value does not exist). Use `manager.retrieve_resource(res, field)` to load the data into an existing resource. The manager will iterate resource's properties and load matching data. The `field` must match the one you provided for `store_resource()`. The manager will automatically assign MetSys data when loading.
 
 ### Minimap
 
-A Control-based node that draws part of the map. Comes with a few properties that allow automatic position tracking, specifying the center point and layer. `area` property specifies the size of minimap, in cells. Odd values recommended. It can be used both as minimap or for use in a map screen. Note that the minimap does not draw player position, you need to add it yourself.
+A Control-based node that draws part of the map. Comes with a few properties that allow automatic position tracking, specifying the center point and layer. `area` property specifies the size of minimap, in cells. Odd values recommended, so that center is clearly defined. It can be used both as minimap or for use in a map screen. Note that the minimap does not draw player position, you need to add it yourself.
 
 Instantiate the minimap from `Template/Nodes/Minimap.tscn` inside the addon's folder.
 
@@ -650,7 +650,7 @@ Top-level elements of the project, not related to specific rooms.
 
 `Game.tscn` is the main scene of the project. It contains player with camera and UI. Player is a separate scene with CharacterBody2D root. It uses the default template controller, with some modifications like double jump and reset position. UI elements are Minimap, FullMap (with Percent) and CollectibleCount. Their logic is contained inside built-in scripts. The CollectibleCount is managed by Game, which has the only external script in this scene.
 
-Game scene manages room transitions and project-specific save data. Check the comments in `Game.gd` for more details. Other functions in this scene are Minimap (using the Template minimap), Map Window and discovered percentage label. The script inherits [MetSys Game](#metsys-game).
+Game scene manages room transitions and project-specific save data. The script inherits [MetSys Game](#metsys-game). Check the comments in `Game.gd` for more details. Other functions in this scene are Minimap, Map Window and discovered percentage label. The minimap is made using the [Template's Minimap](#minimap) node, while the map window is drawn manually (but it can technically use/extend Minimap too).
 
 #### Collectibles
 
@@ -713,7 +713,7 @@ The sample project supports [Custom Runner](https://github.com/KoBeWi/Godot-Cust
 
 ![](Media/GameCustomRunner.gif)
 
-See [the other README](SampleProject/CustomRunnerIntegration/README.md) located in the SampleProject directory for more details.
+See [the other README](SampleProject/CustomRunnerIntegration/README.md) located in the SampleProject directory for more details. Refer to `CustomStart.tscn` to see how you can implement it in your project.
 
 ## Closing words
 

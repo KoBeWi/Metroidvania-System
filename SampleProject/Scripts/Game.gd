@@ -33,7 +33,7 @@ func _ready() -> void:
 		# If save data exists, load it using MetSys SaveManager.
 		var save_manager := SaveManager.new()
 		save_manager.load_from_text("user://save_data.sav")
-		
+		# Assign loaded values.
 		collectibles = save_manager.get_value("collectible_count")
 		generated_rooms.assign(save_manager.get_value("generated_rooms"))
 		events.assign(save_manager.get_value("events"))
@@ -47,7 +47,7 @@ func _ready() -> void:
 	
 	# Initialize room when it changes.
 	room_loaded.connect(init_room)
-	# Go to the starting point.
+	# Load the starting room.
 	load_room(starting_map)
 	
 	# Find the save point and teleport the player to it, to start at the save point.

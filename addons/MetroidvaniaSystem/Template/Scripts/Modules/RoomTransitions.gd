@@ -1,3 +1,6 @@
+## A MetSysModule that handles room transitions.
+##
+## The module connects to [signal MetroidvaniaSystem.room_changed]. When room changes, the new scene gets is loaded via [code]load_room()[/code] method. If MetSysGame has a player set, the player will be automatically teleported to the correct entrance.
 extends "res://addons/MetroidvaniaSystem/Template/Scripts/MetSysModule.gd"
 
 var player: Node2D
@@ -5,9 +8,9 @@ var player: Node2D
 func _initialize():
 	player = game.player
 	assert(player)
-	MetSys.room_changed.connect(on_room_changed, CONNECT_DEFERRED)
+	MetSys.room_changed.connect(_on_room_changed, CONNECT_DEFERRED)
 
-func on_room_changed(target_room: String):
+func _on_room_changed(target_room: String):
 	if target_room == MetSys.get_current_room_name():
 		# This can happen when teleporting to another room.
 		return
