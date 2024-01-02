@@ -1,4 +1,6 @@
-[gd_scene load_steps=6 format=3 uid="uid://bx8a6r0ee0l1b"]
+[gd_scene load_steps=7 format=3 uid="uid://bx8a6r0ee0l1b"]
+
+[ext_resource type="Theme" uid="uid://dfyoc5jqnnpf5" path="res://addons/MetroidvaniaSystem/Database/DatabaseTheme.tres" id="1_f25u0"]
 
 [sub_resource type="Shader" id="Shader_jk80p"]
 code = "shader_type canvas_item;
@@ -33,6 +35,11 @@ var offset: Vector2
 
 func _ready() -> void:
 	%Label.text = tooltip_text
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_THEME_CHANGED:
+		$Hover.border_color = get_theme_color(&\"hovered_room_preview_outline\", &\"MetSys\")
+		%Label.add_theme_color_override(&\"font_color\", get_theme_color(&\"hovered_room_preview_name\", &\"MetSys\"))
 
 func add_room(room: Node2D, direction: int, offset: Vector2):
 	var cell_size := MetSys.settings.in_game_cell_size
@@ -86,6 +93,7 @@ shader_parameter/direction = 0
 material = SubResource("ShaderMaterial_4y0d4")
 offset_right = 100.0
 offset_bottom = 100.0
+theme = ExtResource("1_f25u0")
 script = SubResource("GDScript_rf8ul")
 
 [node name="SubViewportContainer" type="SubViewportContainer" parent="."]

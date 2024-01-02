@@ -32,6 +32,7 @@ func _editor_exit():
 
 func _update_theme():
 	theme_cache.cursor_color = get_theme_color(&\"cursor_color\", &\"MetSys\")
+	theme_cache.invalid_room_drop_position = get_theme_color(&\"invalid_room_drop_position\", &\"MetSys\")
 
 func _editor_input(event: InputEvent):
 	if event is InputEventMouseButton:
@@ -95,7 +96,7 @@ func _editor_draw(map_overlay: CanvasItem):
 				var offset3 := get_coords(offset)
 				
 				if not offset3 in dragging_room and MetSys.map_data.get_cell_at(offset3):
-					map_overlay.draw_rect(Rect2(Vector2(editor.map_offset + offset) * MetSys.CELL_SIZE, MetSys.CELL_SIZE), Color.RED)
+					map_overlay.draw_rect(Rect2(Vector2(editor.map_offset + offset) * MetSys.CELL_SIZE, MetSys.CELL_SIZE), theme_cache.invalid_room_drop_position)
 				else:
 					MetSys.draw_cell(map_overlay, editor.map_offset + offset, coords, true, false)
 
