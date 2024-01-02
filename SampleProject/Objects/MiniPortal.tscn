@@ -1,0 +1,94 @@
+[gd_scene load_steps=7 format=3 uid="uid://dgbhua1xw0ckx"]
+
+[ext_resource type="Texture2D" uid="uid://cargdawan7gao" path="res://SampleProject/Sprites/Portal.png" id="2_d5vpk"]
+
+[sub_resource type="GDScript" id="GDScript_op7ae"]
+script/source = "# A portal object that transports to another room.
+extends Area2D
+# The target map after entering the portal.
+@export var target_map: String
+
+func _on_body_entered(body: Node2D) -> void:
+	# If player entered and isn't doing an event (event in this case is entering the portal).
+	if body.is_in_group(&\"player\") and not body.event:
+		body.event = true
+		# Hack to teleport player to the exit portal position after the room has changed.
+		Game.get_singleton().room_loaded.connect(PortalHandler.new().move_to_portal)
+		# Load the new room.
+		Game.get_singleton().load_room(target_map)
+
+class PortalHandler extends Object:
+	func move_to_portal():
+		var map := Game.get_singleton().map
+		# Get the portal node.
+		var portal: Node2D = map.get_node(^\"MiniPortal\")
+		# Move the player to portal.
+		Game.get_singleton().player.position = portal.position
+		# Need to wait 3 frames, because 2 is apparently not enough.
+		await map.get_tree().physics_frame
+		await map.get_tree().physics_frame
+		await map.get_tree().physics_frame
+		# Disable player's \"event\". It's delayed to prevent re-entering the portal.
+		Game.get_singleton().player.event = false
+		# THe object needs to be freed, but it can't free itself.
+		map.get_tree().queue_delete(self)
+"
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_vq33u"]
+radius = 25.0
+
+[sub_resource type="Animation" id="Animation_bkyt7"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+
+[sub_resource type="Animation" id="Animation_g3r3d"]
+resource_name = "Rotat"
+length = 2.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0.0, 6.28319]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_0plid"]
+_data = {
+"RESET": SubResource("Animation_bkyt7"),
+"Rotat": SubResource("Animation_g3r3d")
+}
+
+[node name="MiniPortal" type="Area2D"]
+script = SubResource("GDScript_op7ae")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_vq33u")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(0.25, 0.25)
+texture = ExtResource("2_d5vpk")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Sprite2D"]
+libraries = {
+"": SubResource("AnimationLibrary_0plid")
+}
+autoplay = "Rotat"
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

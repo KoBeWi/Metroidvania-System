@@ -2,7 +2,7 @@
 
 [ext_resource type="TileSet" uid="uid://bwpcg2opya34n" path="res://SampleProject/Resources/Tileset.tres" id="1_0xlmy"]
 [ext_resource type="PackedScene" uid="uid://bsg0351mx3b4u" path="res://addons/MetroidvaniaSystem/Nodes/RoomInstance.tscn" id="2_h8ruc"]
-[ext_resource type="PackedScene" uid="uid://c8j6i3fx8p758" path="res://SampleProject/Objects/Collectible.tscn" id="3_juw15"]
+[ext_resource type="PackedScene" uid="uid://dgbhua1xw0ckx" path="res://SampleProject/Objects/MiniPortal.tscn" id="3_1ystc"]
 
 [sub_resource type="GDScript" id="GDScript_r3e0s"]
 resource_name = "Outside"
@@ -42,5 +42,7 @@ layer_1/tile_data = PackedInt32Array(1572864, 524290, 1, 1638400, 524290, 1, 170
 z_index = 10
 script = SubResource("GDScript_r3e0s")
 
-[node name="Collectible2" parent="." instance=ExtResource("3_juw15")]
-position = Vector2(1552, 304)
+[node name="MiniPortal" parent="." instance=ExtResource("3_1ystc")]
+modulate = Color(1, 1, 0, 1)
+position = Vector2(1558, 285)
+target_map = "SecretChamber.tscn"
