@@ -19,7 +19,7 @@ func set_value(field: String, value: Variant):
 
 ## Retrieves the value from the internal [Dictionary]. Works the same as [method Dictionary.get]. You need to load the data before calling this.
 func get_value(field: String, default = null) -> Variant:
-	return data.get(field)
+	return data.get(field, default)
 
 ## Stores a [Resource] by dumping its properties into a [Dictionary]. [param field] can be optionally provided to store the data in a nested [Dictionary]. If it's not provided, the resource's data will be mixed with the main data.
 ## [br][br]Just like with [method set_value], the resource's properties can't have [Object] values.
