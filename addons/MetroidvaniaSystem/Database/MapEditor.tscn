@@ -627,6 +627,21 @@ func create_scene_confirm() -> void:
 	EditorInterface.get_resource_filesystem().scan()
 	EditorInterface.open_scene_from_path(scene_path)
 	on_map_selected(scene_path)
+
+func can_drop_data(at_position: Vector2, data) -> bool:
+	if highlighted_room.is_empty():
+		return false
+	if data.get(\"type\", \"\") != \"files\" or len(data.files) != 1:
+		return false
+	
+	var file: String = data.files[0]
+	if not (file.ends_with(\".tscn\") or file.ends_with(\".scn\")) or not file.begins_with(MetSys.settings.map_root_folder):
+		return false
+	return true
+
+func drop_data(at_position: Vector2, data) -> void:
+	var file = data.files[0]
+	on_map_selected(file)
 "
 
 [sub_resource type="GDScript" id="GDScript_5yej3"]
