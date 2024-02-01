@@ -26,6 +26,7 @@ func _ready() -> void:
 	get_current_sub_editor()._editor_enter()
 	MetSys.settings.theme_changed.connect(grid.queue_redraw)
 	map_overlay.mouse_entered.connect(map_overlay.grab_focus)
+	map_overlay.set_drag_forwarding(Callable(), _on_overlay_can_drop_data, _on_overlay_drop_data)
 
 func mode_pressed(button: BaseButton):
 	get_current_sub_editor()._editor_exit()
@@ -120,6 +121,12 @@ func is_unsaved() -> bool:
 func mark_saved():
 	saved_version = undo_redo.get_version()
 	update_name()
+
+func _on_overlay_can_drop_data(at_pos: Vector2, data) -> bool:
+	return get_current_sub_editor().can_drop_data(at_pos, data)
+
+func _on_overlay_drop_data(at_pos: Vector2, data) -> void:
+	get_current_sub_editor().drop_data(at_pos, data)
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_PREDELETE:

@@ -268,3 +268,11 @@ func _notification(what: int) -> void:
 		theme_cache.border_highlight = get_theme_color(&"border_highlight", &"MetSys")
 		theme_cache.cursor_color = get_theme_color(&"cursor_color", &"MetSys")
 		_update_theme()
+
+
+func can_drop_data(at_position: Vector2, data) -> bool:
+	return false
+
+
+func drop_data(at_position: Vector2, data) -> void:
+	pass
