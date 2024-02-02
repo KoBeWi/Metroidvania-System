@@ -107,6 +107,21 @@ func load_from_binary(path: String):
 	data = loaded_data
 	MetSys.set_save_data(data)
 
+## Stores the data as text using [method @GlobalScope.var_to_str], returning the resulting [String]. Use it if you can't use the file methods for some reason.
+func save_as_string() -> String:
+	data.merge(MetSys.get_save_data())
+	return var_to_str(data)
+
+## Loads a text saved data from the provided [String] (it must have been created with [method save_as_string]). The data can be then retrieved using [method get_value].
+func load_from_string(string: String):
+	var loaded_data = str_to_var(string)
+	if not loaded_data is Dictionary:
+		push_error("Failed to load data from string.")
+		return
+	
+	data = loaded_data
+	MetSys.set_save_data(data)
+
 func _setup_save(path: String) -> FileAccess:
 	data.merge(MetSys.get_save_data())
 	

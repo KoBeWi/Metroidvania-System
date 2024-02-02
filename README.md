@@ -523,6 +523,8 @@ Saves and loads game data. Automatically includes MetSys save data and allows to
 
 Loading game data involves the same steps, but in reverse and different methods. Use `manager.load_from_text()` or `manager.load_from_binar()` to load your data. Then you can get values using `manager.get_value(field, default)` (`default` is optional, the method returns `null` if the value does not exist). Use `manager.retrieve_resource(res, field)` to load the data into an existing resource. The manager will iterate resource's properties and load matching data. The `field` must match the one you provided for `store_resource()`. The manager will automatically assign MetSys data when loading.
 
+If you can't deal with files (e.g. due to using some cloud system or other services), you can use `manager.save_as_string()` and `manager.load_from_string(string)` to manage the data using raw Strings.
+
 ### Minimap
 
 A Control-based node that draws part of the map. Comes with a few properties that allow automatic position tracking, specifying the center point and layer. `area` property specifies the size of minimap, in cells. Odd values recommended, so that center is clearly defined. It can be used both as minimap or for use in a map screen. Note that the minimap does not draw player position, you need to add it yourself.
