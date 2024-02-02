@@ -1,6 +1,8 @@
 @tool
 extends EditorPlugin
 
+const EXTENSION_PATH = "MetroidvaniaSystem/EditorExtension"
+
 enum { TAB_EDITOR, TAB_OVERVIEW, TAB_MANAGE }
 
 var main: Control
@@ -19,10 +21,10 @@ func _get_plugin_icon() -> Texture2D:
 	return preload("res://addons/MetroidvaniaSystem/Icon.png")
 
 func _enable_plugin() -> void:
-	EditorInterface.set_plugin_enabled("MetroidvaniaSystem/EditorExtension", true)
+	EditorInterface.set_plugin_enabled(EXTENSION_PATH, true)
 
 func _disable_plugin() -> void:
-	EditorInterface.set_plugin_enabled("MetroidvaniaSystem/EditorExtension", false)
+	EditorInterface.set_plugin_enabled(EXTENSION_PATH, false)
 
 func _enter_tree() -> void:
 	theme_scanner = Timer.new()
@@ -51,7 +53,9 @@ func _enter_tree() -> void:
 		get_tree().quit()
 		return
 	else:
-		DirAccess.remove_absolute("user://MetSysFail")
+		if FileAccess.file_exists("user://MetSysFail"):
+			DirAccess.remove_absolute("user://MetSysFail")
+			EditorInterface.set_plugin_enabled(EXTENSION_PATH, true)
 	
 	main = preload("res://addons/MetroidvaniaSystem/Database/Main.tscn").instantiate()
 	main.plugin = self
