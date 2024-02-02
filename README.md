@@ -709,11 +709,11 @@ Stuff not directly related to MetSys.
 
 #### Custom Runner integration
 
-The sample project supports [Custom Runner](https://github.com/KoBeWi/Godot-Custom-Runner) addon. It allows to quickly run the scenes from the editor:
+The sample project supports [Custom Runner](https://github.com/KoBeWi/Godot-Custom-Runner) addon. It allows to quickly jump into the in-game rooms from the editor:
 
 ![](Media/GameCustomRunner.gif)
 
-See [the other README](SampleProject/CustomRunnerIntegration/README.md) located in the SampleProject directory for more details. Refer to `CustomStart.tscn` to see how you can implement it in your project.
+See [the other README](SampleProject/CustomRunnerIntegration/README.md) located in the SampleProject directory for more details. Refer to `CustomStart.tscn` to see how you can implement it in your project. Note that the `CustomRunnerIntegration` folder is not visible in the engine.
 
 ## Closing words
 

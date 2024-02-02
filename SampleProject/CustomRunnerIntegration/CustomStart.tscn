@@ -1,14 +1,21 @@
 [gd_scene load_steps=2 format=3 uid="uid://duhj1d1wsggvb"]
 
 [sub_resource type="GDScript" id="GDScript_cw7x7"]
-script/source = "extends Node
+script/source = "# Placeholder scene to start Game in a specific spot. See Config.gd for CustomRunner configuration.
+extends Node
 
 func _ready() -> void:
+	# Create Game scene.
 	var game = preload(\"res://SampleProject/Game.tscn\").instantiate()
+	# Setup the starting map using variables provided by our CustomRunner and enable custom run.
 	game.starting_map = CustomRunner.get_variable(\"room\")
 	game.custom_run = true
 	game.get_node(\"Player\").position = CustomRunner.get_variable(\"mouse_pos\")
-	get_tree().root.add_child.call_deferred(game)
+	
+	await get_tree().process_frame
+	# Make the Game into the current scene and delete this one
+	get_tree().root.add_child(game)
+	get_tree().current_scene = game
 	queue_free()
 "
 
