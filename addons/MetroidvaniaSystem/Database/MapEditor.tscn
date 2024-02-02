@@ -648,6 +648,14 @@ func drop_data(at_position: Vector2, data) -> void:
 script/source = "@tool
 extends FileDialog
 
+func _ready() -> void:
+	if EditorInterface.get_edited_scene_root() == owner:
+		return
+	
+	var create_new := $Button
+	create_new.reparent(get_ok_button().get_parent())
+	create_new.get_parent().move_child(create_new, 0)
+
 func _validate_property(property: Dictionary) -> void:
 	# Hack until Godot handles this properly.
 	if property.name == \"ok_button_text\" or property.name == \"title\":
@@ -910,15 +918,11 @@ file_mode = 0
 filters = PackedStringArray("*.tscn")
 script = SubResource("GDScript_5yej3")
 
-[node name="MarginContainer" type="MarginContainer" parent="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign/FileDialog"]
-offset_left = 4.0
-offset_top = 4.0
+[node name="Button" type="Button" parent="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign/FileDialog"]
+offset_left = 465.0
+offset_top = 35.0
 offset_right = 596.0
-offset_bottom = 358.0
-theme_override_constants/margin_top = 31
-
-[node name="Button" type="Button" parent="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign/FileDialog/MarginContainer"]
-layout_mode = 2
+offset_bottom = 65.0
 size_flags_horizontal = 8
 size_flags_vertical = 0
 text = "Create New Scene"
@@ -1158,7 +1162,7 @@ vertical_alignment = 1
 
 [connection signal="value_changed" from="Sidebar/ScrollContainer/VBoxContainer/Layer/SpinBox2" to="." method="preview_layer_changed"]
 [connection signal="file_selected" from="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign/FileDialog" to="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign" method="on_map_selected"]
-[connection signal="pressed" from="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign/FileDialog/MarginContainer/Button" to="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign" method="create_new_scene"]
+[connection signal="pressed" from="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign/FileDialog/Button" to="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign" method="create_new_scene"]
 [connection signal="confirmed" from="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign/CreateDialog" to="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign" method="create_scene_confirm"]
 [connection signal="text_changed" from="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign/CreateDialog/VBoxContainer/GridContainer/HBoxContainer/SceneName" to="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign" method="validate_scene" unbinds=1]
 [connection signal="value_changed" from="Sidebar/ScrollContainer/VBoxContainer/EditControls/Groups/CurrentGroup" to="MapView" method="queue_redraw" unbinds=1]
