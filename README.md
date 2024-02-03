@@ -365,6 +365,10 @@ If you select the RoomInstance node, you can interact with the previews. Clickin
 
 ![](Media/EditorPreviewInteractions.gif)
 
+While MetSys tries to keep the previews up-to-date, if they get outdated for any reason, you can force refresh them using the Refresh Adjacent Previews button at the top (visible when RoomInstance is selected).
+
+![](Media/EditorAdjacentPreviews.png)
+
 ## Runtime guide
 
 This section provides information about usage of MetSys features at runtime, i.e. in your game itself.
