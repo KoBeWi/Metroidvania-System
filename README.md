@@ -200,6 +200,10 @@ This mode allows to assign scenes to rooms on the map. The scenes are used in ed
 
 ![](Media/EditorSceneAssign.gif)
 
+Scenes can also by assigned by simply dropping them on the rooms:
+
+![](Media/EditorSceneDrag.gif)
+
 From this view you can also create new scenes, by using the Create New Scene button in the bottom-left corner of the file dialog:
 
 ![](Media/EditorCreateNewScene.png)

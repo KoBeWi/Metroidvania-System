@@ -644,17 +644,21 @@ func create_scene_confirm() -> void:
 func can_drop_data(at_position: Vector2, data) -> bool:
 	if highlighted_room.is_empty():
 		return false
-	if data.get(\"type\", \"\") != \"files\" or len(data.files) != 1:
+	
+	if data.get(\"type\", \"\") != \"files\" or data[\"files\"].size() != 1:
 		return false
 	
-	var file: String = data.files[0]
-	if not (file.ends_with(\".tscn\") or file.ends_with(\".scn\")) or not file.begins_with(MetSys.settings.map_root_folder):
+	var file: String = data[\"files\"][0]
+	if file.get_extension() != \"tscn\" and file.get_extension() != \"scn\":
 		return false
+	
+	if not file.begins_with(MetSys.settings.map_root_folder):
+		return false
+	
 	return true
 
 func drop_data(at_position: Vector2, data) -> void:
-	var file = data.files[0]
-	on_map_selected(file)
+	on_map_selected(data[\"files\"][0])
 
 func _on_assign_uid_toggled(toggled_on: bool) -> void:
 	MetSys.settings.assign_uid_to_rooms = toggled_on
@@ -931,7 +935,7 @@ script = SubResource("GDScript_p75ne")
 [node name="FileDialog" type="FileDialog" parent="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign"]
 size = Vector2i(600, 400)
 file_mode = 0
-filters = PackedStringArray("*.tscn")
+filters = PackedStringArray("*.tscn", "*.scn")
 script = SubResource("GDScript_5yej3")
 
 [node name="Button" type="Button" parent="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign/FileDialog"]
