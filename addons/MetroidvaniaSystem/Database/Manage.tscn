@@ -184,7 +184,7 @@ func validate_map_data() -> void:
 	for coords in MetSys.map_data.cells:
 		var cell_data: MetroidvaniaSystem.MapData.CellData = MetSys.map_data.cells[coords]
 		
-		if not MetSys.map_data.get_assigned_scene_at(coords):
+		if MetSys.map_data.get_assigned_scene_at(coords).is_empty():
 			add_label(\"No assigned map at: %s\" % coords, WARNING)
 		
 		var symbol := cell_data.get_symbol()

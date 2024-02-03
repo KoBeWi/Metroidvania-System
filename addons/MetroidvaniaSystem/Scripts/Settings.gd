@@ -20,7 +20,7 @@ extends Resource
 
 ## The size of a map cell within an in-game room, i.e. this is the real game size of your map cells. Usually equal to the screen size.
 @export var in_game_cell_size := Vector2(1152, 648)
-@export var collectible_list: Array[Dictionary]
+
 ## The script that determines the custom elements available in the Custom Elements map editor mode. It should inherit [code]CustomElementManager.gd[/code], refer to that class' documentation on how to use it.
 @export var custom_element_script: Script:
 	set(elements):
@@ -35,11 +35,14 @@ extends Resource
 		
 		custom_elements_changed.emit()
 
+@export var collectible_list: Array[Dictionary]
+@export var assign_uid_to_rooms: bool
+
 var custom_elements: MetroidvaniaSystem.CustomElementManager
 
 signal theme_changed
 signal custom_elements_changed
 
 func _validate_property(property: Dictionary) -> void:
-	if property.name == "collectible_list":
+	if property.name == "collectible_list" or property.name == "assign_uid_to_rooms":
 		property.usage &= ~PROPERTY_USAGE_EDITOR

@@ -41,12 +41,12 @@ func _on_item_unhover(item: Control):
 
 func _update_status_label():
 	status_label.show()
-	status_label.modulate = Color.WHITE
+	status_label.modulate = theme_cache.room_assigned
 	if room_under_cursor and not room_under_cursor.assigned_scene.is_empty():
-		status_label.text = str(get_cursor_pos(), " ", room_under_cursor.assigned_scene)
+		status_label.text = str(get_cursor_pos(), " ", get_assigned_scene_display(room_under_cursor.assigned_scene))
 	else:
 		if room_under_cursor:
-			status_label.modulate = Color.RED
+			status_label.modulate = theme_cache.room_not_assigned
 		status_label.text = str(get_cursor_pos())
 
 func _on_overlay_input(event: InputEvent) -> void:
@@ -59,7 +59,7 @@ func _on_overlay_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_LEFT:
 			if event.pressed and room_under_cursor and not room_under_cursor.assigned_scene.is_empty():
-				EditorInterface.open_scene_from_path(MetSys.settings.map_root_folder.path_join(room_under_cursor.assigned_scene))
+				EditorInterface.open_scene_from_path(MetSys.settings.map_root_folder.path_join(MetSys.map_data.get_uid_room(room_under_cursor.assigned_scene)))
 
 func _on_overlay_draw() -> void:
 	if not plugin:
@@ -72,9 +72,9 @@ func _on_overlay_draw() -> void:
 		map_overlay.draw_rect(Rect2(Vector2(mouse + map_offset) * MetSys.CELL_SIZE, MetSys.CELL_SIZE), theme_cache.cursor_color, false, 2)
 	
 	if get_tree().edited_scene_root and get_tree().edited_scene_root.scene_file_path.begins_with(MetSys.settings.map_root_folder):
-		var current_scene := get_tree().edited_scene_root.scene_file_path.trim_prefix(MetSys.settings.map_root_folder)
+		var current_scene := get_tree().edited_scene_root.scene_file_path
 		
-		for coords in MetSys.map_data.get_cells_assigned_to(current_scene):
+		for coords in MetSys.map_data.get_cells_assigned_to_path(current_scene):
 			if coords.z != current_layer:
 				break
 			

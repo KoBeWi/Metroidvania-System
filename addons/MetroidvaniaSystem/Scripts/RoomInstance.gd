@@ -54,8 +54,7 @@ func _update_assigned_scene():
 	queue_redraw()
 	
 	var owner_node := owner if owner != null else self
-	room_name = owner_node.scene_file_path.trim_prefix(MetSys.settings.map_root_folder)
-	cells = MetSys.map_data.get_cells_assigned_to(room_name)
+	cells = MetSys.map_data.get_cells_assigned_to_path(owner_node.scene_file_path)
 	if cells.is_empty():
 		return
 	

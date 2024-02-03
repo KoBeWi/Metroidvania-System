@@ -417,18 +417,26 @@ func get_whole_room(at: Vector3i) -> Array[Vector3i]:
 	
 	return room
 
-func get_cells_assigned_to(map: String) -> Array[Vector3i]:
-	if map in scene_overrides:
-		map = scene_overrides[map]
+func get_cells_assigned_to(room: String) -> Array[Vector3i]:
+	if room in scene_overrides:
+		room = scene_overrides[room]
 	
 	var ret: Array[Vector3i]
-	ret.assign(assigned_scenes.get(map, []))
+	ret.assign(assigned_scenes.get(room, []))
 	return ret
+
+func get_cells_assigned_to_path(path: String) -> Array[Vector3i]:
+	var room := path.trim_prefix(MetSys.settings.map_root_folder)
+	
+	if not assigned_scenes.has(room):
+		room = ResourceUID.id_to_text(ResourceLoader.get_resource_uid(path)).replace("uid://", ":")
+	
+	return get_cells_assigned_to(room)
 
 func get_assigned_scene_at(coords: Vector3i) -> String:
 	var cell := get_cell_at(coords)
 	if cell:
-		return cell.get_assigned_scene()
+		return get_uid_room(cell.get_assigned_scene())
 	else:
 		return ""
 
@@ -456,3 +464,9 @@ func transfer_cell(from_coords: Vector3i, to_coords: Vector3i):
 		if from_coords in group:
 			group.erase(from_coords)
 			group.append(to_coords)
+
+func get_uid_room(uid: String) -> String:
+	if not uid.begins_with(":"):
+		return uid
+	
+	return ResourceUID.get_id_path(ResourceUID.text_to_id(uid.replace(":", "uid://"))).trim_prefix(MetSys.settings.map_root_folder)

@@ -161,3 +161,10 @@ func _on_overlay_draw() -> void:
 
 func update_map_position():
 	map.position = Vector2(map_offset - Vector2i(100, 100)) * MetSys.CELL_SIZE * map.scale
+
+func get_assigned_scene_display(assigned_scene: String) -> String:
+	if assigned_scene.begins_with(":"):
+		var uid := assigned_scene.replace(":", "uid://")
+		assigned_scene = "%s (%s)" % [ResourceUID.get_id_path(ResourceUID.text_to_id(uid)).trim_prefix(MetSys.settings.map_root_folder), uid]
+	
+	return assigned_scene

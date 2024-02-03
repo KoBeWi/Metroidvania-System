@@ -9,6 +9,7 @@ script = ExtResource("2_r56ns")
 theme = ExtResource("3_qyjha")
 map_root_folder = "res://SampleProject/Maps/"
 in_game_cell_size = Vector2(864, 480)
+custom_element_script = ExtResource("1_v4ykp")
 collectible_list = Array[Dictionary]([{
 "element": "Collectible",
 "icon": "res://SampleProject/Sprites/Collectible.png"
@@ -16,4 +17,4 @@ collectible_list = Array[Dictionary]([{
 "element": "MapItem",
 "icon": "res://SampleProject/Sprites/MapItem.png"
 }])
-custom_element_script = ExtResource("1_v4ykp")
+assign_uid_to_rooms = false

@@ -210,8 +210,15 @@ Clicking it will open a dialog similar to Godot's own scene creation dialog:
 
 You can configure scene name and root node name here (by default root is called Map). The created scene is always Node2D, and [RoomInstance](#room-instance) is added automatically.
 
-Each scene can be assigned to a single room only. When a scene is already assigned to a room and you try to assign it to another one, the previous room assignment will be removed.
+By default scenes are assigned by "room name", i.e. scene path relative to map root folder, but MetSys supports scene assign via UID. Using UID allows to rename and move the scene file without breaking references and it's transparent to the user for the most part. To assign UID, simply enable this checkbox:
 
+![](Media/EditorAssignUID.png)
+
+When a scene has UID assigned, it will display differently in the tooltip:
+
+![](Media/EditorUID.png)
+
+Each scene can be assigned to a single room only. When a scene is already assigned to a room and you try to assign it to another one, the previous room assignment will be removed.
 
 #### Custom Elements mode
 

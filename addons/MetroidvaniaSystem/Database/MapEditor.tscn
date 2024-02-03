@@ -474,15 +474,25 @@ extends \"res://addons/MetroidvaniaSystem/Database/SubEditor.gd\"
 @onready var scene_extension: OptionButton = %SceneExtension
 @onready var root_name: LineEdit = %RootName
 @onready var error_label: Label = %ErrorLabel
+@onready var assign_uid: CheckBox = %AssignUID
 @onready var ok_button := create_dialog.get_ok_button()
 
 func _editor_init() -> void:
 	use_cursor = false
 	overlay_mode = true
 	create_dialog.register_text_enter(scene_name)
+	assign_uid.set_pressed_no_signal(MetSys.settings.assign_uid_to_rooms)
 
 func _update_theme():
 	theme_cache.assigned_scene = get_theme_color(&\"assigned_scene\", &\"MetSys\")
+
+func _editor_enter():
+	super()
+	%SceneAssign.show()
+
+func _editor_exit():
+	super()
+	%SceneAssign.hide()
 
 func _editor_input(event: InputEvent):
 	if event is InputEventMouseMotion:
@@ -527,7 +537,7 @@ func _editor_draw(map_overlay: CanvasItem):
 	if not highlighted_room.is_empty():
 		map_overlay.draw_set_transform_matrix(Transform2D())
 		map_overlay.draw_string(get_theme_font(&\"font\", &\"Label\"), Vector2(0, 40),
-				MetSys.map_data.get_cell_at(highlighted_room.front()).assigned_scene)
+				editor.get_assigned_scene_display(MetSys.map_data.get_cell_at(highlighted_room.front()).assigned_scene))
 
 func clear_scene(from: Array[Vector3i]) -> String:
 	if from.is_empty():
@@ -545,7 +555,10 @@ func clear_scene(from: Array[Vector3i]) -> String:
 	return current_assigned
 
 func on_map_selected(path: String) -> void:
-	path = path.trim_prefix(MetSys.settings.map_root_folder)
+	if assign_uid.button_pressed:
+		path = ResourceUID.id_to_text(ResourceLoader.get_resource_uid(path)).replace(\"uid://\", \":\")
+	else:
+		path = path.trim_prefix(MetSys.settings.map_root_folder)
 	
 	var prev_scene := clear_scene(highlighted_room)
 	
@@ -642,6 +655,9 @@ func can_drop_data(at_position: Vector2, data) -> bool:
 func drop_data(at_position: Vector2, data) -> void:
 	var file = data.files[0]
 	on_map_selected(file)
+
+func _on_assign_uid_toggled(toggled_on: bool) -> void:
+	MetSys.settings.assign_uid_to_rooms = toggled_on
 "
 
 [sub_resource type="GDScript" id="GDScript_5yej3"]
@@ -1041,6 +1057,22 @@ custom_minimum_size = Vector2(0, 30)
 layout_mode = 2
 edit_alpha = false
 
+[node name="SceneAssign" type="VBoxContainer" parent="Sidebar/ScrollContainer/VBoxContainer/EditControls"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="AssignUID" type="CheckBox" parent="Sidebar/ScrollContainer/VBoxContainer/EditControls/SceneAssign"]
+unique_name_in_owner = true
+layout_mode = 2
+tooltip_text = "If enabled, the room will have scene's UID assigned instead of path."
+text = "Assign UID"
+
+[node name="Label" type="Label" parent="Sidebar/ScrollContainer/VBoxContainer/EditControls/SceneAssign"]
+layout_mode = 2
+text = "Click a room or drag and drop a file"
+autowrap_mode = 2
+
 [node name="CustomElements" type="VBoxContainer" parent="Sidebar/ScrollContainer/VBoxContainer/EditControls"]
 unique_name_in_owner = true
 visible = false
@@ -1166,5 +1198,6 @@ vertical_alignment = 1
 [connection signal="confirmed" from="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign/CreateDialog" to="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign" method="create_scene_confirm"]
 [connection signal="text_changed" from="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign/CreateDialog/VBoxContainer/GridContainer/HBoxContainer/SceneName" to="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign" method="validate_scene" unbinds=1]
 [connection signal="value_changed" from="Sidebar/ScrollContainer/VBoxContainer/EditControls/Groups/CurrentGroup" to="MapView" method="queue_redraw" unbinds=1]
+[connection signal="toggled" from="Sidebar/ScrollContainer/VBoxContainer/EditControls/SceneAssign/AssignUID" to="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign" method="_on_assign_uid_toggled"]
 [connection signal="draw" from="MapView/Grid" to="." method="_on_grid_draw"]
 [connection signal="draw" from="MapView/GhostMap" to="." method="_on_ghost_map_draw"]
