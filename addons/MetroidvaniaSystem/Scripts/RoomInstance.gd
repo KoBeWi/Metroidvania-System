@@ -58,6 +58,8 @@ func _update_assigned_scene():
 	if cells.is_empty():
 		return
 	
+	room_name = MetSys.map_data.get_room_from_scene_path(owner_node.scene_file_path, false)
+	
 	layer = cells[0].z
 	for p in cells:
 		min_cell.x = mini(min_cell.x, p.x)

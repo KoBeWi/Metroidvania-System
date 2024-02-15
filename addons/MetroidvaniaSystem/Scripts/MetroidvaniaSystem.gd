@@ -251,9 +251,7 @@ func get_object_coords(object: Object) -> Vector3i:
 		object.set_meta(&"object_coords", coords)
 		return coords
 	elif object is Node:
-		var room_name: String = object.owner.scene_file_path.trim_prefix(settings.map_root_folder)
-		room_name = MetSys.map_data.scene_overrides.get(room_name, room_name)
-		assert(room_name in map_data.assigned_scenes)
+		var room_name: String = map_data.get_room_from_scene_path(object.owner.scene_file_path)
 		
 		var coords: Vector3i = map_data.assigned_scenes[room_name].front()
 		for vec in map_data.assigned_scenes[room_name]:

@@ -470,3 +470,13 @@ func get_uid_room(uid: String) -> String:
 		return uid
 	
 	return ResourceUID.get_id_path(ResourceUID.text_to_id(uid.replace(":", "uid://"))).trim_prefix(MetSys.settings.map_root_folder)
+
+func get_room_from_scene_path(path: String, safe := true) -> String:
+	var room_name: String = path.trim_prefix(MetSys.settings.map_root_folder)
+	if not room_name in assigned_scenes:
+		room_name = ResourceUID.id_to_text(ResourceLoader.get_resource_uid(path)).replace("uid://", ":")
+	
+	room_name = scene_overrides.get(room_name, room_name)
+	if safe:
+		assert(room_name in assigned_scenes)
+	return room_name
