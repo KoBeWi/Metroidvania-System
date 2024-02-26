@@ -10,6 +10,17 @@ const RECTANGLE_BORDERS = ["vertical_wall", "horizontal_wall", "vertical_passage
 const DEFAULT_CORNERS = ["inner_corner", "outer_corner"]
 const SHARED_CORNERS = ["u_corner", "l_corner", "t_corner", "cross_corner"]
 
+enum SeparatorMode {
+	## Separator is drawn when there is no border, only on bottom and right side.
+	EMPTY_SINGLE,
+	## Separator is drawn when there is no border, on all sides.
+	EMPTY_DOUBLE,
+	## Separator is drawn under any border except wall, only on bottom and right side.
+	FULL_SINGLE,
+	## Separator is drawn under any border except wall, on all sides.
+	FULL_DOUBLE
+}
+
 ## The cell's center texture. The size of all other textures depends on this one. It can be square or rectangular and the shape affects some properties. The texture should be grayscale (preferrably white).
 @export var center_texture: Texture2D:
 	set(ct):
@@ -29,6 +40,8 @@ const SHARED_CORNERS = ["u_corner", "l_corner", "t_corner", "cross_corner"]
 ## Determines how mapped (unexplored) cells are displayed. Use Preview Mapped option in Map Viewer to preview this style.
 @export_flags("Center", "Outline", "Borders", "Symbol") var mapped_display := 3
 
+## Determines how separators are displayed. See [enum SeparatorMode]. Not supported in shared border mode.
+@export var separator_mode: SeparatorMode = SeparatorMode.FULL_SINGLE
 ## If [code]true[/code], cell borders are drawn between the cells instead of inside them. This setting has a major effect on the theme.
 @export var use_shared_borders: bool:
 	set(usb):

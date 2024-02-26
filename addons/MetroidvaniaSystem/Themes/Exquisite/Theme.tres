@@ -23,6 +23,7 @@ empty_space_texture = ExtResource("2_tsiva")
 player_location_scene = ExtResource("3_mk7eh")
 show_exact_player_location = true
 mapped_display = 11
+separator_mode = 1
 use_shared_borders = false
 default_center_color = Color(0.5, 0.25, 0.25, 1)
 mapped_center_color = Color(0.745098, 0.745098, 0.745098, 1)

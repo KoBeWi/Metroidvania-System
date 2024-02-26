@@ -54,8 +54,8 @@
 [-1,-7,2]
 1,0,0,0|8ca1ff,3d4e99,3d4e99,3d4e99,3d4e99|1|
 [-2,0,1]
--1,-1,0,0|e646ff,,,,||DarkStaircase.tscn
+-1,-1,0,0|e646ff,,,e68bff,e68bff||DarkStaircase.tscn
 [-1,0,1]
-0,0,-1,0|e646ff,,,,||DarkStaircase.tscn
+0,0,-1,0|e646ff,e68bff,e68bff,,e68bff||DarkStaircase.tscn
 [3,0,1]
 0,0,0,0|e646ff,e68bff,e68bff,e68bff,e68bff||SecretChamber.tscn

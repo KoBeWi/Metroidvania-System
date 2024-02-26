@@ -82,16 +82,28 @@ static func draw_regular_borders(canvas_item: CanvasItem, offset: Vector2, coord
 		else:
 			borders[i] = border
 	
+	if display_outlines and get_border_texture(theme, -1, 0):
+		var separators := 2
+		if theme.separator_mode == MapTheme.SeparatorMode.EMPTY_DOUBLE or theme.separator_mode == MapTheme.SeparatorMode.FULL_DOUBLE:
+			separators = 4
+		
+		var full := theme.separator_mode == MapTheme.SeparatorMode.FULL_DOUBLE or theme.separator_mode == MapTheme.SeparatorMode.FULL_SINGLE
+		
+		for i in separators:
+			if borders[i] == 0 or (not full and borders[i] != -1):
+				continue
+			
+			var texture := get_border_texture(theme, -1, i)
+			if not texture:
+				continue
+			
+			draw_border(canvas_item, offset, i, texture, Color.WHITE)
+	
 	for i in 4:
 		var texture: Texture2D
 		var color: Color
 		
-		var rotation := PI * 0.5 * i
-		if borders[i] == -1:
-			if display_outlines:
-				texture = get_border_texture(theme, -1, i)
-				color = Color.WHITE
-		else:
+		if borders[i] > -1:
 			var border: int = borders[i]
 			
 			if not bool(display_flags & MetroidvaniaSystem.DISPLAY_BORDERS):
@@ -106,12 +118,7 @@ static func draw_regular_borders(canvas_item: CanvasItem, offset: Vector2, coord
 		if not texture:
 			continue
 		
-		canvas_item.draw_set_transform(offset * MetSys.CELL_SIZE + MetSys.CELL_SIZE * 0.5, rotation, Vector2.ONE)
-		match i:
-			MetroidvaniaSystem.R, MetroidvaniaSystem.L:
-				texture.draw(ci, -texture.get_size() / 2 + Vector2.RIGHT * (MetSys.CELL_SIZE.x * 0.5 - texture.get_width() / 2), color)
-			MetroidvaniaSystem.D, MetroidvaniaSystem.U:
-				texture.draw(ci, -texture.get_size() / 2 + Vector2.RIGHT * (MetSys.CELL_SIZE.y * 0.5 - texture.get_width() / 2), color)
+		draw_border(canvas_item, offset, i, texture, color)
 	
 	if not display_outlines:
 		return
@@ -428,6 +435,15 @@ static func get_border_texture(theme: MapTheme, idx: int, direction: int) -> Tex
 		return theme.get(texture_name)[idx - 2]
 	else:
 		return theme.get(texture_name)
+
+static func draw_border(canvas_item: CanvasItem, offset: Vector2, i: int, texture: Texture2D, color: Color):
+	var rotation := PI * 0.5 * i
+	canvas_item.draw_set_transform(offset * MetSys.CELL_SIZE + MetSys.CELL_SIZE * 0.5, rotation, Vector2.ONE)
+	match i:
+		MetroidvaniaSystem.R, MetroidvaniaSystem.L:
+			texture.draw(canvas_item.get_canvas_item(), -texture.get_size() / 2 + Vector2.RIGHT * (MetSys.CELL_SIZE.x * 0.5 - texture.get_width() / 2), color)
+		MetroidvaniaSystem.D, MetroidvaniaSystem.U:
+			texture.draw(canvas_item.get_canvas_item(), -texture.get_size() / 2 + Vector2.RIGHT * (MetSys.CELL_SIZE.y * 0.5 - texture.get_width() / 2), color)
 
 static func draw_empty(canvas_item: CanvasItem, offset: Vector2):
 	var theme: MapTheme = MetSys.settings.theme

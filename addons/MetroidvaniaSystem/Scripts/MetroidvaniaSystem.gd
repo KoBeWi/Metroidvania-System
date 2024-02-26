@@ -265,7 +265,7 @@ func get_object_coords(object: Object) -> Vector3i:
 		
 		object.set_meta(&"object_coords", coords)
 		return coords
-	return Vector3i()
+	return Vector3i.MAX
 
 ## Translates map coordinates to 2D pixel coordinates. Can be used for custom drawing on the map.
 ## [br][br][param relative] allows to specify precise position inside the cell, with [code](0.5, 0.5)[/code] being the cell's center. [param base_offset] is an additional offset in pixels.
