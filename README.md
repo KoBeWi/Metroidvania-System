@@ -75,7 +75,7 @@ A small but important sub-system are object IDs. Whether it's a collectible, a s
 
 ## Instructions
 
-You can find instructions in the (wiki)[wiki].
+(You can find instructions in the wiki)[https://github.com/KoBeWi/Metroidvania-System/wiki].
 
 ## Closing words
 
