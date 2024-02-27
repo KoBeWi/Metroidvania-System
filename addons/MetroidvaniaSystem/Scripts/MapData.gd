@@ -428,7 +428,7 @@ func get_cells_assigned_to(room: String) -> Array[Vector3i]:
 func get_cells_assigned_to_path(path: String) -> Array[Vector3i]:
 	var room := path.trim_prefix(MetSys.settings.map_root_folder)
 	
-	if not assigned_scenes.has(room):
+	if not assigned_scenes.has(room) and not room in scene_overrides:
 		room = ResourceUID.id_to_text(ResourceLoader.get_resource_uid(path)).replace("uid://", ":")
 	
 	return get_cells_assigned_to(room)
@@ -473,7 +473,7 @@ func get_uid_room(uid: String) -> String:
 
 func get_room_from_scene_path(path: String, safe := true) -> String:
 	var room_name: String = path.trim_prefix(MetSys.settings.map_root_folder)
-	if not room_name in assigned_scenes:
+	if not room_name in assigned_scenes and not room_name in scene_overrides:
 		room_name = ResourceUID.id_to_text(ResourceLoader.get_resource_uid(path)).replace("uid://", ":")
 	
 	room_name = scene_overrides.get(room_name, room_name)
