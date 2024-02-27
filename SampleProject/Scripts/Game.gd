@@ -41,7 +41,9 @@ func _ready() -> void:
 		player.abilities.assign(save_manager.get_value("abilities"))
 		
 		if not custom_run:
-			starting_map = save_manager.get_value("current_room")
+			var loaded_starting_map: String = save_manager.get_value("current_room")
+			if not loaded_starting_map.is_empty(): # Some compatibility problem.
+				starting_map = loaded_starting_map
 	else:
 		# If no data exists, set empty one.
 		MetSys.set_save_data()
