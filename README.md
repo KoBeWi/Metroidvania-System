@@ -6,11 +6,17 @@ This plugin evolved from various tools I made for my metroidvania game, [Voice o
 
 Supports Godot **4.2** or newer.
 
+## Instructions
+
+[You can find instructions in the wiki.](https://github.com/KoBeWi/Metroidvania-System/wiki)
+
 ## Quick overview
 
 Metroidvania System is designed as a general-purpose addon, mainly focused on 2D grid-based metroidvania games (either platformer or top-down). Grid-based, i.e. it assumes that the map is composed of rooms that fit on a square or rectangular grid. The main feature is the Map Editor, which helps designing the world layout by placing the map cells and customizing them. The map, while it's only representation of the game's world, can be integrated with the game by associating scenes with rooms on the map, making the room transitions much easier to implement and the general overview of the world is more convenient.
 
 A small but important sub-system are object IDs. Whether it's a collectible, a switch, a breakable wall, some objects may need a persistent state. This is often achieved using a list of hard-coded "events". MetSys comes with an automated system that generates a unique ID for each object in scene (or outside scene); you can manage object persistence using just 2 methods with all-optional arguments. They can be used for non-metroidvania games too.
+
+https://github.com/KoBeWi/Metroidvania-System/assets/2223172/4d8f3099-93be-4a90-98dd-178fc8b7b0b3
 
 ### Brief list of all features
 
@@ -72,10 +78,6 @@ A small but important sub-system are object IDs. Whether it's a collectible, a s
 - Get world map coordinates for any object on a scene.
 - Helper method for custom drawing on map (for anything not supported by other features).
 - Template scripts and scenes for common functionality, including scene transitions, connection automapping, save management and minimaps.
-
-## Instructions
-
-[You can find instructions in the wiki](https://github.com/KoBeWi/Metroidvania-System/wiki).
 
 ## Closing words
 
