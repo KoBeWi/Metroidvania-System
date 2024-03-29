@@ -54,7 +54,12 @@ class CellData:
 			data.append(str(symbol))
 		else:
 			data.append("")
-		data.append(assigned_scene.trim_prefix(MetSys.settings.map_root_folder + "/"))
+		
+		if MetSys.map_data.exporting_mode:
+			data.append(MetSys.map_data.get_uid_room(assigned_scene))
+		else:
+			data.append(assigned_scene.trim_prefix(MetSys.settings.map_root_folder + "/"))
+		
 		return "|".join(data)
 	
 	func load_next_chunk() -> String:
@@ -276,6 +281,8 @@ var custom_elements: Dictionary#[Vector3i, Struct]
 
 var cell_overrides: Dictionary#[Vector3i, CellOverride]
 var scene_overrides: Dictionary#[String, String]
+
+var exporting_mode: bool
 
 func load_data():
 	var file := FileAccess.open(MetSys.settings.map_root_folder.path_join("MapData.txt"), FileAccess.READ)

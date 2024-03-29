@@ -5,6 +5,8 @@ const EXTENSION_PATH = "MetroidvaniaSystem/EditorExtension"
 
 enum { TAB_EDITOR, TAB_OVERVIEW, TAB_MANAGE }
 
+var export_plugin: EditorExportPlugin
+
 var main: Control
 var theme_scanner: Timer
 var prev_theme_state: Array
@@ -63,9 +65,13 @@ func _enter_tree() -> void:
 	main.hide()
 	
 	get_singleton().settings.theme_changed.connect(func(): prev_theme_state.clear())
+	
+	export_plugin = MetSysExport.new()
+	add_export_plugin(export_plugin)
 
 func _exit_tree() -> void:
 	main.queue_free()
+	remove_export_plugin(export_plugin)
 
 func _make_visible(visible: bool) -> void:
 	main.visible = visible
@@ -94,3 +100,12 @@ func check_theme():
 	var changed := theme.check_for_changes(prev_theme_state)
 	if not changed.is_empty():
 		get_singleton().theme_modified.emit(changed)
+
+class MetSysExport extends EditorExportPlugin:
+	func _export_begin(features: PackedStringArray, is_debug: bool, path: String, flags: int) -> void:
+		MetSys.map_data.exporting_mode = true
+		MetSys.map_data.save_data()
+		MetSys.map_data.exporting_mode = false
+	
+	func _export_end() -> void:
+		MetSys.map_data.save_data()
