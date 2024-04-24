@@ -306,7 +306,7 @@ func load_data():
 			coords.z = line.get_slice(",", 2).to_int()
 			
 			i += 1
-			line = data[i]
+			line = data[i].strip_edges()
 			
 			var cell_data := CellData.new(line)
 			if not cell_data.assigned_scene.is_empty():
