@@ -7,6 +7,9 @@ extends Control
 ## If [code]true[/code], [member center] and [member layer] will be automatically updated when [signal MetroidvaniaSystem.cell_changed] is received.
 @export var track_position := true
 
+## If [code]true[/code], player location scene will be automatically displayed and updated in the minimap.
+@export var display_player_location := false
+
 ## Size of the minimap in cells. Avoid even numbers if you want to display the player position in the middle.
 @export var area: Vector2i = Vector2i(3, 3):
 	set(value):
@@ -26,6 +29,8 @@ extends Control
 		layer = value
 		queue_redraw()
 
+var player_location: Node2D
+
 func _ready() -> void:
 	if Engine.is_editor_hint():
 		return
@@ -33,6 +38,9 @@ func _ready() -> void:
 	MetSys.map_updated.connect(queue_redraw)
 	if track_position:
 		MetSys.cell_changed.connect(_on_cell_changed)
+	
+	if display_player_location:
+		player_location = MetSys.add_player_location(self)
 
 func _on_cell_changed(new_cell: Vector3i):
 	center = Vector2i(new_cell.x, new_cell.y)
@@ -50,6 +58,8 @@ func _get_minimum_size() -> Vector2:
 
 func _draw() -> void:
 	var offset := -area / 2
+	if player_location:
+		player_location.offset = -Vector2(center + offset) * MetSys.CELL_SIZE
 	
 	for y in area.y:
 		for x in area.x:
