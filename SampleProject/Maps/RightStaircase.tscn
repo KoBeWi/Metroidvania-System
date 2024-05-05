@@ -29,10 +29,12 @@ func _ready() -> void:
 func on_body_entered(body: Node2D) -> void:
 	# Create override.
 	var override := MetSys.get_cell_override(MetSys.get_current_coords())
-	# Change right wall to passage.
+	# Change the right wall to passage.
 	override.set_border(MetroidvaniaSystem.R, 1)
 	# Store the object.
 	MetSys.store_object(self)
+	# Remove it, so it's not detected again.
+	queue_free()
 "
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_j3y4p"]
