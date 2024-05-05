@@ -1,54 +1,9 @@
-[gd_scene load_steps=11 format=3 uid="uid://c3xqaietfgs7l"]
+[gd_scene load_steps=7 format=3 uid="uid://c3xqaietfgs7l"]
 
 [ext_resource type="Script" path="res://SampleProject/Scripts/Game.gd" id="1_xdpfu"]
 [ext_resource type="PackedScene" uid="uid://xpbhai8nlgtx" path="res://SampleProject/Player.tscn" id="2_bam1a"]
 [ext_resource type="PackedScene" uid="uid://dch8dyylb7526" path="res://addons/MetroidvaniaSystem/Template/Nodes/Minimap.tscn" id="3_a3gfy"]
 [ext_resource type="Texture2D" uid="uid://wiq0mic5m6is" path="res://SampleProject/Sprites/Collectible.png" id="3_kng3d"]
-
-[sub_resource type="GDScript" id="GDScript_kcm6q"]
-resource_name = "PlayerIndicator"
-script/source = "extends ColorRect
-
-func _ready() -> void:
-	custom_minimum_size = get_parent_control().size / 3
-"
-
-[sub_resource type="Animation" id="Animation_lgykt"]
-resource_name = "Flash"
-loop_mode = 1
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:modulate")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.5),
-"transitions": PackedFloat32Array(0.5, 2),
-"update": 0,
-"values": [Color(1, 1, 1, 0.752941), Color(1, 1, 1, 0)]
-}
-
-[sub_resource type="Animation" id="Animation_0p0d4"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:modulate")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Color(1, 1, 1, 0.752941)]
-}
-
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_kkw8m"]
-_data = {
-"Flash": SubResource("Animation_lgykt"),
-"RESET": SubResource("Animation_0p0d4")
-}
 
 [sub_resource type="GDScript" id="GDScript_u7odr"]
 resource_name = "MapWindow"
@@ -169,28 +124,8 @@ offset_top = 8.0
 offset_right = -8.0
 offset_bottom = 104.0
 grow_horizontal = 0
-
-[node name="PlayerIndicator" type="ColorRect" parent="UI/Minimap"]
-modulate = Color(1, 1, 1, 0.752941)
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -16.0
-offset_top = -16.0
-offset_right = 16.0
-offset_bottom = 16.0
-grow_horizontal = 2
-grow_vertical = 2
-script = SubResource("GDScript_kcm6q")
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="UI/Minimap/PlayerIndicator"]
-libraries = {
-"": SubResource("AnimationLibrary_kkw8m")
-}
-autoplay = "Flash"
+smooth_scroll = true
+display_player_location = true
 
 [node name="Background" type="Panel" parent="UI/Minimap"]
 show_behind_parent = true

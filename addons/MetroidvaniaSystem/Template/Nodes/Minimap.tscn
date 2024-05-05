@@ -9,3 +9,8 @@ anchors_preset = 0
 offset_right = 48.0
 offset_bottom = 96.0
 script = ExtResource("1_xjfym")
+smooth_scroll = true
+
+[node name="Drawer" type="Node2D" parent="."]
+
+[connection signal="draw" from="Drawer" to="." method="_draw_map"]
