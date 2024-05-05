@@ -169,7 +169,6 @@ offset_top = 8.0
 offset_right = -8.0
 offset_bottom = 104.0
 grow_horizontal = 0
-track_position = true
 
 [node name="PlayerIndicator" type="ColorRect" parent="UI/Minimap"]
 modulate = Color(1, 1, 1, 0.752941)

@@ -583,6 +583,7 @@ func on_map_selected(path: String) -> void:
 func create_new_scene() -> void:
 	file_dialog.hide()
 	create_dialog.popup_centered()
+	scene_name.grab_focus.call_deferred()
 	
 	scene_name.clear()
 	validate_scene()
@@ -978,10 +979,9 @@ size_flags_horizontal = 3
 [node name="SceneExtension" type="OptionButton" parent="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign/CreateDialog/VBoxContainer/GridContainer/HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
-item_count = 2
 selected = 0
+item_count = 2
 popup/item_0/text = "tscn"
-popup/item_0/id = 0
 popup/item_1/text = "scn"
 popup/item_1/id = 1
 
