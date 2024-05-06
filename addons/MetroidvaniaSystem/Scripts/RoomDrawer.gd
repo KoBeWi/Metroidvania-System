@@ -348,7 +348,7 @@ static func draw_custom_elements(canvas_item: CanvasItem, elements: Dictionary, 
 		var element: Dictionary = elements[coords]
 		var element_rect := Rect2i(coords.x, coords.y, element["size"].x, element["size"].y)
 		if element_rect.intersects(rect):
-			element_manager.draw_element(canvas_item, coords, element.name, (base_offset + Vector2(coords.x, coords.y) - Vector2(rect.position)) * MetSys.CELL_SIZE, Vector2(element_rect.size) * MetSys.CELL_SIZE, element.data)
+			element_manager.draw_element(canvas_item, coords, element["name"], (base_offset + Vector2(coords.x, coords.y) - Vector2(rect.position)) * MetSys.CELL_SIZE, Vector2(element_rect.size) * MetSys.CELL_SIZE, element.data)
 
 static func get_border_at(coords: Vector3i, idx: int) -> int:
 	var cell_data = get_discovered_cell_at(coords)

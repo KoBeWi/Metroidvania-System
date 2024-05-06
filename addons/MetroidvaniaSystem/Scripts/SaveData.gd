@@ -15,7 +15,11 @@ func discover_cell(coords: Vector3i):
 
 func explore_cell(coords: Vector3i):
 	if discovered_cells.get(coords, 0) < 2:
-		discovered_cells[coords] = 2
+		if MetSys.settings.discover_whole_rooms:
+			for cell in MetSys.map_data.get_whole_room(coords):
+				discovered_cells[cell] = 2
+		else:
+			discovered_cells[coords] = 2
 		MetSys.map_updated.emit()
 
 func is_cell_discovered(coords: Vector3i) -> int:
