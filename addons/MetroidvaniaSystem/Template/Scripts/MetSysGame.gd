@@ -25,7 +25,8 @@ func add_module(module_name: String):
 	modules.append(module)
 
 func _physics_tick():
-	MetSys.set_player_position(player.position)
+	if can_process():
+		MetSys.set_player_position(player.position)
 
 ## Loads a map and adds as a child of this node. If a map already exists, it will be removed before the new one is loaded. This method is asynchronous, so you should call it with [code]await[/code] if you want to do something after the map is loaded. Alternatively, you can use [signal room_loaded].
 func load_room(path: String):
@@ -42,3 +43,26 @@ func load_room(path: String):
 	
 	MetSys.current_layer = MetSys.get_current_room_instance().get_layer()
 	room_loaded.emit()
+
+func get_save_data() -> Dictionary:
+	var data: Dictionary
+	data.merge(_get_save_data())
+	
+	for module in modules:
+		data.merge(module.get_save_data())
+	
+	return data
+
+## Virtual method to be overriden in your game class. Called by SaveManager's store_game(). Use it to return the data you want to save. Data of added modules is stored automatically.
+func _get_save_data() -> Dictionary:
+	return {}
+
+func set_save_data(data: Dictionary):
+	_set_save_data(data)
+	
+	for module in modules:
+		module._set_save_data(data)
+
+## Virtual method to be overriden in your game class. Called by SaveManager's retrieve_game(). The provided [Dictionary] holds your previously saved data.
+func _set_save_data(data: Dictionary):
+	pass

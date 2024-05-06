@@ -21,6 +21,15 @@ func set_value(field: String, value: Variant):
 func get_value(field: String, default = null) -> Variant:
 	return data.get(field, default)
 
+## Stores save data of a MetSys game object or other object with get_save_data() method. Allows for easier storing of game data, especially when you have game modules with save data. Only one such object can be stored in the save file.
+func store_game(game):
+	data["_MetSysGame_"] = game.get_save_data()
+
+## Retrieves save data of a MetSys game object or other object with set_save_data() method.
+func retrieve_game(game):
+	var game_data: Dictionary = data.get("_MetSysGame_", {})
+	game.set_save_data(game_data)
+
 ## Stores a [Resource] by dumping its properties into a [Dictionary]. [param field] can be optionally provided to store the data in a nested [Dictionary]. If it's not provided, the resource's data will be mixed with the main data.
 ## [br][br]Just like with [method set_value], the resource's properties can't have [Object] values.
 func store_resource(res: Resource, field := ""):
