@@ -104,4 +104,4 @@ func _draw_map() -> void:
 	if MetSys.settings.theme.use_shared_borders:
 		MetSys.draw_shared_borders()
 	
-	MetSys.draw_custom_elements(drawer, Rect2i(draw_center + offset - Vector2i(draw_offset), draw_area), Vector2(), layer)
+	MetSys.draw_custom_elements(drawer, Rect2i(draw_center + offset, draw_area), draw_offset, layer)
