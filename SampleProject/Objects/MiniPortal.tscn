@@ -13,7 +13,7 @@ func _on_body_entered(body: Node2D) -> void:
 	if body.is_in_group(&\"player\") and not body.event:
 		body.event = true
 		# Teleport player to the exit portal position after the room has changed.
-		Game.get_singleton().room_loaded.connect(move_to_portal)
+		Game.get_singleton().room_loaded.connect(move_to_portal, CONNECT_ONE_SHOT)
 		# Load the new room.
 		Game.get_singleton().load_room(target_map)
 
