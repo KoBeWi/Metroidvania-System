@@ -402,6 +402,7 @@ size_flags_horizontal = 3
 size_flags_vertical = 0
 
 [node name="MapView" type="Control" parent="."]
+texture_filter = 1
 clip_contents = true
 layout_mode = 2
 size_flags_horizontal = 3
