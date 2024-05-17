@@ -54,9 +54,9 @@ shape = SubResource("CircleShape2D_vq33u")
 texture = ExtResource("2_j5rn3")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Sprite2D"]
-autoplay = "Rotat"
 libraries = {
 "": SubResource("AnimationLibrary_0plid")
 }
+autoplay = "Rotat"
 
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]

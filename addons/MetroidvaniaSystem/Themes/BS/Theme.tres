@@ -15,6 +15,7 @@ center_texture = ExtResource("4_4g5i5")
 player_location_scene = ExtResource("3_y5832")
 show_exact_player_location = true
 mapped_display = 7
+separator_mode = 2
 use_shared_borders = true
 default_center_color = Color(0, 0.368627, 0.996078, 1)
 mapped_center_color = Color(0.25098, 0.25098, 0.25098, 1)
