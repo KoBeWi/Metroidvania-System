@@ -1,0 +1,21 @@
+[gd_resource type="Resource" load_steps=4 format=3 uid="uid://po1yy1ihchuv"]
+
+[ext_resource type="Script" path="res://SampleProject/Scripts/CustomElements.gd" id="1_v4ykp"]
+[ext_resource type="Script" path="res://addons/MetroidvaniaSystem/Scripts/Settings.gd" id="2_r56ns"]
+[ext_resource type="Resource" uid="uid://do6um2iibxy0k" path="res://addons/MetroidvaniaSystem/Themes/EM/Theme.tres" id="3_8ab0f"]
+
+[resource]
+script = ExtResource("2_r56ns")
+theme = ExtResource("3_8ab0f")
+map_root_folder = "res://SampleProject/Maps/"
+in_game_cell_size = Vector2(864, 480)
+discover_whole_rooms = true
+custom_element_script = ExtResource("1_v4ykp")
+collectible_list = Array[Dictionary]([{
+"element": "Collectible",
+"icon": "res://SampleProject/Sprites/Collectible.png"
+}, {
+"element": "MapItem",
+"icon": "res://SampleProject/Sprites/MapItem.png"
+}])
+assign_uid_to_rooms = false

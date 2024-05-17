@@ -1,0 +1,52 @@
+[gd_scene load_steps=4 format=3 uid="uid://d165fnekqr5ex"]
+
+[ext_resource type="Texture2D" uid="uid://dagy3gny0c0cg" path="res://SampleProject/Sprites/Button.png" id="1_umy0p"]
+
+[sub_resource type="GDScript" id="GDScript_4b230"]
+script/source = "# Code for the button that opens the gate.
+extends Area2D
+
+signal pressed
+
+func _ready() -> void:
+	# Register the button as storable. Note that press is passed as callback.
+	# If the button was pressed before (store_object() was called), press will be called immediately.
+	MetSys.register_storable_object(self, press)
+
+func _on_body_entered(body: Node2D) -> void:
+	# Detect when player enters button area.
+	if not body.is_in_group(&\"player\"):
+		return
+	# \"Store\" the button, i.e. remember its persistent state.
+	MetSys.store_object(self)
+	# Hack to keep the room discovered.
+	const FogOfMystery = preload(\"res://addons/MetroidvaniaSystem/Template/Scripts/Modules/FogOfMystery.gd\")
+	FogOfMystery.fom.discover_cache[\"LavaCorridorAfterwater.tscn\"] = FogOfMystery.fom.discover_cache[\"LavaCorridor.tscn\"]
+	FogOfMystery.fom.cache_overlays_from_discovers([\"LavaCorridorAfterwater.tscn\"])
+	# The callback needs to be called manually when storing.
+	press()
+
+func press():
+	# Emit the signal to notify other nodes (GateOpen and Pipe).
+	pressed.emit()
+	# Visual stuff.
+	$Sprite2D.scale.y = 0.2
+	# Make sure the button can't be pressed again.
+	$CollisionShape2D.queue_free()
+"
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_x8ufv"]
+size = Vector2(18, 17)
+
+[node name="Button" type="Area2D"]
+script = SubResource("GDScript_4b230")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -8.5)
+shape = SubResource("RectangleShape2D_x8ufv")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_umy0p")
+offset = Vector2(0, -12)
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
