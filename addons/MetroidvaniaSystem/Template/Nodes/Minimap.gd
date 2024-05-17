@@ -95,7 +95,9 @@ func _draw_map() -> void:
 	
 	var offset := -draw_area / 2
 	if player_location:
-		player_location.offset = (-Vector2(draw_center + offset) + draw_offset) * MetSys.CELL_SIZE
+		player_location.visible = layer == MetSys.current_layer
+		if player_location.visible:
+			player_location.offset = (-Vector2(draw_center + offset) + draw_offset) * MetSys.CELL_SIZE
 	
 	for y in draw_area.y:
 		for x in draw_area.x:

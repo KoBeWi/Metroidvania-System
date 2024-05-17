@@ -14,7 +14,7 @@ func on_body_entered(body: Node2D) -> void:
 	Game.get_singleton().save_game()
 	# Starting coords for the delta vector feature.
 	Game.get_singleton().reset_map_starting_coords()
-	
+
 func _draw() -> void:
 	# Draws the circle.
 	$CollisionShape2D.shape.draw(get_canvas_item(), Color.BLUE)

@@ -49,7 +49,7 @@ func get_save_data() -> Dictionary:
 	data.merge(_get_save_data())
 	
 	for module in modules:
-		data.merge(module.get_save_data())
+		data.merge(module._get_save_data())
 	
 	return data
 
