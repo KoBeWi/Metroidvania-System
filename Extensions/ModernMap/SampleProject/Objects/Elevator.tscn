@@ -1,0 +1,109 @@
+[gd_scene load_steps=5 format=3 uid="uid://bex32x8t30k4n"]
+
+[ext_resource type="Texture2D" uid="uid://c2b8sodh13n7m" path="res://SampleProject/Sprites/ElevatorSprite.png" id="1_16218"]
+
+[sub_resource type="GDScript" id="GDScript_bxd4l"]
+script/source = "# Simple elevator script. This scene exists in ElevatorRoom.tscn and UpperElevatorRoom.tscn.
+# It's not really related to MetSys, but it's quite intricate. The elvator moves when pressing Up,
+# Freezing player's controls. After going out of the screen, map changes and the elevator in the
+# new room is activated.
+extends StaticBody2D
+
+const FogOfMystery = preload(\"res://addons/MetroidvaniaSystem/Template/Scripts/Modules/FogOfMystery.gd\")
+
+# Whether the elevator should go up or down.
+@export var up := true
+# Map to teleport to after reaching the target.
+@export var target_map: String
+# Initial position of the elevator.
+@onready var start_y := position.y
+
+var moving: int
+var player: Node2D
+
+func _physics_process(delta: float) -> void:
+	if moving:
+		# Elevator is moving.
+		position.y += 200 * delta * signf(moving)
+		player.position.y += 200 * delta * signf(moving)
+		
+		# Detect when the elevator goes out of the screen and teleport appropriately.
+		if moving == -1 and position.y < -64:
+			FogOfMystery.fom.pre_new_room(target_map)
+			await Game.get_singleton().load_room(target_map)
+			# Activate the elevator in the next room.
+			Game.get_singleton().map.get_node(^\"Elevator\").enter()
+		elif moving == -2 and position.y < start_y:
+			# When elevator reached its destination, release the player.
+			position.y = start_y
+			player.event = false
+			moving = 0
+		elif moving == 1 and position.y > MetSys.current_room.get_size().y:
+			FogOfMystery.fom.pre_new_room(target_map)
+			await Game.get_singleton().load_room(target_map)
+			Game.get_singleton().map.get_node(^\"Elevator\").enter()
+		elif moving == 2 and position.y > start_y:
+			position.y = start_y
+			player.event = false
+			moving = 0
+		
+		return
+	
+	# Show Up label.
+	if $Area2D.has_overlapping_bodies():
+		$Label.show()
+	else:
+		$Label.hide()
+		return
+	
+	# When pressed Up, start moving.
+	if Input.is_action_just_pressed(\"ui_up\"):
+		moving = -1 if up else 1
+		player = $Area2D.get_overlapping_bodies().front()
+		player.event = true
+		$Label.hide()
+
+# Called after being transported to the target room.
+func enter():
+	# Set initial position of the elevator.
+	if up:
+		position.y = -64
+		moving = 2
+	else:
+		position.y = MetSys.get_current_room_instance().get_size().y + 64
+		moving = -2
+	# Put the player at the elevator.
+	player = Game.get_singleton().player
+	player.position.y = position.y - 64
+"
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_q65hc"]
+size = Vector2(64, 32)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_fj1ik"]
+size = Vector2(64, 32)
+
+[node name="Elevator" type="StaticBody2D"]
+script = SubResource("GDScript_bxd4l")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_q65hc")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_16218")
+
+[node name="Area2D" type="Area2D" parent="."]
+position = Vector2(0, -48)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+shape = SubResource("RectangleShape2D_fj1ik")
+
+[node name="Label" type="Label" parent="."]
+visible = false
+offset_left = -32.0
+offset_top = 16.0
+offset_right = 32.0
+offset_bottom = 48.0
+text = "-> Up"
+horizontal_alignment = 1
+vertical_alignment = 1

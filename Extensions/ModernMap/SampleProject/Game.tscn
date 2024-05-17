@@ -1,0 +1,176 @@
+[gd_scene load_steps=11 format=3 uid="uid://c3xqaietfgs7l"]
+
+[ext_resource type="Script" path="res://SampleProject/Scripts/Game.gd" id="1_xdpfu"]
+[ext_resource type="PackedScene" uid="uid://xpbhai8nlgtx" path="res://SampleProject/Player.tscn" id="2_bam1a"]
+[ext_resource type="PackedScene" uid="uid://dch8dyylb7526" path="res://addons/MetroidvaniaSystem/Template/Nodes/Minimap.tscn" id="3_a3gfy"]
+[ext_resource type="Texture2D" uid="uid://wiq0mic5m6is" path="res://SampleProject/Sprites/Collectible.png" id="3_kng3d"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5kobx"]
+draw_center = false
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(1, 1, 1, 1)
+
+[sub_resource type="Gradient" id="Gradient_p30je"]
+colors = PackedColorArray(0.00850003, 0, 0.17, 1, 0, 0, 0.4, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_aruf4"]
+gradient = SubResource("Gradient_p30je")
+width = 128
+height = 128
+fill_to = Vector2(0.115385, 0.0854701)
+repeat = 2
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_kqkec"]
+texture = SubResource("GradientTexture2D_aruf4")
+
+[sub_resource type="GDScript" id="GDScript_i0wlt"]
+resource_name = "FullMap"
+script/source = "@tool
+extends \"res://addons/MetroidvaniaSystem/Template/Nodes/Minimap.gd\"
+
+const SCROLL_SPEED = 10
+
+@onready var initial_position = position
+
+func _input(event: InputEvent) -> void:
+	if event is InputEventKey:
+		if event.pressed:
+			# Toggle visibility when pressing M.
+			if event.keycode == KEY_M:
+				visible = not visible
+				%Background.visible = visible
+				Game.get_singleton().player.event = visible
+				
+				if visible:
+					layer = MetSys.current_layer
+					position = initial_position - Vector2(MetSys.last_player_position.x, MetSys.last_player_position.y) * MetSys.CELL_SIZE
+			
+			if visible:
+				if event.keycode == KEY_LEFT:
+					position += Vector2.RIGHT * SCROLL_SPEED
+				elif event.keycode == KEY_RIGHT:
+					position += Vector2.LEFT * SCROLL_SPEED
+				elif event.keycode == KEY_UP:
+					position += Vector2.DOWN * SCROLL_SPEED
+				elif event.keycode == KEY_DOWN:
+					position += Vector2.UP * SCROLL_SPEED
+"
+
+[sub_resource type="GDScript" id="GDScript_66suq"]
+resource_name = "PercentLabel"
+script/source = "# Displays map completion percentage
+extends Label
+
+func _ready() -> void:
+	# The percentage may change when map is updated.
+	MetSys.map_updated.connect(update)
+
+func _notification(what: int) -> void:
+	# Update when the label is made visible. This happens when the map is toggled.
+	if what == NOTIFICATION_VISIBILITY_CHANGED:
+		update()
+
+func update():
+	# Only update when visible.
+	if is_visible_in_tree():
+		# Show the percentage.
+		text = \"%03d%%\" % int(MetSys.get_explored_ratio() * 100)
+"
+
+[node name="Game" type="Node2D"]
+script = ExtResource("1_xdpfu")
+starting_map = "StartingPoint.tscn"
+
+[node name="Player" parent="." groups=["player"] instance=ExtResource("2_bam1a")]
+position = Vector2(368, 248)
+
+[node name="Camera2D" type="Camera2D" parent="Player"]
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="Panel" type="Panel" parent="UI"]
+clip_contents = true
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -296.0
+offset_top = 8.0
+offset_right = -8.0
+offset_bottom = 170.0
+grow_horizontal = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_5kobx")
+
+[node name="Minimap" parent="UI/Panel" instance=ExtResource("3_a3gfy")]
+texture_filter = 1
+clip_contents = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -96.0
+offset_top = -54.0
+offset_right = 96.0
+offset_bottom = 54.0
+grow_horizontal = 2
+grow_vertical = 2
+display_player_location = true
+area = Vector2i(1, 1)
+
+[node name="Background" type="Panel" parent="UI"]
+unique_name_in_owner = true
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_kqkec")
+
+[node name="Map" parent="UI" instance=ExtResource("3_a3gfy")]
+visible = false
+texture_filter = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -384.0
+offset_top = -216.0
+offset_right = 384.0
+offset_bottom = 216.0
+grow_horizontal = 2
+grow_vertical = 2
+script = SubResource("GDScript_i0wlt")
+track_position = false
+display_player_location = true
+area = Vector2i(11, 11)
+
+[node name="Percent" type="Label" parent="UI/Map"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 26.0
+text = "0%"
+script = SubResource("GDScript_66suq")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="UI"]
+offset_left = 8.0
+offset_top = 8.0
+offset_right = 48.0
+offset_bottom = 34.0
+
+[node name="TextureRect" type="TextureRect" parent="UI/HBoxContainer"]
+layout_mode = 2
+texture = ExtResource("3_kng3d")
+expand_mode = 2
+stretch_mode = 5
+
+[node name="CollectibleCount" type="Label" parent="UI/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "0"
+vertical_alignment = 1
