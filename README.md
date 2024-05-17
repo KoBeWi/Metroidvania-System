@@ -2,7 +2,7 @@
 
 Metroidvania System (abbrevated as MetSys) is a general-purpose toolkit for creating metroidvania games in Godot game engine. It helps with map design, navigation and presentation, tracking collectibles and provides basic save data functionality related to the system. Its components can be used independently, even for games that aren't metroidvanias.
 
-This plugin evolved from various tools I made for my metroidvania game, [Voice of Flowers](https://store.steampowered.com/app/2609560?utm_source=GitHub&utm_medium=README_TOP&utm_campaign=MetSys). They were quite useful, so I decided to make them into a separate project that can be used in other games too.
+This plugin evolved from various tools I made for my metroidvania game, [Voice of Flowers](https://store.steampowered.com/app/2609560?utm_source=GitHub&utm_medium=README_TOP&utm_campaign=MetSys). They were quite useful, so I decided to make them into a separate project that can be used in other games too. The project evolved well beyond the tools I used originally.
 
 Supports Godot **4.2** or newer.
 
@@ -70,6 +70,7 @@ https://github.com/KoBeWi/Metroidvania-System/assets/2223172/4d8f3099-93be-4a90-
 
 - Specify in-game cell size, i.e. how a single cell size on the minimap relates to in-game world.
 - Player position tracking using a single method, which automatically discovers cells and sends scene change requests.
+- Option to discover whole rooms instead of single cells.
 - Override existing cells, assigning them different colors, borders, symbols or even scenes.
 - Create and customize new ad hoc cells to make random map generators.
 - Register and store persistent objects to track their state using automatically or manually assigned IDs.
@@ -78,6 +79,7 @@ https://github.com/KoBeWi/Metroidvania-System/assets/2223172/4d8f3099-93be-4a90-
 - Get world map coordinates for any object on a scene.
 - Helper method for custom drawing on map (for anything not supported by other features).
 - Template scripts and scenes for common functionality, including scene transitions, connection automapping, save management and minimaps.
+- Support for "modern" maps that display detailed room overview and feature per-pixel room discovery.
 
 ## Closing words
 
