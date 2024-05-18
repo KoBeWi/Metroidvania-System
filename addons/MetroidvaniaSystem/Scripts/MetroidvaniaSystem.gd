@@ -88,8 +88,12 @@ func _update_theme():
 	CELL_SIZE = settings.theme.center_texture.get_size()
 	map_updated.emit()
 
-func _ready() -> void:
-	set_physics_process(false)
+## Loads map data from the provided map root directory. Can be used to support multiple separate world maps (for custom campaigns etc.). 
+func load_map_data(folder: String):
+	settings.map_root_folder = folder
+	map_data = MapData.new()
+	map_data.load_data()
+	map_updated.emit()
 
 ## Resets the state of MetSys singleton to initial one. This means clearing save data, player position, current room and layer.
 ## [br][br]You should call it every time you start a new game session. This does [i]not[/i] initialize the save data. In fact, it sets it to [code]null[/code], which means that you need to call [method set_save_data] to initialize save data.
