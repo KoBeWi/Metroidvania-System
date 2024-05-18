@@ -601,8 +601,7 @@ func validate_scene():
 		set_error(\"Root node invalid.\")
 		return
 	
-	var path := file_dialog.current_dir.path_join(scene_name_text)
-	if FileAccess.file_exists(path):
+	if FileAccess.file_exists(get_scene_path()):
 		set_error(\"File already exists.\")
 		return
 	
@@ -612,7 +611,7 @@ func set_error(error: String):
 	error_label.text = error
 	ok_button.disabled = not error.is_empty()
 
-func create_scene_confirm() -> void:
+func create_default_scene() -> Node:
 	var root := Node2D.new()
 	if root_name.text.is_empty():
 		root.name = &\"Map\"
@@ -624,23 +623,45 @@ func create_scene_confirm() -> void:
 	
 	add_child(root)
 	instance.owner = root
+	return root
+
+func create_scene_confirm() -> void:
+	var root: Node
+	if not MetSys.settings.scene_template.is_empty():
+		var scene: PackedScene = load(MetSys.settings.scene_template)
+		if scene:
+			root = scene.instantiate()
+			if root:
+				root.scene_file_path = \"\"
+				if not root_name.text.is_empty():
+					root.name = root_name.text
+			else:
+				push_error(\"Failed to instantiate template scene.\")
+		else:
+			push_error(\"Failed to load template scene.\")
+	
+	if not root:
+		root = create_default_scene()
 	
 	var scene := PackedScene.new()
 	scene.pack(root)
 	
-	var scene_nejm := scene_name.text
-	if not scene_nejm.ends_with(\".\"):
-		scene_nejm += \".\"
-	scene_nejm += scene_extension.get_item_text(scene_extension.selected)
-	
-	var scene_path := file_dialog.root_subfolder.path_join(file_dialog.current_dir).path_join(scene_nejm)
+	var scene_path := get_scene_path()
 	ResourceSaver.save(scene, scene_path)
-	
 	root.queue_free()
 	
 	EditorInterface.get_resource_filesystem().scan()
 	EditorInterface.open_scene_from_path(scene_path)
 	on_map_selected(scene_path)
+
+func get_scene_name() -> String:
+	var neym := scene_name.text
+	if not neym.ends_with(\".\"):
+		neym += \".\"
+	return neym + scene_extension.get_item_text(scene_extension.selected)
+
+func get_scene_path() -> String:
+	return file_dialog.root_subfolder.path_join(file_dialog.current_dir).path_join(get_scene_name())
 
 func can_drop_data(at_position: Vector2, data) -> bool:
 	if highlighted_room.is_empty():

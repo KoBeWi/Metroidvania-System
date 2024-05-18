@@ -18,6 +18,9 @@ extends Resource
 		else:
 			map_root_folder = mrf + "/"
 
+## Scene template file used when creating new scenes from editor's Assign Scene mode. If empty, a default scene with RoomInstance will be created.
+@export_file("*.tscn", "*.scn") var scene_template: String
+
 ## The size of a map cell within an in-game room, i.e. this is the real game size of your map cells. Usually equal to the screen size.
 @export var in_game_cell_size := Vector2(1152, 648)
 
