@@ -1,0 +1,163 @@
+[gd_scene load_steps=2 format=3 uid="uid://w34y4dyx84y8"]
+
+[sub_resource type="GDScript" id="GDScript_43u2x"]
+script/source = "@tool
+extends HBoxContainer
+
+@export var allow_none: bool
+
+@onready var prev_button: Button = %Prev
+@onready var next_button: Button = %Next
+@onready var layer_name: Button = %LayerName
+@onready var name_edit: LineEdit = %NameEdit
+@onready var name_popup: PopupMenu = $NamePopup
+@onready var popup_timer: Timer = %PopupTimer
+
+var layer_names: PackedStringArray
+var value: int:
+	set(v):
+		if v == value:
+			return
+		
+		value = v
+		update_buttons()
+
+signal value_changed(v: int)
+
+func _ready() -> void:
+	if allow_none:
+		value = -1
+	update_buttons()
+
+func _on_prev_pressed() -> void:
+	_set_layer(value - 1)
+
+func _on_next_pressed() -> void:
+	_set_layer(value + 1)
+
+func _set_layer(idx: int):
+	if idx == value:
+		return
+	
+	value = idx
+	value_changed.emit(value)
+	update_buttons()
+
+func _on_layer_name_gui_input(event: InputEvent) -> void:
+	if event is InputEventMouseButton:
+		if not event.pressed or event.button_index != MOUSE_BUTTON_LEFT:
+			return
+		
+		if event.double_click:
+			popup_timer.stop()
+			name_edit.text = get_layer_name(value)
+			name_edit.show()
+			name_edit.grab_focus()
+			name_edit.select_all()
+			update_buttons()
+		else:
+			popup_timer.start()
+
+func _cancel_name_edit() -> void:
+	name_edit.hide()
+	update_buttons()
+
+func _submit_name(new_text: String) -> void:
+	set_layer_name(value, new_text)
+	name_edit.release_focus()
+
+func update_buttons():
+	layer_name.text = get_layer_format(value)
+	prev_button.disabled = value == (-1 if allow_none else 0) or name_edit.visible
+	next_button.disabled = value == 9999 or name_edit.visible
+
+func open_popup() -> void:
+	name_popup.clear()
+	name_popup.reset_size()
+	
+	if allow_none:
+		name_popup.add_item(get_layer_format(-1))
+	
+	for i in layer_names.size():
+		var lname := layer_names[i]
+		if not lname.is_empty():
+			name_popup.add_item(get_layer_format(i), i)
+	
+	if name_popup.item_count == 0:
+		return
+	
+	#name_popup.position = name_edit.get_screen_position() + Vector2(0, name_edit.size.y)
+	#name_popup.size.x = layer_name.size.x
+	name_popup.popup(Rect2(name_edit.get_screen_position() + Vector2(0, name_edit.size.y), Vector2(layer_name.size.x, 1)))
+
+func get_layer_name(idx: int) -> String:
+	if idx < 0:
+		return \"None\"
+	elif idx >= layer_names.size() or layer_names[idx].is_empty():
+		return \"Unnamed\"
+	else:
+		return layer_names[idx]
+
+func get_layer_format(idx: int) -> String:
+	return \"%d: %s\" % [idx, get_layer_name(idx)]
+
+func set_layer_name(idx: int, text: String):
+	if idx >= layer_names.size():
+		layer_names.resize(idx + 1)
+	layer_names[idx] = text
+	
+	for selector in get_tree().get_nodes_in_group(&\"layer_selectors\"):
+		if selector == self:
+			continue
+		selector.layer_names = layer_names
+		selector.update_buttons()
+"
+
+[node name="LayerSelector" type="HBoxContainer" groups=["layer_selectors"]]
+offset_right = 256.0
+offset_bottom = 31.0
+script = SubResource("GDScript_43u2x")
+
+[node name="Prev" type="Button" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+disabled = true
+text = "<"
+
+[node name="LayerName" type="Button" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+tooltip_text = "Double-click to edit name."
+text = "0: Defaltia"
+text_overrun_behavior = 3
+
+[node name="NameEdit" type="LineEdit" parent="LayerName"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Next" type="Button" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+text = ">"
+
+[node name="NamePopup" type="PopupMenu" parent="."]
+
+[node name="PopupTimer" type="Timer" parent="."]
+unique_name_in_owner = true
+wait_time = 0.2
+one_shot = true
+
+[connection signal="pressed" from="Prev" to="." method="_on_prev_pressed"]
+[connection signal="gui_input" from="LayerName" to="." method="_on_layer_name_gui_input"]
+[connection signal="focus_exited" from="LayerName/NameEdit" to="." method="_cancel_name_edit"]
+[connection signal="text_submitted" from="LayerName/NameEdit" to="." method="_submit_name"]
+[connection signal="pressed" from="Next" to="." method="_on_next_pressed"]
+[connection signal="id_pressed" from="NamePopup" to="." method="_set_layer"]
+[connection signal="timeout" from="PopupTimer" to="." method="open_popup"]

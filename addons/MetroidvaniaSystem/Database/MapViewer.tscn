@@ -1,7 +1,8 @@
-[gd_scene load_steps=7 format=3 uid="uid://df5fuj4vjr11p"]
+[gd_scene load_steps=8 format=3 uid="uid://df5fuj4vjr11p"]
 
 [ext_resource type="Script" path="res://addons/MetroidvaniaSystem/Database/MapViewer.gd" id="1_s16ok"]
 [ext_resource type="Script" path="res://addons/MetroidvaniaSystem/Scripts/EditorIconButton.gd" id="2_tjngl"]
+[ext_resource type="PackedScene" uid="uid://w34y4dyx84y8" path="res://addons/MetroidvaniaSystem/Nodes/LayerSelector.tscn" id="2_yqo4d"]
 
 [sub_resource type="ButtonGroup" id="ButtonGroup_lmh17"]
 
@@ -279,10 +280,9 @@ layout_mode = 2
 text = "Current Layer"
 horizontal_alignment = 1
 
-[node name="CurrentLayer" type="SpinBox" parent="Sidebar/ScrollContainer/VBoxContainer/Layer"]
+[node name="CurrentLayer" parent="Sidebar/ScrollContainer/VBoxContainer/Layer" instance=ExtResource("2_yqo4d")]
 unique_name_in_owner = true
 layout_mode = 2
-size_flags_horizontal = 4
 
 [node name="RecenterButton" type="Button" parent="Sidebar/ScrollContainer/VBoxContainer/Layer"]
 unique_name_in_owner = true

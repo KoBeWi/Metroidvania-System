@@ -1,6 +1,7 @@
-[gd_scene load_steps=13 format=3 uid="uid://dfbykrvyqnqr5"]
+[gd_scene load_steps=14 format=3 uid="uid://dfbykrvyqnqr5"]
 
 [ext_resource type="Script" path="res://addons/MetroidvaniaSystem/Database/MapEditor.gd" id="1_i7yda"]
+[ext_resource type="PackedScene" uid="uid://w34y4dyx84y8" path="res://addons/MetroidvaniaSystem/Nodes/LayerSelector.tscn" id="2_rinoa"]
 
 [sub_resource type="ButtonGroup" id="ButtonGroup_pv7fp"]
 
@@ -830,7 +831,6 @@ layout_mode = 2
 
 [node name="ScrollContainer" type="ScrollContainer" parent="Sidebar"]
 layout_mode = 2
-scroll_vertical = 64
 horizontal_scroll_mode = 0
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Sidebar/ScrollContainer"]
@@ -848,21 +848,19 @@ layout_mode = 2
 text = "Current Layer"
 horizontal_alignment = 1
 
-[node name="CurrentLayer" type="SpinBox" parent="Sidebar/ScrollContainer/VBoxContainer/Layer"]
+[node name="CurrentLayer" parent="Sidebar/ScrollContainer/VBoxContainer/Layer" instance=ExtResource("2_rinoa")]
 unique_name_in_owner = true
 layout_mode = 2
-size_flags_horizontal = 4
 
 [node name="Label2" type="Label" parent="Sidebar/ScrollContainer/VBoxContainer/Layer"]
 layout_mode = 2
 text = "Preview Layer"
 horizontal_alignment = 1
 
-[node name="SpinBox2" type="SpinBox" parent="Sidebar/ScrollContainer/VBoxContainer/Layer"]
+[node name="PreviewLayer" parent="Sidebar/ScrollContainer/VBoxContainer/Layer" instance=ExtResource("2_rinoa")]
+unique_name_in_owner = true
 layout_mode = 2
-size_flags_horizontal = 4
-min_value = -1.0
-value = -1.0
+allow_none = true
 
 [node name="RecenterButton" type="Button" parent="Sidebar/ScrollContainer/VBoxContainer/Layer"]
 unique_name_in_owner = true
@@ -1217,7 +1215,7 @@ mouse_filter = 1
 theme_override_styles/normal = SubResource("StyleBoxFlat_xiyo8")
 vertical_alignment = 1
 
-[connection signal="value_changed" from="Sidebar/ScrollContainer/VBoxContainer/Layer/SpinBox2" to="." method="preview_layer_changed"]
+[connection signal="value_changed" from="Sidebar/ScrollContainer/VBoxContainer/Layer/PreviewLayer" to="." method="preview_layer_changed"]
 [connection signal="file_selected" from="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign/FileDialog" to="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign" method="on_map_selected"]
 [connection signal="pressed" from="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign/FileDialog/Button" to="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign" method="create_new_scene"]
 [connection signal="confirmed" from="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign/CreateDialog" to="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign" method="create_scene_confirm"]
