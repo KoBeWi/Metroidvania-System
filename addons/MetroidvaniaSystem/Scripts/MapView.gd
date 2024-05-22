@@ -127,10 +127,10 @@ func _unhandled_key_input(event: InputEvent) -> void:
 	
 	if event is InputEventKey and event.pressed:
 		if event.physical_keycode == KEY_Q:
-			current_layer_spinbox.value -= 1
+			current_layer_spinbox._on_prev_pressed()
 			accept_event()
 		elif event.physical_keycode == KEY_E:
-			current_layer_spinbox.value += 1
+			current_layer_spinbox._on_next_pressed()
 			accept_event()
 
 func _notification(what: int) -> void:

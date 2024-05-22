@@ -29,9 +29,13 @@ func _ready() -> void:
 	update_buttons()
 
 func _on_prev_pressed() -> void:
+	if prev_button.disabled:
+		return
 	_set_layer(value - 1)
 
 func _on_next_pressed() -> void:
+	if next_button.disabled:
+		return
 	_set_layer(value + 1)
 
 func _set_layer(idx: int):

@@ -23,7 +23,7 @@ https://github.com/KoBeWi/Metroidvania-System/assets/2223172/4d8f3099-93be-4a90-
 #### Map Editor
 
 - Place or remove map cells, connecting them in any grid-based shape.
-- The map supports independent layers, allowing for sub-areas, parallel worlds etc.
+- The map supports independent layers, allowing for sub-areas, parallel worlds etc. The layers can be named.
 - Map cells may have different colors and symbols.
 - Cell borders are also colored independently and may have different textures.
 - You can assign groups to cells, for easier runtime operations on multiple cells (like mapping or recoloring).
