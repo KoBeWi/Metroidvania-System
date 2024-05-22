@@ -5,8 +5,6 @@ const EXTENSION_PATH = "MetroidvaniaSystem/EditorExtension"
 
 enum { TAB_EDITOR, TAB_OVERVIEW, TAB_MANAGE }
 
-var export_plugin: EditorExportPlugin
-
 var main: Control
 var theme_scanner: Timer
 var prev_theme_state: Array
@@ -20,7 +18,7 @@ func _get_plugin_name() -> String:
 	return "MetSys"
 
 func _get_plugin_icon() -> Texture2D:
-	return preload("res://addons/MetroidvaniaSystem/Icon.png")
+	return load("res://addons/MetroidvaniaSystem/Icon.png")
 
 func _enable_plugin() -> void:
 	EditorInterface.set_plugin_enabled(EXTENSION_PATH, true)
@@ -59,19 +57,15 @@ func _enter_tree() -> void:
 			DirAccess.remove_absolute("user://MetSysFail")
 			EditorInterface.set_plugin_enabled(EXTENSION_PATH, true)
 	
-	main = preload("res://addons/MetroidvaniaSystem/Database/Main.tscn").instantiate()
+	main = load("res://addons/MetroidvaniaSystem/Database/Main.tscn").instantiate()
 	main.plugin = self
 	EditorInterface.get_editor_main_screen().add_child(main)
 	main.hide()
 	
 	get_singleton().settings.theme_changed.connect(func(): prev_theme_state.clear())
-	
-	export_plugin = MetSysExport.new()
-	add_export_plugin(export_plugin)
 
 func _exit_tree() -> void:
 	main.queue_free()
-	remove_export_plugin(export_plugin)
 
 func _make_visible(visible: bool) -> void:
 	main.visible = visible
@@ -92,20 +86,11 @@ func _get_unsaved_status(for_scene: String) -> String:
 		return "MetSys map has been modified.\nDo you want to save?"
 	return ""
 
-func get_singleton() -> MetroidvaniaSystem:
+func get_singleton():# -> MetroidvaniaSystem:
 	return get_tree().root.get_node_or_null(^"MetSys")
 
 func check_theme():
-	var theme := get_singleton().settings.theme
+	var theme: MapTheme = get_singleton().settings.theme
 	var changed := theme.check_for_changes(prev_theme_state)
 	if not changed.is_empty():
 		get_singleton().theme_modified.emit(changed)
-
-class MetSysExport extends EditorExportPlugin:
-	func _export_begin(features: PackedStringArray, is_debug: bool, path: String, flags: int) -> void:
-		MetSys.map_data.exporting_mode = true
-		MetSys.map_data.save_data()
-		MetSys.map_data.exporting_mode = false
-	
-	func _export_end() -> void:
-		MetSys.map_data.save_data()

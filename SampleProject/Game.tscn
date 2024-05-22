@@ -124,7 +124,6 @@ offset_top = 8.0
 offset_right = -8.0
 offset_bottom = 104.0
 grow_horizontal = 0
-smooth_scroll = true
 display_player_location = true
 
 [node name="Background" type="Panel" parent="UI/Minimap"]

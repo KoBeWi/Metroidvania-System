@@ -179,7 +179,7 @@ func discover_cell_group(group_id: int):
 
 ## Assigns a custom symbol to the given cell that will override the symbol set in the editor. You can assign any number of symbols and the one with the highest ID will be displayed. [param symbol_id] must be within the symbols defined in [member MapTheme.symbols].
 func add_custom_marker(coords: Vector3i, symbol_id: int):
-	assert(symbol_id >= 0 and symbol_id < mini(MetSys.settings.theme.symbols.size(), 63))
+	assert(symbol_id >= 0 and symbol_id < mini(settings.theme.symbols.size(), 63))
 	save_data.add_custom_marker(coords, symbol_id)
 
 ## Removes a custom symbol assigned in [method add_custom_marker]. Does nothing if the given [param symbol_id] was not assigned to the cell.
@@ -274,7 +274,7 @@ func get_object_coords(object: Object) -> Vector3i:
 ## Translates map coordinates to 2D pixel coordinates. Can be used for custom drawing on the map.
 ## [br][br][param relative] allows to specify precise position inside the cell, with [code](0.5, 0.5)[/code] being the cell's center. [param base_offset] is an additional offset in pixels.
 func get_cell_position(coords: Vector2i, relative := Vector2(0.5, 0.5), base_offset := Vector2()) -> Vector2:
-	return base_offset + (Vector2(coords) + relative) * MetSys.CELL_SIZE
+	return base_offset + (Vector2(coords) + relative) * CELL_SIZE
 
 ## Returns a cell override at position [param coords]. If it doesn't exist, it will be created (unless [param auto_create] is [code]false[/code]). A cell must exist at the given [param coords].
 ## [br][br]Cell overrides allow to modify any cell's data at runtime. They are included with the data returned in [method get_save_data]. Creating an override and doing any modifications with emit [signal map_updated]. The signal emitted with modifications is deferred, i.e. multiple modifications will do only a single emission, at the end of the current frame.
@@ -301,7 +301,7 @@ func get_cell_override_from_group(group_id: int, auto_create := true) -> MapData
 ## Removes an override created with [method get_cell_override], reverting the cell to its original appearance, and emits [signal map_updated] signal. Does nothing if the override didn't exist.
 ## [br][br][b]Note:[/b] If the override was created with MapBuilder, use the [code]destroy()[/code] method instead.
 func remove_cell_override(coords: Vector3i):
-	var cell = MetSys.map_data.get_cell_at(coords)
+	var cell = map_data.get_cell_at(coords)
 	assert(cell, "Can't remove override of non-existent cell")
 	if save_data.remove_cell_override(cell):
 		map_updated.emit()

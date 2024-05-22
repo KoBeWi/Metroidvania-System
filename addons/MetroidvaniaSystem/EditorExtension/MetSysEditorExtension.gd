@@ -1,6 +1,8 @@
 @tool
 extends EditorPlugin
 
+var export_plugin: EditorExportPlugin
+
 var button: Button
 var current_instance: MetroidvaniaSystem.RoomInstance
 var preview_list: Array[Control]
@@ -13,9 +15,13 @@ func _enter_tree() -> void:
 	button.hide()
 	
 	add_control_to_container(EditorPlugin.CONTAINER_CANVAS_EDITOR_MENU, button)
+	
+	export_plugin = MetSysExport.new()
+	add_export_plugin(export_plugin)
 
 func _exit_tree() -> void:
 	remove_control_from_container(EditorPlugin.CONTAINER_CANVAS_EDITOR_MENU, button)
+	remove_export_plugin(export_plugin)
 
 func _make_visible(visible: bool) -> void:
 	button.visible = visible
@@ -100,3 +106,12 @@ func _forward_canvas_gui_input(event: InputEvent) -> bool:
 			return true
 	
 	return false
+
+class MetSysExport extends EditorExportPlugin:
+	func _export_begin(features: PackedStringArray, is_debug: bool, path: String, flags: int) -> void:
+		MetSys.map_data.exporting_mode = true
+		MetSys.map_data.save_data()
+		MetSys.map_data.exporting_mode = false
+	
+	func _export_end() -> void:
+		MetSys.map_data.save_data()
