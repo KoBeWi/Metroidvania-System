@@ -104,6 +104,13 @@ func reset_state():
 	current_room = null
 	current_layer = 0
 
+## Returns index of a layer with the given name. Returns [code]-1[/code] and error if layer name does not exist.
+func get_layer_by_name(layer: String) -> int:
+	var index := map_data.layer_names.find(layer)
+	if index == -1:
+		push_error("Layer \"%s\" does not exist." % layer)
+	return index
+
 ## Returns a [Dictionary] containing the MetSys' runtime data, like discovered cells or stored objects. You need to serialize it yourself, e.g. using [method FileAccess.store_var].
 func get_save_data() -> Dictionary:
 	return save_data.get_data()

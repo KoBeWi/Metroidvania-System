@@ -13,7 +13,6 @@ extends HBoxContainer
 @onready var name_popup: PopupMenu = $NamePopup
 @onready var popup_timer: Timer = %PopupTimer
 
-var layer_names: PackedStringArray
 var value: int:
 	set(v):
 		if v == value:
@@ -66,6 +65,9 @@ func _submit_name(new_text: String) -> void:
 	set_layer_name(value, new_text)
 	name_edit.release_focus()
 
+func _set_layer_index(index: int) -> void:
+	_set_layer(name_popup.get_item_metadata(index))
+
 func update_buttons():
 	layer_name.text = get_layer_format(value)
 	prev_button.disabled = value == (-1 if allow_none else 0) or name_edit.visible
@@ -77,39 +79,38 @@ func open_popup() -> void:
 	
 	if allow_none:
 		name_popup.add_item(get_layer_format(-1))
+		name_popup.set_item_metadata(-1, -1)
 	
-	for i in layer_names.size():
-		var lname := layer_names[i]
+	for i in MetSys.map_data.layer_names.size():
+		var lname := MetSys.map_data.layer_names[i]
 		if not lname.is_empty():
-			name_popup.add_item(get_layer_format(i), i)
+			name_popup.add_item(get_layer_format(i))
+			name_popup.set_item_metadata(-1, i)
 	
 	if name_popup.item_count == 0:
 		return
 	
-	#name_popup.position = name_edit.get_screen_position() + Vector2(0, name_edit.size.y)
-	#name_popup.size.x = layer_name.size.x
 	name_popup.popup(Rect2(name_edit.get_screen_position() + Vector2(0, name_edit.size.y), Vector2(layer_name.size.x, 1)))
 
 func get_layer_name(idx: int) -> String:
 	if idx < 0:
 		return \"None\"
-	elif idx >= layer_names.size() or layer_names[idx].is_empty():
+	elif idx >= MetSys.map_data.layer_names.size() or MetSys.map_data.layer_names[idx].is_empty():
 		return \"Unnamed\"
 	else:
-		return layer_names[idx]
+		return MetSys.map_data.layer_names[idx]
 
 func get_layer_format(idx: int) -> String:
 	return \"%d: %s\" % [idx, get_layer_name(idx)]
 
 func set_layer_name(idx: int, text: String):
-	if idx >= layer_names.size():
-		layer_names.resize(idx + 1)
-	layer_names[idx] = text
+	if idx >= MetSys.map_data.layer_names.size():
+		MetSys.map_data.layer_names.resize(idx + 1)
+	MetSys.map_data.layer_names[idx] = text
 	
 	for selector in get_tree().get_nodes_in_group(&\"layer_selectors\"):
 		if selector == self:
 			continue
-		selector.layer_names = layer_names
 		selector.update_buttons()
 "
 
@@ -159,5 +160,5 @@ one_shot = true
 [connection signal="focus_exited" from="LayerName/NameEdit" to="." method="_cancel_name_edit"]
 [connection signal="text_submitted" from="LayerName/NameEdit" to="." method="_submit_name"]
 [connection signal="pressed" from="Next" to="." method="_on_next_pressed"]
-[connection signal="id_pressed" from="NamePopup" to="." method="_set_layer"]
+[connection signal="index_pressed" from="NamePopup" to="." method="_set_layer_index"]
 [connection signal="timeout" from="PopupTimer" to="." method="open_popup"]

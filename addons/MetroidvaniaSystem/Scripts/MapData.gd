@@ -10,7 +10,7 @@ class CellData:
 	var assigned_scene: String
 	var override_map: String
 	
-	var loading
+	var loading: Variant
 	
 	func _init(line: String) -> void:
 		if line.is_empty():
@@ -279,6 +279,7 @@ var assigned_scenes: Dictionary#[String, Array[Vector3i]]
 var cell_groups: Dictionary#[int, Array[Vector3i]]
 var custom_elements: Dictionary#[Vector3i, Struct]
 
+var layer_names: PackedStringArray
 var cell_overrides: Dictionary#[Vector3i, CellOverride]
 var scene_overrides: Dictionary#[String, String]
 
@@ -296,7 +297,9 @@ func load_data():
 	var current_section := 0 # groups, custom_elements, cells
 	while i < data.size():
 		var line := data[i].strip_edges()
-		if line.begins_with("["):
+		if line.begins_with("$ln"):
+			layer_names = line.split(";").slice(1)
+		elif line.begins_with("["):
 			current_section = 2
 			line = line.trim_prefix("[").trim_suffix("]")
 			
@@ -354,6 +357,19 @@ func save_data():
 	if not file:
 		push_error("Could not open file '%s' for writing." % MetSys.settings.map_root_folder.path_join("MapData.txt"))
 		return
+	
+	if not layer_names.is_empty():
+		var i := layer_names.size() - 1
+		while i > -1:
+			if not layer_names[i].is_empty():
+				break
+			i -= 1
+		
+		if i > -1:
+			layer_names = layer_names.slice(0, i + 1)
+	
+	if not layer_names.is_empty():
+		file.store_line("$ln;" + ";".join(layer_names))
 	
 	for group in cell_groups:
 		if cell_groups[group].is_empty():
