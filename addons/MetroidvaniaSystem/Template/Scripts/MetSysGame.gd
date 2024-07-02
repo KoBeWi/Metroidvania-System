@@ -7,6 +7,7 @@ const MetSysModule = preload("res://addons/MetroidvaniaSystem/Template/Scripts/M
 
 var player: Node2D
 var map: Node2D
+var map_changing: bool
 
 var modules: Array[MetSysModule]
 
@@ -29,7 +30,12 @@ func _physics_tick():
 		MetSys.set_player_position(player.position)
 
 ## Loads a map and adds as a child of this node. If a map already exists, it will be removed before the new one is loaded. This method is asynchronous, so you should call it with [code]await[/code] if you want to do something after the map is loaded. Alternatively, you can use [signal room_loaded].
+## [br][br][b]Note:[/b] If you call this method while a map is being loaded, it will fail silently. The earliest when you can load a map again is after [signal room_loaded] is emitted.
 func load_room(path: String):
+	if map_changing:
+		return
+	
+	map_changing = true
 	if not path.is_absolute_path():
 		path = MetSys.get_full_room_path(path)
 	
@@ -42,6 +48,7 @@ func load_room(path: String):
 	add_child(map)
 	
 	MetSys.current_layer = MetSys.get_current_room_instance().get_layer()
+	map_changing = false
 	room_loaded.emit()
 
 func get_save_data() -> Dictionary:

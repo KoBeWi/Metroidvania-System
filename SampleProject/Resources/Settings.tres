@@ -8,6 +8,7 @@
 script = ExtResource("2_r56ns")
 theme = ExtResource("3_qyjha")
 map_root_folder = "res://SampleProject/Maps/"
+scene_template = ""
 in_game_cell_size = Vector2(864, 480)
 discover_whole_rooms = false
 custom_element_script = ExtResource("1_v4ykp")
