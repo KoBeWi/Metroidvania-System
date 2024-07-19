@@ -9,9 +9,65 @@
 script/source = "@tool
 extends VBoxContainer
 
+@onready var changes_detected: ConfirmationDialog = $ChangesDetected
 @onready var tabs = $TabContainer
 
 var plugin: EditorPlugin
+
+var modtime: int
+var md5: String
+
+func _ready() -> void:
+	if not is_inside_tree() or get_tree().edited_scene_root == self:
+		return
+	
+	changes_detected.get_ok_button().tooltip_text = \"Discards local map data and loads the external one instead.\\nIf you made any local changes to the map, they will be lost.\"
+	changes_detected.get_cancel_button().tooltip_text = \"Saves local map data to the file, overwriting whatever is stored on disk. If you are using version control (e.g. git), this allows you to manually merge changes.\"
+	var new_button := changes_detected.add_button(\"Save Copy and Reload\", true)
+	new_button.tooltip_text = \"Save local map data into a backup file called \\\"MapData(Copy).txt\\\", then reloads map data. You can use the backup file to manually merge changes.\"
+	
+	changes_detected.get_cancel_button().pressed.connect(_on_changes_detected_cancelled)
+	new_button.pressed.connect(_on_changes_detected_third)
+	
+	modtime = FileAccess.get_modified_time(MetSys.map_data.get_map_data_path())
+	md5 = FileAccess.get_md5(MetSys.map_data.get_map_data_path())
+	MetSys.map_data.saved.connect(update_md_info, CONNECT_DEFERRED)
+
+func _notification(what: int) -> void:
+	if not is_inside_tree() or get_tree().edited_scene_root == self:
+		return
+	
+	if what == NOTIFICATION_WM_WINDOW_FOCUS_IN:
+		var new_modtime := FileAccess.get_modified_time(MetSys.map_data.get_map_data_path())
+		if new_modtime != modtime:
+			modtime = new_modtime
+			var new_md5 := FileAccess.get_md5(MetSys.map_data.get_map_data_path())
+			if new_md5 != md5:
+				md5 = new_md5
+				changes_detected.popup_centered()
+
+func _on_changes_detected_confirmed() -> void:
+	reload_map()
+
+func _on_changes_detected_cancelled() -> void:
+	MetSys.map_data.save_data()
+
+func update_md_info():
+	modtime = FileAccess.get_modified_time(MetSys.map_data.get_map_data_path())
+	md5 = FileAccess.get_md5(MetSys.map_data.get_map_data_path())
+
+func _on_changes_detected_third() -> void:
+	changes_detected.hide()
+	MetSys.map_data.save_data(true)
+	reload_map()
+
+func reload_map():
+	%Manage.force_reload()
+	%\"Map Editor\".map.queue_redraw()
+	%\"Map Editor\".map_overlay.queue_redraw()
+	%\"Map Editor\".ghost_map.queue_redraw()
+	%\"Map Viewer\".map.queue_redraw()
+	%\"Map Viewer\".map_overlay.queue_redraw()
 "
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0ndnc"]
@@ -42,16 +98,32 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_styles/panel = SubResource("StyleBoxFlat_0ndnc")
 tab_alignment = 1
+current_tab = 0
 
 [node name="Map Editor" parent="TabContainer" instance=ExtResource("1_lpqq2")]
+unique_name_in_owner = true
 layout_mode = 2
 mode_group = SubResource("ButtonGroup_u4ywv")
+metadata/_tab_index = 0
 
 [node name="Map Viewer" parent="TabContainer" instance=ExtResource("2_0tuq7")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
+metadata/_tab_index = 1
 
 [node name="Manage" parent="TabContainer" instance=ExtResource("2_1dme8")]
+unique_name_in_owner = true
 visible = false
 layout_mode = 2
+metadata/_tab_index = 2
+
+[node name="ChangesDetected" type="ConfirmationDialog" parent="."]
+size = Vector2i(441, 128)
+ok_button_text = "Reload From Disk"
+dialog_text = "Map data file was modified externally.
+What action should be taken?
+(hover a button for more info)"
+cancel_button_text = "Re-save Map Data"
+
+[connection signal="confirmed" from="ChangesDetected" to="." method="_on_changes_detected_confirmed"]
