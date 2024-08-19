@@ -10,10 +10,12 @@ enum { DISPLAY_CENTER = 1, DISPLAY_OUTLINE = 2, DISPLAY_BORDERS = 4, DISPLAY_SYM
 const MetSysSettings = preload("res://addons/MetroidvaniaSystem/Scripts/Settings.gd")
 const MetSysSaveData = preload("res://addons/MetroidvaniaSystem/Scripts/SaveData.gd")
 const MapData = preload("res://addons/MetroidvaniaSystem/Scripts/MapData.gd")
+const CellView = preload("res://addons/MetroidvaniaSystem/Scripts/CellView.gd")
 const MapBuilder = preload("res://addons/MetroidvaniaSystem/Scripts/MapBuilder.gd")
 const RoomInstance = preload("res://addons/MetroidvaniaSystem/Scripts/RoomInstance.gd")
-const RoomDrawer = preload("res://addons/MetroidvaniaSystem/Scripts/RoomDrawer.gd")
 const CustomElementManager = preload("res://addons/MetroidvaniaSystem/Scripts/CustomElementManager.gd")
+
+const RoomDrawer = preload("res://addons/MetroidvaniaSystem/Scripts/Legacy/RoomDrawer.gd")
 
 enum { R, ## Right border.
 		D, ## Bottom border.
@@ -317,6 +319,14 @@ func remove_cell_override(coords: Vector3i):
 ## [br][br]Click this method's return value for more info.
 func get_map_builder() -> MapBuilder:
 	return MapBuilder.new()
+
+## TODO doc
+func make_cell_view(parent_item: CanvasItem, coords: Vector3i, offset: Vector2) -> CellView:
+	var cv := CellView.new(parent_item)
+	cv._coords = coords
+	cv.offset = offset
+	cv.update()
+	return cv
 
 ## Draws a single map cell. [param canvas_item] is the [CanvasItem] responsible for drawing, [param offset] is the drawing offset in map coordinates. [param coords] is the coordinate of the map cell that's going to be drawn (does not need to exist). If [param skip_empty] is [code]false[/code], [member MapTheme.empty_space_texture] will be drawn in place of empty cells, if available. If [param use_save_data] is [code]true[/code], the discovered rooms data will be used for drawing the map.
 ## [br][br]Example of drawing a 3x3 minimap where center is at [code]current_cell[/code]:

@@ -1,5 +1,5 @@
 @tool
-extends "res://addons/MetroidvaniaSystem/Scripts/MapView.gd"
+extends "res://addons/MetroidvaniaSystem/Scripts/EditorMapView.gd"
 
 @onready var ghost_map: Control = %GhostMap
 @onready var grid: Control = %Grid

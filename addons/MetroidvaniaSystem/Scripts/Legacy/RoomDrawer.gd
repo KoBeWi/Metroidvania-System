@@ -401,7 +401,7 @@ static func get_border_texture(theme: MapTheme, idx: int, direction: int) -> Tex
 					texture_name = &"vertical_wall"
 				1:
 					texture_name = &"vertical_passage"
-				2:
+				_:
 					texture_name = &"vertical_borders"
 		else:
 			match idx:
@@ -412,7 +412,7 @@ static func get_border_texture(theme: MapTheme, idx: int, direction: int) -> Tex
 				1:
 					texture_name = &"horizontal_passage"
 				_:
-					texture_name = &"vertical_borders"
+					texture_name = &"horizontal_borders"
 	else:
 		match idx:
 			-1:

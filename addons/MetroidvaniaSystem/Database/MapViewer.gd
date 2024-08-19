@@ -1,5 +1,5 @@
 @tool
-extends "res://addons/MetroidvaniaSystem/Scripts/MapView.gd"
+extends "res://addons/MetroidvaniaSystem/Scripts/EditorMapView.gd"
 
 enum {MODE_LAYOUT = 1, MODE_ROOM_SYMBOL, MODE_ROOM_COLOR, MODE_ROOM_GROUP, MODE_BORDER_TYPE, MODE_BORDER_COLOR, MODE_MAP}
 
