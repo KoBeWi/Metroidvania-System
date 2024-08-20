@@ -14,6 +14,13 @@ var erase_mode: bool
 
 var dragging_room_from: Vector2i
 var dragging_room: Array[Vector3i]
+var dragging_drawer: Node2D
+
+func _ready() -> void:
+	super()
+	
+	dragging_drawer = Node2D.new()
+	editor.add_child.call_deferred(dragging_drawer)
 
 func _editor_init() -> void:
 	room_only_cursor = false
@@ -143,10 +150,9 @@ func update_rooms(rect: Rect2i):
 				
 				undo_handle_cell_spawn(coords, cell)
 	
-	undo_end_with_redraw()
-	#redraw_map()
-	
 	editor.current_map_view.update_rect(rect)
+	undo_handle_rect_redraw(rect)
+	undo_end()
 
 func erase_rooms(rect: Rect2i):
 	var map_data: MetroidvaniaSystem.MapData = MetSys.map_data
@@ -172,10 +178,10 @@ func erase_rooms(rect: Rect2i):
 			
 			map_data.erase_cell(coords)
 	
-	undo_end_with_redraw()
-	#redraw_map()
-	
-	editor.current_map_view.update_rect(rect.grow(1))
+	rect = rect.grow(1)
+	editor.current_map_view.update_rect(rect)
+	undo_handle_rect_redraw(rect)
+	undo_end()
 
 func remove_assign(coords: Vector3i) -> Array[Vector3i]:
 	var ret: Array[Vector3i]

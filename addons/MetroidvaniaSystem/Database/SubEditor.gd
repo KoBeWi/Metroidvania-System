@@ -254,10 +254,15 @@ func undo_end_with_redraw():
 	if had_undo_change:
 		editor.undo_redo.add_do_method(redraw_overlay_if_needed)
 		editor.undo_redo.add_undo_method(redraw_overlay_if_needed)
-		#if not overlay_mode:
-			#editor.undo_redo.add_do_method(redraw_map)
-			#editor.undo_redo.add_undo_method(redraw_map)
 	undo_end()
+
+func undo_handle_cell_redraw(coords: Vector3i):
+	editor.undo_redo.add_do_method(func(): editor.current_map_view.update_cell(coords))
+	editor.undo_redo.add_undo_method(func(): editor.current_map_view.update_cell(coords))
+
+func undo_handle_rect_redraw(rect: Rect2i):
+	editor.undo_redo.add_do_method(func(): editor.current_map_view.update_rect(rect))
+	editor.undo_redo.add_undo_method(func(): editor.current_map_view.update_rect(rect))
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_THEME_CHANGED:
