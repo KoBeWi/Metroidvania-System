@@ -12,7 +12,6 @@ var plugin: EditorPlugin
 
 var view_drag: Vector4
 var map_offset := Vector2i(10, 10)
-var skip_cells: Array[Vector3i]
 
 var current_layer: int
 var cursor_inside: bool

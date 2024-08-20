@@ -44,8 +44,7 @@ func _editor_input(event: InputEvent):
 					if under:
 						dragging_room = MetSys.map_data.get_whole_room(get_coords(get_cursor_pos()))
 						dragging_room_from = get_cursor_pos()
-						editor.skip_cells = dragging_room
-						redraw_map()
+						set_dragging_room_visible(false)
 						redraw_overlay()
 				else:
 					drag_from = get_cursor_pos()
@@ -55,23 +54,28 @@ func _editor_input(event: InputEvent):
 					update_rooms(rect)
 					drag_from = Vector2i.MAX
 				elif not dragging_room.is_empty():
-					var drop_valid := true
-					for coords in dragging_room:
-						var offset := get_cell_dragging_offset(coords)
-						var offset3 := get_coords(offset)
-						
-						if not offset3 in dragging_room and MetSys.map_data.get_cell_at(offset3):
-							drop_valid = false
+					var drop_valid := get_cursor_pos() != dragging_room_from
+					if drop_valid:
+						for coords in dragging_room:
+							var offset := get_cell_dragging_offset(coords)
+							var offset3 := get_coords(offset)
+							
+							if not offset3 in dragging_room and MetSys.map_data.get_cell_at(offset3):
+								drop_valid = false
 					
 					if drop_valid:
 						for old_coords in dragging_room:
 							var new_coords := get_coords(get_cell_dragging_offset(old_coords))
 							MetSys.map_data.transfer_cell(old_coords, new_coords)
+							editor.current_map_view.update_cell(new_coords)
 							undo_handle_transfer(old_coords, new_coords)
 					
+					for coords in dragging_room:
+						editor.current_map_view.update_cell(coords)
+					
+					set_dragging_room_visible(true)
 					dragging_room.clear()
 					undo_end_with_redraw()
-					redraw_map()
 		elif event.button_index == MOUSE_BUTTON_RIGHT:
 			if event.pressed:
 				drag_from = get_cursor_pos()
@@ -140,9 +144,9 @@ func update_rooms(rect: Rect2i):
 				undo_handle_cell_spawn(coords, cell)
 	
 	undo_end_with_redraw()
-	redraw_map()
+	#redraw_map()
 	
-	editor.map_view.update_rect(rect)
+	editor.current_map_view.update_rect(rect)
 
 func erase_rooms(rect: Rect2i):
 	var map_data: MetroidvaniaSystem.MapData = MetSys.map_data
@@ -169,9 +173,9 @@ func erase_rooms(rect: Rect2i):
 			map_data.erase_cell(coords)
 	
 	undo_end_with_redraw()
-	redraw_map()
+	#redraw_map()
 	
-	editor.map_view.update_rect(rect.grow(1))
+	editor.current_map_view.update_rect(rect.grow(1))
 
 func remove_assign(coords: Vector3i) -> Array[Vector3i]:
 	var ret: Array[Vector3i]
@@ -204,6 +208,11 @@ func close_border(pos: Vector2i, border: int):
 
 func get_cell_dragging_offset(coords: Vector3i) -> Vector2i:
 	return get_cursor_pos() + Vector2i(coords.x, coords.y) - dragging_room_from
+
+func set_dragging_room_visible(vis: bool):
+	for coords in dragging_room:
+		var cell: MetroidvaniaSystem.CellView = editor.current_map_view._cache[coords]
+		cell.visible = vis
 "
 
 [sub_resource type="GDScript" id="GDScript_tlx5u"]
@@ -799,7 +808,7 @@ func _editor_input(event: InputEvent):
 					undo_handle_element_remove(coords, MetSys.map_data.custom_elements[coords])
 					MetSys.map_data.custom_elements.erase(coords)
 					undo_end_with_redraw()
-					redraw_map()
+					#redraw_map()
 
 func add_element(rect: Rect2i):
 	var element: Dictionary
@@ -809,7 +818,7 @@ func add_element(rect: Rect2i):
 	
 	var coords := Vector3i(rect.position.x, rect.position.y, editor.current_layer)
 	MetSys.map_data.custom_elements[coords] = element
-	redraw_map()
+	#redraw_map()
 	
 	undo_handle_element_add(coords, element)
 "

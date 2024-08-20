@@ -63,10 +63,12 @@ func _on_changes_detected_third() -> void:
 
 func reload_map():
 	%Manage.force_reload()
-	%\"Map Editor\".map.queue_redraw()
+	%\"Map Editor\".layers.clear()
+	%\"Map Editor\".current_map_view.update_all()
 	%\"Map Editor\".map_overlay.queue_redraw()
 	%\"Map Editor\".ghost_map.queue_redraw()
-	%\"Map Viewer\".map.queue_redraw()
+	%\"Map Editor\".layers.clear()
+	%\"Map Editor\".current_map_view.update_all()
 	%\"Map Viewer\".map_overlay.queue_redraw()
 "
 

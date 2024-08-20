@@ -69,15 +69,13 @@ func paint(mode: int):
 			continue
 		
 		if modify_cell(cell_data, mode) or modify_coords(coords, mode):
+			editor.current_map_view.update_cell(coords)
 			modified = true
 	
 	undo_end_with_redraw()
 	
-	if modified:
-		if overlay_mode:
-			redraw_overlay()
-		else:
-			redraw_map()
+	if modified and overlay_mode:
+		redraw_overlay()
 
 func modify_cell(cell_data: MetroidvaniaSystem.MapData.CellData, mode: int) -> bool:
 	return false

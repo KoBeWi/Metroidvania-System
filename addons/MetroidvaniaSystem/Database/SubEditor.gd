@@ -115,9 +115,6 @@ func get_cell_at_cursor() -> MetroidvaniaSystem.MapData.CellData:
 func mark_modified():
 	editor.plugin.modified = true
 
-func redraw_map():
-	editor.map.queue_redraw()
-
 func redraw_overlay():
 	editor.map_overlay.queue_redraw()
 
@@ -257,9 +254,9 @@ func undo_end_with_redraw():
 	if had_undo_change:
 		editor.undo_redo.add_do_method(redraw_overlay_if_needed)
 		editor.undo_redo.add_undo_method(redraw_overlay_if_needed)
-		if not overlay_mode:
-			editor.undo_redo.add_do_method(redraw_map)
-			editor.undo_redo.add_undo_method(redraw_map)
+		#if not overlay_mode:
+			#editor.undo_redo.add_do_method(redraw_map)
+			#editor.undo_redo.add_undo_method(redraw_map)
 	undo_end()
 
 func _notification(what: int) -> void:
