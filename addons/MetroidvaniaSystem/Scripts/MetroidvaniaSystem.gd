@@ -11,6 +11,7 @@ const MetSysSettings = preload("res://addons/MetroidvaniaSystem/Scripts/Settings
 const MetSysSaveData = preload("res://addons/MetroidvaniaSystem/Scripts/SaveData.gd")
 const MapData = preload("res://addons/MetroidvaniaSystem/Scripts/MapData.gd")
 const CellView = preload("res://addons/MetroidvaniaSystem/Scripts/CellView.gd")
+const MapView = preload("res://addons/MetroidvaniaSystem/Scripts/MapView.gd")
 const MapBuilder = preload("res://addons/MetroidvaniaSystem/Scripts/MapBuilder.gd")
 const RoomInstance = preload("res://addons/MetroidvaniaSystem/Scripts/RoomInstance.gd")
 const CustomElementManager = preload("res://addons/MetroidvaniaSystem/Scripts/CustomElementManager.gd")
@@ -322,11 +323,18 @@ func get_map_builder() -> MapBuilder:
 
 ## TODO doc
 func make_cell_view(parent_item: CanvasItem, coords: Vector3i, offset: Vector2) -> CellView:
-	var cv := CellView.new(parent_item)
+	var cv := CellView.new(parent_item.get_canvas_item())
 	cv._coords = coords
 	cv.offset = offset
 	cv.update()
 	return cv
+
+func make_map_view(parent_item: CanvasItem, begin: Vector2i, size: Vector2i, layer: int) -> MapView:
+	var mv := MapView.new(parent_item.get_canvas_item())
+	mv.begin = begin
+	mv.size = size
+	mv.layer = layer
+	return mv
 
 ## Draws a single map cell. [param canvas_item] is the [CanvasItem] responsible for drawing, [param offset] is the drawing offset in map coordinates. [param coords] is the coordinate of the map cell that's going to be drawn (does not need to exist). If [param skip_empty] is [code]false[/code], [member MapTheme.empty_space_texture] will be drawn in place of empty cells, if available. If [param use_save_data] is [code]true[/code], the discovered rooms data will be used for drawing the map.
 ## [br][br]Example of drawing a 3x3 minimap where center is at [code]current_cell[/code]:

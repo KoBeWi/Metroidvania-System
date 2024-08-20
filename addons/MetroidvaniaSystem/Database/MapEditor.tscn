@@ -104,8 +104,8 @@ func _editor_draw(map_overlay: CanvasItem):
 func update_rooms(rect: Rect2i):
 	var map_data: MetroidvaniaSystem.MapData = MetSys.map_data
 	
-	for x in range(rect.position.x, rect.end.x):
-		for y in range(rect.position.y, rect.end.y):
+	for y in range(rect.position.y, rect.end.y):
+		for x in range(rect.position.x, rect.end.x):
 			var coords := Vector3i(x, y, editor.current_layer)
 			
 			var cell = map_data.get_cell_at(coords)
@@ -141,12 +141,14 @@ func update_rooms(rect: Rect2i):
 	
 	undo_end_with_redraw()
 	redraw_map()
+	
+	editor.map_view.update_rect(rect)
 
 func erase_rooms(rect: Rect2i):
 	var map_data: MetroidvaniaSystem.MapData = MetSys.map_data
 	
-	for x in range(rect.position.x, rect.end.x):
-		for y in range(rect.position.y, rect.end.y):
+	for y in range(rect.position.y, rect.end.y):
+		for x in range(rect.position.x, rect.end.x):
 			var coords := Vector3i(x, y, editor.current_layer)
 			var cell_data := map_data.get_cell_at(coords)
 			
@@ -168,6 +170,8 @@ func erase_rooms(rect: Rect2i):
 	
 	undo_end_with_redraw()
 	redraw_map()
+	
+	editor.map_view.update_rect(rect.grow(1))
 
 func remove_assign(coords: Vector3i) -> Array[Vector3i]:
 	var ret: Array[Vector3i]
@@ -1172,16 +1176,8 @@ grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
 
-[node name="Map" type="Control" parent="MapView"]
+[node name="Map" type="Node2D" parent="MapView"]
 unique_name_in_owner = true
-clip_contents = true
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-size_flags_horizontal = 3
 
 [node name="GhostMap" type="Control" parent="MapView"]
 unique_name_in_owner = true

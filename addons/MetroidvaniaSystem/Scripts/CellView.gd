@@ -2,8 +2,6 @@ extends RefCounted
 
 const CellData = MetroidvaniaSystem.MapData.CellData
 
-static var _force_mapped: bool
-
 var use_save_data: bool = true
 var skip_empty: bool
 
@@ -20,10 +18,12 @@ var offset: Vector2:
 var _canvas_item: RID
 var _coords: Vector3i
 var _theme: MapTheme
+	
+var _force_mapped: bool
 
-func _init(parent_item: CanvasItem) -> void:
+func _init(parent_item: RID) -> void:
 	_canvas_item = RenderingServer.canvas_item_create()
-	RenderingServer.canvas_item_set_parent(_canvas_item, parent_item.get_canvas_item())
+	RenderingServer.canvas_item_set_parent(_canvas_item, parent_item)
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_PREDELETE:

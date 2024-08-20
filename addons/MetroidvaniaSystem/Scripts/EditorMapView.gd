@@ -1,8 +1,8 @@
 extends Control
 
-@onready var map_view: Control = $MapView
+@onready var map_view_container: Control = $MapView
 @onready var map_overlay: Control = %OverlayLayer
-@onready var map: Control = %Map
+@onready var map: Node2D = %Map
 @onready var current_layer_spinbox: Control = %CurrentLayer
 @onready var status_label: Label = %StatusLabel
 @onready var zoom_slider: HSlider = %ZoomSlider
@@ -15,8 +15,10 @@ var map_offset := Vector2i(10, 10)
 var skip_cells: Array[Vector3i]
 
 var current_layer: int
-var force_mapped: bool
 var cursor_inside: bool
+
+var layers: Dictionary#[int, MetroidvaniaSystem.MapView]
+var current_map_view: MetroidvaniaSystem.MapView
 
 func _enter_tree() -> void:
 	if owner:
@@ -25,7 +27,6 @@ func _enter_tree() -> void:
 func _ready() -> void:
 	$Sidebar.custom_minimum_size.x = 200 * EditorInterface.get_editor_scale()
 	
-	map.draw.connect(_on_map_draw)
 	map_overlay.mouse_exited.connect(status_label.hide)
 	map_overlay.gui_input.connect(_on_overlay_input)
 	map_overlay.draw.connect(_on_overlay_draw)
@@ -34,18 +35,19 @@ func _ready() -> void:
 	%RecenterButton.pressed.connect(on_recenter_view)
 	zoom_slider.value_changed.connect(on_zoom_changed)
 	
-	map_view.mouse_entered.connect(func():
+	map_view_container.mouse_entered.connect(func():
 		cursor_inside = true
 		map_overlay.queue_redraw())
 	
-	map_view.mouse_exited.connect(func():
+	map_view_container.mouse_exited.connect(func():
 		cursor_inside = false
 		map_overlay.queue_redraw())
 	
 	status_label.hide()
 	await get_tree().process_frame
+	
+	on_layer_changed(0)
 	update_map_position()
-	map.size = MetSys.CELL_SIZE * 200
 	
 	var refresh := func():
 		update_map_position()
@@ -59,7 +61,20 @@ func get_cursor_pos() -> Vector2i:
 	return pos
 
 func on_layer_changed(l: int):
+	if current_map_view:
+		current_map_view.visible = false
+	
 	current_layer = l
+	
+	var new_map_view: MetroidvaniaSystem.MapView = layers.get(current_layer)
+	if not new_map_view:
+		var map_extents := MetSys.settings.map_extents
+		new_map_view = MetSys.make_map_view(map, Vector2i(-map_extents, -map_extents), Vector2i(map_extents * 2, map_extents * 2), current_layer)
+		layers[current_layer] = new_map_view
+	
+	current_map_view = new_map_view
+	current_map_view.visible = true
+	
 	map.queue_redraw()
 	map_overlay.queue_redraw()
 
@@ -79,17 +94,17 @@ func _on_overlay_input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion:
 		if view_drag != Vector4():
 			if event.position.x >= map_overlay.size.x:
-				map_view.warp_mouse(Vector2(event.position.x - map_overlay.size.x, event.position.y))
+				map_view_container.warp_mouse(Vector2(event.position.x - map_overlay.size.x, event.position.y))
 				view_drag.x -= map_overlay.size.x
 			elif event.position.x < 0:
-				map_view.warp_mouse(Vector2(map_overlay.size.x + event.position.x, event.position.y))
+				map_view_container.warp_mouse(Vector2(map_overlay.size.x + event.position.x, event.position.y))
 				view_drag.x += map_overlay.size.x
 			
 			if event.position.y >= map_overlay.size.y:
-				map_view.warp_mouse(Vector2(event.position.x, event.position.y - map_overlay.size.y))
+				map_view_container.warp_mouse(Vector2(event.position.x, event.position.y - map_overlay.size.y))
 				view_drag.y -= map_overlay.size.y
 			elif event.position.y < 0:
-				map_view.warp_mouse(Vector2(event.position.x, map_overlay.size.y + event.position.y))
+				map_view_container.warp_mouse(Vector2(event.position.x, map_overlay.size.y + event.position.y))
 				view_drag.y += map_overlay.size.y
 			
 			map_offset = Vector2(view_drag.z, view_drag.w) + (map_overlay.get_local_mouse_position() - Vector2(view_drag.x, view_drag.y)) / MetSys.CELL_SIZE
@@ -139,28 +154,18 @@ func _notification(what: int) -> void:
 			map_overlay.queue_redraw()
 
 func _on_map_draw() -> void:
+	return
 	if not plugin:
 		return
 	
-	MetroidvaniaSystem.RoomDrawer.force_mapped = force_mapped
-	for x in range(-100, 100):
-		for y in range(-100, 100):
-			var coords := Vector3i(x, y, current_layer)
-			if coords in skip_cells:
-				continue
-			
-			MetSys.draw_cell(map, Vector2i(x, y) + Vector2i(100, 100), coords, true, false)
-	
 	if MetSys.settings.theme.use_shared_borders:
 		MetSys.draw_shared_borders()
-	
-	MetroidvaniaSystem.RoomDrawer.force_mapped = false
 
 func _on_overlay_draw() -> void:
 	MetSys.draw_custom_elements(map_overlay, Rect2i(-map_offset, map_overlay.size / MetSys.CELL_SIZE + Vector2.ONE), Vector2(), current_layer)
 
 func update_map_position():
-	map.position = Vector2(map_offset - Vector2i(100, 100)) * MetSys.CELL_SIZE * map.scale
+	map.position = Vector2(map_offset - Vector2i.ONE * MetSys.settings.map_extents) * MetSys.CELL_SIZE * map.scale
 
 func get_assigned_scene_display(assigned_scene: String) -> String:
 	if assigned_scene.begins_with(":"):
