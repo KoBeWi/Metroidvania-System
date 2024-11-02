@@ -8,9 +8,8 @@ func _editor_init() -> void:
 	super()
 
 func _editor_input(event: InputEvent):
-	var cell_data := get_cell_at_cursor()
-	
 	if event is InputEventMouseMotion:
+		var cell_data := get_cell_at_cursor()
 		if cell_data:
 			var rel := editor.map_overlay.get_local_mouse_position().posmodv(MetSys.CELL_SIZE)
 			var border := get_square_border_idx(cell_data.borders, rel)

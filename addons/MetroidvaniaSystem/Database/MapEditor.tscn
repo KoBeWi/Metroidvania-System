@@ -452,6 +452,7 @@ extends \"res://addons/MetroidvaniaSystem/Database/BorderPaintEditor.gd\"
 
 func _editor_init():
 	can_pick = true
+	update_neighbors = true
 	border_property = &\"border_colors\"
 	super()
 
@@ -1020,6 +1021,7 @@ layout_mode = 2
 selected = 0
 item_count = 2
 popup/item_0/text = "tscn"
+popup/item_0/id = 0
 popup/item_1/text = "scn"
 popup/item_1/id = 1
 

@@ -11,6 +11,7 @@ var had_undo_change: bool
 var use_cursor := true
 var room_only_cursor := true
 var overlay_mode: bool
+var update_neighbors: bool
 
 var drag_from: Vector2i = Vector2i.MAX
 var highlighted_room: Array[Vector3i]

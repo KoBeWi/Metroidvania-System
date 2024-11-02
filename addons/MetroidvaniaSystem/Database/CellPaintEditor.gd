@@ -69,8 +69,15 @@ func paint(mode: int):
 			continue
 		
 		if modify_cell(cell_data, mode) or modify_coords(coords, mode):
-			editor.current_map_view.update_cell(coords)
-			undo_handle_cell_redraw(coords)
+			if update_neighbors:
+				var rect := Rect2i(Vector2i(coords.x, coords.y), Vector2i.ONE).grow(1)
+				editor.current_map_view.queue_updates = true
+				editor.current_map_view.update_rect(rect)
+				editor.current_map_view.queue_updates = false
+				undo_handle_rect_redraw(rect)
+			else:
+				editor.current_map_view.update_cell(coords)
+				undo_handle_cell_redraw(coords)
 			modified = true
 	
 	undo_end_with_redraw()
