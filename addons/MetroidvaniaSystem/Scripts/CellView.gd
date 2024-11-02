@@ -5,6 +5,7 @@ const CellData = MetroidvaniaSystem.MapData.CellData
 var use_save_data: bool = true
 var skip_empty: bool
 
+var coords: Vector3i
 var visible: bool:
 	set(v):
 		visible = v
@@ -16,7 +17,6 @@ var offset: Vector2:
 		RenderingServer.canvas_item_set_transform(_canvas_item, Transform2D(0, offset * MetSys.CELL_SIZE))
 
 var _canvas_item: RID
-var _coords: Vector3i
 var _theme: MapTheme
 	
 var _force_mapped: bool
@@ -40,7 +40,7 @@ func _draw():
 	if use_save_data:
 		save_data = MetSys.save_data
 	
-	var cell_data: CellData = MetSys.map_data.get_cell_at(_coords)
+	var cell_data: CellData = MetSys.map_data.get_cell_at(coords)
 	if not cell_data:
 		if not skip_empty:
 			draw_empty()
@@ -48,7 +48,7 @@ func _draw():
 	
 	var discovered := 2
 	if save_data:
-		discovered = save_data.is_cell_discovered(_coords)
+		discovered = save_data.is_cell_discovered(coords)
 	elif _force_mapped:
 		discovered = 1
 	
@@ -69,8 +69,8 @@ func _draw():
 	if bool(display_flags & MetroidvaniaSystem.DISPLAY_SYMBOLS):
 		var symbol: int = -1
 		
-		if save_data and _coords in save_data.custom_markers:
-			var custom: int = save_data.custom_markers[_coords]
+		if save_data and coords in save_data.custom_markers:
+			var custom: int = save_data.custom_markers[coords]
 			for i in range(63, -1, -1):
 				if custom & 1 << i:
 					symbol = i
@@ -81,7 +81,7 @@ func _draw():
 		
 		if symbol > - 1:
 			if symbol >= _theme.symbols.size():
-				push_error("Bad symbol '%s' at '%s'" % [symbol, _coords])
+				push_error("Bad symbol '%s' at '%s'" % [symbol, coords])
 			else:
 				_draw_texture(_theme.symbols[symbol], Color.WHITE, -_theme.symbols[symbol].get_size() * 0.5 + MetSys.CELL_SIZE * 0.5)
 
@@ -177,14 +177,14 @@ func _draw_regular_borders(cell_data: CellData, display_flags: int, discovered: 
 		if borders[i] != -1 or borders[j] != -1:
 			continue
 		
-		var neighbor_room := _get_neighbor(map_data, _coords, map_data.FWD[i] + map_data.FWD[j])
+		var neighbor_room := _get_neighbor(map_data, coords, map_data.FWD[i] + map_data.FWD[j])
 		if neighbor_room:
 			if neighbor_room.borders[_opposite(i)] == -1 and neighbor_room.borders[_opposite(j)] == -1:
 				continue
 		
 		var texture: Texture2D = _theme.inner_corner
-		var color1 := _get_neighbor(map_data, _coords, map_data.FWD[i]).get_border_color(_rotate(i))
-		var color2 := _get_neighbor(map_data, _coords, map_data.FWD[j]).get_border_color(_rotate(j, -1))
+		var color1 := _get_neighbor(map_data, coords, map_data.FWD[i]).get_border_color(_rotate(i))
+		var color2 := _get_neighbor(map_data, coords, map_data.FWD[j]).get_border_color(_rotate(j, -1))
 		
 		var corner_color := _get_shared_color(color1, color2, _theme.default_border_color)
 		_draw_corner(i, _theme.inner_corner, corner_color)
