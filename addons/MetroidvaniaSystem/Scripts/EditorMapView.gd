@@ -50,6 +50,7 @@ func _ready() -> void:
 	
 	var refresh := func():
 		update_map_position()
+		layers.clear()
 		on_layer_changed(current_layer)
 	
 	MetSys.settings.theme_changed.connect(refresh)
