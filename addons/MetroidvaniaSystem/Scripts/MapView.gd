@@ -39,6 +39,8 @@ func recreate_cache():
 			var cell := CellView.new(_canvas_item)
 			cell.coords = coords
 			cell.offset = Vector2(x, y)
+			cell._left_edge = x == 0
+			cell._top_edge = y == 0
 			_cache[coords] = cell
 	
 	var rect := Rect2i(begin, size)
@@ -83,7 +85,6 @@ func update_all():
 
 func update_cell(coords: Vector3i):
 	var exists: bool
-	
 	
 	var cell: CellView = _cache.get(coords)
 	if cell:

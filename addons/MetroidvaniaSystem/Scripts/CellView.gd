@@ -17,7 +17,10 @@ var offset: Vector2:
 		RenderingServer.canvas_item_set_transform(_canvas_item, Transform2D(0, offset * MetSys.CELL_SIZE))
 
 var _canvas_item: RID
+var _shared_border_item: RID
 var _theme: MapTheme
+var _top_edge: bool
+var _left_edge: bool
 	
 var _force_mapped: bool
 
@@ -28,13 +31,25 @@ func _init(parent_item: RID) -> void:
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_PREDELETE:
 		RenderingServer.free_rid(_canvas_item)
+		if _shared_border_item.is_valid():
+			RenderingServer.free_rid(_shared_border_item)
 
 func update():
 	RenderingServer.canvas_item_clear(_canvas_item)
+	if _shared_border_item.is_valid():
+		RenderingServer.canvas_item_clear(_shared_border_item)
 	_draw()
 
 func _draw():
 	_theme = MetSys.settings.theme
+	# TODO: This could be checked only once.
+	if _theme.use_shared_borders and not _shared_border_item.is_valid():
+		_shared_border_item = RenderingServer.canvas_item_create()
+		RenderingServer.canvas_item_set_z_index(_shared_border_item, 1)
+		RenderingServer.canvas_item_set_parent(_shared_border_item, _canvas_item)
+	elif not _theme.use_shared_borders and _shared_border_item.is_valid():
+		RenderingServer.free_rid(_shared_border_item)
+		_shared_border_item = RID()
 	
 	var save_data: MetroidvaniaSystem.MetSysSaveData
 	if use_save_data:
@@ -59,12 +74,13 @@ func _draw():
 	
 	var display_flags: int = (int(discovered == 2) * 255) | _theme.mapped_display
 	
-	# center
 	if bool(display_flags & MetroidvaniaSystem.DISPLAY_CENTER):
 		_draw_texture(_theme.center_texture, cell_data.get_color() if discovered == 2 else _theme.mapped_center_color)
 	
-	# corners
-	_draw_regular_borders(cell_data, display_flags, discovered)
+	if _theme.use_shared_borders:
+		_draw_shared_borders(cell_data, display_flags, discovered)
+	else:
+		_draw_regular_borders(cell_data, display_flags, discovered)
 	
 	if bool(display_flags & MetroidvaniaSystem.DISPLAY_SYMBOLS):
 		var symbol: int = -1
@@ -189,6 +205,64 @@ func _draw_regular_borders(cell_data: CellData, display_flags: int, discovered: 
 		var corner_color := _get_shared_color(color1, color2, _theme.default_border_color)
 		_draw_corner(i, _theme.inner_corner, corner_color)
 
+func _draw_shared_borders(cell_data: CellData, display_flags: int, discovered: int):
+	var _original_item := _canvas_item
+	var borders: Array[int] = [-1, -1, -1, -1]
+	
+	var display_outlines := bool(display_flags & MetroidvaniaSystem.DISPLAY_OUTLINE)
+	for i in 4:
+		var border: int = cell_data.get_border(i)
+		if not display_outlines and border == 0:
+			borders[i] = -1
+		elif not bool(display_flags & MetroidvaniaSystem.DISPLAY_BORDERS):
+			borders[i] = mini(border, 0 if display_outlines else -1)
+		else:
+			borders[i] = border
+	
+	if display_outlines and _get_border_texture(_theme, -1, 0):
+		var separators := 2
+		if _theme.separator_mode == MapTheme.SeparatorMode.EMPTY_DOUBLE or _theme.separator_mode == MapTheme.SeparatorMode.FULL_DOUBLE:
+			separators = 4
+		
+		var full := _theme.separator_mode == MapTheme.SeparatorMode.FULL_DOUBLE or _theme.separator_mode == MapTheme.SeparatorMode.FULL_SINGLE
+		for i in separators:
+			if borders[i] == 0 or (not full and borders[i] != -1):
+				continue
+			
+			var texture := _get_border_texture(_theme, -1, i)
+			if not texture:
+				continue
+			
+			_draw_border(i, texture, Color.WHITE)
+	
+	for i in 4:
+		if not _left_edge and i == MetSys.L:
+			continue
+		if not _top_edge and i == MetSys.U:
+			continue
+		
+		var texture: Texture2D
+		var color: Color
+		
+		if borders[i] > -1:
+			var border: int = borders[i]
+			
+			if not bool(display_flags & MetroidvaniaSystem.DISPLAY_BORDERS):
+				border = 0
+			
+			texture = _get_border_texture(_theme, border, i)
+			if discovered == 2:
+				color = cell_data.get_border_color(i)
+			else:
+				color = _theme.mapped_border_color
+		
+		if not texture:
+			continue
+		
+		_canvas_item = _shared_border_item
+		_draw_border(i, texture, color)
+		_canvas_item = _original_item
+
 func _get_border_texture(_theme: MapTheme, idx: int, direction: int) -> Texture2D:
 	var texture_name: StringName
 	
@@ -242,6 +316,13 @@ func _draw_border(i: int, texture: Texture2D, color: Color):
 			pos.y = MetSys.CELL_SIZE.y * 0.5 - texture.get_height() * 0.5
 		MetroidvaniaSystem.D, MetroidvaniaSystem.U:
 			pos.x = MetSys.CELL_SIZE.x * 0.5 - texture.get_height() * 0.5
+	
+	if _theme.use_shared_borders:
+		match i:
+			MetroidvaniaSystem.R:
+				pos.x += texture.get_width() / 2
+			MetroidvaniaSystem.D:
+				pos.y += texture.get_width() / 2
 	
 	_draw_texture(texture, color, pos, i)
 

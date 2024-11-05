@@ -325,6 +325,8 @@ func get_map_builder() -> MapBuilder:
 func make_cell_view(parent_item: CanvasItem, coords: Vector3i, offset: Vector2) -> CellView:
 	var cv := CellView.new(parent_item.get_canvas_item())
 	cv._coords = coords
+	cv._left_edge = true
+	cv._top_edge = true
 	cv.offset = offset
 	cv.update()
 	return cv
