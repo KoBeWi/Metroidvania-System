@@ -76,7 +76,7 @@ func on_layer_changed(l: int):
 	current_map_view = new_map_view
 	current_map_view.visible = true
 	
-	map.queue_redraw()
+	map.queue_redraw()## nie
 	map_overlay.queue_redraw()
 
 func on_recenter_view() -> void:

@@ -261,7 +261,7 @@ func _draw_shared_borders(cell_data: CellData, display_flags: int, discovered: i
 			
 			texture = _get_border_texture(_theme, border, i)
 			if discovered == 2:
-				color = cell_data.get_border_color(i)
+				color = _get_shared_border_color(i)
 			else:
 				color = _theme.mapped_border_color
 		
@@ -331,6 +331,24 @@ func _get_border_at(coords: Vector3i, idx: int) -> int:
 		return -1
 	return cell_data.get_border(idx)
 
+func _get_shared_border_color(idx: int, source_coords := coords) -> Color:
+	var fwd := Vector3i(MetroidvaniaSystem.MapData.FWD[idx].x, MetroidvaniaSystem.MapData.FWD[idx].y, 0)
+	var color := Color.TRANSPARENT
+	
+	var cell_data = _get_discovered_cell_at(source_coords)
+	if cell_data and cell_data.get_border(idx) > -1:
+		color = cell_data.get_border_color(idx)
+	
+	idx = _opposite(idx)
+	cell_data = _get_discovered_cell_at(source_coords + fwd)
+	if cell_data and cell_data.get_border(idx) > -1:
+		if color.a > 0:
+			color = _get_shared_color(color, cell_data.get_border_color(idx), MetSys.settings.theme.default_border_color)
+		else:
+			color = cell_data.get_border_color(idx)
+	
+	return color
+
 func _get_discovered_cell_at(coords: Vector3i) -> MetroidvaniaSystem.MapData.CellData:
 	var cell_data = MetSys.map_data.get_cell_at(coords)
 	if cell_data and (_force_mapped or MetSys.is_cell_discovered(coords)):
@@ -373,6 +391,24 @@ func _draw_shared_corner(corner_offset: Vector2):
 	corner_data |= (1 << 2) * (_get_corner_bit(corner_coords + Vector3i(0, 1, 0), MetroidvaniaSystem.R) | _get_corner_bit(corner_coords + Vector3i(1, 1, 0), MetroidvaniaSystem.L))
 	corner_data |= (1 << 3) * (_get_corner_bit(corner_coords + Vector3i(1, 0, 0), MetroidvaniaSystem.D) | _get_corner_bit(corner_coords + Vector3i(1, 1, 0), MetroidvaniaSystem.U))
 	
+	var color_blend: Array[Color]
+	var add_blend := func(idx: int, pos: Vector3i):
+		var color := _get_shared_border_color(idx, pos)
+		if color.a > 0:
+			color_blend.append(color)
+	
+	add_blend.call(MetroidvaniaSystem.R, corner_coords)
+	add_blend.call(MetroidvaniaSystem.D, corner_coords)
+	add_blend.call(MetroidvaniaSystem.L, corner_coords + Vector3i(1, 1, 0))
+	add_blend.call(MetroidvaniaSystem.U, corner_coords + Vector3i(1, 1, 0))
+	
+	var color: Color = _theme.default_border_color
+	if not color_blend.is_empty():
+		color = color_blend.reduce(func(final_color: Color, color: Color) -> Color: return final_color + color) / color_blend.size()
+	
+	if _theme.is_unicorner():
+		corner_data = signi(corner_data) * 15
+		
 	var corner_type := signi(corner_data & 1) + signi(corner_data & 2) + signi(corner_data & 4) + signi(corner_data & 8)
 	var corner_texture: Texture2D
 	var corner_rotation := -1
@@ -417,7 +453,7 @@ func _draw_shared_corner(corner_offset: Vector2):
 	if corner_rotation == -1 or not corner_texture:
 		return
 	
-	_draw_texture(corner_texture, Color.WHITE, MetSys.CELL_SIZE - corner_texture.get_size() / 2 + corner_offset * MetSys.CELL_SIZE, corner_rotation)
+	_draw_texture(corner_texture, color, MetSys.CELL_SIZE - corner_texture.get_size() / 2 + corner_offset * MetSys.CELL_SIZE, corner_rotation)
 
 func _draw_corner(i: int, texture: Texture2D, color: Color):
 	match i:

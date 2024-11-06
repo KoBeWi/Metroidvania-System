@@ -1,7 +1,7 @@
 extends RefCounted
 
 const CellView = MetroidvaniaSystem.CellView
-const SURROUND = [Vector3i(-1, -1, 0), Vector3i(0, -1, 0), Vector3i(0, -1, 0), Vector3i(-1, 0, 0), Vector3i(1, 0, 0), Vector3i(-1, 1, 0), Vector3i(0, 1, 0), Vector3i(1, 1, 0)]
+const SURROUND = [Vector3i(-1, -1, 0), Vector3i(0, -1, 0), Vector3i(1, -1, 0), Vector3i(-1, 0, 0), Vector3i(1, 0, 0), Vector3i(-1, 1, 0), Vector3i(0, 1, 0), Vector3i(1, 1, 0)]
 
 var begin: Vector2i ## TODO handle changing
 var size: Vector2i
