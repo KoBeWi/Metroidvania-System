@@ -32,6 +32,7 @@ func _notification(what: int) -> void:
 func recreate_cache():
 	_cache.clear()
 	_custom_elements_cache.clear()
+	var shared_borders := MetSys.settings.theme.use_shared_borders
 	
 	for y in size.y:
 		for x in size.x:
@@ -39,9 +40,15 @@ func recreate_cache():
 			var cell := CellView.new(_canvas_item)
 			cell.coords = coords
 			cell.offset = Vector2(x, y)
-			cell._left_edge = x == 0
-			cell._top_edge = y == 0
 			_cache[coords] = cell
+			
+			if shared_borders:
+				if x > 0:
+					cell._left_cell = _cache[coords + Vector3i(-1, 0, 0)]
+				if y > 0:
+					cell._top_cell = _cache[coords + Vector3i(0, -1, 0)]
+				if x > 0 and y > 0:
+					cell._top_left_cell = _cache[coords + Vector3i(-1, -1, 0)]
 	
 	var rect := Rect2i(begin, size)
 	var element_manager: MetroidvaniaSystem.CustomElementManager = MetSys.settings.custom_elements
@@ -145,7 +152,7 @@ class CustomElementInstance:
 	func _init(parent_item: RID) -> void:
 		canvas_item = RenderingServer.canvas_item_create()
 		RenderingServer.canvas_item_set_parent(canvas_item, parent_item)
-		RenderingServer.canvas_item_set_z_index(canvas_item, 2)
+		RenderingServer.canvas_item_set_z_index(canvas_item, 3)
 	
 	func _notification(what: int) -> void:
 		if what == NOTIFICATION_PREDELETE:

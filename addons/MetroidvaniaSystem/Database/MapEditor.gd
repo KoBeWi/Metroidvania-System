@@ -95,6 +95,7 @@ func _on_grid_draw() -> void:
 	if not plugin:
 		return
 	
+	## chyba nie trzeba już
 	var empty_texture: Texture2D = MetSys.settings.theme.empty_space_texture
 	for x in ceili(grid.size.x / MetSys.CELL_SIZE.x):
 		for y in ceili(grid.size.y / MetSys.CELL_SIZE.y):
