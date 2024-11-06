@@ -70,6 +70,7 @@ func on_layer_changed(l: int):
 	if not new_map_view:
 		var map_extents := MetSys.settings.map_extents
 		new_map_view = MetSys.make_map_view(map, Vector2i(-map_extents, -map_extents), Vector2i(map_extents * 2, map_extents * 2), current_layer)
+		new_map_view.queue_updates = true
 		layers[current_layer] = new_map_view
 	
 	current_map_view = new_map_view

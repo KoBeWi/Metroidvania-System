@@ -1,6 +1,7 @@
 extends RefCounted
 
 const CellView = MetroidvaniaSystem.CellView
+const SURROUND = [Vector3i(-1, -1, 0), Vector3i(0, -1, 0), Vector3i(0, -1, 0), Vector3i(-1, 0, 0), Vector3i(1, 0, 0), Vector3i(-1, 1, 0), Vector3i(0, 1, 0), Vector3i(1, 1, 0)]
 
 var begin: Vector2i ## TODO handle changing
 var size: Vector2i
@@ -65,7 +66,10 @@ func recreate_cache():
 		
 		_make_custom_element_instance(coords, element)
 	
+	var was_queue := queue_updates
+	queue_updates = false
 	update_all()
+	queue_updates = was_queue
 
 func _make_custom_element_instance(coords: Vector3i, data: Dictionary):
 	var element_instance := CustomElementInstance.new(_canvas_item)
@@ -96,6 +100,12 @@ func update_cell(coords: Vector3i):
 	var cell: CellView = _cache.get(coords)
 	if cell:
 		_update_cell(cell)
+		if MetSys.settings.theme.use_shared_borders:
+			for delta in SURROUND:
+				var cell2: CellView = _cache.get(coords + delta)
+				if cell2:
+					_update_cell(cell2)
+		
 		exists = true
 	
 	var custom_element = _custom_elements_cache.get(coords)
