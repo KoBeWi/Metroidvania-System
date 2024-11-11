@@ -181,6 +181,9 @@ func erase_rooms(rect: Rect2i):
 			
 			map_data.erase_cell(coords)
 	
+	if not undo_active:
+		return
+	
 	rect = rect.grow(1)
 	editor.current_map_view.update_rect(rect)
 	undo_handle_rect_redraw(rect)
