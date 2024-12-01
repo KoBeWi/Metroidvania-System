@@ -1,13 +1,14 @@
 @tool
 extends "res://addons/MetroidvaniaSystem/Scripts/EditorMapView.gd"
 
-@onready var ghost_map: Control = %GhostMap
 @onready var grid: Control = %Grid
 
 @export var mode_group: ButtonGroup
 
 var mode: int
 var preview_layer := -1
+
+var preview_layers: Dictionary#[int, MetroidvaniaSystem.MapView]
 
 var undo_redo: UndoRedo
 var saved_version := 1
@@ -36,12 +37,34 @@ func mode_pressed(button: BaseButton):
 	map_overlay.queue_redraw()
 
 func on_layer_changed(l: int):
+	if preview_layer > -1 and current_layer == preview_layer:
+		preview_layers[preview_layer].visible = true
+	
 	super(l)
-	ghost_map.queue_redraw()
+	
+	if preview_layer > -1 and current_layer == preview_layer:
+		preview_layers[preview_layer].visible = false
 
 func preview_layer_changed(value: float) -> void:
+	if preview_layer > -1:
+		var prev_preview_layer: MetroidvaniaSystem.MapView = preview_layers.get(preview_layer)
+		if prev_preview_layer:
+			prev_preview_layer.visible = false
+	
 	preview_layer = value
-	ghost_map.queue_redraw()
+	if preview_layer == -1 or preview_layer == current_layer:
+		return
+	
+	var new_preview_layer: MetroidvaniaSystem.MapView = preview_layers.get(preview_layer)
+	if not new_preview_layer:
+		var map_extents := MetSys.settings.map_extents
+		new_preview_layer = MetSys.make_map_view(map, Vector2i(-map_extents, -map_extents), Vector2i(map_extents * 2, map_extents * 2), preview_layer)
+		new_preview_layer.skip_empty = true
+		RenderingServer.canvas_item_set_modulate(new_preview_layer._canvas_item, Color(1, 1, 1, 0.5))
+		new_preview_layer.queue_updates = true
+		preview_layers[preview_layer] = new_preview_layer
+	
+	new_preview_layer.visible = true
 
 func get_current_sub_editor() -> Control:
 	return mode_group.get_buttons()[mode]
@@ -63,14 +86,10 @@ func _on_overlay_input(event: InputEvent) -> void:
 					print("MetSys undo")
 				accept_event()
 
-func _on_drag():
-	ghost_map.queue_redraw()
-
 func _on_overlay_draw() -> void:
 	if not plugin:
 		return
 	
-	super()
 	map_overlay.draw_set_transform(Vector2(map_offset) * MetSys.CELL_SIZE)
 	
 	var sub := get_current_sub_editor()
@@ -79,17 +98,6 @@ func _on_overlay_draw() -> void:
 	
 	if sub.top_draw.is_valid():
 		sub.top_draw.call(map_overlay)
-
-func _on_ghost_map_draw() -> void:
-	if not plugin:
-		return
-	
-	if preview_layer == -1 or preview_layer == current_layer:
-		return
-	
-	for x in range(-100, 100):
-		for y in range(-100, 100):
-			MetSys.draw_cell(ghost_map, Vector2i(x, y) + map_offset, Vector3i(x, y, preview_layer), true, false)
 
 func _on_grid_draw() -> void:
 	if not plugin:
@@ -107,7 +115,6 @@ func _on_grid_draw() -> void:
 func on_zoom_changed(new_zoom: float):
 	super(new_zoom)
 	var new_zoom_vector := Vector2.ONE * new_zoom
-	ghost_map.scale = new_zoom_vector
 	grid.scale = new_zoom_vector
 
 func update_name():

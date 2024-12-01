@@ -1,6 +1,6 @@
 [gd_scene load_steps=14 format=3 uid="uid://dfbykrvyqnqr5"]
 
-[ext_resource type="Script" path="res://addons/MetroidvaniaSystem/Database/MapEditor.gd" id="1_i7yda"]
+[ext_resource type="Script" uid="uid://cmjsph053oe5d" path="res://addons/MetroidvaniaSystem/Database/MapEditor.gd" id="1_i7yda"]
 [ext_resource type="PackedScene" uid="uid://w34y4dyx84y8" path="res://addons/MetroidvaniaSystem/Nodes/LayerSelector.tscn" id="2_rinoa"]
 
 [sub_resource type="ButtonGroup" id="ButtonGroup_pv7fp"]
@@ -1201,18 +1201,6 @@ size_flags_horizontal = 3
 [node name="Map" type="Node2D" parent="MapView"]
 unique_name_in_owner = true
 
-[node name="GhostMap" type="Control" parent="MapView"]
-unique_name_in_owner = true
-modulate = Color(1, 1, 1, 0.12549)
-clip_contents = true
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-size_flags_horizontal = 3
-
 [node name="OverlayLayer" type="Control" parent="MapView"]
 unique_name_in_owner = true
 z_index = 5
@@ -1243,4 +1231,3 @@ vertical_alignment = 1
 [connection signal="value_changed" from="Sidebar/ScrollContainer/VBoxContainer/EditControls/Groups/CurrentGroup" to="MapView" method="queue_redraw" unbinds=1]
 [connection signal="toggled" from="Sidebar/ScrollContainer/VBoxContainer/EditControls/SceneAssign/AssignUID" to="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign" method="_on_assign_uid_toggled"]
 [connection signal="draw" from="MapView/Grid" to="." method="_on_grid_draw"]
-[connection signal="draw" from="MapView/GhostMap" to="." method="_on_ghost_map_draw"]

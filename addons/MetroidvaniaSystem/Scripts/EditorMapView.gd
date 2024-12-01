@@ -34,13 +34,8 @@ func _ready() -> void:
 	%RecenterButton.pressed.connect(on_recenter_view)
 	zoom_slider.value_changed.connect(on_zoom_changed)
 	
-	map_view_container.mouse_entered.connect(func():
-		cursor_inside = true
-		map_overlay.queue_redraw())
-	
-	map_view_container.mouse_exited.connect(func():
-		cursor_inside = false
-		map_overlay.queue_redraw())
+	map_view_container.mouse_entered.connect(set.bind(&"cursor_inside", true))
+	map_view_container.mouse_exited.connect(set.bind(&"cursor_inside", false))
 	
 	status_label.hide()
 	await get_tree().process_frame
@@ -48,16 +43,16 @@ func _ready() -> void:
 	on_layer_changed(0)
 	update_map_position()
 	
-	var refresh := func():
-		update_map_position()
-		layers.clear()
-		on_layer_changed(current_layer)
-	
 	MetSys.settings.theme_changed.connect(refresh)
 	MetSys.theme_modified.connect(refresh.unbind(1))
 
+func refresh():
+	update_map_position()
+	layers.clear()
+	on_layer_changed(current_layer)
+
 func get_cursor_pos() -> Vector2i:
-	var pos := (map_overlay.get_local_mouse_position() - MetSys.CELL_SIZE / 2).snapped(MetSys.CELL_SIZE) / MetSys.CELL_SIZE as Vector2i - map_offset
+	var pos := (map_view_container.get_local_mouse_position() - MetSys.CELL_SIZE / 2).snapped(MetSys.CELL_SIZE) / MetSys.CELL_SIZE as Vector2i - map_offset
 	return pos
 
 func on_layer_changed(l: int):
@@ -77,17 +72,14 @@ func on_layer_changed(l: int):
 	current_map_view.visible = true
 	
 	map.queue_redraw()## nie
-	map_overlay.queue_redraw()
 
 func on_recenter_view() -> void:
 	map_offset = Vector2i(10, 10)
-	map_overlay.queue_redraw()
 	update_map_position()
 
 func on_zoom_changed(new_zoom: float):
 	zoom_value_label.text = "x%0.1f" % new_zoom
 	var new_zoom_vector := Vector2.ONE * new_zoom
-	map_overlay.scale = new_zoom_vector
 	map.scale = new_zoom_vector
 	update_map_position()
 
@@ -111,7 +103,6 @@ func _on_overlay_input(event: InputEvent) -> void:
 			map_offset = Vector2(view_drag.z, view_drag.w) + (map_overlay.get_local_mouse_position() - Vector2(view_drag.x, view_drag.y)) / MetSys.CELL_SIZE
 			update_map_position()
 			map_overlay.queue_redraw()
-			_on_drag()
 		else:
 			map_overlay.queue_redraw()
 		
@@ -129,9 +120,6 @@ func _on_overlay_input(event: InputEvent) -> void:
 		elif event.button_index == MOUSE_BUTTON_WHEEL_UP or event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
 			if event.pressed and event.is_command_or_control_pressed():
 				zoom_slider.value += zoom_slider.step * (-1 if event.button_index == MOUSE_BUTTON_WHEEL_DOWN else 1)
-
-func _on_drag():
-	pass
 
 func _update_status_label():
 	status_label.show()
@@ -154,17 +142,8 @@ func _notification(what: int) -> void:
 		if map_overlay:
 			map_overlay.queue_redraw()
 
-func _on_map_draw() -> void:
-	return
-	if not plugin:
-		return
-	
-	if MetSys.settings.theme.use_shared_borders:
-		MetSys.draw_shared_borders()
-
 func _on_overlay_draw() -> void:
-	pass ## DELET
-	#MetSys.draw_custom_elements(map_overlay, Rect2i(-map_offset, map_overlay.size / MetSys.CELL_SIZE + Vector2.ONE), Vector2(), current_layer)
+	pass
 
 func update_map_position():
 	map.position = Vector2(map_offset - Vector2i.ONE * MetSys.settings.map_extents) * MetSys.CELL_SIZE * map.scale

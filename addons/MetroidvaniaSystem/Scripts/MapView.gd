@@ -6,8 +6,9 @@ const SURROUND = [Vector3i(-1, -1, 0), Vector3i(0, -1, 0), Vector3i(1, -1, 0), V
 var begin: Vector2i ## TODO handle changing
 var size: Vector2i
 var layer: int
+var skip_empty: bool
 var queue_updates: bool
-var threaded: bool ## TODO
+#var threaded: bool
 
 var visible: bool:
 	set(v):
@@ -39,6 +40,7 @@ func recreate_cache():
 		for x in size.x:
 			var coords := Vector3i(begin.x + x, begin.y + y, layer)
 			var cell := CellView.new(_canvas_item)
+			cell.skip_empty = skip_empty
 			cell.coords = coords
 			cell.offset = Vector2(x, y)
 			_cache[coords] = cell

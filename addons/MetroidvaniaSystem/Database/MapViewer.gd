@@ -65,7 +65,6 @@ func _on_overlay_draw() -> void:
 	if not plugin:
 		return
 	
-	super()
 	var mouse := get_cursor_pos()
 	
 	if cursor_inside:
