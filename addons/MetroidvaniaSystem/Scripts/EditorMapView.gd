@@ -70,8 +70,6 @@ func on_layer_changed(l: int):
 	
 	current_map_view = new_map_view
 	current_map_view.visible = true
-	
-	map.queue_redraw()## nie
 
 func on_recenter_view() -> void:
 	map_offset = Vector2i(10, 10)

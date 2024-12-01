@@ -103,14 +103,12 @@ func _on_grid_draw() -> void:
 	if not plugin:
 		return
 	
-	## chyba nie trzeba już
-	var empty_texture: Texture2D = MetSys.settings.theme.empty_space_texture
+	if MetSys.settings.theme.empty_space_texture:
+		return
+	
 	for x in ceili(grid.size.x / MetSys.CELL_SIZE.x):
 		for y in ceili(grid.size.y / MetSys.CELL_SIZE.y):
-			if empty_texture:
-				grid.draw_texture(empty_texture, Vector2(x, y) * MetSys.CELL_SIZE)
-			else:
-				grid.draw_rect(Rect2(Vector2(x, y) * MetSys.CELL_SIZE, MetSys.CELL_SIZE), Color(Color.WHITE, 0.1), false)
+			grid.draw_rect(Rect2(Vector2(x, y) * MetSys.CELL_SIZE, MetSys.CELL_SIZE), Color(Color.WHITE, 0.1), false)
 
 func on_zoom_changed(new_zoom: float):
 	super(new_zoom)
