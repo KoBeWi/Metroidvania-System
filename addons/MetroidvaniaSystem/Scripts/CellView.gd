@@ -3,19 +3,22 @@ extends RefCounted
 const CellData = MetroidvaniaSystem.MapData.CellData
 
 var use_save_data: bool = true
-var skip_empty: bool
 
 var coords: Vector3i
-var visible: bool:
+var visible: bool = true:
 	set(v):
 		visible = v
-		RenderingServer.canvas_item_set_visible(_canvas_item, visible)
+		if _canvas_item.is_valid():
+			RenderingServer.canvas_item_set_visible(_canvas_item, visible)
 
 var offset: Vector2:
 	set(v):
 		offset = v
-		RenderingServer.canvas_item_set_transform(_canvas_item, Transform2D(0, offset * MetSys.CELL_SIZE))
+		if _canvas_item.is_valid():
+			RenderingServer.canvas_item_set_transform(_canvas_item, Transform2D(0, offset * MetSys.CELL_SIZE))
 
+var _this: RefCounted # hack
+var _parent_item: RID
 var _canvas_item: RID
 var _shared_border_item: RID
 var _shared_corner_item: RID
@@ -28,42 +31,59 @@ var _theme: MapTheme
 var _force_mapped: bool
 
 func _init(parent_item: RID) -> void:
-	_canvas_item = RenderingServer.canvas_item_create()
-	RenderingServer.canvas_item_set_parent(_canvas_item, parent_item)
+	_this = self # hack
+	unreference() # hack
 	
+	_parent_item = parent_item
 	_theme = MetSys.settings.theme
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_PREDELETE:
+		if _this._canvas_item.is_valid():
+			_this.delete_rids()
+
+func create_rids():
+	_canvas_item = RenderingServer.canvas_item_create()
+	RenderingServer.canvas_item_set_parent(_canvas_item, _parent_item)
+	
+	RenderingServer.canvas_item_set_visible(_canvas_item, visible)
+	RenderingServer.canvas_item_set_transform(_canvas_item, Transform2D(0, offset * MetSys.CELL_SIZE))
+	
 	if _theme.use_shared_borders:
 		_shared_border_item = RenderingServer.canvas_item_create()
 		RenderingServer.canvas_item_set_z_index(_shared_border_item, 1)
 		RenderingServer.canvas_item_set_parent(_shared_border_item, _canvas_item)
+		
 		_shared_corner_item = RenderingServer.canvas_item_create()
 		RenderingServer.canvas_item_set_z_index(_shared_corner_item, 2)
 		RenderingServer.canvas_item_set_parent(_shared_corner_item, _canvas_item)
 
-func _notification(what: int) -> void:
-	if what == NOTIFICATION_PREDELETE:
-		RenderingServer.free_rid(_canvas_item)
-		if _shared_border_item.is_valid():
-			RenderingServer.free_rid(_shared_border_item)
-			RenderingServer.free_rid(_shared_corner_item)
+func delete_rids():
+	RenderingServer.free_rid(_canvas_item)
+	if _shared_border_item.is_valid():
+		RenderingServer.free_rid(_shared_border_item)
+		RenderingServer.free_rid(_shared_corner_item)
 
 func update():
-	RenderingServer.canvas_item_clear(_canvas_item)
-	if _shared_border_item.is_valid():
-		RenderingServer.canvas_item_clear(_shared_border_item)
-		RenderingServer.canvas_item_clear(_shared_corner_item)
+	if _canvas_item.is_valid():
+		RenderingServer.canvas_item_clear(_canvas_item)
+		if _shared_border_item.is_valid():
+			RenderingServer.canvas_item_clear(_shared_border_item)
+			RenderingServer.canvas_item_clear(_shared_corner_item)
 	_draw()
 
 func _draw():
+	var cell_data: CellData = MetSys.map_data.get_cell_at(coords)
+	if not cell_data:
+		if _canvas_item.is_valid():
+			delete_rids()
+		return
+	elif not _canvas_item.is_valid():
+		create_rids()
+	
 	var save_data: MetroidvaniaSystem.MetSysSaveData
 	if use_save_data:
 		save_data = MetSys.save_data
-	
-	var cell_data: CellData = MetSys.map_data.get_cell_at(coords)
-	if not cell_data:
-		if not skip_empty:
-			draw_empty()
-		return
 	
 	var discovered := 2
 	if save_data:
@@ -72,8 +92,6 @@ func _draw():
 		discovered = 1
 	
 	if discovered == 0:
-		if not skip_empty:
-			draw_empty()
 		return
 	
 	var display_flags: int = (int(discovered == 2) * 255) | _theme.mapped_display
@@ -115,10 +133,6 @@ func _draw_texture(texture: Texture2D, color := Color.WHITE, offset := Vector2()
 			RenderingServer.canvas_item_add_texture_rect(_canvas_item, Rect2(offset, texture.get_size() * Vector2(-1, -1)), texture.get_rid(), false, color)
 		MetroidvaniaSystem.U:
 			RenderingServer.canvas_item_add_texture_rect(_canvas_item, Rect2(offset, texture.get_size() * Vector2(1, -1)), texture.get_rid(), false, color, true)
-
-func draw_empty():
-	if _theme.empty_space_texture:
-		_draw_texture(_theme.empty_space_texture)
 
 func _draw_regular_borders(cell_data: CellData, display_flags: int, discovered: int):
 	var map_data: MetroidvaniaSystem.MapData = MetSys.map_data

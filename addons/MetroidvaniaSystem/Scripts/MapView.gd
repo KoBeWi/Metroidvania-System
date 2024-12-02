@@ -40,7 +40,6 @@ func recreate_cache():
 		for x in size.x:
 			var coords := Vector3i(begin.x + x, begin.y + y, layer)
 			var cell := CellView.new(_canvas_item)
-			cell.skip_empty = skip_empty
 			cell.coords = coords
 			cell.offset = Vector2(x, y)
 			_cache[coords] = cell
@@ -95,6 +94,19 @@ func update_all():
 		_update_cell(cell)
 	for element: CustomElementInstance in _custom_elements_cache.values():
 		_update_element(element)
+	
+	RenderingServer.canvas_item_clear(_canvas_item)
+	if skip_empty:
+		return
+	
+	var empty_texture := MetSys.settings.theme.empty_space_texture
+	
+	if empty_texture:
+		var texture_rid := empty_texture.get_rid()
+		var texture_size := empty_texture.get_size()
+		for y in size.y:
+			for x in size.x:
+				RenderingServer.canvas_item_add_texture_rect(_canvas_item, Rect2(Vector2(x, y) * MetSys.CELL_SIZE, texture_size), texture_rid)
 
 func update_cell(coords: Vector3i):
 	var exists: bool
