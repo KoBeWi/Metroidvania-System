@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://dch8dyylb7526"]
 
-[ext_resource type="Script" path="res://addons/MetroidvaniaSystem/Template/Nodes/Minimap.gd" id="1_xjfym"]
+[ext_resource type="Script" uid="uid://caldklojsd6il" path="res://addons/MetroidvaniaSystem/Template/Nodes/Minimap.gd" id="1_xjfym"]
 
 [node name="Minimap" type="Control"]
 clip_contents = true
@@ -12,5 +12,3 @@ script = ExtResource("1_xjfym")
 smooth_scroll = true
 
 [node name="Drawer" type="Node2D" parent="."]
-
-[connection signal="draw" from="Drawer" to="." method="_draw_map"]

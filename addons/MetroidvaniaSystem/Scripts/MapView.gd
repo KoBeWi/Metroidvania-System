@@ -3,7 +3,7 @@ extends RefCounted
 const CellView = MetroidvaniaSystem.CellView
 const SURROUND = [Vector3i(-1, -1, 0), Vector3i(0, -1, 0), Vector3i(1, -1, 0), Vector3i(-1, 0, 0), Vector3i(1, 0, 0), Vector3i(-1, 1, 0), Vector3i(0, 1, 0), Vector3i(1, 1, 0)]
 
-var begin: Vector2i ## TODO handle changing
+var begin: Vector2i
 var size: Vector2i
 var layer: int
 var skip_empty: bool
@@ -72,6 +72,66 @@ func recreate_cache():
 	update_all()
 	queue_updates = was_queue
 
+func move(offset: Vector2i, new_layer := layer):
+	if new_layer != layer:
+		begin += offset
+		layer = new_layer
+		recreate_cache()
+		return
+	elif offset == Vector2i():
+		return
+	
+	begin += offset
+	
+	var shared_borders: bool = MetSys.settings.theme.use_shared_borders
+	var new_cache: Dictionary#[Vector3i, CellView]
+	for y in size.y:
+		for x in size.x:
+			var coords := Vector3i(begin.x + x, begin.y + y, layer)
+			var cell: CellView = _cache.get(coords)
+			if not cell:
+				cell = CellView.new(_canvas_item)
+				cell.coords = coords
+				cell.update()
+			
+			cell.offset = Vector2(x, y)
+			new_cache[coords] = cell
+			
+			if shared_borders:
+				if x > 0:
+					cell._left_cell = new_cache[coords + Vector3i(-1, 0, 0)]
+				if y > 0:
+					cell._top_cell = new_cache[coords + Vector3i(0, -1, 0)]
+				if x > 0 and y > 0:
+					cell._top_left_cell = new_cache[coords + Vector3i(-1, -1, 0)]
+		
+		var rect := Rect2i(begin, size)
+		var element_manager: MetroidvaniaSystem.CustomElementManager = MetSys.settings.custom_elements
+		var element_list: Dictionary = MetSys.map_data.custom_elements
+		
+		for coords in _custom_elements_cache.keys():
+			var element: CustomElementInstance = _custom_elements_cache[coords]
+			var element_rect := Rect2i(coords.x, coords.y, element.data["size"].x, element.data["size"].y)
+			
+			if not element_rect.intersects(rect):
+				_custom_elements_cache.erase(coords)
+		
+		for coords in MetSys.map_data.custom_elements:
+			if coords.z != layer:
+				continue
+			
+			if coords in _custom_elements_cache:
+				continue
+			
+			var element: Dictionary = element_list[coords]
+			var element_rect := Rect2i(coords.x, coords.y, element["size"].x, element["size"].y)
+			if not element_rect.intersects(rect):
+				continue
+			
+			_make_custom_element_instance(coords, element)
+	
+	_cache = new_cache
+
 func _make_custom_element_instance(coords: Vector3i, data: Dictionary):
 	var element_instance := CustomElementInstance.new(_canvas_item)
 	element_instance.coords = coords
@@ -99,7 +159,7 @@ func update_all():
 	if skip_empty:
 		return
 	
-	var empty_texture := MetSys.settings.theme.empty_space_texture
+	var empty_texture: Texture2D = MetSys.settings.theme.empty_space_texture
 	
 	if empty_texture:
 		var texture_rid := empty_texture.get_rid()
