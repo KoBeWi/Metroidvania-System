@@ -113,7 +113,8 @@ func _editor_draw(map_overlay: CanvasItem):
 				if not offset3 in dragging_room and MetSys.map_data.get_cell_at(offset3):
 					map_overlay.draw_rect(Rect2(Vector2(editor.map_offset + offset) * MetSys.CELL_SIZE, MetSys.CELL_SIZE), theme_cache.invalid_room_drop_position)
 				else:
-					MetSys.draw_cell(map_overlay, editor.map_offset + offset, coords, true, false)
+					pass
+					#MetSys.draw_cell(map_overlay, editor.map_offset + offset, coords, true, false)
 
 func update_rooms(rect: Rect2i):
 	var map_data: MetroidvaniaSystem.MapData = MetSys.map_data

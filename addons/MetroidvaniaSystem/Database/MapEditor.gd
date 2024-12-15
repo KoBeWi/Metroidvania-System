@@ -8,7 +8,7 @@ extends "res://addons/MetroidvaniaSystem/Scripts/EditorMapView.gd"
 var mode: int
 var preview_layer := -1
 
-var preview_layers: Dictionary#[int, MetroidvaniaSystem.MapView]
+var preview_layers: Dictionary#[int, MapView]
 
 var undo_redo: UndoRedo
 var saved_version := 1
@@ -47,7 +47,7 @@ func on_layer_changed(l: int):
 
 func preview_layer_changed(value: float) -> void:
 	if preview_layer > -1:
-		var prev_preview_layer: MetroidvaniaSystem.MapView = preview_layers.get(preview_layer)
+		var prev_preview_layer: MapView = preview_layers.get(preview_layer)
 		if prev_preview_layer:
 			prev_preview_layer.visible = false
 	
@@ -55,7 +55,7 @@ func preview_layer_changed(value: float) -> void:
 	if preview_layer == -1 or preview_layer == current_layer:
 		return
 	
-	var new_preview_layer: MetroidvaniaSystem.MapView = preview_layers.get(preview_layer)
+	var new_preview_layer: MapView = preview_layers.get(preview_layer)
 	if not new_preview_layer:
 		var map_extents := MetSys.settings.map_extents
 		new_preview_layer = MetSys.make_map_view(map, Vector2i(-map_extents, -map_extents), Vector2i(map_extents * 2, map_extents * 2), preview_layer)

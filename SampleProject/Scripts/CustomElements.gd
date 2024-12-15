@@ -14,9 +14,9 @@ func draw_elevator(canvas_item: RID, coords: Vector3i, pos: Vector2, size: Vecto
 		return
 	
 	var elevator_texture := preload("res://SampleProject/Sprites/Elevator.png")
-	# Draw the texture using the element's rect and default bolder color as modulate.
+	# Draw the texture using the element's rect and default border color as modulate.
 	elevator_texture.draw_rect(canvas_item, Rect2(
-		pos + Vector2.RIGHT * (MetSys.CELL_SIZE.x * 0.5 - elevator_texture.get_width() * 0.5),
+		pos + Vector2(MetSys.CELL_SIZE.x * 0.5 - elevator_texture.get_width() * 0.5, 0),
 		Vector2(elevator_texture.get_width(), size.y)), true, MetSys.settings.theme.default_border_color)
 
 func draw_label(canvas_item: RID, coords: Vector3i, pos: Vector2, size: Vector2, data: String):

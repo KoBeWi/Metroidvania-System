@@ -96,6 +96,6 @@ func _on_overlay_draw() -> void:
 		extra_draw.call(map_overlay)
 
 func toggle_mapped(toggled_on: bool) -> void:
-	for map_view: MetroidvaniaSystem.MapView in layers.values():
+	for map_view: MapView in layers.values():
 		map_view._force_mapped = toggled_on
 		map_view._update_all_with_mapped()

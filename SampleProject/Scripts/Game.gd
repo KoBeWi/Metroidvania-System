@@ -58,10 +58,12 @@ func _ready() -> void:
 	if start and not custom_run:
 		player.position = start.position
 	
-	# Reset position tracking (feature specific to this project).
-	reset_map_starting_coords.call_deferred()
 	# Add module for room transitions.
 	add_module("RoomTransitions.gd")
+	
+	# Reset position tracking (feature specific to this project).
+	await get_tree().physics_frame
+	reset_map_starting_coords.call_deferred()
 
 # Returns this node from anywhere.
 static func get_singleton() -> Game:

@@ -11,7 +11,6 @@ const MetSysSettings = preload("res://addons/MetroidvaniaSystem/Scripts/Settings
 const MetSysSaveData = preload("res://addons/MetroidvaniaSystem/Scripts/SaveData.gd")
 const MapData = preload("res://addons/MetroidvaniaSystem/Scripts/MapData.gd")
 const CellView = preload("res://addons/MetroidvaniaSystem/Scripts/CellView.gd")
-const MapView = preload("res://addons/MetroidvaniaSystem/Scripts/MapView.gd")
 const MapBuilder = preload("res://addons/MetroidvaniaSystem/Scripts/MapBuilder.gd")
 const RoomInstance = preload("res://addons/MetroidvaniaSystem/Scripts/RoomInstance.gd")
 const CustomElementManager = preload("res://addons/MetroidvaniaSystem/Scripts/CustomElementManager.gd")
@@ -333,17 +332,6 @@ func make_map_view(parent_item: CanvasItem, begin: Vector2i, size: Vector2i, lay
 	mv.size = size
 	mv.layer = layer
 	return mv
-
-## Draws a single map cell. [param canvas_item] is the [CanvasItem] responsible for drawing, [param offset] is the drawing offset in map coordinates. [param coords] is the coordinate of the map cell that's going to be drawn (does not need to exist). If [param skip_empty] is [code]false[/code], [member MapTheme.empty_space_texture] will be drawn in place of empty cells, if available. If [param use_save_data] is [code]true[/code], the discovered rooms data will be used for drawing the map.
-## [br][br]Example of drawing a 3x3 minimap where center is at [code]current_cell[/code]:
-## [codeblock]
-## for x in range(-1, 2):
-##     for y in range(-1, 2):
-##         MetSys.draw_cell(self, Vector2i(x + 1, y + 1), Vector3i(current_cell.x + x, current_cell.y + y, MetSys.current_layer))
-## [/codeblock]
-## [b]Note:[/b] Drawing a cell is an expensive operation, so avoid performing it too often. You can use the [signal map_updated] signal to only redraw when necessary.
-func draw_cell(canvas_item: CanvasItem, offset: Vector2, coords: Vector3i, skip_empty := false, use_save_data := true):
-	RoomDrawer.draw(canvas_item, offset, coords, skip_empty, map_data, save_data if use_save_data else null)
 
 ## Performs a second drawing pass after all cells were drawn, for drawing the shared borders. Only required if [member MapTheme.use_shared_borders] is enabled.
 func draw_shared_borders():

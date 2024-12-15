@@ -16,8 +16,8 @@ var map_offset := Vector2i(10, 10)
 var current_layer: int
 var cursor_inside: bool
 
-var layers: Dictionary#[int, MetroidvaniaSystem.MapView]
-var current_map_view: MetroidvaniaSystem.MapView
+var layers: Dictionary#[int, MapView]
+var current_map_view: MapView
 
 func _enter_tree() -> void:
 	if owner:
@@ -61,7 +61,7 @@ func on_layer_changed(l: int):
 	
 	current_layer = l
 	
-	var new_map_view: MetroidvaniaSystem.MapView = layers.get(current_layer)
+	var new_map_view: MapView = layers.get(current_layer)
 	if not new_map_view:
 		var map_extents := MetSys.settings.map_extents
 		new_map_view = MetSys.make_map_view(map, Vector2i(-map_extents, -map_extents), Vector2i(map_extents * 2, map_extents * 2), current_layer)
