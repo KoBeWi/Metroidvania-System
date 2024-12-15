@@ -6,7 +6,7 @@ This plugin evolved from various tools I made for my metroidvania game, [Voice o
 
 Supports Godot **4.2** or newer.
 
-**NOTE** The current master branch is in process of major refactor and some of the instructions are outdated. Use 17e1fed0ec7cd1a9bffbe58301edbab49b02b16e if you want stable experience.
+**NOTE** The current master branch is in process of major refactor and some of the instructions are outdated. Use [17e1fed0ec7cd1a9bffbe58301edbab49b02b16e](https://github.com/KoBeWi/Metroidvania-System/commit/17e1fed0ec7cd1a9bffbe58301edbab49b02b16e) (available on AssetLib) if you want stable experience.
 
 ## Instructions
 
