@@ -265,6 +265,7 @@ class CustomElementInstance:
 	func _notification(what: int) -> void:
 		if what == NOTIFICATION_PREDELETE:
 			RenderingServer.free_rid(canvas_item)
+			canvas_item = RID()
 	
 	func update():
 		RenderingServer.canvas_item_clear(canvas_item)

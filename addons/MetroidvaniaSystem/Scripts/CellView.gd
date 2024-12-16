@@ -60,9 +60,12 @@ func create_rids():
 
 func delete_rids():
 	RenderingServer.free_rid(_canvas_item)
+	_canvas_item = RID()
 	if _shared_border_item.is_valid():
 		RenderingServer.free_rid(_shared_border_item)
 		RenderingServer.free_rid(_shared_corner_item)
+		_shared_border_item = RID()
+		_shared_corner_item = RID()
 
 func update():
 	if _canvas_item.is_valid():

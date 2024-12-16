@@ -14,6 +14,7 @@ var erase_mode: bool
 
 var dragging_room_from: Vector2i
 var dragging_room: Array[Vector3i]
+var dragging_room_cells: Array[MetroidvaniaSystem.CellView]
 var dragging_drawer: Node2D
 
 func _ready() -> void:
@@ -22,8 +23,10 @@ func _ready() -> void:
 	
 	super()
 	
+	await editor.ready
+	
 	dragging_drawer = Node2D.new()
-	editor.add_child.call_deferred(dragging_drawer)
+	editor.map_view_container.add_child(dragging_drawer)
 
 func _editor_init() -> void:
 	room_only_cursor = false
@@ -52,8 +55,23 @@ func _editor_input(event: InputEvent):
 				if event.shift_pressed:
 					var under := get_cell_at_cursor()
 					if under:
-						dragging_room = MetSys.map_data.get_whole_room(get_coords(get_cursor_pos()))
 						dragging_room_from = get_cursor_pos()
+						dragging_room = MetSys.map_data.get_whole_room(get_coords(get_cursor_pos()))
+						var begin := Vector3i.MAX
+						for cell in dragging_room:
+							begin = begin.min(cell)
+						
+						
+						var diff2 := Vector3i(dragging_room_from.x, dragging_room_from.y, begin.z) - begin
+						for cell in dragging_room:
+							var view := MetroidvaniaSystem.CellView.new(dragging_drawer.get_canvas_item())
+							dragging_room_cells.append(view)
+							var diff := cell - begin - diff2
+							view.offset = Vector2(diff.x, diff.y)
+							view.coords = cell
+							view.update()
+						
+						dragging_drawer.position = Vector2(dragging_room_from + editor.map_offset) * MetSys.CELL_SIZE
 						set_dragging_room_visible(false)
 						redraw_overlay()
 				else:
@@ -85,6 +103,7 @@ func _editor_input(event: InputEvent):
 					
 					set_dragging_room_visible(true)
 					dragging_room.clear()
+					dragging_room_cells.clear()
 					undo_end_with_redraw()
 		elif event.button_index == MOUSE_BUTTON_RIGHT:
 			if event.pressed:
@@ -98,23 +117,25 @@ func _editor_input(event: InputEvent):
 				erase_mode = false
 				theme_cache.cursor_color = get_theme_color(&\"cursor_color\", &\"MetSys\")
 				drag_from = Vector2i.MAX
+	elif event is InputEventMouseMotion:
+		if not dragging_room.is_empty():
+			dragging_drawer.position = Vector2(get_cursor_pos() + editor.map_offset) * MetSys.CELL_SIZE
 
 func _editor_draw(map_overlay: CanvasItem):
 	super(map_overlay)
 	
-	if not dragging_room.is_empty():
-		top_draw = func(map_overlay: CanvasItem):
-			map_overlay.draw_set_transform_matrix(Transform2D())
+	if dragging_room.is_empty():
+		return
+	
+	top_draw = func(map_overlay: CanvasItem):
+		map_overlay.draw_set_transform_matrix(Transform2D())
+		
+		for coords in dragging_room:
+			var offset := get_cell_dragging_offset(coords)
+			var offset3 := get_coords(offset)
 			
-			for coords in dragging_room:
-				var offset := get_cell_dragging_offset(coords)
-				var offset3 := get_coords(offset)
-				
-				if not offset3 in dragging_room and MetSys.map_data.get_cell_at(offset3):
-					map_overlay.draw_rect(Rect2(Vector2(editor.map_offset + offset) * MetSys.CELL_SIZE, MetSys.CELL_SIZE), theme_cache.invalid_room_drop_position)
-				else:
-					pass
-					#MetSys.draw_cell(map_overlay, editor.map_offset + offset, coords, true, false)
+			if not offset3 in dragging_room and MetSys.map_data.get_cell_at(offset3):
+				map_overlay.draw_rect(Rect2(Vector2(editor.map_offset + offset) * MetSys.CELL_SIZE, MetSys.CELL_SIZE), theme_cache.invalid_room_drop_position)
 
 func update_rooms(rect: Rect2i):
 	var map_data: MetroidvaniaSystem.MapData = MetSys.map_data

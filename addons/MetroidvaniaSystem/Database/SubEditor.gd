@@ -166,6 +166,8 @@ func undo_handle_transfer(from_coords: Vector3i, to_coords: Vector3i):
 	
 	editor.undo_redo.add_do_method(MetSys.map_data.transfer_cell.bind(from_coords, to_coords))
 	editor.undo_redo.add_undo_method(MetSys.map_data.transfer_cell.bind(to_coords, from_coords))
+	undo_handle_cell_redraw(from_coords)
+	undo_handle_cell_redraw(to_coords)
 	
 	had_undo_change = true
 
