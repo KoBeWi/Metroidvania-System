@@ -56,21 +56,28 @@ func recreate_cache():
 	_custom_elements_cache.clear()
 	var shared_borders: bool = MetSys.settings.theme.use_shared_borders
 	
+	var prev_row: Array[CellView]
 	for y in size.y:
+		var current_row: Array[CellView]
+		current_row.resize(size.x)
+		
 		for x in size.x:
 			var coords := Vector3i(begin.x + x, begin.y + y, layer)
 			var cell := CellView.new(_canvas_item)
 			cell.coords = coords
 			cell.offset = Vector2(x, y)
 			_cache[coords] = cell
+			current_row[x] = cell
 			
 			if shared_borders:
 				if x > 0:
-					cell._left_cell = _cache[coords + Vector3i(-1, 0, 0)]
+					cell._left_cell = current_row[x - 1]
 				if y > 0:
-					cell._top_cell = _cache[coords + Vector3i(0, -1, 0)]
+					cell._top_cell = prev_row[x]
 				if x > 0 and y > 0:
-					cell._top_left_cell = _cache[coords + Vector3i(-1, -1, 0)]
+					cell._top_cell = prev_row[x - 1]
+		
+		prev_row = current_row
 	
 	var rect := Rect2i(begin, size)
 	var element_manager: MetroidvaniaSystem.CustomElementManager = MetSys.settings.custom_elements
