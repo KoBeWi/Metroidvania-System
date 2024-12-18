@@ -1,7 +1,7 @@
 @tool
 ## Resource that defines the cell appearance.
 ##
-## MapTheme is assigned in MetSys Settings and defines the cell appearance when using [method MetroidvaniaSystem.draw_cell]. It has a few subtypes: shape can be either square or rectangular and borders can be either shared or not. Some properties are only available for certain theme subtypes. Check the Map Theme section in README for some more detailed information.
+## MapTheme is assigned in MetSys Settings and defines the cell appearance when using [MapView]. It has a few subtypes: shape can be either square or rectangular and borders can be either shared or not. Some properties are only available for certain theme subtypes. Check the Map Theme section in README for some more detailed information.
 extends Resource
 class_name MapTheme
 

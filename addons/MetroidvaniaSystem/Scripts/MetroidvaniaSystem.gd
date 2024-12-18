@@ -15,8 +15,6 @@ const MapBuilder = preload("res://addons/MetroidvaniaSystem/Scripts/MapBuilder.g
 const RoomInstance = preload("res://addons/MetroidvaniaSystem/Scripts/RoomInstance.gd")
 const CustomElementManager = preload("res://addons/MetroidvaniaSystem/Scripts/CustomElementManager.gd")
 
-const RoomDrawer = preload("res://addons/MetroidvaniaSystem/Scripts/Legacy/RoomDrawer.gd")
-
 enum { R, ## Right border.
 		D, ## Bottom border.
 		L, ## Left border.
@@ -332,17 +330,6 @@ func make_map_view(parent_item: CanvasItem, begin: Vector2i, size: Vector2i, lay
 	mv.size = size
 	mv.layer = layer
 	return mv
-
-## Performs a second drawing pass after all cells were drawn, for drawing the shared borders. Only required if [member MapTheme.use_shared_borders] is enabled.
-func draw_shared_borders():
-	RoomDrawer.draw_shared_borders()
-
-## Performs another drawing pass after all cells were draw, for drawing the custom elements. Only required if [code]custom_element_script[/code] is assigned in MetSyS Settings.
-## [br][br][param canvas_item] is the [CanvasItem] responsible for drawing. [param rect] is the portion of the world map that's going to be drawn. All elements whose rects intersect with this rectangle will be drawn. [param drawing_offset] is an offset in pixels, in case your map has a margin etc. You can draw elements from another layer or leave default [param layer] to use the current one.
-func draw_custom_elements(canvas_item: CanvasItem, rect: Rect2i, drawing_offset := Vector2(), layer := current_layer):
-	if not settings.custom_elements or map_data.custom_elements.is_empty():
-		return
-	RoomDrawer.draw_custom_elements(canvas_item, map_data.custom_elements, drawing_offset, rect, layer)
 
 ## Creates an instance of [member MapTheme.player_location_scene] and adds it as a child of the specified [param canvas_item]. The location scene will be moved to the player's location, respecting [member MapTheme.show_exact_player_location]. [param offset] is the offset in pixels for drawing the location. Use it if your map doesn't use [code](0, 0)[/code] as origin point.
 ## [br][br][b]Note:[/b] The scene automatically disables processing if it's not visible, so you don't need to worry about having animations and such. They will not run in the background.
