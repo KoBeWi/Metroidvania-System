@@ -1,0 +1,10 @@
+{
+"epic_artifact_id": "",
+"epic_cloud_dir": "",
+"epic_product_id": "",
+"godot_path": "",
+"itch_default_channel": "",
+"itch_game_name": "",
+"routines": {},
+"templates": {}
+}

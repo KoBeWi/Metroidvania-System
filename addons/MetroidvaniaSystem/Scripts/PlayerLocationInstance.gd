@@ -5,6 +5,7 @@ var exact: bool
 
 func _ready() -> void:
 	exact = MetSys.settings.theme.show_exact_player_location
+	z_index = 5
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_VISIBILITY_CHANGED:
