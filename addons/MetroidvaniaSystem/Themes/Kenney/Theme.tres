@@ -1,0 +1,37 @@
+[gd_resource type="Resource" script_class="MapTheme" load_steps=14 format=3 uid="uid://bfx2fid0hmsyb"]
+
+[ext_resource type="Script" uid="uid://b7ofctgav4kq4" path="res://addons/MetroidvaniaSystem/Scripts/MapTheme.gd" id="1_dn1d3"]
+[ext_resource type="Texture2D" uid="uid://dvu8mgj5j1nc" path="res://addons/MetroidvaniaSystem/Themes/Kenney/Borders/Barrier.png" id="1_sca7f"]
+[ext_resource type="Texture2D" uid="uid://bp2d04ksaxa4r" path="res://addons/MetroidvaniaSystem/Themes/Kenney/Center.png" id="1_t0e02"]
+[ext_resource type="Texture2D" uid="uid://b4pmu2hp13i21" path="res://addons/MetroidvaniaSystem/Themes/Kenney/CornerInner.png" id="2_1cn7s"]
+[ext_resource type="Texture2D" uid="uid://dw5a8bbhocksc" path="res://addons/MetroidvaniaSystem/Themes/Kenney/Symbols/Collectible.png" id="2_n3h0k"]
+[ext_resource type="Texture2D" uid="uid://c5e0a6e3skwvf" path="res://addons/MetroidvaniaSystem/Themes/Kenney/Symbols/Save.png" id="3_ok0jq"]
+[ext_resource type="Texture2D" uid="uid://bhxdahyhbid7m" path="res://addons/MetroidvaniaSystem/Themes/Kenney/BorderPassage.png" id="3_osw06"]
+[ext_resource type="Texture2D" uid="uid://c663y7lq7ycu6" path="res://addons/MetroidvaniaSystem/Themes/Kenney/Symbols/Skull.png" id="4_mmsb1"]
+[ext_resource type="PackedScene" uid="uid://dube8r7swlh2o" path="res://addons/MetroidvaniaSystem/Themes/Kenney/PlayerLocation.tscn" id="4_osw06"]
+[ext_resource type="Texture2D" uid="uid://d2p0wtijnvovk" path="res://addons/MetroidvaniaSystem/Themes/Kenney/CornerOuter.png" id="4_sca7f"]
+[ext_resource type="Texture2D" uid="uid://djuvsk1vybh8u" path="res://addons/MetroidvaniaSystem/Themes/Kenney/Symbols/House.png" id="5_t0e02"]
+[ext_resource type="Texture2D" uid="uid://c1x4v13eiinba" path="res://addons/MetroidvaniaSystem/Themes/Kenney/Symbols/Dot.png" id="6_osw06"]
+[ext_resource type="Texture2D" uid="uid://iswce4i7mku" path="res://addons/MetroidvaniaSystem/Themes/Kenney/BorderWall.png" id="9_lik5d"]
+
+[resource]
+script = ExtResource("1_dn1d3")
+center_texture = ExtResource("1_t0e02")
+player_location_scene = ExtResource("4_osw06")
+show_exact_player_location = false
+mapped_display = 3
+separator_mode = 2
+use_shared_borders = false
+default_center_color = Color(0.254902, 0.188235, 0.223529, 1)
+mapped_center_color = Color(0, 0, 0, 1)
+default_border_color = Color(0.866667, 0.403922, 0.298039, 1)
+mapped_border_color = Color(0.254902, 0.188235, 0.223529, 1)
+symbols = Array[Texture2D]([ExtResource("2_n3h0k"), ExtResource("3_ok0jq"), ExtResource("4_mmsb1"), ExtResource("5_t0e02"), ExtResource("6_osw06")])
+uncollected_item_symbol = 0
+collected_item_symbol = -1
+wall = ExtResource("9_lik5d")
+passage = ExtResource("3_osw06")
+borders = Array[Texture2D]([ExtResource("1_sca7f")])
+outer_corner = ExtResource("4_sca7f")
+inner_corner = ExtResource("2_1cn7s")
+metadata/_custom_type_script = ExtResource("1_dn1d3")
