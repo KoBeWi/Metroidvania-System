@@ -52,7 +52,7 @@ func refresh():
 	on_layer_changed(current_layer)
 
 func get_cursor_pos() -> Vector2i:
-	var pos := (map_view_container.get_local_mouse_position() - MetSys.CELL_SIZE / 2).snapped(MetSys.CELL_SIZE) / MetSys.CELL_SIZE as Vector2i - map_offset
+	var pos := (map_overlay.get_local_mouse_position() - MetSys.CELL_SIZE / 2).snapped(MetSys.CELL_SIZE) / MetSys.CELL_SIZE as Vector2i - map_offset
 	return pos
 
 func on_layer_changed(l: int):
@@ -79,6 +79,7 @@ func on_zoom_changed(new_zoom: float):
 	zoom_value_label.text = "x%0.1f" % new_zoom
 	var new_zoom_vector := Vector2.ONE * new_zoom
 	map.scale = new_zoom_vector
+	map_overlay.scale = new_zoom_vector
 	update_map_position()
 
 func _on_overlay_input(event: InputEvent) -> void:
