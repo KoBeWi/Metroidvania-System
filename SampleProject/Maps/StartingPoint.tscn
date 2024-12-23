@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://cv55nv1c2sbiq"]
+[gd_scene load_steps=6 format=3 uid="uid://cv55nv1c2sbiq"]
 
 [ext_resource type="TileSet" uid="uid://bwpcg2opya34n" path="res://SampleProject/Resources/Tileset.tres" id="1_0svtx"]
 [ext_resource type="PackedScene" uid="uid://bsg0351mx3b4u" path="res://addons/MetroidvaniaSystem/Nodes/RoomInstance.tscn" id="1_45cto"]
@@ -7,23 +7,6 @@
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_4rbcf"]
 radius = 32.0
-
-[sub_resource type="GDScript" id="GDScript_vp246"]
-script/source = "extends Node2D
-
-var cv: Array
-var mv: RefCounted
-
-func _ready() -> void:
-	await get_tree().process_frame
-	
-	mv = MetSys.make_map_view(self, Vector2i(), Vector2i(3, 3), 0)
-	
-	#for i in 9:
-		#var x := i % 3
-		#var y := i / 3
-		#cv.append(MetSys.make_cell_view(self, Vector3(x, y, 0), Vector2(x, y)))
-"
 
 [node name="Map" type="Node2D"]
 
@@ -64,7 +47,3 @@ vertical_alignment = 1
 
 [node name="Collectible" parent="." instance=ExtResource("4_ljvb3")]
 position = Vector2(2064, 160)
-
-[node name="Node2D" type="Node2D" parent="."]
-position = Vector2(986, 173)
-script = SubResource("GDScript_vp246")
