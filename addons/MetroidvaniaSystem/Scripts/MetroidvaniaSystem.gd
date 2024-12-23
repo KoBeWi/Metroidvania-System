@@ -315,15 +315,7 @@ func remove_cell_override(coords: Vector3i):
 func get_map_builder() -> MapBuilder:
 	return MapBuilder.new()
 
-## potrzebne to??
-func make_cell_view(parent_item: CanvasItem, coords: Vector3i, offset: Vector2) -> CellView:
-	var cv := CellView.new(parent_item.get_canvas_item())
-	cv.coords = coords
-	cv.offset = offset
-	cv.update()
-	return cv
-
-## TODO doc
+## Creates a [MapView] object that displays the specified area of the map. It's a low-level system to use if you find Minimap.tscn insufficient.
 func make_map_view(parent_item: CanvasItem, begin: Vector2i, size: Vector2i, layer: int) -> MapView:
 	var mv := MapView.new(parent_item.get_canvas_item())
 	mv.begin = begin

@@ -4,7 +4,7 @@
 @tool
 extends Control
 
-## If [code]true[/code], [member center] and [member layer] will be automatically updated when [signal MetroidvaniaSystem.cell_changed] is received.
+## If [code]true[/code], [member center] and [member layer] will be automatically updated when [signal MetroidvaniaSystem.cell_changed] is received. Enabling this property will make some other properties ineffective.
 @export var track_position := true:
 	set(tp):
 		track_position = tp
@@ -70,18 +70,18 @@ func _physics_process(delta: float) -> void:
 
 func _on_cell_changed(new_cell: Vector3i):
 	var new_center := Vector2i(new_cell.x, new_cell.y)
-	_map_view.begin += new_center - center
+	_map_view.move(new_center - center, new_cell.z)
+	#_map_view.begin += new_center - center
 	center = new_center
-	layer = new_cell.z
 	update_drawer_position()
 
 func update_drawer_position():
-	var new_position := -(MetSys.exact_player_position / MetSys.settings.in_game_cell_size).posmod(1) * MetSys.CELL_SIZE + MetSys.CELL_SIZE * 0.5
-	if new_position != _drawer.position:
-		if smooth_scroll:
-			_drawer.position = new_position - MetSys.CELL_SIZE
-		else:
-			_drawer.position = new_position
+	#var new_position := -(MetSys.exact_player_position / MetSys.settings.in_game_cell_size).posmod(1) * MetSys.CELL_SIZE + MetSys.CELL_SIZE * 0.5
+	#if new_position != _drawer.position:
+		#if smooth_scroll:
+			#_drawer.position = new_position - MetSys.CELL_SIZE
+		#else:
+			#_drawer.position = new_position
 	
 	if _player_location:
 		_player_location.visible = layer == MetSys.current_layer
@@ -102,5 +102,10 @@ func _get_configuration_warnings() -> PackedStringArray:
 	return ret
 
 func _validate_property(property: Dictionary) -> void:
-	if not track_position and property["name"] == "smooth_scroll":
-		property.usage |= PROPERTY_USAGE_READ_ONLY
+	var pname: String = property["name"]
+	if track_position:
+		if pname == "center" or pname == "layer":
+			property.usage |= PROPERTY_USAGE_READ_ONLY
+	else:
+		if pname == "smooth_scroll":
+			property.usage |= PROPERTY_USAGE_READ_ONLY
