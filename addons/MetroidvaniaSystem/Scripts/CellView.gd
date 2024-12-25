@@ -367,7 +367,7 @@ func _get_shared_border_color(idx: int, source_coords := coords) -> Color:
 	return color
 
 func _get_discovered_cell_at(coords: Vector3i) -> MetroidvaniaSystem.MapData.CellData:
-	var cell_data = MetSys.map_data.get_cell_at(coords)
+	var cell_data := MetSys.map_data.get_cell_at(coords)
 	if cell_data and (_force_mapped or MetSys.is_cell_discovered(coords)):
 		return cell_data
 	return null

@@ -75,7 +75,7 @@ func recreate_cache():
 				if y > 0:
 					cell._top_cell = prev_row[x]
 				if x > 0 and y > 0:
-					cell._top_cell = prev_row[x - 1]
+					cell._top_left_cell = prev_row[x - 1]
 		
 		prev_row = current_row
 	
