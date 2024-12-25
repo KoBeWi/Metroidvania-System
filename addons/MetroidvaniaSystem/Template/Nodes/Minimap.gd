@@ -45,6 +45,8 @@ var _map_view: MapView
 var _player_location: Node2D
 
 func _ready() -> void:
+	smooth_scroll = smooth_scroll and MetSys.settings.theme.show_exact_player_location
+	
 	var actual_size := area
 	if smooth_scroll:
 		actual_size += Vector2i(2, 2)
@@ -56,11 +58,10 @@ func _ready() -> void:
 		MetSys.settings.theme_changed.connect(update_configuration_warnings)
 		return
 	
-	
 	MetSys.map_updated.connect(_map_view.update_all)
 	if track_position:
 		MetSys.cell_changed.connect(_on_cell_changed)
-		set_physics_process(smooth_scroll and MetSys.settings.theme.show_exact_player_location)
+		set_physics_process(smooth_scroll)
 	
 	if display_player_location:
 		_player_location = MetSys.add_player_location(_drawer)

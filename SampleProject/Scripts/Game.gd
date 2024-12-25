@@ -64,6 +64,9 @@ func _ready() -> void:
 	# Reset position tracking (feature specific to this project).
 	await get_tree().physics_frame
 	reset_map_starting_coords.call_deferred()
+	
+	# Make sure minimap is at correct position (required for themes to work correctly).
+	%Minimap.set_offsets_preset(Control.PRESET_TOP_RIGHT, Control.PRESET_MODE_MINSIZE, 8)
 
 # Returns this node from anywhere.
 static func get_singleton() -> Game:
