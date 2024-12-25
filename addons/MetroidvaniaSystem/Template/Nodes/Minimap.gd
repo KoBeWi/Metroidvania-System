@@ -45,8 +45,9 @@ var _map_view: MapView
 var _player_location: Node2D
 
 func _ready() -> void:
-	if not Engine.is_editor_hint():
-		smooth_scroll = smooth_scroll and MetSys.settings.theme.show_exact_player_location
+	if not Engine.is_editor_hint() and smooth_scroll and not MetSys.settings.theme.show_exact_player_location:
+		push_warning("Minimap has smooth_scroll enabled, but the theme does not show exact position. Disabling.")
+		smooth_scroll = false
 	
 	var actual_size := area
 	if smooth_scroll:
