@@ -71,22 +71,26 @@ func _physics_process(delta: float) -> void:
 func _on_cell_changed(new_cell: Vector3i):
 	var new_center := Vector2i(new_cell.x, new_cell.y)
 	_map_view.move(new_center - center, new_cell.z)
-	#_map_view.begin += new_center - center
 	center = new_center
 	update_drawer_position()
 
 func update_drawer_position():
-	#var new_position := -(MetSys.exact_player_position / MetSys.settings.in_game_cell_size).posmod(1) * MetSys.CELL_SIZE + MetSys.CELL_SIZE * 0.5
-	#if new_position != _drawer.position:
-		#if smooth_scroll:
-			#_drawer.position = new_position - MetSys.CELL_SIZE
-		#else:
-			#_drawer.position = new_position
+	if smooth_scroll:
+		var new_position := -(MetSys.exact_player_position / MetSys.settings.in_game_cell_size).posmod(1) * MetSys.CELL_SIZE + MetSys.CELL_SIZE * 0.5
+		if new_position != _drawer.position:
+			if smooth_scroll:
+				_drawer.position = new_position - MetSys.CELL_SIZE
+			else:
+				_drawer.position = new_position
 	
 	if _player_location:
-		_player_location.visible = layer == MetSys.current_layer
-		if _player_location.visible:
-			_player_location.offset = Vector2.ONE * MetSys.CELL_SIZE * 2 - Vector2(center) * MetSys.CELL_SIZE
+		if layer == MetSys.current_layer:
+			_player_location.show()
+			_player_location.offset = -Vector2(center) * MetSys.CELL_SIZE + MetSys.CELL_SIZE * Vector2(area / 2)
+			if smooth_scroll:
+				_player_location.offset += MetSys.CELL_SIZE
+		else:
+			_player_location.hide()
 
 func _get_minimum_size() -> Vector2:
 	return Vector2(area) * MetSys.CELL_SIZE
