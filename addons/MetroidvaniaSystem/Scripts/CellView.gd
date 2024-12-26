@@ -88,12 +88,7 @@ func _draw():
 	if use_save_data:
 		save_data = MetSys.save_data
 	
-	var discovered := 2
-	if save_data:
-		discovered = save_data.is_cell_discovered(coords)
-	elif _force_mapped:
-		discovered = 1
-	
+	var discovered := _get_discovered_status(coords)
 	if discovered == 0:
 		return
 	
@@ -277,10 +272,7 @@ func _draw_shared_borders(cell_data: CellData, display_flags: int, discovered: i
 				border = 0
 			
 			texture = _get_border_texture(_theme, border, i)
-			if discovered == 2:
-				color = _get_shared_border_color(i)
-			else:
-				color = _theme.mapped_border_color
+			color = _get_shared_border_color(i)
 		
 		if not texture:
 			continue
@@ -351,18 +343,30 @@ func _get_border_at(coords: Vector3i, idx: int) -> int:
 func _get_shared_border_color(idx: int, source_coords := coords) -> Color:
 	var fwd := Vector3i(MetroidvaniaSystem.MapData.FWD[idx].x, MetroidvaniaSystem.MapData.FWD[idx].y, 0)
 	var color := Color.TRANSPARENT
+	var mapped_color := MetSys.settings.theme.mapped_border_color
 	
-	var cell_data = _get_discovered_cell_at(source_coords)
+	var cell_data := MetSys.map_data.get_cell_at(source_coords)
 	if cell_data and cell_data.get_border(idx) > -1:
-		color = cell_data.get_border_color(idx)
+		var status := _get_discovered_status(source_coords)
+		if status == 1:
+			color = mapped_color
+		elif status == 2:
+			color = cell_data.get_border_color(idx)
 	
 	idx = _opposite(idx)
-	cell_data = _get_discovered_cell_at(source_coords + fwd)
+	cell_data = MetSys.map_data.get_cell_at(source_coords + fwd)
 	if cell_data and cell_data.get_border(idx) > -1:
+		var other_color: Color
+		var status := _get_discovered_status(source_coords + fwd)
+		if status == 1:
+			other_color = mapped_color
+		elif status == 2:
+			other_color = cell_data.get_border_color(idx)
+		
 		if color.a > 0:
-			color = _get_shared_color(color, cell_data.get_border_color(idx), MetSys.settings.theme.default_border_color)
+			color = _get_shared_color(color, other_color, MetSys.settings.theme.default_border_color)
 		else:
-			color = cell_data.get_border_color(idx)
+			color = other_color
 	
 	return color
 
@@ -371,6 +375,18 @@ func _get_discovered_cell_at(coords: Vector3i) -> MetroidvaniaSystem.MapData.Cel
 	if cell_data and (_force_mapped or MetSys.is_cell_discovered(coords)):
 		return cell_data
 	return null
+
+func _get_discovered_status(coords: Vector3i) -> int:
+	var save_data: MetroidvaniaSystem.MetSysSaveData
+	if use_save_data:
+		save_data = MetSys.save_data
+	
+	if save_data:
+		return save_data.is_cell_discovered(coords)
+	elif _force_mapped:
+		return 1
+	else:
+		return 2
 
 func _draw_border(i: int, texture: Texture2D, color: Color):
 	var pos: Vector2
@@ -501,18 +517,8 @@ func _get_neighbor(map_data: MetroidvaniaSystem.MapData, coords: Vector3i, offse
 	return map_data.get_cell_at(Vector3i(neighbor.x, neighbor.y, coords.z))
 
 func _should_draw() -> bool:
-	var save_data: MetroidvaniaSystem.MetSysSaveData
-	if use_save_data:
-		save_data = MetSys.save_data
-	
 	var cell_data: CellData = MetSys.map_data.get_cell_at(coords)
 	if not cell_data:
 		return false
 	
-	var discovered := 2
-	if save_data:
-		discovered = save_data.is_cell_discovered(coords)
-	elif _force_mapped:
-		discovered = 1
-	
-	return discovered > 0
+	return _get_discovered_status(coords) > 0
