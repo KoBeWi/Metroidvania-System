@@ -449,7 +449,7 @@ size_flags_horizontal = 4
 text = "Close"
 
 [node name="FileDialog" type="FileDialog" parent="."]
-size = Vector2i(483, 162)
+size = Vector2i(483, 175)
 access = 2
 filters = PackedStringArray("*.json")
 

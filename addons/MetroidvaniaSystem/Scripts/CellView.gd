@@ -343,9 +343,9 @@ func _get_border_at(coords: Vector3i, idx: int) -> int:
 func _get_shared_border_color(idx: int, source_coords := coords) -> Color:
 	var fwd := Vector3i(MetroidvaniaSystem.MapData.FWD[idx].x, MetroidvaniaSystem.MapData.FWD[idx].y, 0)
 	var color := Color.TRANSPARENT
-	var mapped_color := MetSys.settings.theme.mapped_border_color
+	var mapped_color: Color = MetSys.settings.theme.mapped_border_color
 	
-	var cell_data := MetSys.map_data.get_cell_at(source_coords)
+	var cell_data: CellData = MetSys.map_data.get_cell_at(source_coords)
 	if cell_data and cell_data.get_border(idx) > -1:
 		var status := _get_discovered_status(source_coords)
 		if status == 1:
@@ -370,8 +370,8 @@ func _get_shared_border_color(idx: int, source_coords := coords) -> Color:
 	
 	return color
 
-func _get_discovered_cell_at(coords: Vector3i) -> MetroidvaniaSystem.MapData.CellData:
-	var cell_data := MetSys.map_data.get_cell_at(coords)
+func _get_discovered_cell_at(coords: Vector3i) -> CellData:
+	var cell_data: CellData = MetSys.map_data.get_cell_at(coords)
 	if cell_data and (_force_mapped or MetSys.is_cell_discovered(coords)):
 		return cell_data
 	return null
@@ -512,7 +512,7 @@ func _get_shared_color(color1: Color, color2: Color, default: Color) -> Color:
 		return color1
 	return color1.lerp(color2, 0.5)
 
-func _get_neighbor(map_data: MetroidvaniaSystem.MapData, coords: Vector3i, offset: Vector2i) -> MetroidvaniaSystem.MapData.CellData:
+func _get_neighbor(map_data: MetroidvaniaSystem.MapData, coords: Vector3i, offset: Vector2i) -> CellData:
 	var neighbor: Vector2i = Vector2i(coords.x, coords.y) + offset
 	return map_data.get_cell_at(Vector3i(neighbor.x, neighbor.y, coords.z))
 

@@ -229,7 +229,6 @@ func remove_assign(coords: Vector3i) -> Array[Vector3i]:
 func close_border(pos: Vector2i, border: int):
 	var coords := get_coords(pos)
 	var cell: MetroidvaniaSystem.MapData.CellData = MetSys.map_data.get_cell_at(coords)
-	
 	if cell:
 		var old: Variant = cell.borders.duplicate()
 		cell.borders[border] = 0

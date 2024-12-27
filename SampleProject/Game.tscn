@@ -99,8 +99,7 @@ func update_offset():
 	# Player position node needs to be moved accordingly.
 	player_location.offset = -Vector2(offset) * MetSys.CELL_SIZE
 	# Updates map view initial position.
-	map_view.begin = offset
-	map_view.layer = MetSys.current_layer
+	map_view.move_to(Vector3i(offset.x, offset.y, MetSys.current_layer))
 	# Update all cells of MapView to reflect the current state.
 	map_view.update_all()
 
