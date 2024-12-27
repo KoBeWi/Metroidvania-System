@@ -187,7 +187,7 @@ func undo_handle_group_remove(coords: Vector3i, group_id: int):
 	editor.undo_redo.add_undo_method(func(): MetSys.map_data.cell_groups[group_id].append(coords))
 	had_undo_change = true
 
-func undo_handle_element_add(coords: Vector3i, element: Dictionary):
+func undo_handle_element_add(coords: Vector3i, element: MetroidvaniaSystem.MapData.CustomElement):
 	if not undo_active:
 		undo_begin()
 	
@@ -197,7 +197,7 @@ func undo_handle_element_add(coords: Vector3i, element: Dictionary):
 	editor.undo_redo.add_undo_method(func(): editor.current_map_view.update_custom_element_at(coords))
 	had_undo_change = true
 
-func undo_handle_element_remove(coords: Vector3i, element: Dictionary):
+func undo_handle_element_remove(coords: Vector3i, element: MetroidvaniaSystem.MapData.CustomElement):
 	if not undo_active:
 		undo_begin()
 	
