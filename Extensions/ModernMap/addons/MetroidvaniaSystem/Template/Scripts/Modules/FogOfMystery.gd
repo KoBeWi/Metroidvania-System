@@ -182,7 +182,7 @@ func cache_overlays_from_discovers(overlays_to_cache: PackedStringArray):
 	MetSys.map_updated.emit()
 	sub_compositor.queue_free()
 
-static func draw_overlay(canvas_item: CanvasItem, coords: Vector3i, pos: Vector2, size: Vector2):
+static func draw_overlay(canvas_item: RID, coords: Vector3i, pos: Vector2, size: Vector2):
 	if not MetSys.is_cell_discovered(coords):
 		return
 	
@@ -192,4 +192,4 @@ static func draw_overlay(canvas_item: CanvasItem, coords: Vector3i, pos: Vector2
 	var room := MetSys.map_data.get_assigned_scene_at(coords)
 	var overlay: Texture2D = fom.get_drawable_overlay_texture(room)
 	if overlay:
-		canvas_item.draw_texture_rect(overlay, Rect2(pos, size), false)
+		overlay.draw_rect(canvas_item, Rect2(pos, size), false)
