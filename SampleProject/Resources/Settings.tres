@@ -2,11 +2,11 @@
 
 [ext_resource type="Script" uid="uid://b23v0vuudcegw" path="res://SampleProject/Scripts/CustomElements.gd" id="1_v4ykp"]
 [ext_resource type="Script" uid="uid://orxlanqpgccv" path="res://addons/MetroidvaniaSystem/Scripts/Settings.gd" id="2_r56ns"]
-[ext_resource type="Resource" uid="uid://cua5dfmrbmlho" path="res://addons/MetroidvaniaSystem/Themes/MF/Theme.tres" id="3_wjmfi"]
+[ext_resource type="Resource" uid="uid://bt6s3nd8xo6b" path="res://addons/MetroidvaniaSystem/Themes/Exquisite/Theme.tres" id="3_qyjha"]
 
 [resource]
 script = ExtResource("2_r56ns")
-theme = ExtResource("3_wjmfi")
+theme = ExtResource("3_qyjha")
 map_root_folder = "res://SampleProject/Maps/"
 map_extents = 100
 scene_template = ""

@@ -73,7 +73,8 @@ func _physics_process(delta: float) -> void:
 
 func _on_cell_changed(new_cell: Vector3i):
 	var new_center := Vector2i(new_cell.x, new_cell.y)
-	_map_view.move(new_center - center, new_cell.z)
+	layer = new_cell.z
+	_map_view.move(new_center - center, layer)
 	center = new_center
 	update_drawer_position()
 
