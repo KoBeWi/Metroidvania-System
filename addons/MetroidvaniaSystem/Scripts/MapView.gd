@@ -163,6 +163,9 @@ func move(offset: Vector2i, new_layer := layer):
 	
 	_cache = new_cache
 
+func move_to(coords: Vector3i):
+	move(Vector2i(coords.x, coords.y) - _begin, coords.z)
+
 func _make_custom_element_instance(coords: Vector3i, element: CustomElement) -> CustomElementInstance:
 	var element_instance := CustomElementInstance.new(_canvas_item)
 	element_instance.coords = coords
