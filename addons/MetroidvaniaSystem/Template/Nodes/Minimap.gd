@@ -22,27 +22,46 @@ extends Control
 ## Size of the minimap in cells. Avoid even numbers if you want to display the player position in the middle.
 @export var area: Vector2i = Vector2i(3, 3):
 	set(value):
+		if value == area:
+			return
+		
 		area = value
+		if _map_view:
+			_update_center()
+		
 		update_configuration_warnings()
 		update_minimum_size()
 
 ## Center coordinates shown on the minimap. Corresponds to the position on the world map.
 @export var center: Vector2i:
 	set(value):
-		center = value
-		if _drawer:
-			_drawer.queue_redraw()
+		if value == center:
+			return
+		
+		_center.x = value.x
+		_center.y = value.y
+		_update_center()
+	get:
+		return Vector2i(_center.x, _center.y)
 
 ## Layer displayed by the minimap.
 @export var layer: int:
 	set(value):
-		layer = value
-		if _drawer:
-			_drawer.queue_redraw()
+		if value == _center.z:
+			return
+		
+		_center.z = value
+		if _map_view:
+			_map_view.move(Vector2i(), value)
+	get:
+		return _center.z
 
 @onready var _drawer: Node2D = $Drawer
+
 var _map_view: MapView
 var _player_location: Node2D
+var _center: Vector3i
+var _center_offset: Vector3i
 
 func _ready() -> void:
 	if not Engine.is_editor_hint() and smooth_scroll and not MetSys.settings.theme.show_exact_player_location:
@@ -53,7 +72,9 @@ func _ready() -> void:
 	if smooth_scroll:
 		actual_size += Vector2i(2, 2)
 	
-	_map_view = MetSys.make_map_view(_drawer, center - actual_size / 2, actual_size, layer)
+	_center_offset.x = -actual_size.x / 2
+	_center_offset.y = -actual_size.y / 2
+	_map_view = MetSys.make_map_view(_drawer, center + Vector2i(_center_offset.x, _center_offset.y), actual_size, layer)
 	
 	if Engine.is_editor_hint():
 		set_physics_process(false)
@@ -69,16 +90,14 @@ func _ready() -> void:
 		_player_location = MetSys.add_player_location(_drawer)
 
 func _physics_process(delta: float) -> void:
-	update_drawer_position()
+	_update_drawer_position()
 
 func _on_cell_changed(new_cell: Vector3i):
-	var new_center := Vector2i(new_cell.x, new_cell.y)
-	layer = new_cell.z
-	_map_view.move(new_center - center, layer)
-	center = new_center
-	update_drawer_position()
+	_map_view.move_to(new_cell + _center_offset)
+	_center = new_cell
+	_update_drawer_position()
 
-func update_drawer_position():
+func _update_drawer_position():
 	if smooth_scroll:
 		var new_position := -(MetSys.exact_player_position / MetSys.settings.in_game_cell_size).posmod(1) * MetSys.CELL_SIZE + MetSys.CELL_SIZE * 0.5
 		if new_position != _drawer.position:
@@ -95,6 +114,17 @@ func update_drawer_position():
 				_player_location.offset += MetSys.CELL_SIZE
 		else:
 			_player_location.hide()
+
+func _update_center():
+	var actual_size := area
+	if smooth_scroll:
+		actual_size += Vector2i(2, 2)
+	
+	_center_offset.x = -actual_size.x / 2
+	_center_offset.y = -actual_size.y / 2
+	_map_view.size = actual_size
+	_map_view._begin = center - actual_size / 2
+	_map_view.recreate_cache()
 
 func _get_minimum_size() -> Vector2:
 	return Vector2(area) * MetSys.CELL_SIZE

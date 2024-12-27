@@ -1,9 +1,13 @@
+## Displays a portion of the map on a [CanvasItem].
+##
+## [MapView] is a low-level interface for displaying map data. It's very optimized, capable of drawing large maps and update them partially. This is an advanced feature, for basic needs consider using Minimap.tscn.
 class_name MapView extends RefCounted
 
 const CellView = MetroidvaniaSystem.CellView
 const CustomElement = MetroidvaniaSystem.MapData.CustomElement
-const SURROUND = [Vector3i(-1, -1, 0), Vector3i(0, -1, 0), Vector3i(1, -1, 0), Vector3i(-1, 0, 0), Vector3i(1, 0, 0), Vector3i(-1, 1, 0), Vector3i(0, 1, 0), Vector3i(1, 1, 0)]
+const _SURROUND = [Vector3i(-1, -1, 0), Vector3i(0, -1, 0), Vector3i(1, -1, 0), Vector3i(-1, 0, 0), Vector3i(1, 0, 0), Vector3i(-1, 1, 0), Vector3i(0, 1, 0), Vector3i(1, 1, 0)]
 
+## Coordinates of the top-left corner of the displayed area. Changing this value will internally call [method move] and only update edge cells whenever possible.
 var begin: Vector2i:
 	set(b):
 		if _begin == Vector2i.MAX:
@@ -13,7 +17,10 @@ var begin: Vector2i:
 	get:
 		return _begin
 
+## Size of the displayed area, in cells. Changing this value after the map is initialized will not work properly until you call [method recreate_cache].
 var size: Vector2i
+
+## The currently displayed layer. Changing this value will update all displayed cells.
 var layer: int:
 	set(l):
 		if _layer < 0:
@@ -27,10 +34,14 @@ var layer: int:
 var _begin: Vector2i = Vector2i.MAX
 var _layer: int = -1
 
+## If [code]true[/code], empty and undiscovered cells will not appear on map. Has no effect if [MapTheme.empty_space_texture] is not defined, as the cells won't display anyway.
 var skip_empty: bool
+
+## If [code]true[/code], cells won't be updated immediately when calling update methods. Instead the update will be queued and done in a batch at the end of the frame. It's especially useful to avoid duplicate updates.
 var queue_updates: bool
 #var threaded: bool
 
+## Whether the map should be visible or not. You can also set visibility of the parent [CanvasItem].
 var visible: bool:
 	set(v):
 		visible = v
@@ -52,6 +63,7 @@ func _notification(what: int) -> void:
 	if what == NOTIFICATION_PREDELETE:
 		RenderingServer.free_rid(_canvas_item)
 
+## Discards all cached cells and initializes the whole map again. This method can update cell coordinates and map size, but it's rarely needed to be called manually.
 func recreate_cache():
 	_cache.clear()
 	_custom_elements_cache.clear()
@@ -100,6 +112,7 @@ func recreate_cache():
 	update_all()
 	queue_updates = was_queue
 
+## Moves the [member begin] by the given offset. If the new map area intersects with the previous one, only the newly displayed cells will be redrawn. However if you change the layer, all cells will be updated.
 func move(offset: Vector2i, new_layer := layer):
 	_begin += offset
 	
@@ -163,6 +176,7 @@ func move(offset: Vector2i, new_layer := layer):
 	
 	_cache = new_cache
 
+## Same as [method move], but moves to absolute coordinates instead of by offset.
 func move_to(coords: Vector3i):
 	move(Vector2i(coords.x, coords.y) - _begin, coords.z)
 
@@ -174,16 +188,7 @@ func _make_custom_element_instance(coords: Vector3i, element: CustomElement) -> 
 	_custom_elements_cache[coords] = element_instance
 	return element_instance
 
-func update_custom_element_at(coords: Vector3i):
-	var element_list: Dictionary = MetSys.map_data.custom_elements
-	var element: CustomElement = element_list.get(coords, {})
-	
-	if element.is_empty():
-		_custom_elements_cache.erase(coords)
-	else:
-		_make_custom_element_instance(coords, element)
-	update_cell(coords)
-
+## Updates all currently visible cells. This will only refresh their state (symbols, colors etc.), while keeping the current coordinates. It's recommended to call this when [signal MetroidvaniaSystem.map_updated] is received (the [MapView] does not do it automatically).
 func update_all():
 	for cell: CellView in _cache.values():
 		_update_cell(cell)
@@ -203,6 +208,7 @@ func update_all():
 			for x in size.x:
 				RenderingServer.canvas_item_add_texture_rect(_canvas_item, Rect2(Vector2(x, y) * MetSys.CELL_SIZE, texture_size), texture_rid)
 
+## Updates a specific cell. Prints error if no cell with the given [param coords] is visible. See also [method update_all].
 func update_cell(coords: Vector3i):
 	var exists: bool
 	
@@ -210,7 +216,7 @@ func update_cell(coords: Vector3i):
 	if cell:
 		_update_cell(cell)
 		if MetSys.settings.theme.use_shared_borders:
-			for delta in SURROUND:
+			for delta in _SURROUND:
 				var cell2: CellView = _cache.get(coords + delta)
 				if cell2:
 					_update_cell(cell2)
@@ -225,6 +231,7 @@ func update_cell(coords: Vector3i):
 	if not exists:
 		push_error("MapView has no cell nor custom element at %s" % coords)
 
+## Updates all cells inside the given rect. Prints errors if the rect goes outside bounds of the [MapView]. See also [method update_all].
 func update_rect(rect: Rect2i):
 	for y in rect.size.y:
 		for x in rect.size.x:
