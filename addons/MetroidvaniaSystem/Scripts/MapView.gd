@@ -1,6 +1,7 @@
 class_name MapView extends RefCounted
 
 const CellView = MetroidvaniaSystem.CellView
+const CustomElement = MetroidvaniaSystem.MapData.CustomElement
 const SURROUND = [Vector3i(-1, -1, 0), Vector3i(0, -1, 0), Vector3i(1, -1, 0), Vector3i(-1, 0, 0), Vector3i(1, 0, 0), Vector3i(-1, 1, 0), Vector3i(0, 1, 0), Vector3i(1, 1, 0)]
 
 var begin: Vector2i:
@@ -87,7 +88,7 @@ func recreate_cache():
 		if coords.z != layer:
 			continue
 		
-		var element: Dictionary = element_list[coords]
+		var element: CustomElement = element_list[coords]
 		var element_rect := Rect2i(coords.x, coords.y, element["size"].x, element["size"].y)
 		if not element_rect.intersects(rect):
 			continue
@@ -138,7 +139,7 @@ func move(offset: Vector2i, new_layer := layer):
 	var element_offset: Vector2 = Vector2(offset) * MetSys.CELL_SIZE
 	for coords in _custom_elements_cache.keys():
 		var element: CustomElementInstance = _custom_elements_cache[coords]
-		var element_rect := Rect2i(coords.x, coords.y, element.data["size"].x, element.data["size"].y)
+		var element_rect := Rect2i(coords.x, coords.y, element.base_element.size.x, element.base_element.size.y)
 		
 		if element_rect.intersects(rect):
 			element.offset -= element_offset
@@ -153,7 +154,7 @@ func move(offset: Vector2i, new_layer := layer):
 		if coords in _custom_elements_cache:
 			continue
 		
-		var element: Dictionary = element_list[coords]
+		var element: CustomElement = element_list[coords]
 		var element_rect := Rect2i(coords.x, coords.y, element["size"].x, element["size"].y)
 		if not element_rect.intersects(rect):
 			continue
@@ -162,17 +163,17 @@ func move(offset: Vector2i, new_layer := layer):
 	
 	_cache = new_cache
 
-func _make_custom_element_instance(coords: Vector3i, data: Dictionary) -> CustomElementInstance:
+func _make_custom_element_instance(coords: Vector3i, element: CustomElement) -> CustomElementInstance:
 	var element_instance := CustomElementInstance.new(_canvas_item)
 	element_instance.coords = coords
 	element_instance.offset = Vector2(-begin + Vector2i(coords.x, coords.y)) * MetSys.CELL_SIZE
-	element_instance.data = data
+	element_instance.base_element = element
 	_custom_elements_cache[coords] = element_instance
 	return element_instance
 
 func update_custom_element_at(coords: Vector3i):
 	var element_list: Dictionary = MetSys.map_data.custom_elements
-	var element: Dictionary = element_list.get(coords, {})
+	var element: CustomElement = element_list.get(coords, {})
 	
 	if element.is_empty():
 		_custom_elements_cache.erase(coords)
@@ -262,7 +263,7 @@ class CustomElementInstance:
 	var canvas_item: RID
 	var coords: Vector3i
 	var offset: Vector2
-	var data: Dictionary
+	var base_element: CustomElement
 	
 	func _init(parent_item: RID) -> void:
 		canvas_item = RenderingServer.canvas_item_create()
@@ -277,6 +278,6 @@ class CustomElementInstance:
 	func update():
 		RenderingServer.canvas_item_clear(canvas_item)
 		
-		var size: Vector2i = data["size"]
+		var size := base_element.size
 		var element_rect := Rect2i(coords.x, coords.y, size.x, size.y)
-		MetSys.settings.custom_elements.draw_element(canvas_item, coords, data["name"], offset, Vector2(element_rect.size) * MetSys.CELL_SIZE, data["data"])
+		MetSys.settings.custom_elements.draw_element(canvas_item, coords, base_element.name, offset, Vector2(element_rect.size) * MetSys.CELL_SIZE, base_element.data)

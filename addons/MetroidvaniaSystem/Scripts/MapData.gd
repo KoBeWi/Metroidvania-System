@@ -273,11 +273,16 @@ class CellOverride extends CellData:
 		commit_queued = false
 		MetSys.map_updated.emit()
 
+class CustomElement:
+	var name: String
+	var size: Vector2i
+	var data: String
+
 var cells: Dictionary#[Vector3i, CellData]
 var custom_cells: Dictionary#[Vector3i, CellData]
 var assigned_scenes: Dictionary#[String, Array[Vector3i]]
 var cell_groups: Dictionary#[int, Array[Vector3i]]
-var custom_elements: Dictionary#[Vector3i, Struct]
+var custom_elements: Dictionary#[Vector3i, CustomElement]
 
 var layer_names: PackedStringArray
 var cell_overrides: Dictionary#[Vector3i, CellOverride]
@@ -320,7 +325,7 @@ func load_data():
 		elif current_section == 1 or current_section == 0 and line.contains("/"):
 			current_section = 1
 			var element_data := line.split("/")
-			var element: Dictionary
+			var element := CustomElement.new()
 			element.name = element_data[1]
 			element.size = Vector2i(element_data[2].get_slice("x", 0).to_int(), element_data[2].get_slice("x", 1).to_int())
 			if element_data.size() == 4:
@@ -393,7 +398,7 @@ func save_data(backup := false):
 		var line: PackedStringArray
 		line.append("%s,%s,%s" % [coords.x, coords.y, coords.z])
 		
-		var element: Dictionary = custom_elements[coords]
+		var element: CustomElement = custom_elements[coords]
 		line.append(element.name)
 		line.append("%sx%s" % [element.size.x, element.size.y])
 		if not element.data.is_empty():
