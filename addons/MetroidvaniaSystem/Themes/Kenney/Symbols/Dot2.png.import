@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b4pmu2hp13i21"
-path="res://.godot/imported/CornerInner.png-6244ebd03f2526312e4dcf935f327417.ctex"
+uid="uid://i5yrx2gbck0p"
+path="res://.godot/imported/Dot2.png-13e3f917489f442b51d692d5f0c41dad.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/MetroidvaniaSystem/Themes/Kenney/CornerInner.png"
-dest_files=["res://.godot/imported/CornerInner.png-6244ebd03f2526312e4dcf935f327417.ctex"]
+source_file="res://addons/MetroidvaniaSystem/Themes/Kenney/Symbols/Dot2.png"
+dest_files=["res://.godot/imported/Dot2.png-13e3f917489f442b51d692d5f0c41dad.ctex"]
 
 [params]
 

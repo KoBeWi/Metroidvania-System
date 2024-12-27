@@ -185,7 +185,7 @@ func _draw_regular_borders(cell_data: CellData, display_flags: int, discovered: 
 		
 		_draw_border(i, texture, color)
 	
-	if not display_outlines:
+	if not display_outlines or _theme.is_nocorner():
 		return
 	
 	# outer corner
@@ -280,14 +280,15 @@ func _draw_shared_borders(cell_data: CellData, display_flags: int, discovered: i
 		_draw_border(i, texture, color)
 	
 	# corners
-	_canvas_item = _shared_corner_item
-	_draw_shared_corner(Vector2())
-	if left_edge:
-		_draw_shared_corner(Vector2(-1, 0))
-	if top_edge:
-		_draw_shared_corner(Vector2(0, -1))
-	if top_left_edge:
-		_draw_shared_corner(Vector2(-1, -1))
+	if not _theme.is_nocorner():
+		_canvas_item = _shared_corner_item
+		_draw_shared_corner(Vector2())
+		if left_edge:
+			_draw_shared_corner(Vector2(-1, 0))
+		if top_edge:
+			_draw_shared_corner(Vector2(0, -1))
+		if top_left_edge:
+			_draw_shared_corner(Vector2(-1, -1))
 	
 	_canvas_item = _original_item
 

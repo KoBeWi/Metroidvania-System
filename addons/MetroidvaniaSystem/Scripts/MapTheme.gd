@@ -136,6 +136,12 @@ func is_unicorner() -> bool:
 	else:
 		return inner_corner == outer_corner
 
+func is_nocorner():
+	if use_shared_borders:
+		return l_corner == null and is_unicorner()
+	else:
+		return inner_corner == null and outer_corner == null
+
 func check_for_changes(prev_state: Array) -> Array[String]:
 	var new_state: Array
 	var changed: Array[String]
