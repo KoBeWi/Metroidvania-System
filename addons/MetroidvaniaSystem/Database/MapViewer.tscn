@@ -1,7 +1,7 @@
 [gd_scene load_steps=8 format=3 uid="uid://df5fuj4vjr11p"]
 
-[ext_resource type="Script" uid="uid://cdl44ebe6tc0h" path="res://addons/MetroidvaniaSystem/Database/MapViewer.gd" id="1_s16ok"]
-[ext_resource type="Script" uid="uid://celtpddhdfods" path="res://addons/MetroidvaniaSystem/Scripts/EditorIconButton.gd" id="2_tjngl"]
+[ext_resource type="Script" path="res://addons/MetroidvaniaSystem/Database/MapViewer.gd" id="1_s16ok"]
+[ext_resource type="Script" path="res://addons/MetroidvaniaSystem/Scripts/EditorIconButton.gd" id="2_tjngl"]
 [ext_resource type="PackedScene" uid="uid://w34y4dyx84y8" path="res://addons/MetroidvaniaSystem/Nodes/LayerSelector.tscn" id="2_yqo4d"]
 
 [sub_resource type="ButtonGroup" id="ButtonGroup_lmh17"]
