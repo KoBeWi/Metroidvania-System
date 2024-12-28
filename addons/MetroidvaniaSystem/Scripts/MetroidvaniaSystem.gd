@@ -41,8 +41,6 @@ var current_layer: int:
 		current_layer = layer
 		cell_changed.emit(Vector3i(last_player_position.x, last_player_position.y, current_layer))
 
-var _meta_list: Array[StringName]
-
 ## Emitted when the player crosses a cell boundary and visits another cell as a result of [method set_player_position]. The new cell coordinates are provided as an argument.
 signal cell_changed(new_cell: Vector3i)
 ## Emitted when the player enters a new room, i.e. using [method set_player_position] results in a cell that has a different assigned scene. The new scene is provided as an argument, you can use it to easily make room transitions.
@@ -357,16 +355,3 @@ func get_current_room_name() -> String:
 ## Returns the full path to the provided [param room_name] scene. This method assumes that the scene is inside the base map folder.
 func get_full_room_path(room_name: String) -> String:
 	return settings.map_root_folder.path_join(room_name)
-
-func _add_meta(meta: StringName, value: Variant):
-	set_meta(meta, value)
-	
-	if _meta_list.is_empty():
-		_cleanup_meta.call_deferred()
-	
-	_meta_list.append(meta)
-
-func _cleanup_meta():
-	for meta in _meta_list:
-		remove_meta(meta)
-	_meta_list.clear()

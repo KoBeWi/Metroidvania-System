@@ -459,6 +459,10 @@ func get_cells_assigned_to(room: String) -> Array[Vector3i]:
 	if room in scene_overrides:
 		room = scene_overrides[room]
 	
+	if not room in assigned_scenes:
+		if not room.begins_with(":"):
+			room = ":" + ResourceUID.id_to_text(ResourceLoader.get_resource_uid(MetSys.settings.map_root_folder.path_join(room))).trim_prefix("uid://")
+	
 	var ret: Array[Vector3i]
 	ret.assign(assigned_scenes.get(room, []))
 	return ret
