@@ -31,6 +31,15 @@ func force_reload() -> void:
 				i += 1
 			else:
 				group.remove_at(i)
+	
+	%\"Map Editor\".layers.clear()
+	%\"Map Editor\".current_map_view = null
+	%\"Map Editor\".preview_layers.clear()
+	%\"Map Editor\".on_layer_changed(%\"Map Editor\".current_layer)
+	
+	%\"Map Viewer\".layers.clear()
+	%\"Map Viewer\".current_map_view = null
+	%\"Map Viewer\".on_layer_changed(%\"Map Editor\".current_layer)
 
 func edit_database_theme() -> void:
 	EditorInterface.edit_resource(owner.theme)
