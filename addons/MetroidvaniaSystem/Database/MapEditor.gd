@@ -2,6 +2,7 @@
 extends "res://addons/MetroidvaniaSystem/Scripts/EditorMapView.gd"
 
 @onready var grid: Control = %Grid
+var viewer_layers: Dictionary
 
 @export var mode_group: ButtonGroup
 
@@ -23,6 +24,8 @@ func _ready() -> void:
 	plugin.saved.connect(mark_saved)
 	await super()
 	
+	viewer_layers = %"Map Viewer".layers
+	
 	mode_group.pressed.connect(mode_pressed)
 	get_current_sub_editor()._editor_enter()
 	MetSys.settings.theme_changed.connect(grid.queue_redraw)
@@ -38,12 +41,12 @@ func mode_pressed(button: BaseButton):
 
 func on_layer_changed(l: int):
 	if preview_layer > -1 and current_layer == preview_layer:
-		preview_layers[preview_layer].visible = true
+		preview_layer_changed(preview_layer)
 	
 	super(l)
 	
-	if preview_layer > -1 and current_layer == preview_layer:
-		preview_layers[preview_layer].visible = false
+	if preview_layer > -1 and current_layer != preview_layer:
+		preview_layer_changed(preview_layer)
 
 func preview_layer_changed(value: float) -> void:
 	if preview_layer > -1:
@@ -127,6 +130,24 @@ func is_unsaved() -> bool:
 func mark_saved():
 	saved_version = undo_redo.get_version()
 	update_name()
+
+func update_cell(coords: Vector3i):
+	current_map_view.update_cell(coords)
+	var other: MapView = preview_layers.get(current_layer)
+	if other:
+		other.update_cell(coords)
+	other = viewer_layers.get(current_layer)
+	if other:
+		other.update_cell(coords)
+
+func update_rect(rect: Rect2i):
+	current_map_view.update_rect(rect)
+	var other: MapView = preview_layers.get(current_layer)
+	if other:
+		other.update_rect(rect)
+	other = viewer_layers.get(current_layer)
+	if other:
+		other.update_rect(rect)
 
 func _on_overlay_can_drop_data(at_pos: Vector2, data) -> bool:
 	return get_current_sub_editor().can_drop_data(at_pos, data)

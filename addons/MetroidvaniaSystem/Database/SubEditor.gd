@@ -264,12 +264,12 @@ func undo_end_with_redraw():
 	undo_end()
 
 func undo_handle_cell_redraw(coords: Vector3i):
-	editor.undo_redo.add_do_method(func(): editor.current_map_view.update_cell(coords))
-	editor.undo_redo.add_undo_method(func(): editor.current_map_view.update_cell(coords))
+	editor.undo_redo.add_do_method(editor.update_cell)
+	editor.undo_redo.add_undo_method(editor.update_cell)
 
 func undo_handle_rect_redraw(rect: Rect2i):
-	editor.undo_redo.add_do_method(func(): editor.current_map_view.update_rect(rect))
-	editor.undo_redo.add_undo_method(func(): editor.current_map_view.update_rect(rect))
+	editor.undo_redo.add_do_method(editor.update_rect)
+	editor.undo_redo.add_undo_method(editor.update_rect)
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_THEME_CHANGED:
