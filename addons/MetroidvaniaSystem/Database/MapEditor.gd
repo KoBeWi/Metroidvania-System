@@ -32,6 +32,10 @@ func _ready() -> void:
 	map_overlay.mouse_entered.connect(map_overlay.grab_focus)
 	map_overlay.set_drag_forwarding(Callable(), _on_overlay_can_drop_data, _on_overlay_drop_data)
 
+func refresh():
+	preview_layers.clear()
+	super()
+
 func mode_pressed(button: BaseButton):
 	get_current_sub_editor()._editor_exit()
 	mode = button.get_index() - 1

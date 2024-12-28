@@ -28,6 +28,10 @@ func _notification(what: int) -> void:
 		theme_cache.room_not_assigned = get_theme_color(&"room_not_assigned", &"MetSys")
 		theme_cache.room_assigned = get_theme_color(&"room_assigned", &"MetSys")
 
+func setup_new_layer(layer: MapView):
+	layer._force_mapped = %MappedCheckbox.button_pressed
+	layer._update_all_with_mapped.call_deferred()
+
 func _on_item_hover(item: Control):
 	item.mouse_exited.connect(_on_item_unhover.bind(item))
 	current_hovered_item = item

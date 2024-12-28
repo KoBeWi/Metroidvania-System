@@ -312,7 +312,8 @@ unique_name_in_owner = true
 layout_mode = 2
 text = "x1.0"
 
-[node name="CheckButton" type="CheckButton" parent="Sidebar/ScrollContainer/VBoxContainer/Layer"]
+[node name="MappedCheckbox" type="CheckButton" parent="Sidebar/ScrollContainer/VBoxContainer/Layer"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 4
 text = "Preview Mapped"
@@ -442,7 +443,7 @@ mouse_filter = 1
 theme_override_styles/normal = SubResource("StyleBoxFlat_qbvjg")
 vertical_alignment = 1
 
-[connection signal="toggled" from="Sidebar/ScrollContainer/VBoxContainer/Layer/CheckButton" to="." method="toggle_mapped"]
+[connection signal="toggled" from="Sidebar/ScrollContainer/VBoxContainer/Layer/MappedCheckbox" to="." method="toggle_mapped"]
 [connection signal="pressed" from="Sidebar/ScrollContainer/VBoxContainer/EditControls/Settings/Button" to="Sidebar/ScrollContainer/VBoxContainer/Modes/Settings" method="add_collectible"]
 [connection signal="pressed" from="Sidebar/ScrollContainer/VBoxContainer/EditControls/Finder/ScanButton" to="Sidebar/ScrollContainer/VBoxContainer/Modes/Finder" method="start_scan"]
 [connection signal="toggled" from="Sidebar/ScrollContainer/VBoxContainer/EditControls/Finder/ShowOnMap" to="Sidebar/ScrollContainer/VBoxContainer/Modes/Finder" method="toggle_display_on_map"]

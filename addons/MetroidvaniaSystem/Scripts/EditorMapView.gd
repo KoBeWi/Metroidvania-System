@@ -66,10 +66,14 @@ func on_layer_changed(l: int):
 		var map_extents := MetSys.settings.map_extents
 		new_map_view = MetSys.make_map_view(map, Vector2i(-map_extents, -map_extents), Vector2i(map_extents * 2, map_extents * 2), current_layer)
 		new_map_view.queue_updates = true
+		setup_new_layer(new_map_view)
 		layers[current_layer] = new_map_view
 	
 	current_map_view = new_map_view
 	current_map_view.visible = true
+
+func setup_new_layer(layer: MapView):
+	pass
 
 func on_recenter_view() -> void:
 	map_offset = Vector2i(10, 10)
