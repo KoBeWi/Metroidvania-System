@@ -197,7 +197,7 @@ func _draw_regular_borders(cell_data: CellData, display_flags: int, discovered: 
 		var texture: Texture2D = _theme.outer_corner
 		var corner_color: Color
 		if discovered == 2:
-			corner_color = _get_shared_color(cell_data.get_border_color(i), cell_data.get_border_color(j), _theme.default_border_color)
+			corner_color = _get_shared_color(cell_data.get_border_color(i), cell_data.get_border_color(j))
 		else:
 			corner_color = _theme.mapped_border_color
 		
@@ -218,7 +218,7 @@ func _draw_regular_borders(cell_data: CellData, display_flags: int, discovered: 
 		var color1 := _get_neighbor(map_data, coords, map_data.FWD[i]).get_border_color(_rotate(i))
 		var color2 := _get_neighbor(map_data, coords, map_data.FWD[j]).get_border_color(_rotate(j, -1))
 		
-		var corner_color := _get_shared_color(color1, color2, _theme.default_border_color)
+		var corner_color := _get_shared_color(color1, color2)
 		_draw_corner(i, _theme.inner_corner, corner_color)
 
 func _draw_shared_borders(cell_data: CellData, display_flags: int, discovered: int):
@@ -357,16 +357,16 @@ func _get_shared_border_color(idx: int, source_coords := coords) -> Color:
 	idx = _opposite(idx)
 	cell_data = MetSys.map_data.get_cell_at(source_coords + fwd)
 	if cell_data and cell_data.get_border(idx) > -1:
-		var other_color: Color
+		var other_color := Color.TRANSPARENT
 		var status := _get_discovered_status(source_coords + fwd)
 		if status == 1:
 			other_color = mapped_color
 		elif status == 2:
 			other_color = cell_data.get_border_color(idx)
 		
-		if color.a > 0:
-			color = _get_shared_color(color, other_color, MetSys.settings.theme.default_border_color)
-		else:
+		if color.a > 0 and other_color.a > 0:
+			color = _get_shared_color(color, other_color)
+		elif other_color.a > 0:
 			color = other_color
 	
 	return color
@@ -425,24 +425,15 @@ func _draw_shared_corner(corner_offset: Vector2):
 	corner_data |= (1 << 2) * (_get_corner_bit(corner_coords + Vector3i(0, 1, 0), MetroidvaniaSystem.R) | _get_corner_bit(corner_coords + Vector3i(1, 1, 0), MetroidvaniaSystem.L))
 	corner_data |= (1 << 3) * (_get_corner_bit(corner_coords + Vector3i(1, 0, 0), MetroidvaniaSystem.D) | _get_corner_bit(corner_coords + Vector3i(1, 1, 0), MetroidvaniaSystem.U))
 	
-	var color_blend: Array[Color]
-	var add_blend := func(idx: int, pos: Vector3i):
-		var color := _get_shared_border_color(idx, pos)
-		if color.a > 0:
-			color_blend.append(color)
-	
-	add_blend.call(MetroidvaniaSystem.R, corner_coords)
-	add_blend.call(MetroidvaniaSystem.D, corner_coords)
-	add_blend.call(MetroidvaniaSystem.L, corner_coords + Vector3i(1, 1, 0))
-	add_blend.call(MetroidvaniaSystem.U, corner_coords + Vector3i(1, 1, 0))
-	
-	var color: Color = _theme.default_border_color
-	if not color_blend.is_empty():
-		color = color_blend.reduce(func(final_color: Color, color: Color) -> Color: return final_color + color) / color_blend.size()
+	var color := Color.TRANSPARENT
+	color = _get_corner_blend(color, MetroidvaniaSystem.R, corner_coords)
+	color = _get_corner_blend(color, MetroidvaniaSystem.D, corner_coords)
+	color = _get_corner_blend(color, MetroidvaniaSystem.L, corner_coords + Vector3i(1, 1, 0))
+	color = _get_corner_blend(color, MetroidvaniaSystem.U, corner_coords + Vector3i(1, 1, 0))
 	
 	if _theme.is_unicorner():
 		corner_data = signi(corner_data) * 15
-		
+	
 	var corner_type := signi(corner_data & 1) + signi(corner_data & 2) + signi(corner_data & 4) + signi(corner_data & 8)
 	var corner_texture: Texture2D
 	var corner_rotation := -1
@@ -506,12 +497,34 @@ func _rotate(i: int, amount := 1) -> int:
 func _opposite(i: int) -> int:
 	return (i + 2) % 4
 
-func _get_shared_color(color1: Color, color2: Color, default: Color) -> Color:
-	if color1 == default:
-		return color2
-	elif color2 == default:
+func _get_shared_color(color1: Color, color2: Color) -> Color:
+	var color1_priority := 2
+	if color1 == _theme.default_border_color:
+		color1_priority = 1
+	elif color1 == _theme.mapped_border_color:
+		color1_priority = 0
+	
+	var color2_priority := 2
+	if color2 == _theme.default_border_color:
+		color2_priority = 1
+	elif color2 == _theme.mapped_border_color:
+		color2_priority = 0
+	
+	if color1_priority > color2_priority:
 		return color1
+	elif color2_priority > color1_priority:
+		return color2
+	
 	return color1.lerp(color2, 0.5)
+
+func _get_corner_blend(base_color: Color, idx: int, pos: Vector3i) -> Color:
+	var blend_color := _get_shared_border_color(idx, pos)
+	if blend_color.a > 0:
+		if base_color.a > 0:
+			return _get_shared_color(base_color, blend_color)
+		else:
+			return blend_color
+	return base_color
 
 func _get_neighbor(map_data: MetroidvaniaSystem.MapData, coords: Vector3i, offset: Vector2i) -> CellData:
 	var neighbor: Vector2i = Vector2i(coords.x, coords.y) + offset
