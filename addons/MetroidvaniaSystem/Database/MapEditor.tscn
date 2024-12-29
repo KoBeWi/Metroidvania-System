@@ -339,6 +339,7 @@ func add_symbol(texture: Texture2D):
 	button.icon = texture
 	button.toggle_mode = true
 	button.button_group = symbol_group
+	button.add_theme_color_override(&\"icon_pressed_color\", Color.WHITE)
 	
 	if not symbol_group.get_pressed_button():
 		button.button_pressed = true
@@ -465,6 +466,7 @@ func add_border(texture: Texture2D):
 	button.button_group = border_group
 	button.custom_minimum_size.x = MetSys.CELL_SIZE.x
 	button.icon_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	button.add_theme_color_override(&\"icon_pressed_color\", Color.WHITE)
 	
 	if not border_group.get_pressed_button():
 		button.button_pressed = true
