@@ -140,10 +140,18 @@ func move(offset: Vector2i, new_layer := layer):
 			if shared_borders:
 				if x > 0:
 					cell._left_cell = new_cache[coords + Vector3i(-1, 0, 0)]
+				else:
+					cell._left_cell = null
+				
 				if y > 0:
 					cell._top_cell = new_cache[coords + Vector3i(0, -1, 0)]
+				else:
+					cell._top_cell = null
+				
 				if x > 0 and y > 0:
 					cell._top_left_cell = new_cache[coords + Vector3i(-1, -1, 0)]
+				else:
+					cell._top_left_cell = null
 	
 	var rect := Rect2i(_begin, size)
 	var element_manager: MetroidvaniaSystem.CustomElementManager = MetSys.settings.custom_elements
