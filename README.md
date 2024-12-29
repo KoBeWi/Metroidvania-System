@@ -28,13 +28,15 @@ https://github.com/KoBeWi/Metroidvania-System/assets/2223172/4d8f3099-93be-4a90-
 - Cell borders are also colored independently and may have different textures.
 - You can assign groups to cells, for easier runtime operations on multiple cells (like mapping or recoloring).
 - Cells are automatically grouped into rooms and can have assigned scenes.
+- You can create a scene from within the editor, with support for custom scene template.
+- The rooms support drag and drop to move them around.
 - You can define custom elements that draw arbitrary things on map (like elevators or location names).
-- Add a special RoomInstance node to your scene to display the borders of currently edited room inside the 2D editor view.
 - Full undo/redo support.
+- The editor can detect external map changes (e.g. from git) and automatically update it.
 
 #### Map Viewer
 
-- Same view as Map Editor, but provides more overview information.
+- Same view as Map Editor, but provides more overview information instead of editing.
 - Click a room to open the assigned scene.
 - A room is highlighted if it matches the currently opened scene.
 - Define a list of collectibles found in your game, each with a name and an icon.
@@ -72,7 +74,7 @@ https://github.com/KoBeWi/Metroidvania-System/assets/2223172/4d8f3099-93be-4a90-
 - Player position tracking using a single method, which automatically discovers cells and sends scene change requests.
 - Option to discover whole rooms instead of single cells.
 - Override existing cells, assigning them different colors, borders, symbols or even scenes.
-- Create and customize new ad hoc cells to make random map generators.
+- Create and customize new ad hoc cells to make dynamic maps or random map generators.
 - Register and store persistent objects to track their state using automatically or manually assigned IDs.
 - Automatically mark discovered and acquired collectibles on the map.
 - Request runtime save data in a form of a Dictionary, which contains discovered rooms, stored object IDs and customized cells. It can be loaded back at any time.
