@@ -267,9 +267,23 @@ func _draw_shared_borders(cell_data: CellData, display_flags: int, discovered: i
 		
 		if borders[i] > -1:
 			var border: int = borders[i]
-			
 			if not bool(display_flags & MetroidvaniaSystem.DISPLAY_BORDERS):
 				border = 0
+			
+			var fwd := Vector3i(MetroidvaniaSystem.MapData.FWD[i].x, MetroidvaniaSystem.MapData.FWD[i].y, 0)
+			var other_cell: CellData = MetSys.map_data.get_cell_at(coords + fwd)
+			var other_status: int
+			if other_cell:
+				other_status = _get_discovered_status(coords + fwd)
+			
+			if other_cell and other_status > 0:
+				var other_border := other_cell.get_border(_opposite(i))
+				if not display_outlines and other_border == 0:
+					other_border = -1
+				elif other_status == 1 and not bool(_theme.mapped_display & MetroidvaniaSystem.DISPLAY_BORDERS):
+					other_border = mini(other_border, 0 if display_outlines else -1)
+				
+				border = maxi(border, other_border)
 			
 			texture = _get_border_texture(_theme, border, i)
 			color = _get_shared_border_color(i)
