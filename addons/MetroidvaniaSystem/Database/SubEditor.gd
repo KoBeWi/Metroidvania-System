@@ -264,12 +264,12 @@ func undo_end_with_redraw():
 	undo_end()
 
 func undo_handle_cell_redraw(coords: Vector3i):
-	editor.undo_redo.add_do_method(editor.update_cell)
-	editor.undo_redo.add_undo_method(editor.update_cell)
+	editor.undo_redo.add_do_method(editor.update_cell.bind(coords))
+	editor.undo_redo.add_undo_method(editor.update_cell.bind(coords))
 
 func undo_handle_rect_redraw(rect: Rect2i):
-	editor.undo_redo.add_do_method(editor.update_rect)
-	editor.undo_redo.add_undo_method(editor.update_rect)
+	editor.undo_redo.add_do_method(editor.update_rect.bind(rect))
+	editor.undo_redo.add_undo_method(editor.update_rect.bind(rect))
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_THEME_CHANGED:
