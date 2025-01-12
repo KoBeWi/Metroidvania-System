@@ -66,8 +66,8 @@ tracks/0/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_0plid"]
 _data = {
-"RESET": SubResource("Animation_bkyt7"),
-"Rotat": SubResource("Animation_g3r3d")
+&"RESET": SubResource("Animation_bkyt7"),
+&"Rotat": SubResource("Animation_g3r3d")
 }
 
 [node name="MiniPortal" type="Area2D"]
@@ -82,7 +82,7 @@ texture = ExtResource("2_d5vpk")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Sprite2D"]
 libraries = {
-"": SubResource("AnimationLibrary_0plid")
+&"": SubResource("AnimationLibrary_0plid")
 }
 autoplay = "Rotat"
 

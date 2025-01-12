@@ -5,7 +5,7 @@
 [ext_resource type="Texture2D" uid="uid://dp67rmhfarvuw" path="res://addons/MetroidvaniaSystem/Themes/BS/Corner.png" id="3_junke"]
 [ext_resource type="PackedScene" uid="uid://cq5af3a4hpkmc" path="res://addons/MetroidvaniaSystem/Themes/BS/PlayerLocation.tscn" id="3_y5832"]
 [ext_resource type="Texture2D" uid="uid://danai55i8ghuq" path="res://addons/MetroidvaniaSystem/Themes/BS/RoomFill.png" id="4_4g5i5"]
-[ext_resource type="Script" path="res://addons/MetroidvaniaSystem/Scripts/MapTheme.gd" id="7_2ip2q"]
+[ext_resource type="Script" uid="uid://b7ofctgav4kq4" path="res://addons/MetroidvaniaSystem/Scripts/MapTheme.gd" id="7_2ip2q"]
 [ext_resource type="Texture2D" uid="uid://dlhoaflaw78ms" path="res://addons/MetroidvaniaSystem/Themes/BS/BorderPassage.png" id="8_fo8f6"]
 [ext_resource type="Texture2D" uid="uid://cp12io0ko3ari" path="res://addons/MetroidvaniaSystem/Themes/BS/BorderWall.png" id="9_c2e7j"]
 

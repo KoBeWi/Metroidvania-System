@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://cwdt1r5mp5gpj"]
 
-[ext_resource type="Script" path="res://addons/MetroidvaniaSystem/Scripts/CollectibleFoundItem.gd" id="1_t85ni"]
+[ext_resource type="Script" uid="uid://d4bd2tk51jom4" path="res://addons/MetroidvaniaSystem/Scripts/CollectibleFoundItem.gd" id="1_t85ni"]
 
 [node name="Collectible" type="PanelContainer"]
 script = ExtResource("1_t85ni")

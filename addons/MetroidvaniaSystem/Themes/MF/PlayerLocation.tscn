@@ -33,8 +33,8 @@ tracks/0/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_d6kwd"]
 _data = {
-"RESET": SubResource("Animation_l8bj1"),
-"new_animation": SubResource("Animation_og8hk")
+&"RESET": SubResource("Animation_l8bj1"),
+&"new_animation": SubResource("Animation_og8hk")
 }
 
 [node name="PlayerLocation" type="Node2D"]
@@ -53,8 +53,8 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_d6kwd")
+}
 autoplay = "new_animation"
 speed_scale = 4.0
-libraries = {
-"": SubResource("AnimationLibrary_d6kwd")
-}

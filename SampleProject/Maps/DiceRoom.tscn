@@ -226,8 +226,8 @@ tracks/0/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_txane"]
 _data = {
-"RESET": SubResource("Animation_g16o2"),
-"Spin": SubResource("Animation_7j2ql")
+&"RESET": SubResource("Animation_g16o2"),
+&"Spin": SubResource("Animation_7j2ql")
 }
 
 [node name="Map" type="Node2D"]
@@ -271,7 +271,7 @@ render_target_update_mode = 4
 [node name="DiceAnimator" type="AnimationPlayer" parent="Dice/SubViewportContainer/SubViewport/Dice"]
 unique_name_in_owner = true
 libraries = {
-"": SubResource("AnimationLibrary_txane")
+&"": SubResource("AnimationLibrary_txane")
 }
 autoplay = "Spin"
 speed_scale = 0.0

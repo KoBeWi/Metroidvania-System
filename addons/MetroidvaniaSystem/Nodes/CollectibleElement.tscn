@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://w48b71tv2d4v"]
 
-[ext_resource type="Script" path="res://addons/MetroidvaniaSystem/Scripts/CollectibleElement.gd" id="1_1bebr"]
-[ext_resource type="Script" path="res://addons/MetroidvaniaSystem/Scripts/EditorIconButton.gd" id="2_3d05g"]
+[ext_resource type="Script" uid="uid://2fu7dhm72l7r" path="res://addons/MetroidvaniaSystem/Scripts/CollectibleElement.gd" id="1_1bebr"]
+[ext_resource type="Script" uid="uid://celtpddhdfods" path="res://addons/MetroidvaniaSystem/Scripts/EditorIconButton.gd" id="2_3d05g"]
 
 [node name="Collectible" type="PanelContainer"]
 script = ExtResource("1_1bebr")

@@ -1,7 +1,7 @@
 [gd_resource type="Resource" load_steps=4 format=3 uid="uid://po1yy1ihchuv"]
 
-[ext_resource type="Script" path="res://SampleProject/Scripts/CustomElements.gd" id="1_v4ykp"]
-[ext_resource type="Script" path="res://addons/MetroidvaniaSystem/Scripts/Settings.gd" id="2_r56ns"]
+[ext_resource type="Script" uid="uid://b23v0vuudcegw" path="res://SampleProject/Scripts/CustomElements.gd" id="1_v4ykp"]
+[ext_resource type="Script" uid="uid://orxlanqpgccv" path="res://addons/MetroidvaniaSystem/Scripts/Settings.gd" id="2_r56ns"]
 [ext_resource type="Resource" uid="uid://bt6s3nd8xo6b" path="res://addons/MetroidvaniaSystem/Themes/Exquisite/Theme.tres" id="3_qyjha"]
 
 [resource]

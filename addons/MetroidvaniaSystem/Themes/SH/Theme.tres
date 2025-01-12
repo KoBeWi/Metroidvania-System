@@ -1,6 +1,6 @@
 [gd_resource type="Resource" script_class="MapTheme" load_steps=17 format=3 uid="uid://y6u67cfpuogf"]
 
-[ext_resource type="Script" path="res://addons/MetroidvaniaSystem/Scripts/MapTheme.gd" id="1_4j04x"]
+[ext_resource type="Script" uid="uid://b7ofctgav4kq4" path="res://addons/MetroidvaniaSystem/Scripts/MapTheme.gd" id="1_4j04x"]
 [ext_resource type="Texture2D" uid="uid://snjt7cvsgvvy" path="res://addons/MetroidvaniaSystem/Themes/SH/RoomFill.png" id="1_hultg"]
 [ext_resource type="Texture2D" uid="uid://d3rrhbvssnbxq" path="res://addons/MetroidvaniaSystem/Themes/SH/CornerInner.png" id="2_4n12c"]
 [ext_resource type="Texture2D" uid="uid://dmllf41qywe3y" path="res://addons/MetroidvaniaSystem/Themes/SH/CornerOuter.png" id="3_8brxa"]

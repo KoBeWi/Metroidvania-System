@@ -3,7 +3,7 @@
 [ext_resource type="Texture2D" uid="uid://cmsf2ftu1nxv5" path="res://addons/MetroidvaniaSystem/Themes/RR/CornerInner.png" id="1_uvvyp"]
 [ext_resource type="Texture2D" uid="uid://bma4gpyfwxyol" path="res://addons/MetroidvaniaSystem/Themes/RR/CornerOuter.png" id="2_xnnlu"]
 [ext_resource type="Texture2D" uid="uid://binqbgqxhnx7j" path="res://addons/MetroidvaniaSystem/Themes/RR/BorderPassage.png" id="3_6c7r1"]
-[ext_resource type="Script" path="res://addons/MetroidvaniaSystem/Scripts/MapTheme.gd" id="5_bgi7a"]
+[ext_resource type="Script" uid="uid://b7ofctgav4kq4" path="res://addons/MetroidvaniaSystem/Scripts/MapTheme.gd" id="5_bgi7a"]
 [ext_resource type="PackedScene" uid="uid://d28u2q2eihye7" path="res://addons/MetroidvaniaSystem/Themes/RR/PlayerLocation.tscn" id="5_g1m6u"]
 [ext_resource type="Texture2D" uid="uid://8ehs32p4uca2" path="res://addons/MetroidvaniaSystem/Themes/RR/RoomFill.png" id="5_lncyc"]
 [ext_resource type="Texture2D" uid="uid://p0tx0kl4qk4i" path="res://addons/MetroidvaniaSystem/Themes/RR/Symbols/SavePoint.png" id="7_1emgp"]

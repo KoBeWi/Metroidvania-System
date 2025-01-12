@@ -59,8 +59,8 @@ tracks/1/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_qhx6n"]
 _data = {
-"Animate": SubResource("Animation_a76ue"),
-"RESET": SubResource("Animation_4lnw3")
+&"Animate": SubResource("Animation_a76ue"),
+&"RESET": SubResource("Animation_4lnw3")
 }
 
 [node name="PlayerLocation" type="Sprite2D"]
@@ -68,7 +68,7 @@ modulate = Color(1, 1, 1, 0.0627451)
 texture = ExtResource("1_6xqmr")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-autoplay = "Animate"
 libraries = {
-"": SubResource("AnimationLibrary_qhx6n")
+&"": SubResource("AnimationLibrary_qhx6n")
 }
+autoplay = "Animate"

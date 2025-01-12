@@ -5,7 +5,7 @@
 [ext_resource type="Texture2D" uid="uid://b358crvb7tquv" path="res://addons/MetroidvaniaSystem/Themes/SotN/RoomFill.png" id="4_iev0j"]
 [ext_resource type="Texture2D" uid="uid://cpsx30sutkree" path="res://addons/MetroidvaniaSystem/Themes/SotN/BorderPassage.png" id="5_n8k5y"]
 [ext_resource type="Texture2D" uid="uid://c3u8paa831jvs" path="res://addons/MetroidvaniaSystem/Themes/SotN/BorderWall.png" id="6_yy33y"]
-[ext_resource type="Script" path="res://addons/MetroidvaniaSystem/Scripts/MapTheme.gd" id="8_diwrg"]
+[ext_resource type="Script" uid="uid://b7ofctgav4kq4" path="res://addons/MetroidvaniaSystem/Scripts/MapTheme.gd" id="8_diwrg"]
 
 [resource]
 script = ExtResource("8_diwrg")

@@ -1,6 +1,6 @@
 [gd_scene load_steps=14 format=3 uid="uid://dfbykrvyqnqr5"]
 
-[ext_resource type="Script" path="res://addons/MetroidvaniaSystem/Database/MapEditor.gd" id="1_i7yda"]
+[ext_resource type="Script" uid="uid://cmjsph053oe5d" path="res://addons/MetroidvaniaSystem/Database/MapEditor.gd" id="1_i7yda"]
 [ext_resource type="PackedScene" uid="uid://w34y4dyx84y8" path="res://addons/MetroidvaniaSystem/Nodes/LayerSelector.tscn" id="2_rinoa"]
 
 [sub_resource type="ButtonGroup" id="ButtonGroup_pv7fp"]
