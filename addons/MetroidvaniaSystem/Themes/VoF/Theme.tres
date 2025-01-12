@@ -9,7 +9,7 @@
 [ext_resource type="Texture2D" uid="uid://61edyfnw5m8p" path="res://addons/MetroidvaniaSystem/Themes/VoF/BorderPassage.png" id="5_xa2wc"]
 [ext_resource type="Texture2D" uid="uid://cw1j4evd31ogo" path="res://addons/MetroidvaniaSystem/Themes/VoF/RoomSeparator.png" id="6_ye56i"]
 [ext_resource type="Texture2D" uid="uid://cbk62vedgdwdy" path="res://addons/MetroidvaniaSystem/Themes/VoF/BorderWall.png" id="7_2kabb"]
-[ext_resource type="Script" path="res://addons/MetroidvaniaSystem/Scripts/MapTheme.gd" id="8_xw4q1"]
+[ext_resource type="Script" uid="uid://b7ofctgav4kq4" path="res://addons/MetroidvaniaSystem/Scripts/MapTheme.gd" id="8_xw4q1"]
 [ext_resource type="Texture2D" uid="uid://dgu4j12kskk6i" path="res://addons/MetroidvaniaSystem/Themes/VoF/Symbols/RoomSave.png" id="10_qlbgl"]
 [ext_resource type="Texture2D" uid="uid://d0r6edulskdb6" path="res://addons/MetroidvaniaSystem/Themes/VoF/Symbols/RoomTeleport.png" id="11_f6gue"]
 [ext_resource type="Texture2D" uid="uid://dcopymiyvdc4k" path="res://addons/MetroidvaniaSystem/Themes/VoF/Symbols/WarpRight.png" id="12_otlmo"]

@@ -35,15 +35,15 @@ tracks/0/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_vk7a8"]
 _data = {
-"RESET": SubResource("Animation_36srt"),
-"new_animation": SubResource("Animation_j5j13")
+&"RESET": SubResource("Animation_36srt"),
+&"new_animation": SubResource("Animation_j5j13")
 }
 
 [node name="PlayerLocation" type="Sprite2D"]
 texture = ExtResource("1_paeov")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-autoplay = "new_animation"
 libraries = {
-"": SubResource("AnimationLibrary_vk7a8")
+&"": SubResource("AnimationLibrary_vk7a8")
 }
+autoplay = "new_animation"

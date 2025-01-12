@@ -37,7 +37,7 @@ func _ready() -> void:
 	%Label.text = tooltip_text
 
 func _notification(what: int) -> void:
-	if what == NOTIFICATION_THEME_CHANGED:
+	if what == NOTIFICATION_THEME_CHANGED and not is_part_of_edited_scene():
 		$Hover.border_color = get_theme_color(&\"hovered_room_preview_outline\", &\"MetSys\")
 		%Label.add_theme_color_override(&\"font_color\", get_theme_color(&\"hovered_room_preview_name\", &\"MetSys\"))
 

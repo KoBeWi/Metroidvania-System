@@ -7,7 +7,7 @@
 [ext_resource type="Texture2D" uid="uid://dijxm76dgesma" path="res://addons/MetroidvaniaSystem/Themes/Zeric/RoomFill.png" id="4_01u05"]
 [ext_resource type="Texture2D" uid="uid://dyuqgby0pkv1i" path="res://addons/MetroidvaniaSystem/Themes/Zeric/Borders/PinkBarrier.png" id="4_el8x7"]
 [ext_resource type="Texture2D" uid="uid://dw0lgh8p873i4" path="res://addons/MetroidvaniaSystem/Themes/Zeric/CornerCross.png" id="4_jwgxf"]
-[ext_resource type="Script" path="res://addons/MetroidvaniaSystem/Scripts/MapTheme.gd" id="5_oyauq"]
+[ext_resource type="Script" uid="uid://b7ofctgav4kq4" path="res://addons/MetroidvaniaSystem/Scripts/MapTheme.gd" id="5_oyauq"]
 [ext_resource type="Texture2D" uid="uid://djdgo7kixxhpj" path="res://addons/MetroidvaniaSystem/Themes/Zeric/CornerL.png" id="5_varkp"]
 [ext_resource type="Texture2D" uid="uid://cu2f7csv8gt7c" path="res://addons/MetroidvaniaSystem/Themes/Zeric/BorderWall.png" id="6_xee1q"]
 [ext_resource type="PackedScene" uid="uid://csibk51vvt46y" path="res://addons/MetroidvaniaSystem/Themes/Zeric/PlayerLocation.tscn" id="9_ehbr4"]

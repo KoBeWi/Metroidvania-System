@@ -1,6 +1,6 @@
 [gd_scene load_steps=7 format=3 uid="uid://cwrf84g5mlucd"]
 
-[ext_resource type="Script" path="res://SampleProject/Scripts/Portal.gd" id="1_q6xcx"]
+[ext_resource type="Script" uid="uid://b6hvngpyjmbfk" path="res://SampleProject/Scripts/Portal.gd" id="1_q6xcx"]
 [ext_resource type="Texture2D" uid="uid://cargdawan7gao" path="res://SampleProject/Sprites/Portal.png" id="2_j5rn3"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_vq33u"]
@@ -40,8 +40,8 @@ tracks/0/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_0plid"]
 _data = {
-"RESET": SubResource("Animation_bkyt7"),
-"Rotat": SubResource("Animation_g3r3d")
+&"RESET": SubResource("Animation_bkyt7"),
+&"Rotat": SubResource("Animation_g3r3d")
 }
 
 [node name="Portal" type="Area2D"]
@@ -55,7 +55,7 @@ texture = ExtResource("2_j5rn3")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Sprite2D"]
 libraries = {
-"": SubResource("AnimationLibrary_0plid")
+&"": SubResource("AnimationLibrary_0plid")
 }
 autoplay = "Rotat"
 

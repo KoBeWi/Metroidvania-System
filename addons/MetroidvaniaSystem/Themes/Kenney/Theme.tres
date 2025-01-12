@@ -1,6 +1,6 @@
 [gd_resource type="Resource" script_class="MapTheme" load_steps=13 format=3 uid="uid://bfx2fid0hmsyb"]
 
-[ext_resource type="Script" path="res://addons/MetroidvaniaSystem/Scripts/MapTheme.gd" id="1_dn1d3"]
+[ext_resource type="Script" uid="uid://b7ofctgav4kq4" path="res://addons/MetroidvaniaSystem/Scripts/MapTheme.gd" id="1_dn1d3"]
 [ext_resource type="Texture2D" uid="uid://dvu8mgj5j1nc" path="res://addons/MetroidvaniaSystem/Themes/Kenney/Borders/Barrier.png" id="1_sca7f"]
 [ext_resource type="Texture2D" uid="uid://bp2d04ksaxa4r" path="res://addons/MetroidvaniaSystem/Themes/Kenney/Center.png" id="1_t0e02"]
 [ext_resource type="Texture2D" uid="uid://dw5a8bbhocksc" path="res://addons/MetroidvaniaSystem/Themes/Kenney/Symbols/Collectible.png" id="2_n3h0k"]

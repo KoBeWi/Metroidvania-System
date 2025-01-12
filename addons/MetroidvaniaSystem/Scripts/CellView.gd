@@ -31,16 +31,16 @@ var _theme: MapTheme
 var _force_mapped: bool
 
 func _init(parent_item: RID) -> void:
-	_this = self # hack
-	unreference() # hack
+	#_this = self # hack
+	#unreference() # hack
 	
 	_parent_item = parent_item
 	_theme = MetSys.settings.theme
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_PREDELETE:
-		if _this._canvas_item.is_valid():
-			_this.delete_rids()
+		if _canvas_item.is_valid():
+			delete_rids()
 
 func create_rids():
 	_canvas_item = RenderingServer.canvas_item_create()
