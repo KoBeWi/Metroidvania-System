@@ -66,9 +66,9 @@ func generate_map():
 	# Gets rid of errors. This method is thread-safe, trust me.
 	Thread.set_thread_safety_checks_enabled(false)
 	# The grid of generated cells. The key is cell coordinates relative to the first generated cell, the value is a bitmask of exits.
-	var grid: Dictionary#[Vector2i, int]
+	var grid: Dictionary[Vector2i, int]
 	# Distance map. The key is cell coordinate, the value is distance from the first cell.
-	var distance_grid: Dictionary#[Vector2i, int]
+	var distance_grid: Dictionary[Vector2i, int]
 	# Initialize the first cell. This is the cell next to the Dice Room.
 	# 4 = 1 << MetroidvaniaSystem.L (the way to the Dice Room).
 	grid[Vector2i()] = 4

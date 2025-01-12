@@ -282,15 +282,15 @@ class CustomElement:
 	var size: Vector2i
 	var data: String
 
-var cells: Dictionary#[Vector3i, CellData]
-var custom_cells: Dictionary#[Vector3i, CellData]
-var assigned_scenes: Dictionary#[String, Array[Vector3i]]
-var cell_groups: Dictionary#[int, Array[Vector3i]]
-var custom_elements: Dictionary#[Vector3i, CustomElement]
+var cells: Dictionary[Vector3i, CellData]
+var custom_cells: Dictionary[Vector3i, CellData]
+var assigned_scenes: Dictionary[String, Array]#[Vector3i]]
+var cell_groups: Dictionary[int, Array]#[Vector3i]]
+var custom_elements: Dictionary[Vector3i, CustomElement]
 
 var layer_names: PackedStringArray
-var cell_overrides: Dictionary#[Vector3i, CellOverride]
-var scene_overrides: Dictionary#[String, String]
+var cell_overrides: Dictionary[Vector3i, CellOverride]
+var scene_overrides: Dictionary[String, String]
 
 var exporting_mode: bool
 signal saved

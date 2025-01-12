@@ -5,7 +5,7 @@
 ## [br][br]To use custom elements, create a new script that inherits this one and assign it to [code]custom_element_script[/code] property in MetSys Settings. Register your elements by calling [method register_elements] inside [method Object._init] then press Refresh Custom Elements button in the Manage tab of MetSys Database. This will create an instance of your script and the elements will be available in Custom Elements edit mode of the editor.
 extends RefCounted
 
-var _custom_elements: Dictionary#[String, Callable]
+var _custom_elements: Dictionary[String, Callable]
 
 ## Registers a new element. The [param name] will appear in the editor (capitalized) and [param draw_callback] will be used to draw your element. The callback is called automatically when the element needs to be drawn.
 ## [br][br]The callback signature is [code]method(canvas_item: RID, coords: Vector3i, pos: Vector2, size: Vector2, data: String)[/code]. [code]canvas_item[/code] is the [CanvasItem] that you should use to draw the elements, [code]coords[/code] are the coordinates of the origin point of the element, [code]pos[/code] is the position of the element's origin in pixels, [code]size[/code] is the size of the element's rectangle in pixels, [code]data[/code] is the data [String] that was assigned to the element.

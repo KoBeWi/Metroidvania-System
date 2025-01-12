@@ -16,7 +16,7 @@ var map_offset := Vector2i(10, 10)
 var current_layer: int
 var cursor_inside: bool
 
-var layers: Dictionary#[int, MapView]
+var layers: Dictionary[int, MapView]
 var current_map_view: MapView
 
 func _enter_tree() -> void:

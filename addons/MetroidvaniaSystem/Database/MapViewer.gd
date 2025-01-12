@@ -5,7 +5,7 @@ enum {MODE_LAYOUT = 1, MODE_ROOM_SYMBOL, MODE_ROOM_COLOR, MODE_ROOM_GROUP, MODE_
 
 @export var mode_group: ButtonGroup
 
-var theme_cache: Dictionary
+var theme_cache: Dictionary[StringName, Variant]
 
 var room_under_cursor: MetroidvaniaSystem.MapData.CellData
 var current_hovered_item: Control

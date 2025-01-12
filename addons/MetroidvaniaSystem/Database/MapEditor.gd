@@ -9,7 +9,7 @@ var viewer_layers: Dictionary
 var mode: int
 var preview_layer := -1
 
-var preview_layers: Dictionary#[int, MapView]
+var preview_layers: Dictionary[int, MapView]
 
 var undo_redo: UndoRedo
 var saved_version := 1

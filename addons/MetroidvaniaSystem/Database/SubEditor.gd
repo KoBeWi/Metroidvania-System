@@ -3,7 +3,7 @@ extends Control
 
 const EDITOR_SCRIPT = preload("res://addons/MetroidvaniaSystem/Database/MapEditor.gd")
 var editor: EDITOR_SCRIPT
-var theme_cache: Dictionary
+var theme_cache: Dictionary[StringName, Variant]
 
 var undo_active: bool
 var had_undo_change: bool
