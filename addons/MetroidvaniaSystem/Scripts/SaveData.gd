@@ -2,12 +2,12 @@ extends RefCounted
 
 const SIMPLE_STORABLE_PROPERTIES: Array[StringName] = [&"discovered_cells", &"registered_objects", &"stored_objects", &"custom_markers"]
 
-var discovered_cells: Dictionary#[Vector3i, int]
-var registered_objects: Dictionary#[String, bool]
-var stored_objects: Dictionary#[String, bool]
+var discovered_cells: Dictionary[Vector3i, int]
+var registered_objects: Dictionary[String, bool]
+var stored_objects: Dictionary[String, bool]
 
-var custom_markers: Dictionary#[Vector3i, int]
-var cell_overrides: Dictionary#[CellData, CellOverride]
+var custom_markers: Dictionary[Vector3i, int]
+var cell_overrides: Dictionary[MetroidvaniaSystem.MapData.CellData, MetroidvaniaSystem.MapData.CellOverride]
 
 func discover_cell(coords: Vector3i):
 	if discovered_cells.get(coords, 0) < 1:
@@ -76,7 +76,7 @@ func remove_custom_marker(coords: Vector3i, symbol: int):
 	MetSys.map_updated.emit()
 
 func get_data() -> Dictionary:
-	var data: Dictionary
+	var data: Dictionary[StringName, Variant]
 	
 	for property in SIMPLE_STORABLE_PROPERTIES:
 		data[property] = get(property)

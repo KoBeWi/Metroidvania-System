@@ -31,7 +31,7 @@ var _theme: MapTheme
 var _force_mapped: bool
 
 func _init(parent_item: RID) -> void:
-	#_this = self # hack
+	_this = self # hack
 	#unreference() # hack
 	
 	_parent_item = parent_item
@@ -39,8 +39,8 @@ func _init(parent_item: RID) -> void:
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_PREDELETE:
-		if _canvas_item.is_valid():
-			delete_rids()
+		if _this._canvas_item.is_valid():
+			_this.delete_rids()
 
 func create_rids():
 	_canvas_item = RenderingServer.canvas_item_create()
