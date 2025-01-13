@@ -5,6 +5,7 @@
 # res://addons/MetroidvaniaSystem/Database/MapViewer.tscn
 # res://addons/MetroidvaniaSystem/Nodes/LayerSelector.tscn
 # res://addons/MetroidvaniaSystem/Nodes/CollectibleElement.tscn
+# res://addons/MetroidvaniaSystem/MetSysPlugin.gd
 #
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
@@ -422,4 +423,21 @@ msgstr ""
 
 #: addons/MetroidvaniaSystem/Nodes/CollectibleElement.tscn
 msgid "Icon"
+msgstr ""
+
+#: addons/MetroidvaniaSystem/MetSysPlugin.gd
+msgid ""
+"MetSys restart failed, the singleton still can't be loaded. Make sure the \"MetroidvaniaSystem.gd\" script has no errors.\n"
+"\n"
+"Common cause of errors are:\n"
+"- Using Godot version older than 4.4.\n"
+"- Name conflicts with one of the classes.\n"
+"\n"
+"The plugin will be now disabled. Fix the errors and try again."
+msgstr ""
+
+#: addons/MetroidvaniaSystem/MetSysPlugin.gd
+msgid ""
+"MetSys map has been modified.\n"
+"Do you want to save?"
 msgstr ""
