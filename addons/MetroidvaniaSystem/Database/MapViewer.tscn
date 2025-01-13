@@ -310,6 +310,7 @@ value = 1.0
 
 [node name="ZoomValue" type="Label" parent="Sidebar/ScrollContainer/VBoxContainer/Layer/HBoxContainer"]
 unique_name_in_owner = true
+auto_translate_mode = 2
 layout_mode = 2
 text = "x1.0"
 

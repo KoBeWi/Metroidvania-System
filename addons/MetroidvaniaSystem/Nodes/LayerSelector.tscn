@@ -73,6 +73,9 @@ func _set_layer_index(index: int) -> void:
 	_set_layer(name_popup.get_item_metadata(index))
 
 func update_buttons():
+	if is_part_of_edited_scene():
+		return
+	
 	layer_name.text = get_layer_format(value)
 	prev_button.disabled = value == (-1 if allow_none else 0) or name_edit.visible
 	next_button.disabled = value == 9999 or name_edit.visible
@@ -98,9 +101,9 @@ func open_popup() -> void:
 
 func get_layer_name(idx: int) -> String:
 	if idx < 0:
-		return \"None\"
+		return tr(\"None\")
 	elif idx >= MetSys.map_data.layer_names.size() or MetSys.map_data.layer_names[idx].is_empty():
-		return \"Unnamed\"
+		return tr(\"Unnamed\")
 	else:
 		return MetSys.map_data.layer_names[idx]
 
@@ -125,6 +128,7 @@ script = SubResource("GDScript_43u2x")
 
 [node name="Prev" type="Button" parent="."]
 unique_name_in_owner = true
+auto_translate_mode = 2
 layout_mode = 2
 disabled = true
 text = "<"
@@ -134,7 +138,6 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 tooltip_text = "Double-click to edit name."
-text = "0: Defaltia"
 text_overrun_behavior = 3
 
 [node name="NameEdit" type="LineEdit" parent="LayerName"]
@@ -149,6 +152,7 @@ grow_vertical = 2
 
 [node name="Next" type="Button" parent="."]
 unique_name_in_owner = true
+auto_translate_mode = 2
 layout_mode = 2
 text = ">"
 
