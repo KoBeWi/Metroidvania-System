@@ -4,14 +4,8 @@
 script/source = "@tool
 extends Control
 
-var plugin: EditorPlugin
-
-func _enter_tree() -> void:
-	if owner:
-		plugin = owner.plugin
-
 func _notification(what: int) -> void:
-	if not plugin:
+	if is_part_of_edited_scene():
 		return
 	
 	if what == NOTIFICATION_THEME_CHANGED:
@@ -119,11 +113,11 @@ func json_file_selected(path: String) -> void:
 		var element_to_save: Dictionary
 		elements[\"%s,%s,%s\" % [element.x, element.y, element.z]] = element_to_save
 		
-		var element_data: Dictionary = MetSys.map_data.custom_elements[element]
-		element_to_save[\"name\"] = element_data[\"name\"]
-		element_to_save[\"size\"] = \"%s,%s\" % [element_data[\"size\"].x, element_data[\"size\"].y]
-		if not element_data[\"data\"].is_empty():
-			element_to_save[\"data\"] = element_data[\"data\"]
+		var element_data := MetSys.map_data.custom_elements[element]
+		element_to_save[\"name\"] = element_data.name
+		element_to_save[\"size\"] = \"%s,%s\" % [element_data.size.x, element_data.size.y]
+		if not element_data.data.is_empty():
+			element_to_save[\"data\"] = element_data.data
 	
 	if not elements.is_empty():
 		map_data[\"custom_elements\"] = elements
@@ -151,20 +145,14 @@ extends PanelContainer
 
 enum { SUCCESS, WARNING, ERROR, INFO }
 
-var plugin: EditorPlugin
-
 var warning_color: Color
 var error_color: Color
 var success_color: Color
 
 var has_error: bool
 
-func _enter_tree() -> void:
-	if owner:
-		plugin = owner.plugin
-
 func _ready() -> void:
-	if plugin:
+	if not is_part_of_edited_scene():
 		hide()
 
 func _notification(what: int) -> void:
