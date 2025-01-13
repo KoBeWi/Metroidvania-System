@@ -942,6 +942,7 @@ value = 1.0
 
 [node name="ZoomValue" type="Label" parent="Sidebar/ScrollContainer/VBoxContainer/Layer/HBoxContainer"]
 unique_name_in_owner = true
+auto_translate_mode = 2
 layout_mode = 2
 text = "x1.0"
 
@@ -1010,7 +1011,7 @@ script = SubResource("GDScript_p75ne")
 [node name="FileDialog" type="FileDialog" parent="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign"]
 size = Vector2i(600, 400)
 file_mode = 0
-filters = PackedStringArray("*.tscn", "*.scn")
+filters = PackedStringArray("*.tscn,*.scn;Scene File")
 script = SubResource("GDScript_5yej3")
 
 [node name="Button" type="Button" parent="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign/FileDialog"]
@@ -1052,6 +1053,7 @@ size_flags_horizontal = 3
 
 [node name="SceneExtension" type="OptionButton" parent="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign/CreateDialog/VBoxContainer/GridContainer/HBoxContainer"]
 unique_name_in_owner = true
+auto_translate_mode = 2
 layout_mode = 2
 selected = 0
 item_count = 2
@@ -1186,20 +1188,20 @@ layout_mode = 2
 [node name="ShortcutPick" type="Label" parent="Sidebar/ScrollContainer/VBoxContainer/EditControls/Shortcuts"]
 unique_name_in_owner = true
 layout_mode = 2
-text = "Ctrl+Click: pick from map"
+text = "Ctrl+Click: Pick from map"
 autowrap_mode = 2
 
 [node name="ShortcutDrag" type="Label" parent="Sidebar/ScrollContainer/VBoxContainer/EditControls/Shortcuts"]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
-text = "Shift+Drag: move rooms"
+text = "Shift+Drag: Move rooms"
 autowrap_mode = 2
 
 [node name="ShortcutWhole" type="Label" parent="Sidebar/ScrollContainer/VBoxContainer/EditControls/Shortcuts"]
 unique_name_in_owner = true
 layout_mode = 2
-text = "Shift+Click: set for the whole room"
+text = "Shift+Click: Set for the whole room"
 autowrap_mode = 2
 
 [node name="MapView" type="Control" parent="."]
