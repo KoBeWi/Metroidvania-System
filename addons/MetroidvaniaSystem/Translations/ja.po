@@ -1,0 +1,502 @@
+# LANGUAGE translation for Metroidvania System for the following files:
+# res://addons/MetroidvaniaSystem/Database/Manage.tscn
+# res://addons/MetroidvaniaSystem/Database/Main.tscn
+# res://addons/MetroidvaniaSystem/Database/MapEditor.tscn
+# res://addons/MetroidvaniaSystem/Database/MapViewer.tscn
+# res://addons/MetroidvaniaSystem/Nodes/LayerSelector.tscn
+# res://addons/MetroidvaniaSystem/Nodes/CollectibleElement.tscn
+# res://addons/MetroidvaniaSystem/MetSysPlugin.gd
+#
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Metroidvania System\n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: ja\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Poedit 3.0.1\n"
+
+#: addons/MetroidvaniaSystem/Database/Manage.tscn
+msgid "No assigned map at: %s"
+msgstr "マップがわりあてられていません。%s"
+
+#: addons/MetroidvaniaSystem/Database/Manage.tscn
+msgid "Invalid symbol (%d) at: %s"
+msgstr "シンボル設定に誤りがあります。(%d) %s"
+
+#: addons/MetroidvaniaSystem/Database/Manage.tscn
+msgid "Invalid border (%d) at: %s"
+msgstr "ボーダー設定に誤りがあります。(%d) %s"
+
+#: addons/MetroidvaniaSystem/Database/Manage.tscn
+msgid "Passage to nowhere at: %s"
+msgstr "到達できない通路が存在します。 %s"
+
+#: addons/MetroidvaniaSystem/Database/Manage.tscn
+msgid "Potentially unused symbol: %d"
+msgstr "未使用の可能性があるシンボルがあります。%d"
+
+#: addons/MetroidvaniaSystem/Database/Manage.tscn
+msgid "Map data is valid."
+msgstr "マップデータは正しく設定されています。"
+
+#: addons/MetroidvaniaSystem/Database/Manage.tscn
+msgid "Cell Shape: %s"
+msgstr "セルの形: %s"
+
+#: addons/MetroidvaniaSystem/Database/Manage.tscn
+msgid "Rectangle"
+msgstr "長方形"
+
+#: addons/MetroidvaniaSystem/Database/Manage.tscn
+msgid "Square"
+msgstr "正方形"
+
+#: addons/MetroidvaniaSystem/Database/Manage.tscn
+msgid "Base Cell Size: %s"
+msgstr "基本セルサイズ: %s"
+
+#: addons/MetroidvaniaSystem/Database/Manage.tscn
+msgid "Theme is missing center texture. Map can't be drawn."
+msgstr "テーマの中央のテクスチャが存在しないため、マップを描画できません。"
+
+#: addons/MetroidvaniaSystem/Database/Manage.tscn
+msgid "Uses unified corners."
+msgstr "同一の角の設定を使用します。"
+
+#: addons/MetroidvaniaSystem/Database/Manage.tscn
+msgid "Size mismatch between empty texture (%s) and center texture."
+msgstr "空のテクスチャ(%s)と中央のテクスチャのサイズが一致しません。"
+
+#: addons/MetroidvaniaSystem/Database/Manage.tscn
+msgid "Number of horizontal and vertical borders do not match."
+msgstr "横と縦のボーダーの数が一致していません。"
+
+#: addons/MetroidvaniaSystem/Database/Manage.tscn
+msgid "Vertical wall texture"
+msgstr "縦の壁のテクスチャ"
+
+#: addons/MetroidvaniaSystem/Database/Manage.tscn
+msgid "Vertical passage texture"
+msgstr "縦の通路のテクスチャ"
+
+#: addons/MetroidvaniaSystem/Database/Manage.tscn
+msgid "Vertical border texture at index %d"
+msgstr "縦のボーダーのテクスチャ %d番目 (index %d)"
+
+#: addons/MetroidvaniaSystem/Database/Manage.tscn
+msgid "Horizontal wall texture"
+msgstr "横の壁のテクスチャ"
+
+#: addons/MetroidvaniaSystem/Database/Manage.tscn
+msgid "Horizontal passage texture"
+msgstr "横の通路のテクスチャ"
+
+#: addons/MetroidvaniaSystem/Database/Manage.tscn
+msgid "Horizontal border texture at index %d"
+msgstr "縦のボーダーのテクスチャ %d番目 (index %d)"
+
+#: addons/MetroidvaniaSystem/Database/Manage.tscn
+msgid "Wall texture"
+msgstr "壁のテクスチャ"
+
+#: addons/MetroidvaniaSystem/Database/Manage.tscn
+msgid "Passage texture"
+msgstr "通路のテクスチャ"
+
+#: addons/MetroidvaniaSystem/Database/Manage.tscn
+msgid "Border texture at index %d"
+msgstr "ボーダーのテクスチャ %d番目 (index %d)"
+
+#: addons/MetroidvaniaSystem/Database/Manage.tscn
+msgid ""
+"Uncollected item symbol index is greater than number of available symbols."
+msgstr ""
+"未収集のアイテムのシンボル数（シンボルのindex）が、使用可能なシンボル数を超え"
+"ています。"
+
+#: addons/MetroidvaniaSystem/Database/Manage.tscn
+msgid ""
+"Collected item symbol index is greater than number of available symbols."
+msgstr ""
+"収集済みのアイテムのシンボル数（シンボルのindex）が、使用可能なシンボル数を超"
+"えています。"
+
+#: addons/MetroidvaniaSystem/Database/Manage.tscn
+msgid "Symbol %d texture"
+msgstr "シンボルのテクスチャ %d"
+
+#: addons/MetroidvaniaSystem/Database/Manage.tscn
+msgid "U corner texture"
+msgstr "U 型の通路角のテクスチャ"
+
+#: addons/MetroidvaniaSystem/Database/Manage.tscn
+msgid "L corner texture"
+msgstr "L 型の通路角のテクスチャ"
+
+#: addons/MetroidvaniaSystem/Database/Manage.tscn
+msgid "T corner texture"
+msgstr "T 型の通路角のテクスチャ"
+
+#: addons/MetroidvaniaSystem/Database/Manage.tscn
+msgid "Cross corner texture"
+msgstr "十字路 の通路角のテクスチャ"
+
+#: addons/MetroidvaniaSystem/Database/Manage.tscn
+msgid "Inner corner texture"
+msgstr "通路角の内側のテクスチャ"
+
+#: addons/MetroidvaniaSystem/Database/Manage.tscn
+msgid "Outer corner texture"
+msgstr "通路角の外側のテクスチャ"
+
+#: addons/MetroidvaniaSystem/Database/Manage.tscn
+msgid "Player location scene is not a Node2D."
+msgstr "プレイヤーの位置のシーンがNode2Dになっていません。"
+
+#: addons/MetroidvaniaSystem/Database/Manage.tscn
+msgid ""
+"Missing player location scene. Player location can't be displayed using "
+"built-in methods."
+msgstr ""
+"プレイヤーの位置のシーンがありません。組み込み関数を使用してプレイヤーの位置"
+"を表示できません。"
+
+#: addons/MetroidvaniaSystem/Database/Manage.tscn
+msgid "Theme is valid."
+msgstr "テーマは正しく設定されています。"
+
+#: addons/MetroidvaniaSystem/Database/Manage.tscn
+msgid ""
+"%s has invalid height (%d). It should be vertical, oriented towards the "
+"right side and match the height of the center texture."
+msgstr ""
+"%s の高さの設定に誤りがあります。 (%d).向きが縦かつ、右側を向いており、中央の"
+"テクスチャの高さと一致する必要があります。"
+
+#: addons/MetroidvaniaSystem/Database/Manage.tscn
+msgid "%s is wider than half of the center texture. It may cause overlaps."
+msgstr ""
+"%s は中央のテクスチャの半分より幅が広くなっています。他と重なる可能性がありま"
+"す。"
+
+#: addons/MetroidvaniaSystem/Database/Manage.tscn
+msgid "%s is empty."
+msgstr "%s が空になっています。"
+
+#: addons/MetroidvaniaSystem/Database/Manage.tscn
+msgid ""
+"%s has invalid height (%d). It should be vertical, oriented towards the "
+"right side and height should match the width of the center texture."
+msgstr ""
+"%s の高さの設定に誤りがあります。 (%d).向きが縦かつ、右側を向いており、中央の"
+"テクスチャの幅と一致する必要があります。"
+
+#: addons/MetroidvaniaSystem/Database/Manage.tscn
+msgid ""
+"%s is wider than half of the height of the center texture. It may cause "
+"overlaps."
+msgstr ""
+"%s は中央のテクスチャの高さの半分より幅が広くなっています。他と重なる可能性が"
+"あります。"
+
+#: addons/MetroidvaniaSystem/Database/Manage.tscn
+msgid "%s is bigger than center texture. It will stick out of cells."
+msgstr "%s は中央のテクスチャより大きくなっています。セルからはみ出します。"
+
+#: addons/MetroidvaniaSystem/Database/Manage.tscn
+msgid "%s is bigger than half of the center texture. It may cause overlaps."
+msgstr ""
+"%s は中央のテクスチャより大きくなっています。他と重なる可能性があります。"
+
+#: addons/MetroidvaniaSystem/Database/Manage.tscn
+msgid "General Settings"
+msgstr "基本設定"
+
+#: addons/MetroidvaniaSystem/Database/Manage.tscn
+msgid "Refresh Custom Elements"
+msgstr "カスタム要素をリフレッシュする"
+
+#: addons/MetroidvaniaSystem/Database/Manage.tscn
+msgid "Reload and Cleanup Map Data"
+msgstr "マップデータの再読み込みとクリーンアップする"
+
+#: addons/MetroidvaniaSystem/Database/Manage.tscn
+msgid "Validate Map Data"
+msgstr "マップデータを検証する（バリデーション）"
+
+#: addons/MetroidvaniaSystem/Database/Manage.tscn
+msgid "Validate Map Theme"
+msgstr "マップテーマを検証する（バリデーション）"
+
+#: addons/MetroidvaniaSystem/Database/Manage.tscn
+msgid "Export Map Data as JSON"
+msgstr "マップデータをJSONで出力する"
+
+#: addons/MetroidvaniaSystem/Database/Manage.tscn
+msgid "Edit Database Theme"
+msgstr "データベースのテーマを編集する"
+
+#: addons/MetroidvaniaSystem/Database/Manage.tscn
+msgid "Reset Database Theme"
+msgstr "データベースのテーマをリセットする"
+
+#: addons/MetroidvaniaSystem/Database/Manage.tscn
+msgid "Validation Result"
+msgstr "検証結果（バリデーション）"
+
+#: addons/MetroidvaniaSystem/Database/Manage.tscn
+msgid "Close"
+msgstr "閉じる"
+
+#: addons/MetroidvaniaSystem/Database/Manage.tscn
+msgid "JSON File"
+msgstr "JSONファイル"
+
+#: addons/MetroidvaniaSystem/Database/Main.tscn
+msgid ""
+"Discards local map data and loads the external one instead.\n"
+"If you made any local changes to the map, they will be lost."
+msgstr ""
+"現在のマップデータの変更を破棄し、代わりに外部で更新されたマップデータでロー"
+"ドします。\n"
+"現在のマップに変更を加えていた場合、その変更は失われます。"
+
+#: addons/MetroidvaniaSystem/Database/Main.tscn
+msgid ""
+"Saves local map data to the file, overwriting whatever is stored on disk. If "
+"you are using version control (e.g. git), this allows you to manually merge "
+"changes."
+msgstr ""
+"現在のマップデータをファイルに上書き保存します。バージョン管理 (Git など) を"
+"使用している場合は、変更を手動でマージできます。"
+
+#: addons/MetroidvaniaSystem/Database/Main.tscn
+msgid ""
+"Save local map data into a backup file called \"MapData(Copy).txt\", then "
+"reloads map data. You can use the backup file to manually merge changes."
+msgstr ""
+"現在のマップデータを「MapData(Copy).txt」というバックアップファイルに保存し、"
+"マップ データを再読み込みします。バックアップファイルを使用して、変更を手動で"
+"マージすることもできます。"
+
+#: addons/MetroidvaniaSystem/Database/Main.tscn
+msgid "Metroidvania System Database"
+msgstr "Metroidvania System データベース"
+
+#: addons/MetroidvaniaSystem/Database/Main.tscn
+msgid "Map Editor"
+msgstr "マップエディタ"
+
+#: addons/MetroidvaniaSystem/Database/Main.tscn
+msgid "Map Viewer"
+msgstr "マップビューアー"
+
+#: addons/MetroidvaniaSystem/Database/Main.tscn
+msgid "Manage"
+msgstr "設定"
+
+#: addons/MetroidvaniaSystem/Database/Main.tscn
+msgid "Reload From Disk"
+msgstr "ディスクから再読込"
+
+#: addons/MetroidvaniaSystem/Database/Main.tscn
+msgid ""
+"Map data file was modified externally.\n"
+"What action should be taken?\n"
+"(hover a button for more info)"
+msgstr ""
+"マップデータ ファイルが外部で変更されました。\n"
+"どうしますか？\n"
+"(ボタンにカーソルを合わせると詳細が表示されます)"
+
+#: addons/MetroidvaniaSystem/Database/Main.tscn
+msgid "Re-save Map Data"
+msgstr "マップデータを再保存する"
+
+#: addons/MetroidvaniaSystem/Database/MapEditor.tscn
+#: addons/MetroidvaniaSystem/Database/MapViewer.tscn
+msgid "Current Layer"
+msgstr "現在のレイヤー"
+
+#: addons/MetroidvaniaSystem/Database/MapEditor.tscn
+msgid "Preview Layer"
+msgstr "プレビューレイヤー"
+
+#: addons/MetroidvaniaSystem/Database/MapEditor.tscn
+#: addons/MetroidvaniaSystem/Database/MapViewer.tscn
+msgid "Recenter View"
+msgstr "表示を中央にする"
+
+#: addons/MetroidvaniaSystem/Database/MapEditor.tscn
+#: addons/MetroidvaniaSystem/Database/MapViewer.tscn
+msgid "Zoom"
+msgstr "ズーム"
+
+#: addons/MetroidvaniaSystem/Database/MapEditor.tscn
+msgid "Mode"
+msgstr "モード"
+
+#: addons/MetroidvaniaSystem/Database/MapEditor.tscn
+msgid "Room Layout"
+msgstr "部屋のレイアウト"
+
+#: addons/MetroidvaniaSystem/Database/MapEditor.tscn
+msgid "Cell Color"
+msgstr "セルの色"
+
+#: addons/MetroidvaniaSystem/Database/MapEditor.tscn
+msgid "Cell Symbol"
+msgstr "セルのシンボル"
+
+#: addons/MetroidvaniaSystem/Database/MapEditor.tscn
+msgid "Cell Group"
+msgstr "セルのグループ"
+
+#: addons/MetroidvaniaSystem/Database/MapEditor.tscn
+msgid "Border Type"
+msgstr "ボーダーの種類"
+
+#: addons/MetroidvaniaSystem/Database/MapEditor.tscn
+msgid "Border Color"
+msgstr "ボーダーの色"
+
+#: addons/MetroidvaniaSystem/Database/MapEditor.tscn
+msgid "Scene Assign"
+msgstr "シーンのわりあて"
+
+#: addons/MetroidvaniaSystem/Database/MapEditor.tscn
+msgid "Scene File"
+msgstr "シーンファイル"
+
+#: addons/MetroidvaniaSystem/Database/MapEditor.tscn
+msgid "Create New Scene"
+msgstr "新しいシーンを作成する"
+
+#: addons/MetroidvaniaSystem/Database/MapEditor.tscn
+msgid "Scene Name"
+msgstr "シーンの名前"
+
+#: addons/MetroidvaniaSystem/Database/MapEditor.tscn
+msgid "Root Name"
+msgstr "ルートの名前"
+
+#: addons/MetroidvaniaSystem/Database/MapEditor.tscn
+msgid "Map"
+msgstr "マップ"
+
+#: addons/MetroidvaniaSystem/Database/MapEditor.tscn
+msgid "Custom Elements"
+msgstr "カスタム要素"
+
+#: addons/MetroidvaniaSystem/Database/MapEditor.tscn
+msgid "Group ID"
+msgstr "グループID"
+
+#: addons/MetroidvaniaSystem/Database/MapEditor.tscn
+msgid "If enabled, the room will have scene's UID assigned instead of path."
+msgstr "有効にすると、部屋にはパスではなくシーンのUIDが割り当てられます。"
+
+#: addons/MetroidvaniaSystem/Database/MapEditor.tscn
+msgid "Assign UID"
+msgstr "UIDのわりあて"
+
+#: addons/MetroidvaniaSystem/Database/MapEditor.tscn
+msgid "Click a room or drag and drop a file"
+msgstr "部屋をクリックするか、ファイルをドラッグアンドドロップします"
+
+#: addons/MetroidvaniaSystem/Database/MapEditor.tscn
+msgid "Data"
+msgstr "データ"
+
+#: addons/MetroidvaniaSystem/Database/MapEditor.tscn
+msgid "No Custom Elements Registered"
+msgstr "カスタム要素が登録されていません"
+
+#: addons/MetroidvaniaSystem/Database/MapEditor.tscn
+msgid "Ctrl+Click: Pick from map"
+msgstr "Ctrl+クリック: マップからスポイト取得"
+
+#: addons/MetroidvaniaSystem/Database/MapEditor.tscn
+msgid "Shift+Drag: Move rooms"
+msgstr "Shift+ドラッグ: 部屋をつかんで移動"
+
+#: addons/MetroidvaniaSystem/Database/MapEditor.tscn
+msgid "Shift+Click: Set for the whole room"
+msgstr "Shift+クリック: 部屋全体へ設定"
+
+#: addons/MetroidvaniaSystem/Database/MapViewer.tscn
+msgid "Preview Mapped"
+msgstr "プレビューマップ"
+
+#: addons/MetroidvaniaSystem/Database/MapViewer.tscn
+msgid "Collectible Settings"
+msgstr "収集可能設定"
+
+#: addons/MetroidvaniaSystem/Database/MapViewer.tscn
+msgid "Collectible Finder"
+msgstr "収集アイテムの検索"
+
+#: addons/MetroidvaniaSystem/Database/MapViewer.tscn
+msgid "Scan Maps"
+msgstr "マップをスキャン"
+
+#: addons/MetroidvaniaSystem/Database/MapViewer.tscn
+msgid "Display on Map"
+msgstr "マップ上に表示する"
+
+#: addons/MetroidvaniaSystem/Nodes/LayerSelector.tscn
+msgid "None"
+msgstr "なし"
+
+#: addons/MetroidvaniaSystem/Nodes/LayerSelector.tscn
+msgid "Unnamed"
+msgstr "名称未設定"
+
+#: addons/MetroidvaniaSystem/Nodes/LayerSelector.tscn
+msgid "Double-click to edit name."
+msgstr "ダブルクリックで名前の変更"
+
+#: addons/MetroidvaniaSystem/Nodes/CollectibleElement.tscn
+msgid "Node Name"
+msgstr "ノード名"
+
+#: addons/MetroidvaniaSystem/Nodes/CollectibleElement.tscn
+msgid "Icon"
+msgstr "アイコン"
+
+#: addons/MetroidvaniaSystem/MetSysPlugin.gd
+msgid ""
+"MetSys restart failed, the singleton still can't be loaded. Make sure the "
+"\"MetroidvaniaSystem.gd\" script has no errors.\n"
+"\n"
+"Common cause of errors are:\n"
+"- Using Godot version older than 4.4.\n"
+"- Name conflicts with one of the classes.\n"
+"\n"
+"The plugin will be now disabled. Fix the errors and try again."
+msgstr ""
+"MetSys の再起動に失敗しました。シングルトンはまだロードできませ"
+"ん。\"MetroidvaniaSystem.gd\" スクリプトにエラーがないことを確認してくださ"
+"い。\n"
+"\n"
+"エラーの一般的な原因は次のとおりです:\n"
+"- Godot バージョン 4.4 より古いバージョンを使用している。\n"
+"- クラスのいずれかと名前が競合している。\n"
+"\n"
+"プラグインは無効になります。エラーを修正して再試行してください。"
+
+#: addons/MetroidvaniaSystem/MetSysPlugin.gd
+msgid ""
+"MetSys map has been modified.\n"
+"Do you want to save?"
+msgstr ""
+"MetSys マップが変更されました。\n"
+"保存しますか?"
