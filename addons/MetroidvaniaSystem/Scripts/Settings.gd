@@ -6,7 +6,7 @@ extends Resource
 	set(t):
 		if t == theme:
 			return
-		
+
 		theme = t
 		theme_changed.emit()
 
@@ -17,6 +17,14 @@ extends Resource
 			map_root_folder = mrf
 		else:
 			map_root_folder = mrf + "/"
+
+## The root directory where room scenes are located. All scenes used for MetSys editor should be within this folder or its subfolders. The name should end with [code]/[/code].
+@export_dir var custom_module_folder: String = "res://":
+	set(cmf):
+		if cmf.ends_with("/"):
+			custom_module_folder = cmf
+		else:
+			custom_module_folder = cmf + "/"
 
 ## Size of the map drawn in the editor, in both directions. Cells beyond this value on any side will not be drawn. Adjust this to your needs, but keep in mind that big values will cause editor slowdowns.
 @export_range(50, 1000) var map_extents: int = 100
@@ -35,13 +43,13 @@ extends Resource
 	set(elements):
 		if elements == custom_element_script:
 			return
-		
+
 		custom_element_script = elements
 		if elements:
 			custom_elements = elements.new()
 		else:
 			custom_elements = null
-		
+
 		custom_elements_changed.emit()
 
 @export var collectible_list: Array[Dictionary]

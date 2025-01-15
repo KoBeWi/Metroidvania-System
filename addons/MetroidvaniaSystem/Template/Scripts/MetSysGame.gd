@@ -25,6 +25,13 @@ func add_module(module_name: String):
 	var module: MetSysModule = load(module_name).new(self)
 	modules.append(module)
 
+## Adds a custom module. [param module_name] refers to a file located in the Custom Module Folder in the settings. The script must extend [code]MetSysModule.gd[/code].
+func add_custom_module(module_name: String):
+	var cmf = MetSys.settings.custom_module_folder
+	module_name = cmf.path_join(module_name)
+	var module: MetSysModule = load(module_name).new(self)
+	modules.append(module)
+
 func _physics_tick():
 	if can_process():
 		MetSys.set_player_position(player.position)
@@ -34,19 +41,19 @@ func _physics_tick():
 func load_room(path: String):
 	if map_changing:
 		return
-	
+
 	map_changing = true
 	if not path.is_absolute_path():
 		path = MetSys.get_full_room_path(path)
-	
+
 	if map:
 		map.queue_free()
 		await map.tree_exited
 		map = null
-	
+
 	map = load(path).instantiate()
 	add_child(map)
-	
+
 	MetSys.current_layer = MetSys.get_current_room_instance().get_layer()
 	map_changing = false
 	room_loaded.emit()
@@ -54,10 +61,10 @@ func load_room(path: String):
 func get_save_data() -> Dictionary:
 	var data: Dictionary
 	data.merge(_get_save_data())
-	
+
 	for module in modules:
 		data.merge(module._get_save_data())
-	
+
 	return data
 
 ## Virtual method to be overriden in your game class. Called by SaveManager's store_game(). Use it to return the data you want to save. Data of added modules is stored automatically.
@@ -66,7 +73,7 @@ func _get_save_data() -> Dictionary:
 
 func set_save_data(data: Dictionary):
 	_set_save_data(data)
-	
+
 	for module in modules:
 		module._set_save_data(data)
 
