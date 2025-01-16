@@ -6,7 +6,7 @@ extends Resource
 	set(t):
 		if t == theme:
 			return
-
+		
 		theme = t
 		theme_changed.emit()
 
@@ -35,13 +35,13 @@ extends Resource
 	set(elements):
 		if elements == custom_element_script:
 			return
-
+		
 		custom_element_script = elements
 		if elements:
 			custom_elements = elements.new()
 		else:
 			custom_elements = null
-
+		
 		custom_elements_changed.emit()
 
 @export var collectible_list: Array[Dictionary]
