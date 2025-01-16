@@ -36,19 +36,19 @@ func _physics_tick():
 func load_room(path: String):
 	if map_changing:
 		return
-
+		
 	map_changing = true
 	if not path.is_absolute_path():
 		path = MetSys.get_full_room_path(path)
-
+		
 	if map:
 		map.queue_free()
 		await map.tree_exited
 		map = null
-
+		
 	map = load(path).instantiate()
 	add_child(map)
-
+		
 	MetSys.current_layer = MetSys.get_current_room_instance().get_layer()
 	map_changing = false
 	room_loaded.emit()
@@ -56,7 +56,7 @@ func load_room(path: String):
 func get_save_data() -> Dictionary:
 	var data: Dictionary
 	data.merge(_get_save_data())
-
+		
 	for module in modules:
 		data.merge(module._get_save_data())
 
