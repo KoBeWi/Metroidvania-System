@@ -59,7 +59,7 @@ func get_save_data() -> Dictionary:
 		
 	for module in modules:
 		data.merge(module._get_save_data())
-
+		
 	return data
 
 ## Virtual method to be overriden in your game class. Called by SaveManager's store_game(). Use it to return the data you want to save. Data of added modules is stored automatically.
@@ -68,7 +68,7 @@ func _get_save_data() -> Dictionary:
 
 func set_save_data(data: Dictionary):
 	_set_save_data(data)
-
+	
 	for module in modules:
 		module._set_save_data(data)
 
