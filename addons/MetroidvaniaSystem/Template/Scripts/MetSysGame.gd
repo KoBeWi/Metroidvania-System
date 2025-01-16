@@ -21,7 +21,9 @@ func set_player(p_player: Node2D):
 
 ## Adds a module. [param module_name] refers to a file located in [code]Template/Scripts/Modules[/code]. The script must extend [code]MetSysModule.gd[/code].
 func add_module(module_name: String):
-	module_name = "res://addons/MetroidvaniaSystem/Template/Scripts/Modules/".path_join(module_name)
+	# If a full path was passed in, use that. Otherwise assume it is a MetSys module.
+	if not module_name.is_absolute_path():
+		module_name = "res://addons/MetroidvaniaSystem/Template/Scripts/Modules/".path_join(module_name)
 	var module: MetSysModule = load(module_name).new(self)
 	modules.append(module)
 
