@@ -36,7 +36,7 @@ func _physics_tick():
 func load_room(path: String):
 	if map_changing:
 		return
-		
+	
 	map_changing = true
 	if not path.is_absolute_path():
 		path = MetSys.get_full_room_path(path)
