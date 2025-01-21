@@ -14,10 +14,10 @@ in_game_cell_size = Vector2(864, 480)
 discover_whole_rooms = false
 custom_element_script = ExtResource("1_v4ykp")
 collectible_list = Array[Dictionary]([{
-"element": "Collectible",
-"icon": "res://SampleProject/Sprites/Collectible.png"
+&"element": "Collectible",
+&"icon": "res://SampleProject/Sprites/Collectible.png"
 }, {
-"element": "MapItem",
-"icon": "res://SampleProject/Sprites/MapItem.png"
+&"element": "MapItem",
+&"icon": "res://SampleProject/Sprites/MapItem.png"
 }])
 assign_uid_to_rooms = false
