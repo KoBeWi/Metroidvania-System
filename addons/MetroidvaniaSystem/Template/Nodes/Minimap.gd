@@ -62,6 +62,7 @@ var _map_view: MapView
 var _player_location: Node2D
 var _center: Vector3i
 var _center_offset: Vector3i
+var _update_all_queued: bool
 
 func _ready() -> void:
 	if not Engine.is_editor_hint() and smooth_scroll and not MetSys.settings.theme.show_exact_player_location:
@@ -81,7 +82,7 @@ func _ready() -> void:
 		MetSys.settings.theme_changed.connect(update_configuration_warnings)
 		return
 	
-	MetSys.map_updated.connect(_map_view.update_all)
+	MetSys.map_updated.connect(_queue_update_all)
 	if track_position:
 		MetSys.cell_changed.connect(_on_cell_changed)
 		set_physics_process(smooth_scroll)
@@ -125,6 +126,17 @@ func _update_center():
 	_map_view.size = actual_size
 	_map_view._begin = center - actual_size / 2
 	_map_view.recreate_cache()
+
+func _queue_update_all():
+	if _update_all_queued:
+		return
+	_update_all_queued = true
+	
+	var update_all := func():
+		_map_view.update_all()
+		_update_all_queued = false
+	
+	update_all.call_deferred()
 
 func _get_minimum_size() -> Vector2:
 	return Vector2(area) * MetSys.CELL_SIZE

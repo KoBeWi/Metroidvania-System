@@ -241,7 +241,9 @@ class CellOverride extends CellData:
 		var cell_coords := custom_cell_coords
 		custom_cell_coords = Vector3i.MAX
 		
+		MetSys.set_block_signals(true)
 		MetSys.remove_cell_override(cell_coords)
+		MetSys.set_block_signals(false)
 		MetSys.map_data.erase_cell(cell_coords)
 		MetSys.map_data.cell_overrides.erase(cell_coords)
 		MetSys.map_data.custom_cells.erase(self)
@@ -251,6 +253,8 @@ class CellOverride extends CellData:
 		
 		if MetSys.save_data:
 			MetSys.save_data.discovered_cells.erase(cell_coords)
+		
+		MetSys.map_updated.emit()
 	
 	func _cleanup_assigned_scene() -> void:
 		if assigned_scene == "/":

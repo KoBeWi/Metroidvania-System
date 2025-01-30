@@ -303,7 +303,7 @@ func get_cell_override_from_group(group_id: int, auto_create := true) -> MapData
 ## Removes an override created with [method get_cell_override], reverting the cell to its original appearance, and emits [signal map_updated] signal. Does nothing if the override didn't exist.
 ## [br][br][b]Note:[/b] If the override was created with MapBuilder, use the [code]destroy()[/code] method instead.
 func remove_cell_override(coords: Vector3i):
-	var cell = map_data.get_cell_at(coords)
+	var cell := map_data.get_cell_at(coords)
 	assert(cell, "Can't remove override of non-existent cell")
 	if save_data.remove_cell_override(cell):
 		map_updated.emit()
