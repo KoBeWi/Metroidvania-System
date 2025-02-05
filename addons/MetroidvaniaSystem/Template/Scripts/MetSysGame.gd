@@ -19,13 +19,15 @@ func set_player(p_player: Node2D):
 	player = p_player
 	player.get_tree().physics_frame.connect(_physics_tick, CONNECT_DEFERRED)
 
-## Adds a module. [param module_name] refers to a file located in [code]Template/Scripts/Modules[/code]. The script must extend [code]MetSysModule.gd[/code].
-func add_module(module_name: String):
+## Adds a module. [param module_name] is either a file located in [code]Template/Scripts/Modules[/code] or a full path to the script. The script must extend [code]MetSysModule.gd[/code]. Returns a module object that can be customized if needed.
+func add_module(module_name: String) -> MetSysModule:
 	# If a full path was passed in, use that. Otherwise assume it is a MetSys module.
 	if not module_name.is_absolute_path():
 		module_name = "res://addons/MetroidvaniaSystem/Template/Scripts/Modules/".path_join(module_name)
+	
 	var module: MetSysModule = load(module_name).new(self)
 	modules.append(module)
+	return module
 
 func _physics_tick():
 	if can_process():
