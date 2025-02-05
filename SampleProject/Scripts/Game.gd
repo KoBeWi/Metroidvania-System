@@ -60,6 +60,8 @@ func _ready() -> void:
 	
 	# Add module for room transitions.
 	add_module("RoomTransitions.gd")
+	# You can enable alternate transition effect by using this module instead.
+	#add_module("ScrollingRoomTransitions.gd")
 	
 	# Reset position tracking (feature specific to this project).
 	await get_tree().physics_frame
