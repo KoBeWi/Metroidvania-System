@@ -766,6 +766,7 @@ var custom_elements: Dictionary
 
 func _editor_init() -> void:
 	room_only_cursor = false
+	overlay_mode = true
 	custom_elements = MetSys.map_data.custom_elements
 	MetSys.settings.custom_elements_changed.connect(reload_custom_elements)
 	
@@ -845,10 +846,11 @@ func _editor_input(event: InputEvent):
 				if coords in MetSys.map_data.custom_elements:
 					undo_handle_element_remove(coords, MetSys.map_data.custom_elements[coords])
 					MetSys.map_data.custom_elements.erase(coords)
-					editor.current_map_view.update_custom_element_at(coords)
+					editor.current_map_view._update_element_at(coords)
+					undo_end_with_redraw()
 
 func add_element(rect: Rect2i):
-	var element: CustomElement
+	var element := CustomElement.new()
 	element.name = current_element
 	element.size = rect.size
 	element.data = %CustomData.text
@@ -857,7 +859,7 @@ func add_element(rect: Rect2i):
 	MetSys.map_data.custom_elements[coords] = element
 	
 	undo_handle_element_add(coords, element)
-	editor.current_map_view.update_custom_element_at(coords)
+	editor.current_map_view._update_element_at(coords)
 "
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xiyo8"]

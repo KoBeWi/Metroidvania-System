@@ -193,8 +193,8 @@ func undo_handle_element_add(coords: Vector3i, element: MetroidvaniaSystem.MapDa
 	
 	editor.undo_redo.add_do_method(func(): MetSys.map_data.custom_elements[coords] = element)
 	editor.undo_redo.add_undo_method(func(): MetSys.map_data.custom_elements.erase(coords))
-	editor.undo_redo.add_do_method(func(): editor.current_map_view.update_custom_element_at(coords))
-	editor.undo_redo.add_undo_method(func(): editor.current_map_view.update_custom_element_at(coords))
+	editor.undo_redo.add_do_method(func(): editor.current_map_view._update_element_at(coords))
+	editor.undo_redo.add_undo_method(func(): editor.current_map_view._update_element_at(coords))
 	had_undo_change = true
 
 func undo_handle_element_remove(coords: Vector3i, element: MetroidvaniaSystem.MapData.CustomElement):
@@ -203,8 +203,8 @@ func undo_handle_element_remove(coords: Vector3i, element: MetroidvaniaSystem.Ma
 	
 	editor.undo_redo.add_do_method(func(): MetSys.map_data.custom_elements.erase(coords))
 	editor.undo_redo.add_undo_method(func(): MetSys.map_data.custom_elements[coords] = element)
-	editor.undo_redo.add_do_method(func(): editor.current_map_view.update_custom_element_at(coords))
-	editor.undo_redo.add_undo_method(func(): editor.current_map_view.update_custom_element_at(coords))
+	editor.undo_redo.add_do_method(func(): editor.current_map_view._update_element_at(coords))
+	editor.undo_redo.add_undo_method(func(): editor.current_map_view._update_element_at(coords))
 	had_undo_change = true
 
 func undo_handle_scene_add(room: Array[Vector3i], old_scene: String, undo_only := false):
