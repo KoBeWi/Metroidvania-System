@@ -51,6 +51,8 @@ func on_layer_changed(l: int):
 	
 	if preview_layer > -1 and current_layer != preview_layer:
 		preview_layer_changed(preview_layer)
+	
+	map_overlay.queue_redraw()
 
 func preview_layer_changed(value: float) -> void:
 	if preview_layer > -1:
