@@ -96,7 +96,7 @@ func _save_external_data() -> void:
 
 func _get_unsaved_status(for_scene: String) -> String:
 	if for_scene.is_empty() and main.tabs.get_child(0).is_unsaved():
-		return "MetSys map has been modified.\nDo you want to save?"
+		return tr("MetSys map has been modified.\nDo you want to save?")
 	return ""
 
 func get_singleton():# -> MetroidvaniaSystem:
