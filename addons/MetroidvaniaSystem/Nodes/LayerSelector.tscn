@@ -4,7 +4,10 @@
 script/source = "@tool
 extends HBoxContainer
 
+enum Mode {LAYERS, GROUPS}
+
 @export var allow_none: bool
+@export var mode := Mode.LAYERS
 
 @onready var prev_button: Button = %Prev
 @onready var next_button: Button = %Next
@@ -88,8 +91,9 @@ func open_popup() -> void:
 		name_popup.add_item(get_layer_format(-1))
 		name_popup.set_item_metadata(-1, -1)
 	
-	for i in MetSys.map_data.layer_names.size():
-		var lname := MetSys.map_data.layer_names[i]
+	var names := get_names()
+	for i in names.size():
+		var lname := names[i]
 		if not lname.is_empty():
 			name_popup.add_item(get_layer_format(i))
 			name_popup.set_item_metadata(-1, i)
@@ -100,25 +104,35 @@ func open_popup() -> void:
 	name_popup.popup(Rect2(name_edit.get_screen_position() + Vector2(0, name_edit.size.y), Vector2(layer_name.size.x, 1)))
 
 func get_layer_name(idx: int) -> String:
+	var names := get_names()
 	if idx < 0:
 		return tr(\"None\")
-	elif idx >= MetSys.map_data.layer_names.size() or MetSys.map_data.layer_names[idx].is_empty():
+	elif idx >= names.size() or names[idx].is_empty():
 		return tr(\"Unnamed\")
 	else:
-		return MetSys.map_data.layer_names[idx]
+		return names[idx]
 
 func get_layer_format(idx: int) -> String:
 	return \"%d: %s\" % [idx, get_layer_name(idx)]
 
 func set_layer_name(idx: int, text: String):
-	if idx >= MetSys.map_data.layer_names.size():
-		MetSys.map_data.layer_names.resize(idx + 1)
-	MetSys.map_data.layer_names[idx] = text
+	var names := get_names()
+	if idx >= names.size():
+		names.resize(idx + 1)
+	names[idx] = text
 	
 	for selector in get_tree().get_nodes_in_group(&\"layer_selectors\"):
 		if selector == self:
 			continue
 		selector.update_buttons()
+
+func get_names() -> PackedStringArray:
+	match mode:
+		Mode.LAYERS:
+			return MetSys.map_data.layer_names
+		Mode.GROUPS:
+			return MetSys.map_data.group_names
+	return PackedStringArray()
 "
 
 [node name="LayerSelector" type="HBoxContainer" groups=["layer_selectors"]]

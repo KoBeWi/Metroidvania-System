@@ -378,7 +378,7 @@ func _editor_draw(map_overlay: CanvasItem):
 	
 	for p in cell_groups.get(%CurrentGroup.value as int, []):
 		if p.z == editor.current_layer:
-		map_overlay.draw_rect(Rect2(Vector2(p.x, p.y) * MetSys.CELL_SIZE, MetSys.CELL_SIZE), theme_cache.group_color)
+			map_overlay.draw_rect(Rect2(Vector2(p.x, p.y) * MetSys.CELL_SIZE, MetSys.CELL_SIZE), theme_cache.group_color)
 
 func modify_coords(coords: Vector3i, mode: int) -> bool:
 	var current_group: int = %CurrentGroup.value
@@ -873,6 +873,8 @@ bg_color = Color(0, 0, 0, 0.501961)
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_right = 813.0
+offset_bottom = 448.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_i7yda")
@@ -1123,9 +1125,10 @@ layout_mode = 2
 text = "Group ID"
 horizontal_alignment = 1
 
-[node name="CurrentGroup" type="SpinBox" parent="Sidebar/ScrollContainer/VBoxContainer/EditControls/Groups"]
+[node name="CurrentGroup" parent="Sidebar/ScrollContainer/VBoxContainer/EditControls/Groups" instance=ExtResource("2_rinoa")]
 unique_name_in_owner = true
 layout_mode = 2
+mode = 1
 
 [node name="Colors" type="VBoxContainer" parent="Sidebar/ScrollContainer/VBoxContainer/EditControls"]
 unique_name_in_owner = true
@@ -1260,6 +1263,5 @@ vertical_alignment = 1
 [connection signal="pressed" from="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign/FileDialog/Button" to="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign" method="create_new_scene"]
 [connection signal="confirmed" from="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign/CreateDialog" to="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign" method="create_scene_confirm"]
 [connection signal="text_changed" from="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign/CreateDialog/VBoxContainer/GridContainer/HBoxContainer/SceneName" to="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign" method="validate_scene" unbinds=1]
-[connection signal="value_changed" from="Sidebar/ScrollContainer/VBoxContainer/EditControls/Groups/CurrentGroup" to="MapView" method="queue_redraw" unbinds=1]
 [connection signal="toggled" from="Sidebar/ScrollContainer/VBoxContainer/EditControls/SceneAssign/AssignUID" to="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign" method="_on_assign_uid_toggled"]
 [connection signal="draw" from="MapView/Grid" to="." method="_on_grid_draw"]

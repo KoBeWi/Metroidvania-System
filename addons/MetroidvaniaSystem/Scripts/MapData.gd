@@ -291,6 +291,7 @@ var custom_elements: Dictionary[Vector3i, CustomElement]
 var layer_names: PackedStringArray
 var cell_overrides: Dictionary[Vector3i, CellOverride]
 var scene_overrides: Dictionary[String, String]
+var group_names: PackedStringArray
 var group_cache: Dictionary[Vector3i, PackedInt32Array]
 
 var exporting_mode: bool
@@ -345,7 +346,7 @@ func load_data():
 			custom_elements[coords] = element
 		elif current_section == 0:
 			var group_data := line.split(":")
-			var group_id := group_data[0].to_int()
+			var group_id := group_data[0].get_slice(";", 0).to_int()
 			var rooms_in_group: Array
 			for j in range(1, group_data.size()):
 				var coords: Vector3i
@@ -355,6 +356,10 @@ func load_data():
 				rooms_in_group.append(coords)
 			
 			cell_groups[group_id] = rooms_in_group
+			if group_data[0].get_slice_count(";") > 1:
+				if group_names.size() < group_id + 1:
+					group_names.resize(group_id + 1)
+				group_names[group_id] = group_data[0].get_slice(";", 1)
 		
 		i += 1
 	
@@ -393,7 +398,11 @@ func save_data(backup := false):
 			continue
 		
 		var line: PackedStringArray
-		line.append(str(group))
+		if group < group_names.size() and not group_names[group].is_empty():
+			line.append(str(group, ";", group_names[group]))
+		else:
+			line.append(str(group))
+		
 		for coords in cell_groups[group]:
 			line.append("%s,%s,%s" % [coords.x, coords.y, coords.z])
 		
