@@ -81,6 +81,12 @@ func _enter_tree() -> void:
 	
 	map_data = MapData.new()
 	map_data.load_data()
+	
+	if Engine.is_editor_hint():
+		return
+	
+	if settings.cache_group_reverse_lookup:
+		map_data.cache_groups()
 
 func _update_theme():
 	CELL_SIZE = settings.theme.center_texture.get_size()
@@ -272,6 +278,18 @@ func get_object_coords(object: Object) -> Vector3i:
 		object.set_meta(&"object_coords", coords)
 		return coords
 	return Vector3i.MAX
+
+## Returns all cell groups assigned at the given coordinates. Make sure to enable [code]cache_group_reverse_lookup[/code] in MetSys settings if you want to call this method, otherwise it's very costly to use.
+func get_cell_groups(coords: Vector3i) -> PackedInt32Array:
+	if not map_data.group_cache.is_empty():
+		return map_data.group_cache.get(coords, PackedInt32Array())
+	
+	var groups: PackedInt32Array
+	for group in map_data.cell_groups:
+		if coords in map_data.cell_groups[group]:
+			groups.append(group)
+	
+	return groups
 
 ## Translates map coordinates to 2D pixel coordinates. Can be used for custom drawing on the map.
 ## [br][br][param relative] allows to specify precise position inside the cell, with [code](0.5, 0.5)[/code] being the cell's center. [param base_offset] is an additional offset in pixels.

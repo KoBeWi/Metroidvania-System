@@ -90,3 +90,7 @@ func reset_map_starting_coords():
 func init_room():
 	MetSys.get_current_room_instance().adjust_camera_limits($Player/Camera2D)
 	player.on_enter()
+	
+	# Initializes MetSys.get_current_coords(), so you can use it from the beginning.
+	if MetSys.last_player_position.x == Vector2i.MAX.x:
+		MetSys.set_player_position(player.position)

@@ -30,6 +30,9 @@ extends Resource
 ## If [code]true[/code], when the player visits a new room, all its cells will be discovered at once.
 @export var discover_whole_rooms := false
 
+## If [code]true[/code], MetSys will cache a reverse map of cell groups, which allows for fast checking of assigned groups for a cell. This can take a while to initialize and takes memory, especially with bigger maps. You can disable it if you don't plan to use [method MetroidvaniaSystem.get_cell_groups].
+@export var cache_group_reverse_lookup := true
+
 ## The script that determines the custom elements available in the Custom Elements map editor mode. It should inherit [code]CustomElementManager.gd[/code], refer to that class' documentation on how to use it.
 @export var custom_element_script: Script:
 	set(elements):

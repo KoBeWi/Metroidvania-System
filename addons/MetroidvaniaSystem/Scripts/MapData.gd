@@ -291,6 +291,7 @@ var custom_elements: Dictionary[Vector3i, CustomElement]
 var layer_names: PackedStringArray
 var cell_overrides: Dictionary[Vector3i, CellOverride]
 var scene_overrides: Dictionary[String, String]
+var group_cache: Dictionary[Vector3i, PackedInt32Array]
 
 var exporting_mode: bool
 signal saved
@@ -418,6 +419,14 @@ func save_data(backup := false):
 	
 	file.close()
 	saved.emit()
+
+func cache_groups():
+	for group in cell_groups:
+		for cell in cell_groups[group]:
+			if not cell in group_cache:
+				group_cache[cell] = PackedInt32Array()
+			
+			group_cache[cell].append(group)
 
 func get_cell_at(coords: Vector3i) -> CellData:
 	return cells.get(coords)
