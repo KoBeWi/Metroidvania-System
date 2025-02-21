@@ -32,7 +32,7 @@ var _force_mapped: bool
 
 func _init(parent_item: RID) -> void:
 	_this = self # hack
-	#unreference() # hack
+	unreference() # hack
 	
 	_parent_item = parent_item
 	_theme = MetSys.settings.theme
