@@ -115,6 +115,35 @@ func get_layer_by_name(layer: String) -> int:
 		push_error("Layer \"%s\" does not exist." % layer)
 	return index
 
+## Returns name of a layer at the given index. Returns empty [String] if the layer with the given index is unnamed.
+func get_layer_name(idx: int) -> String:
+	if idx < 0:
+		push_error("Layer index can't be negative.")
+		return ""
+	
+	if idx >= map_data.layer_names.size():
+		return ""
+	
+	return map_data.layer_names[idx]
+
+## Returns index of a cell group with the given name. Returns [code]-1[/code] and error if group name does not exist.
+func get_group_by_name(group: String) -> int:
+	var index := map_data.group_names.find(group)
+	if index == -1:
+		push_error("Group \"%s\" does not exist." % group)
+	return index
+
+## Returns name of a cell group at the given index. Returns empty [String] if the group with the given index is unnamed.
+func get_group_name(idx: int) -> String:
+	if idx < 0:
+		push_error("Group index can't be negative.")
+		return ""
+	
+	if idx >= map_data.group_names.size():
+		return ""
+	
+	return map_data.group_names[idx]
+
 ## Returns a [Dictionary] containing the MetSys' runtime data, like discovered cells or stored objects. You need to serialize it yourself, e.g. using [method FileAccess.store_var].
 func get_save_data() -> Dictionary:
 	return save_data.get_data()
