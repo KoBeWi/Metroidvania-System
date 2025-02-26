@@ -107,3 +107,7 @@ func check_theme():
 	var changed := theme.check_for_changes(prev_theme_state)
 	if not changed.is_empty():
 		get_singleton().theme_modified.emit(changed)
+
+func POT_hack():
+	tr("Error!")
+	tr("MetSys restart failed, the singleton still can't be loaded. Make sure the \"MetroidvaniaSystem.gd\" script has no errors.\n\nCommon cause of errors are:\n- Using Godot version older than 4.4.\n- Name conflicts with one of the classes.\n\nThe plugin will be now disabled. Fix the errors and try again.")
