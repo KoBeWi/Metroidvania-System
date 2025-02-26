@@ -85,6 +85,10 @@ https://github.com/KoBeWi/Metroidvania-System/assets/2223172/4d8f3099-93be-4a90-
 - Template scripts and scenes for common functionality, including scene transitions, connection automapping, save management and minimaps.
 - Support for "modern" maps that display detailed room overview and feature per-pixel room discovery.
 
+## Community
+
+MetSys uses GitHub discussions as a forum for general discussions: https://github.com/KoBeWi/Metroidvania-System/discussions
+
 ## Closing words
 
 MetSys is the most complex system I have designed and written. It's a result of my years of experience in making and playing different metroidvania games. Hopefully it helps someone make a great metroidvania and I'll be able to play it in the future ;)
