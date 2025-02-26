@@ -65,6 +65,9 @@ func reload_map():
 	%Manage.force_reload()
 	%\"Map Editor\".refresh()
 	%\"Map Viewer\".refresh()
+
+func POT_hack():
+	tr(\"Save Copy and Reload\")
 "
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0ndnc"]

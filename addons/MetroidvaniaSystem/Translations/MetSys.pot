@@ -18,6 +18,38 @@ msgstr ""
 "Content-Transfer-Encoding: 8-bit\n"
 
 #: addons/MetroidvaniaSystem/Database/Manage.tscn
+msgid "General Settings"
+msgstr ""
+
+#: addons/MetroidvaniaSystem/Database/Manage.tscn
+msgid "Refresh Custom Elements"
+msgstr ""
+
+#: addons/MetroidvaniaSystem/Database/Manage.tscn
+msgid "Reload and Cleanup Map Data"
+msgstr ""
+
+#: addons/MetroidvaniaSystem/Database/Manage.tscn
+msgid "Validate Map Data"
+msgstr ""
+
+#: addons/MetroidvaniaSystem/Database/Manage.tscn
+msgid "Validate Map Theme"
+msgstr ""
+
+#: addons/MetroidvaniaSystem/Database/Manage.tscn
+msgid "Export Map Data as JSON"
+msgstr ""
+
+#: addons/MetroidvaniaSystem/Database/Manage.tscn
+msgid "Edit Database Theme"
+msgstr ""
+
+#: addons/MetroidvaniaSystem/Database/Manage.tscn
+msgid "Reset Database Theme"
+msgstr ""
+
+#: addons/MetroidvaniaSystem/Database/Manage.tscn
 msgid "No assigned map at: %s"
 msgstr ""
 
@@ -186,38 +218,6 @@ msgid "%s is bigger than half of the center texture. It may cause overlaps."
 msgstr ""
 
 #: addons/MetroidvaniaSystem/Database/Manage.tscn
-msgid "General Settings"
-msgstr ""
-
-#: addons/MetroidvaniaSystem/Database/Manage.tscn
-msgid "Refresh Custom Elements"
-msgstr ""
-
-#: addons/MetroidvaniaSystem/Database/Manage.tscn
-msgid "Reload and Cleanup Map Data"
-msgstr ""
-
-#: addons/MetroidvaniaSystem/Database/Manage.tscn
-msgid "Validate Map Data"
-msgstr ""
-
-#: addons/MetroidvaniaSystem/Database/Manage.tscn
-msgid "Validate Map Theme"
-msgstr ""
-
-#: addons/MetroidvaniaSystem/Database/Manage.tscn
-msgid "Export Map Data as JSON"
-msgstr ""
-
-#: addons/MetroidvaniaSystem/Database/Manage.tscn
-msgid "Edit Database Theme"
-msgstr ""
-
-#: addons/MetroidvaniaSystem/Database/Manage.tscn
-msgid "Reset Database Theme"
-msgstr ""
-
-#: addons/MetroidvaniaSystem/Database/Manage.tscn
 msgid "Validation Result"
 msgstr ""
 
@@ -241,6 +241,10 @@ msgstr ""
 
 #: addons/MetroidvaniaSystem/Database/Main.tscn
 msgid "Save local map data into a backup file called \"MapData(Copy).txt\", then reloads map data. You can use the backup file to manually merge changes."
+msgstr ""
+
+#: addons/MetroidvaniaSystem/Database/Main.tscn
+msgid "Save Copy and Reload"
 msgstr ""
 
 #: addons/MetroidvaniaSystem/Database/Main.tscn
@@ -427,6 +431,16 @@ msgstr ""
 
 #: addons/MetroidvaniaSystem/MetSysPlugin.gd
 msgid ""
+"MetSys map has been modified.\n"
+"Do you want to save?"
+msgstr ""
+
+#: addons/MetroidvaniaSystem/MetSysPlugin.gd
+msgid "Error!"
+msgstr ""
+
+#: addons/MetroidvaniaSystem/MetSysPlugin.gd
+msgid ""
 "MetSys restart failed, the singleton still can't be loaded. Make sure the \"MetroidvaniaSystem.gd\" script has no errors.\n"
 "\n"
 "Common cause of errors are:\n"
@@ -434,10 +448,4 @@ msgid ""
 "- Name conflicts with one of the classes.\n"
 "\n"
 "The plugin will be now disabled. Fix the errors and try again."
-msgstr ""
-
-#: addons/MetroidvaniaSystem/MetSysPlugin.gd
-msgid ""
-"MetSys map has been modified.\n"
-"Do you want to save?"
 msgstr ""

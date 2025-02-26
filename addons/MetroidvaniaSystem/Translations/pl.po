@@ -18,6 +18,38 @@ msgstr ""
 "X-Generator: Poedit 3.5\n"
 
 #: addons/MetroidvaniaSystem/Database/Manage.tscn
+msgid "General Settings"
+msgstr "Ustawienia ogólne"
+
+#: addons/MetroidvaniaSystem/Database/Manage.tscn
+msgid "Refresh Custom Elements"
+msgstr "Odśwież Własne Elementy"
+
+#: addons/MetroidvaniaSystem/Database/Manage.tscn
+msgid "Reload and Cleanup Map Data"
+msgstr "Przeładuj i oczyść dane mapy"
+
+#: addons/MetroidvaniaSystem/Database/Manage.tscn
+msgid "Validate Map Data"
+msgstr "Waliduj dane mapy"
+
+#: addons/MetroidvaniaSystem/Database/Manage.tscn
+msgid "Validate Map Theme"
+msgstr "Waliduj motyw mapy"
+
+#: addons/MetroidvaniaSystem/Database/Manage.tscn
+msgid "Export Map Data as JSON"
+msgstr "Wyeksportuj dane mapy jako JSON"
+
+#: addons/MetroidvaniaSystem/Database/Manage.tscn
+msgid "Edit Database Theme"
+msgstr "Edytuj motyw bazy danych"
+
+#: addons/MetroidvaniaSystem/Database/Manage.tscn
+msgid "Reset Database Theme"
+msgstr "Resetuj motyw bazy danych"
+
+#: addons/MetroidvaniaSystem/Database/Manage.tscn
 msgid "No assigned map at: %s"
 msgstr "Brak przypisanej mapy w: %s"
 
@@ -211,38 +243,6 @@ msgstr ""
 "nachodzenie."
 
 #: addons/MetroidvaniaSystem/Database/Manage.tscn
-msgid "General Settings"
-msgstr "Ustawienia ogólne"
-
-#: addons/MetroidvaniaSystem/Database/Manage.tscn
-msgid "Refresh Custom Elements"
-msgstr "Odśwież Własne Elementy"
-
-#: addons/MetroidvaniaSystem/Database/Manage.tscn
-msgid "Reload and Cleanup Map Data"
-msgstr "Przeładuj i oczyść dane mapy"
-
-#: addons/MetroidvaniaSystem/Database/Manage.tscn
-msgid "Validate Map Data"
-msgstr "Waliduj dane mapy"
-
-#: addons/MetroidvaniaSystem/Database/Manage.tscn
-msgid "Validate Map Theme"
-msgstr "Waliduj motyw mapy"
-
-#: addons/MetroidvaniaSystem/Database/Manage.tscn
-msgid "Export Map Data as JSON"
-msgstr "Wyeksportuj dane mapy jako JSON"
-
-#: addons/MetroidvaniaSystem/Database/Manage.tscn
-msgid "Edit Database Theme"
-msgstr "Edytuj motyw bazy danych"
-
-#: addons/MetroidvaniaSystem/Database/Manage.tscn
-msgid "Reset Database Theme"
-msgstr "Resetuj motyw bazy danych"
-
-#: addons/MetroidvaniaSystem/Database/Manage.tscn
 msgid "Validation Result"
 msgstr "Wyniki walidacji"
 
@@ -279,6 +279,10 @@ msgstr ""
 "Zapisuje lokalne dane mapy do pliku zapasowego nazwanego \"MapData(Copy)."
 "txt\", po czym przeładowuje dane mapy. Możesz użyć pliku zapasowego do "
 "ręcznego połączenia zmian."
+
+#: addons/MetroidvaniaSystem/Database/Main.tscn
+msgid "Save Copy and Reload"
+msgstr "Zapisz kopię i przeładuj"
 
 #: addons/MetroidvaniaSystem/Database/Main.tscn
 msgid "Metroidvania System Database"
@@ -467,6 +471,18 @@ msgstr "Ikona"
 
 #: addons/MetroidvaniaSystem/MetSysPlugin.gd
 msgid ""
+"MetSys map has been modified.\n"
+"Do you want to save?"
+msgstr ""
+"Mapa MetSys została zmodyfikowana.\n"
+"Czy chcesz zapisać zmiany?"
+
+#: addons/MetroidvaniaSystem/MetSysPlugin.gd
+msgid "Error!"
+msgstr "Błąd!"
+
+#: addons/MetroidvaniaSystem/MetSysPlugin.gd
+msgid ""
 "MetSys restart failed, the singleton still can't be loaded. Make sure the "
 "\"MetroidvaniaSystem.gd\" script has no errors.\n"
 "\n"
@@ -484,11 +500,3 @@ msgstr ""
 "- Konflikt nazwy z jedną z klas.\n"
 "\n"
 "Wtyczka zostanie teraz wyłączona. Napraw błędy i spróbuj ponownie."
-
-#: addons/MetroidvaniaSystem/MetSysPlugin.gd
-msgid ""
-"MetSys map has been modified.\n"
-"Do you want to save?"
-msgstr ""
-"Mapa MetSys została zmodyfikowana.\n"
-"Czy chcesz zapisać zmiany?"
