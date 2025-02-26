@@ -4,7 +4,7 @@ Metroidvania System (abbrevated as MetSys) is a general-purpose toolkit for crea
 
 This plugin evolved from various tools I made for my metroidvania game, [Voice of Flowers](https://store.steampowered.com/app/2609560?utm_source=GitHub&utm_medium=README_TOP&utm_campaign=MetSys). They were quite useful, so I decided to make them into a separate project that can be used in other games too. The project evolved well beyond the tools I used originally.
 
-Supports Godot **4.2** or newer.
+Supports Godot **4.4** or newer. For older versions, use the [1.4 stable](https://github.com/KoBeWi/Metroidvania-System/tree/7fc1b4738039bf09d128aef9ec1e888b3d22ab90).
 
 ## Instructions
 
@@ -27,12 +27,14 @@ https://github.com/KoBeWi/Metroidvania-System/assets/2223172/4d8f3099-93be-4a90-
 - Map cells may have different colors and symbols.
 - Cell borders are also colored independently and may have different textures.
 - You can assign groups to cells, for easier runtime operations on multiple cells (like mapping or recoloring).
+- The groups can also be named and easily looked up, so you can use them to denote locations.
 - Cells are automatically grouped into rooms and can have assigned scenes.
 - You can create a scene from within the editor, with support for custom scene template.
 - The rooms support drag and drop to move them around.
 - You can define custom elements that draw arbitrary things on map (like elevators or location names).
 - Full undo/redo support.
 - The editor can detect external map changes (e.g. from git) and automatically update it.
+- The editor is translated to multiple languages.
 
 #### Map Viewer
 
