@@ -47,14 +47,22 @@ extends Resource
 		
 		custom_elements_changed.emit()
 
-@export var collectible_list: Array[Dictionary]
-@export var assign_uid_to_rooms: bool
+@export_storage var _collectible_list: Array[Dictionary]
+@export_storage var _assign_uid_to_rooms: bool
 
 var custom_elements: MetroidvaniaSystem.CustomElementManager
 
 signal theme_changed
 signal custom_elements_changed
 
-func _validate_property(property: Dictionary) -> void:
-	if property.name == "collectible_list" or property.name == "assign_uid_to_rooms":
-		property.usage &= ~PROPERTY_USAGE_EDITOR
+# Compatibility
+
+func _set(property: StringName, value: Variant) -> bool:
+	if property == &"collectible_list":
+		_collectible_list = value
+		return true
+	elif property == &"assign_uid_to_rooms":
+		_assign_uid_to_rooms = value
+		return true
+	
+	return false

@@ -533,7 +533,7 @@ func _editor_init() -> void:
 	use_cursor = false
 	overlay_mode = true
 	create_dialog.register_text_enter(scene_name)
-	assign_uid.set_pressed_no_signal(MetSys.settings.assign_uid_to_rooms)
+	assign_uid.set_pressed_no_signal(MetSys.settings._assign_uid_to_rooms)
 
 func _update_theme():
 	theme_cache.assigned_scene = get_theme_color(&\"assigned_scene\", &\"MetSys\")
@@ -735,7 +735,7 @@ func drop_data(at_position: Vector2, data) -> void:
 	on_map_selected(data[\"files\"][0])
 
 func _on_assign_uid_toggled(toggled_on: bool) -> void:
-	MetSys.settings.assign_uid_to_rooms = toggled_on
+	MetSys.settings._assign_uid_to_rooms = toggled_on
 "
 
 [sub_resource type="GDScript" id="GDScript_5yej3"]

@@ -24,7 +24,7 @@ func _ready() -> void:
 	_pressed()
 	
 	await get_tree().process_frame
-	for data in MetSys.settings.collectible_list:
+	for data in MetSys.settings._collectible_list:
 		var collectible := add_collectible()
 		collectible.set_data(data)
 
@@ -48,7 +48,7 @@ func save_collectible_list():
 	for collectible in %CollectibleList.get_children():
 		if not collectible.is_queued_for_deletion():
 			list.append(collectible.get_data())
-	MetSys.settings.collectible_list = list
+	MetSys.settings._collectible_list = list
 	ResourceSaver.save(MetSys.settings)
 "
 
