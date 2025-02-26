@@ -13,6 +13,7 @@ func _init(p_game: MetSysGame) -> void:
 	game = p_game
 	_initialize()
 
+## Called when the module is created.
 func _initialize():
 	pass
 
