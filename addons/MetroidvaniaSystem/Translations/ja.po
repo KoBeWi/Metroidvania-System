@@ -24,6 +24,38 @@ msgstr ""
 "X-Generator: Poedit 3.0.1\n"
 
 #: addons/MetroidvaniaSystem/Database/Manage.tscn
+msgid "General Settings"
+msgstr "基本設定"
+
+#: addons/MetroidvaniaSystem/Database/Manage.tscn
+msgid "Refresh Custom Elements"
+msgstr "カスタム要素をリフレッシュする"
+
+#: addons/MetroidvaniaSystem/Database/Manage.tscn
+msgid "Reload and Cleanup Map Data"
+msgstr "マップデータの再読み込みとクリーンアップする"
+
+#: addons/MetroidvaniaSystem/Database/Manage.tscn
+msgid "Validate Map Data"
+msgstr "マップデータを検証する（バリデーション）"
+
+#: addons/MetroidvaniaSystem/Database/Manage.tscn
+msgid "Validate Map Theme"
+msgstr "マップテーマを検証する（バリデーション）"
+
+#: addons/MetroidvaniaSystem/Database/Manage.tscn
+msgid "Export Map Data as JSON"
+msgstr "マップデータをJSONで出力する"
+
+#: addons/MetroidvaniaSystem/Database/Manage.tscn
+msgid "Edit Database Theme"
+msgstr "データベースのテーマを編集する"
+
+#: addons/MetroidvaniaSystem/Database/Manage.tscn
+msgid "Reset Database Theme"
+msgstr "データベースのテーマをリセットする"
+
+#: addons/MetroidvaniaSystem/Database/Manage.tscn
 msgid "No assigned map at: %s"
 msgstr "マップがわりあてられていません。%s"
 
@@ -217,38 +249,6 @@ msgstr ""
 "%s は中央のテクスチャより大きくなっています。他と重なる可能性があります。"
 
 #: addons/MetroidvaniaSystem/Database/Manage.tscn
-msgid "General Settings"
-msgstr "基本設定"
-
-#: addons/MetroidvaniaSystem/Database/Manage.tscn
-msgid "Refresh Custom Elements"
-msgstr "カスタム要素をリフレッシュする"
-
-#: addons/MetroidvaniaSystem/Database/Manage.tscn
-msgid "Reload and Cleanup Map Data"
-msgstr "マップデータの再読み込みとクリーンアップする"
-
-#: addons/MetroidvaniaSystem/Database/Manage.tscn
-msgid "Validate Map Data"
-msgstr "マップデータを検証する（バリデーション）"
-
-#: addons/MetroidvaniaSystem/Database/Manage.tscn
-msgid "Validate Map Theme"
-msgstr "マップテーマを検証する（バリデーション）"
-
-#: addons/MetroidvaniaSystem/Database/Manage.tscn
-msgid "Export Map Data as JSON"
-msgstr "マップデータをJSONで出力する"
-
-#: addons/MetroidvaniaSystem/Database/Manage.tscn
-msgid "Edit Database Theme"
-msgstr "データベースのテーマを編集する"
-
-#: addons/MetroidvaniaSystem/Database/Manage.tscn
-msgid "Reset Database Theme"
-msgstr "データベースのテーマをリセットする"
-
-#: addons/MetroidvaniaSystem/Database/Manage.tscn
 msgid "Validation Result"
 msgstr "検証結果（バリデーション）"
 
@@ -288,8 +288,12 @@ msgstr ""
 "マージすることもできます。"
 
 #: addons/MetroidvaniaSystem/Database/Main.tscn
-msgid "Metroidvania System Database"
-msgstr "Metroidvania System データベース"
+msgid "Save Copy and Reload"
+msgstr ""
+
+#: addons/MetroidvaniaSystem/Database/Main.tscn
+msgid "Metroidvania System Database v.%s"
+msgstr "Metroidvania System データベース v.%s"
 
 #: addons/MetroidvaniaSystem/Database/Main.tscn
 msgid "Map Editor"
@@ -474,6 +478,18 @@ msgstr "アイコン"
 
 #: addons/MetroidvaniaSystem/MetSysPlugin.gd
 msgid ""
+"MetSys map has been modified.\n"
+"Do you want to save?"
+msgstr ""
+"MetSys マップが変更されました。\n"
+"保存しますか?"
+
+#: addons/MetroidvaniaSystem/MetSysPlugin.gd
+msgid "Error!"
+msgstr ""
+
+#: addons/MetroidvaniaSystem/MetSysPlugin.gd
+msgid ""
 "MetSys restart failed, the singleton still can't be loaded. Make sure the "
 "\"MetroidvaniaSystem.gd\" script has no errors.\n"
 "\n"
@@ -492,11 +508,3 @@ msgstr ""
 "- クラスのいずれかと名前が競合している。\n"
 "\n"
 "プラグインは無効になります。エラーを修正して再試行してください。"
-
-#: addons/MetroidvaniaSystem/MetSysPlugin.gd
-msgid ""
-"MetSys map has been modified.\n"
-"Do you want to save?"
-msgstr ""
-"MetSys マップが変更されました。\n"
-"保存しますか?"

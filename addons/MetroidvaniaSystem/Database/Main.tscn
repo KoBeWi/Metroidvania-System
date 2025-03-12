@@ -13,12 +13,18 @@ extends VBoxContainer
 @onready var tabs = $TabContainer
 
 var plugin: EditorPlugin
+var plugin_version: String
 
 var modtime: int
 var md5: String
 
+func _init() -> void:
+	var cfg := ConfigFile.new()
+	cfg.load(\"res://addons/MetroidvaniaSystem/plugin.cfg\")
+	plugin_version = cfg.get_value(\"plugin\", \"version\", \"??\")
+
 func _ready() -> void:
-	if not is_inside_tree() or get_tree().edited_scene_root == self:
+	if is_part_of_edited_scene():
 		return
 	
 	changes_detected.get_ok_button().tooltip_text = \"Discards local map data and loads the external one instead.\\nIf you made any local changes to the map, they will be lost.\"
@@ -34,7 +40,7 @@ func _ready() -> void:
 	MetSys.map_data.saved.connect(update_md_info, CONNECT_DEFERRED)
 
 func _notification(what: int) -> void:
-	if not is_inside_tree() or get_tree().edited_scene_root == self:
+	if is_part_of_edited_scene():
 		return
 	
 	if what == NOTIFICATION_WM_WINDOW_FOCUS_IN:
@@ -45,6 +51,8 @@ func _notification(what: int) -> void:
 			if new_md5 != md5:
 				md5 = new_md5
 				changes_detected.popup_centered()
+	elif what == NOTIFICATION_TRANSLATION_CHANGED:
+		$Label.text = tr($Label.text) % plugin_version
 
 func _on_changes_detected_confirmed() -> void:
 	reload_map()
@@ -89,7 +97,7 @@ script = SubResource("GDScript_ov8k3")
 [node name="Label" type="Label" parent="."]
 layout_mode = 2
 theme_type_variation = &"HeaderSmall"
-text = "Metroidvania System Database"
+text = "Metroidvania System Database v.%s"
 horizontal_alignment = 1
 
 [node name="TabContainer" type="TabContainer" parent="."]

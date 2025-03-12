@@ -24,6 +24,38 @@ msgstr ""
 "X-Generator: Poedit 3.4.4\n"
 
 #: addons/MetroidvaniaSystem/Database/Manage.tscn
+msgid "General Settings"
+msgstr "Allmänna inställningar"
+
+#: addons/MetroidvaniaSystem/Database/Manage.tscn
+msgid "Refresh Custom Elements"
+msgstr "Uppdatera anpassade element"
+
+#: addons/MetroidvaniaSystem/Database/Manage.tscn
+msgid "Reload and Cleanup Map Data"
+msgstr "Ladda om och rensa kartdata"
+
+#: addons/MetroidvaniaSystem/Database/Manage.tscn
+msgid "Validate Map Data"
+msgstr "Validera kartdata"
+
+#: addons/MetroidvaniaSystem/Database/Manage.tscn
+msgid "Validate Map Theme"
+msgstr "Validera karttema"
+
+#: addons/MetroidvaniaSystem/Database/Manage.tscn
+msgid "Export Map Data as JSON"
+msgstr "Exportera kartdata som JSON"
+
+#: addons/MetroidvaniaSystem/Database/Manage.tscn
+msgid "Edit Database Theme"
+msgstr "Ändra databastema"
+
+#: addons/MetroidvaniaSystem/Database/Manage.tscn
+msgid "Reset Database Theme"
+msgstr "Återställ databastema"
+
+#: addons/MetroidvaniaSystem/Database/Manage.tscn
 msgid "No assigned map at: %s"
 msgstr "Ingen karta tilldelad vid: %s"
 
@@ -211,38 +243,6 @@ msgstr ""
 "%s är större än hälften av mittresursen. Det kan orsaka överlappningar."
 
 #: addons/MetroidvaniaSystem/Database/Manage.tscn
-msgid "General Settings"
-msgstr "Allmänna inställningar"
-
-#: addons/MetroidvaniaSystem/Database/Manage.tscn
-msgid "Refresh Custom Elements"
-msgstr "Uppdatera anpassade element"
-
-#: addons/MetroidvaniaSystem/Database/Manage.tscn
-msgid "Reload and Cleanup Map Data"
-msgstr "Ladda om och rensa kartdata"
-
-#: addons/MetroidvaniaSystem/Database/Manage.tscn
-msgid "Validate Map Data"
-msgstr "Validera kartdata"
-
-#: addons/MetroidvaniaSystem/Database/Manage.tscn
-msgid "Validate Map Theme"
-msgstr "Validera karttema"
-
-#: addons/MetroidvaniaSystem/Database/Manage.tscn
-msgid "Export Map Data as JSON"
-msgstr "Exportera kartdata som JSON"
-
-#: addons/MetroidvaniaSystem/Database/Manage.tscn
-msgid "Edit Database Theme"
-msgstr "Ändra databastema"
-
-#: addons/MetroidvaniaSystem/Database/Manage.tscn
-msgid "Reset Database Theme"
-msgstr "Återställ databastema"
-
-#: addons/MetroidvaniaSystem/Database/Manage.tscn
 msgid "Validation Result"
 msgstr "Valideringsresultat"
 
@@ -282,8 +282,12 @@ msgstr ""
 "slå samman ändringar."
 
 #: addons/MetroidvaniaSystem/Database/Main.tscn
-msgid "Metroidvania System Database"
-msgstr "Metroidvania systemdatabas"
+msgid "Save Copy and Reload"
+msgstr ""
+
+#: addons/MetroidvaniaSystem/Database/Main.tscn
+msgid "Metroidvania System Database v.%s"
+msgstr "Metroidvania systemdatabas v.%s"
 
 #: addons/MetroidvaniaSystem/Database/Main.tscn
 msgid "Map Editor"
@@ -469,6 +473,18 @@ msgstr "Ikon"
 
 #: addons/MetroidvaniaSystem/MetSysPlugin.gd
 msgid ""
+"MetSys map has been modified.\n"
+"Do you want to save?"
+msgstr ""
+"MetSys-karta har modifierats.\n"
+"Vill du spara?"
+
+#: addons/MetroidvaniaSystem/MetSysPlugin.gd
+msgid "Error!"
+msgstr ""
+
+#: addons/MetroidvaniaSystem/MetSysPlugin.gd
+msgid ""
 "MetSys restart failed, the singleton still can't be loaded. Make sure the "
 "\"MetroidvaniaSystem.gd\" script has no errors.\n"
 "\n"
@@ -486,11 +502,3 @@ msgstr ""
 "- Namnkonflikt med en av klasserna.\n"
 "\n"
 "Plugin-programmet kommer nu att inaktiveras. Åtgärda felen och försök igen."
-
-#: addons/MetroidvaniaSystem/MetSysPlugin.gd
-msgid ""
-"MetSys map has been modified.\n"
-"Do you want to save?"
-msgstr ""
-"MetSys-karta har modifierats.\n"
-"Vill du spara?"

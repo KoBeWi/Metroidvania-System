@@ -24,6 +24,38 @@ msgstr ""
 "X-Generator: Poedit 3.4.4\n"
 
 #: addons/MetroidvaniaSystem/Database/Manage.tscn
+msgid "General Settings"
+msgstr "Общие настройки"
+
+#: addons/MetroidvaniaSystem/Database/Manage.tscn
+msgid "Refresh Custom Elements"
+msgstr "Обновить кастомные элементы"
+
+#: addons/MetroidvaniaSystem/Database/Manage.tscn
+msgid "Reload and Cleanup Map Data"
+msgstr "Перезагрузить и очистить данные карты"
+
+#: addons/MetroidvaniaSystem/Database/Manage.tscn
+msgid "Validate Map Data"
+msgstr "Проверить данные карты"
+
+#: addons/MetroidvaniaSystem/Database/Manage.tscn
+msgid "Validate Map Theme"
+msgstr "Проверить тему карты"
+
+#: addons/MetroidvaniaSystem/Database/Manage.tscn
+msgid "Export Map Data as JSON"
+msgstr "Экспортировать данные карты в JSON"
+
+#: addons/MetroidvaniaSystem/Database/Manage.tscn
+msgid "Edit Database Theme"
+msgstr "Редактировать тему базы данных"
+
+#: addons/MetroidvaniaSystem/Database/Manage.tscn
+msgid "Reset Database Theme"
+msgstr "Сбросить тему базы данных"
+
+#: addons/MetroidvaniaSystem/Database/Manage.tscn
 msgid "No assigned map at: %s"
 msgstr "Нет назначенной карты в: %s"
 
@@ -215,38 +247,6 @@ msgstr ""
 "%s больше, чем половина текстуры центра. Это может привести к наложениям."
 
 #: addons/MetroidvaniaSystem/Database/Manage.tscn
-msgid "General Settings"
-msgstr "Общие настройки"
-
-#: addons/MetroidvaniaSystem/Database/Manage.tscn
-msgid "Refresh Custom Elements"
-msgstr "Обновить кастомные элементы"
-
-#: addons/MetroidvaniaSystem/Database/Manage.tscn
-msgid "Reload and Cleanup Map Data"
-msgstr "Перезагрузить и очистить данные карты"
-
-#: addons/MetroidvaniaSystem/Database/Manage.tscn
-msgid "Validate Map Data"
-msgstr "Проверить данные карты"
-
-#: addons/MetroidvaniaSystem/Database/Manage.tscn
-msgid "Validate Map Theme"
-msgstr "Проверить тему карты"
-
-#: addons/MetroidvaniaSystem/Database/Manage.tscn
-msgid "Export Map Data as JSON"
-msgstr "Экспортировать данные карты в JSON"
-
-#: addons/MetroidvaniaSystem/Database/Manage.tscn
-msgid "Edit Database Theme"
-msgstr "Редактировать тему базы данных"
-
-#: addons/MetroidvaniaSystem/Database/Manage.tscn
-msgid "Reset Database Theme"
-msgstr "Сбросить тему базы данных"
-
-#: addons/MetroidvaniaSystem/Database/Manage.tscn
 msgid "Validation Result"
 msgstr "Результат проверки"
 
@@ -286,8 +286,12 @@ msgstr ""
 "вмержить изменения."
 
 #: addons/MetroidvaniaSystem/Database/Main.tscn
-msgid "Metroidvania System Database"
-msgstr "База данных Metroidvania System"
+msgid "Save Copy and Reload"
+msgstr ""
+
+#: addons/MetroidvaniaSystem/Database/Main.tscn
+msgid "Metroidvania System Database v.%s"
+msgstr "База данных Metroidvania System v.%s"
 
 #: addons/MetroidvaniaSystem/Database/Main.tscn
 msgid "Map Editor"
@@ -472,6 +476,18 @@ msgstr "Иконка"
 
 #: addons/MetroidvaniaSystem/MetSysPlugin.gd
 msgid ""
+"MetSys map has been modified.\n"
+"Do you want to save?"
+msgstr ""
+"MetSys карта была изменена.\n"
+"Хотите ли Вы сохранить изменения?"
+
+#: addons/MetroidvaniaSystem/MetSysPlugin.gd
+msgid "Error!"
+msgstr ""
+
+#: addons/MetroidvaniaSystem/MetSysPlugin.gd
+msgid ""
 "MetSys restart failed, the singleton still can't be loaded. Make sure the "
 "\"MetroidvaniaSystem.gd\" script has no errors.\n"
 "\n"
@@ -489,11 +505,3 @@ msgstr ""
 "- Конфликт имён с одним из существующих классов.\n"
 "\n"
 "Плагин будет отключен. Исправьте ошибки и попробуйте ещё раз."
-
-#: addons/MetroidvaniaSystem/MetSysPlugin.gd
-msgid ""
-"MetSys map has been modified.\n"
-"Do you want to save?"
-msgstr ""
-"MetSys карта была изменена.\n"
-"Хотите ли Вы сохранить изменения?"

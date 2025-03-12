@@ -248,7 +248,7 @@ msgid "Save Copy and Reload"
 msgstr ""
 
 #: addons/MetroidvaniaSystem/Database/Main.tscn
-msgid "Metroidvania System Database"
+msgid "Metroidvania System Database v.%s"
 msgstr ""
 
 #: addons/MetroidvaniaSystem/Database/Main.tscn

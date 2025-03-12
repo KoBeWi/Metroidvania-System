@@ -24,6 +24,38 @@ msgstr ""
 "X-Generator: Poedit 3.5\n"
 
 #: addons/MetroidvaniaSystem/Database/Manage.tscn
+msgid "General Settings"
+msgstr "常规设置"
+
+#: addons/MetroidvaniaSystem/Database/Manage.tscn
+msgid "Refresh Custom Elements"
+msgstr "刷新自定义元素"
+
+#: addons/MetroidvaniaSystem/Database/Manage.tscn
+msgid "Reload and Cleanup Map Data"
+msgstr "重新加载并清理地图数据"
+
+#: addons/MetroidvaniaSystem/Database/Manage.tscn
+msgid "Validate Map Data"
+msgstr "验证地图数据"
+
+#: addons/MetroidvaniaSystem/Database/Manage.tscn
+msgid "Validate Map Theme"
+msgstr "验证地图主题"
+
+#: addons/MetroidvaniaSystem/Database/Manage.tscn
+msgid "Export Map Data as JSON"
+msgstr "将地图数据导出为 JSON"
+
+#: addons/MetroidvaniaSystem/Database/Manage.tscn
+msgid "Edit Database Theme"
+msgstr "编辑数据库主题"
+
+#: addons/MetroidvaniaSystem/Database/Manage.tscn
+msgid "Reset Database Theme"
+msgstr "重置数据库主题"
+
+#: addons/MetroidvaniaSystem/Database/Manage.tscn
 msgid "No assigned map at: %s"
 msgstr "未指定地图：%s"
 
@@ -116,11 +148,13 @@ msgid "Border texture at index %d"
 msgstr "索引 %d 处的边界纹理"
 
 #: addons/MetroidvaniaSystem/Database/Manage.tscn
-msgid "Uncollected item symbol index is greater than number of available symbols."
+msgid ""
+"Uncollected item symbol index is greater than number of available symbols."
 msgstr "未收集物品的符号索引大于可用符号的数量。"
 
 #: addons/MetroidvaniaSystem/Database/Manage.tscn
-msgid "Collected item symbol index is greater than number of available symbols."
+msgid ""
+"Collected item symbol index is greater than number of available symbols."
 msgstr "已收集物品的符号索引大于可用符号的数量。"
 
 #: addons/MetroidvaniaSystem/Database/Manage.tscn
@@ -156,7 +190,9 @@ msgid "Player location scene is not a Node2D."
 msgstr "玩家位置场景不是 Node2D。"
 
 #: addons/MetroidvaniaSystem/Database/Manage.tscn
-msgid "Missing player location scene. Player location can't be displayed using built-in methods."
+msgid ""
+"Missing player location scene. Player location can't be displayed using "
+"built-in methods."
 msgstr "缺少玩家位置场景；无法使用内置方法显示玩家位置。"
 
 #: addons/MetroidvaniaSystem/Database/Manage.tscn
@@ -164,7 +200,9 @@ msgid "Theme is valid."
 msgstr "主题有效。"
 
 #: addons/MetroidvaniaSystem/Database/Manage.tscn
-msgid "%s has invalid height (%d). It should be vertical, oriented towards the right side and match the height of the center texture."
+msgid ""
+"%s has invalid height (%d). It should be vertical, oriented towards the "
+"right side and match the height of the center texture."
 msgstr "%s 的高度无效 (%d)。它应该是垂直且朝向右侧的，并与中心纹理的高度匹配。"
 
 #: addons/MetroidvaniaSystem/Database/Manage.tscn
@@ -176,11 +214,17 @@ msgid "%s is empty."
 msgstr "%s 是空的。"
 
 #: addons/MetroidvaniaSystem/Database/Manage.tscn
-msgid "%s has invalid height (%d). It should be vertical, oriented towards the right side and height should match the width of the center texture."
-msgstr "%s 的高度无效 (%d)。它应该是垂直且朝向右侧的，并且高度应该与中心纹理的宽度匹配。"
+msgid ""
+"%s has invalid height (%d). It should be vertical, oriented towards the "
+"right side and height should match the width of the center texture."
+msgstr ""
+"%s 的高度无效 (%d)。它应该是垂直且朝向右侧的，并且高度应该与中心纹理的宽度匹"
+"配。"
 
 #: addons/MetroidvaniaSystem/Database/Manage.tscn
-msgid "%s is wider than half of the height of the center texture. It may cause overlaps."
+msgid ""
+"%s is wider than half of the height of the center texture. It may cause "
+"overlaps."
 msgstr "%s 宽于中心纹理高度的一半；这可能会导致重叠。"
 
 #: addons/MetroidvaniaSystem/Database/Manage.tscn
@@ -190,38 +234,6 @@ msgstr "%s 大于中心纹理；它将突出单元格外。"
 #: addons/MetroidvaniaSystem/Database/Manage.tscn
 msgid "%s is bigger than half of the center texture. It may cause overlaps."
 msgstr "%s 大于中心纹理的一半；这可能会导致重叠。"
-
-#: addons/MetroidvaniaSystem/Database/Manage.tscn
-msgid "General Settings"
-msgstr "常规设置"
-
-#: addons/MetroidvaniaSystem/Database/Manage.tscn
-msgid "Refresh Custom Elements"
-msgstr "刷新自定义元素"
-
-#: addons/MetroidvaniaSystem/Database/Manage.tscn
-msgid "Reload and Cleanup Map Data"
-msgstr "重新加载并清理地图数据"
-
-#: addons/MetroidvaniaSystem/Database/Manage.tscn
-msgid "Validate Map Data"
-msgstr "验证地图数据"
-
-#: addons/MetroidvaniaSystem/Database/Manage.tscn
-msgid "Validate Map Theme"
-msgstr "验证地图主题"
-
-#: addons/MetroidvaniaSystem/Database/Manage.tscn
-msgid "Export Map Data as JSON"
-msgstr "将地图数据导出为 JSON"
-
-#: addons/MetroidvaniaSystem/Database/Manage.tscn
-msgid "Edit Database Theme"
-msgstr "编辑数据库主题"
-
-#: addons/MetroidvaniaSystem/Database/Manage.tscn
-msgid "Reset Database Theme"
-msgstr "重置数据库主题"
 
 #: addons/MetroidvaniaSystem/Database/Manage.tscn
 msgid "Validation Result"
@@ -244,16 +256,29 @@ msgstr ""
 "如果你对地图进行了任何本地更改，它们将会丢失。"
 
 #: addons/MetroidvaniaSystem/Database/Main.tscn
-msgid "Saves local map data to the file, overwriting whatever is stored on disk. If you are using version control (e.g. git), this allows you to manually merge changes."
-msgstr "将本地地图数据保存到文件中，覆盖磁盘上存储的内容。如果你使用版本控制（例如 git），这允许你手动合并更改。"
+msgid ""
+"Saves local map data to the file, overwriting whatever is stored on disk. If "
+"you are using version control (e.g. git), this allows you to manually merge "
+"changes."
+msgstr ""
+"将本地地图数据保存到文件中，覆盖磁盘上存储的内容。如果你使用版本控制（例如 "
+"git），这允许你手动合并更改。"
 
 #: addons/MetroidvaniaSystem/Database/Main.tscn
-msgid "Save local map data into a backup file called \"MapData(Copy).txt\", then reloads map data. You can use the backup file to manually merge changes."
-msgstr "将本地地图数据保存到名为 \"MapData(Copy).txt\" 的备份文件中，然后重新加载地图数据。你可以使用备份文件手动合并更改。"
+msgid ""
+"Save local map data into a backup file called \"MapData(Copy).txt\", then "
+"reloads map data. You can use the backup file to manually merge changes."
+msgstr ""
+"将本地地图数据保存到名为 \"MapData(Copy).txt\" 的备份文件中，然后重新加载地图"
+"数据。你可以使用备份文件手动合并更改。"
 
 #: addons/MetroidvaniaSystem/Database/Main.tscn
-msgid "Metroidvania System Database"
-msgstr "类银河战士恶魔城系统数据库"
+msgid "Save Copy and Reload"
+msgstr ""
+
+#: addons/MetroidvaniaSystem/Database/Main.tscn
+msgid "Metroidvania System Database v.%s"
+msgstr "类银河战士恶魔城系统数据库 v.%s"
 
 #: addons/MetroidvaniaSystem/Database/Main.tscn
 msgid "Map Editor"
@@ -438,7 +463,20 @@ msgstr "图标"
 
 #: addons/MetroidvaniaSystem/MetSysPlugin.gd
 msgid ""
-"MetSys restart failed, the singleton still can't be loaded. Make sure the \"MetroidvaniaSystem.gd\" script has no errors.\n"
+"MetSys map has been modified.\n"
+"Do you want to save?"
+msgstr ""
+"MetSys 地图已被修改。\n"
+"是否要保存？"
+
+#: addons/MetroidvaniaSystem/MetSysPlugin.gd
+msgid "Error!"
+msgstr ""
+
+#: addons/MetroidvaniaSystem/MetSysPlugin.gd
+msgid ""
+"MetSys restart failed, the singleton still can't be loaded. Make sure the "
+"\"MetroidvaniaSystem.gd\" script has no errors.\n"
 "\n"
 "Common cause of errors are:\n"
 "- Using Godot version older than 4.4.\n"
@@ -446,18 +484,11 @@ msgid ""
 "\n"
 "The plugin will be now disabled. Fix the errors and try again."
 msgstr ""
-"MetSys 重启失败，单例仍然无法加载。确保 \"MetroidvaniaSystem.gd\" 脚本没有错误。\n"
+"MetSys 重启失败，单例仍然无法加载。确保 \"MetroidvaniaSystem.gd\" 脚本没有错"
+"误。\n"
 "\n"
 "常见的错误原因是：\n"
 "- 使用 Godot 版本低于 4.4。\n"
 "- 与某个类的名称冲突。\n"
 "\n"
 "插件现在将被禁用。请修复错误后再试一次。"
-
-#: addons/MetroidvaniaSystem/MetSysPlugin.gd
-msgid ""
-"MetSys map has been modified.\n"
-"Do you want to save?"
-msgstr ""
-"MetSys 地图已被修改。\n"
-"是否要保存？"
