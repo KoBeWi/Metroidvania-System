@@ -76,7 +76,15 @@ func _update_neighbor_previews():
 		for i in 4:
 			var fwd: Vector2i = MetroidvaniaSystem.MapData.FWD[i]
 			
+			var show_neightbor: bool
 			if cell_data.borders[i] > 0:
+				show_neightbor = true
+			elif cell_data.borders[i] == 0:
+				var neicell := MetSys.map_data.get_cell_at(coords + Vector3i(fwd.x, fwd.y, 0))
+				if neicell:
+					show_neightbor = neicell.borders[(i + 2) % 4] > 0
+			
+			if show_neightbor:
 				var next_coords := coords + Vector3i(fwd.x, fwd.y, 0)
 				var scene: String = MetSys.map_data.get_assigned_scene_at(next_coords)
 				
