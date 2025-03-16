@@ -80,7 +80,7 @@ func _update_neighbor_previews():
 			if cell_data.borders[i] > 0:
 				show_neightbor = true
 			elif cell_data.borders[i] == 0:
-				var neicell := MetSys.map_data.get_cell_at(coords + Vector3i(fwd.x, fwd.y, 0))
+				var neicell: MetroidvaniaSystem.MapData.CellData = MetSys.map_data.get_cell_at(coords + Vector3i(fwd.x, fwd.y, 0))
 				if neicell:
 					show_neightbor = neicell.borders[(i + 2) % 4] > 0
 			
