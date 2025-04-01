@@ -430,9 +430,37 @@ msgid "Icon"
 msgstr ""
 
 #: addons/MetroidvaniaSystem/MetSysPlugin.gd
+msgid "Print Object ID"
+msgstr ""
+
+#: addons/MetroidvaniaSystem/MetSysPlugin.gd
+msgid "Copy Object ID to Clipboard"
+msgstr ""
+
+#: addons/MetroidvaniaSystem/MetSysPlugin.gd
 msgid ""
 "MetSys map has been modified.\n"
 "Do you want to save?"
+msgstr ""
+
+#: addons/MetroidvaniaSystem/MetSysPlugin.gd
+msgid "No scene open to check Node."
+msgstr ""
+
+#: addons/MetroidvaniaSystem/MetSysPlugin.gd
+msgid "You need to select a single Node."
+msgstr ""
+
+#: addons/MetroidvaniaSystem/MetSysPlugin.gd
+msgid "Could not determine ID."
+msgstr ""
+
+#: addons/MetroidvaniaSystem/MetSysPlugin.gd
+msgid "ID of the selected Node is \"%s\"."
+msgstr ""
+
+#: addons/MetroidvaniaSystem/MetSysPlugin.gd
+msgid "ID \"%s\" copied to clipboard."
 msgstr ""
 
 #: addons/MetroidvaniaSystem/MetSysPlugin.gd
@@ -448,4 +476,12 @@ msgid ""
 "- Name conflicts with one of the classes.\n"
 "\n"
 "The plugin will be now disabled. Fix the errors and try again."
+msgstr ""
+
+#: addons/MetroidvaniaSystem/MetSysPlugin.gd
+msgid "Runs get_object_id() for the selected Node and prints the result."
+msgstr ""
+
+#: addons/MetroidvaniaSystem/MetSysPlugin.gd
+msgid "Runs get_object_id() for the selected Node and copies the result to clipboard."
 msgstr ""
