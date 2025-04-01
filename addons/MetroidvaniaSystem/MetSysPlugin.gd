@@ -4,6 +4,7 @@ extends EditorPlugin
 const EXTENSION_PATH = "MetroidvaniaSystem/EditorExtension"
 
 enum { TAB_EDITOR, TAB_OVERVIEW, TAB_MANAGE }
+enum { TOOL_PRINT_ID, TOOL_COPY_ID }
 
 var main: Control
 var theme_scanner: Timer
@@ -80,8 +81,8 @@ func _enter_tree() -> void:
 	add_tool_submenu_item("MetSys", metsys_tools)
 	metsys_tools.index_pressed.connect(on_tool_option)
 	
-	EditorInterface.get_command_palette().add_command("Print Object ID", "metsys/print_object_id", on_tool_option.bind(0))
-	EditorInterface.get_command_palette().add_command("Copy Object ID to Clipboard", "metsys/copy_object_id_to_clipboard", on_tool_option.bind(1))
+	EditorInterface.get_command_palette().add_command("Print Object ID", "met_sys/print_object_id", on_tool_option.bind(0))
+	EditorInterface.get_command_palette().add_command("Copy Object ID to Clipboard", "met_sys/copy_object_id_to_clipboard", on_tool_option.bind(1))
 	
 	get_singleton().settings.theme_changed.connect(func(): prev_theme_state.clear())
 
@@ -93,8 +94,8 @@ func _exit_tree() -> void:
 	main.queue_free()
 	remove_tool_menu_item("MetSys")
 	
-	EditorInterface.get_command_palette().remove_command("metsys/print_object_id")
-	EditorInterface.get_command_palette().remove_command("metsys/copy_object_id_to_clipboard")
+	EditorInterface.get_command_palette().remove_command("met_sys/print_object_id")
+	EditorInterface.get_command_palette().remove_command("met_sys/copy_object_id_to_clipboard")
 
 func _make_visible(visible: bool) -> void:
 	main.visible = visible
@@ -126,7 +127,7 @@ func check_theme():
 
 func on_tool_option(idx: int):
 	match idx:
-		0, 1:
+		TOOL_PRINT_ID, TOOL_COPY_ID:
 			var currrent_scene := EditorInterface.get_edited_scene_root()
 			if not currrent_scene:
 				push_error(tr("No scene open to check Node."))
@@ -141,7 +142,7 @@ func on_tool_option(idx: int):
 			if id.is_empty():
 				push_warning(tr("Could not determine ID."))
 			else:
-				if idx == 0:
+				if idx == TOOL_PRINT_ID:
 					print(tr("ID of the selected Node is \"%s\".") % id)
 				else:
 					print(tr("ID \"%s\" copied to clipboard.") % id)
