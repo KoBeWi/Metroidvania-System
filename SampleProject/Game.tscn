@@ -1,9 +1,11 @@
-[gd_scene load_steps=8 format=3 uid="uid://c3xqaietfgs7l"]
+[gd_scene load_steps=11 format=3 uid="uid://c3xqaietfgs7l"]
 
 [ext_resource type="Script" uid="uid://btgvo27tngq4o" path="res://SampleProject/Scripts/Game.gd" id="1_xdpfu"]
 [ext_resource type="PackedScene" uid="uid://xpbhai8nlgtx" path="res://SampleProject/Player.tscn" id="2_bam1a"]
 [ext_resource type="PackedScene" uid="uid://dch8dyylb7526" path="res://addons/MetroidvaniaSystem/Template/Nodes/Minimap.tscn" id="3_a3gfy"]
 [ext_resource type="Texture2D" uid="uid://wiq0mic5m6is" path="res://SampleProject/Sprites/Collectible.png" id="3_kng3d"]
+[ext_resource type="PackedScene" uid="uid://bd5w7n7gew76f" path="res://SampleProject/Objects/CollectionGridItem.tscn" id="4_uuja8"]
+[ext_resource type="Texture2D" uid="uid://l42te86waali" path="res://SampleProject/Sprites/MapItem.png" id="6_lpbfn"]
 
 [sub_resource type="GDScript" id="GDScript_u7odr"]
 resource_name = "MapWindow"
@@ -136,6 +138,21 @@ content_margin_left = 2.0
 content_margin_right = 2.0
 bg_color = Color(0, 0, 0, 0.752941)
 
+[sub_resource type="GDScript" id="GDScript_lpbfn"]
+resource_name = "CollectionGrid"
+script/source = "extends PanelContainer
+
+func _input(event: InputEvent) -> void:
+	if event is InputEventKey:
+		if event.pressed:
+			# Toggle visibility when pressing M.
+			if event.keycode == KEY_M:
+				visible = not visible
+				# If visible, update collection grid items.
+				if visible:
+					propagate_call(&\"update_collectible\")
+"
+
 [node name="Game" type="Node2D"]
 script = ExtResource("1_xdpfu")
 starting_map = "StartingPoint.tscn"
@@ -209,6 +226,76 @@ z_index = 5
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
+
+[node name="CollectionGrid" type="PanelContainer" parent="UI"]
+visible = false
+offset_left = 85.0
+offset_top = 81.0
+offset_right = 153.0
+offset_bottom = 224.0
+script = SubResource("GDScript_lpbfn")
+
+[node name="CollectionGrid" type="HBoxContainer" parent="UI/CollectionGrid"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/CollectionGrid/CollectionGrid"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="UI/CollectionGrid/CollectionGrid/VBoxContainer"]
+layout_mode = 2
+text = "D"
+horizontal_alignment = 1
+
+[node name="CollectionGridItem" parent="UI/CollectionGrid/CollectionGrid/VBoxContainer" instance=ExtResource("4_uuja8")]
+layout_mode = 2
+texture = ExtResource("3_kng3d")
+id = "StartingPoint/./Collectible"
+
+[node name="CollectionGridItem2" parent="UI/CollectionGrid/CollectionGrid/VBoxContainer" instance=ExtResource("4_uuja8")]
+layout_mode = 2
+texture = ExtResource("3_kng3d")
+id = "RelicRoom/./Collectible"
+
+[node name="CollectionGridItem3" parent="UI/CollectionGrid/CollectionGrid/VBoxContainer" instance=ExtResource("4_uuja8")]
+layout_mode = 2
+texture = ExtResource("3_kng3d")
+id = "Corridor/./Collectible"
+
+[node name="CollectionGridItem4" parent="UI/CollectionGrid/CollectionGrid/VBoxContainer" instance=ExtResource("4_uuja8")]
+layout_mode = 2
+texture = ExtResource("3_kng3d")
+id = "lava_orb"
+
+[node name="CollectionGridItem5" parent="UI/CollectionGrid/CollectionGrid/VBoxContainer" instance=ExtResource("4_uuja8")]
+layout_mode = 2
+texture = ExtResource("6_lpbfn")
+id = "RightStaircase/./MapItem"
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="UI/CollectionGrid/CollectionGrid"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="UI/CollectionGrid/CollectionGrid/VBoxContainer2"]
+layout_mode = 2
+text = "S"
+horizontal_alignment = 1
+
+[node name="CollectionGridItem5" parent="UI/CollectionGrid/CollectionGrid/VBoxContainer2" instance=ExtResource("4_uuja8")]
+layout_mode = 2
+texture = ExtResource("3_kng3d")
+id = "SecretChamber/./Collectible"
+
+[node name="VBoxContainer3" type="VBoxContainer" parent="UI/CollectionGrid/CollectionGrid"]
+layout_mode = 2
+
+[node name="Label2" type="Label" parent="UI/CollectionGrid/CollectionGrid/VBoxContainer3"]
+layout_mode = 2
+text = "R"
+horizontal_alignment = 1
+
+[node name="CollectionGridItem5" parent="UI/CollectionGrid/CollectionGrid/VBoxContainer3" instance=ExtResource("4_uuja8")]
+layout_mode = 2
+texture = ExtResource("3_kng3d")
+id = "random_collectible"
 
 [node name="HBoxContainer" type="HBoxContainer" parent="UI"]
 offset_left = 8.0
