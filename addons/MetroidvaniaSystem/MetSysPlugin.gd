@@ -71,6 +71,15 @@ func _enter_tree() -> void:
 	EditorInterface.get_editor_main_screen().add_child(main)
 	main.hide()
 	
+	var metsys_tools := PopupMenu.new()
+	metsys_tools.add_item("Print Object ID")
+	metsys_tools.set_item_tooltip(-1, "Runs get_object_id() for the selected Node and prints the result.")
+	metsys_tools.add_item("Copy Object ID to Clipboard")
+	metsys_tools.set_item_tooltip(-1, "Runs get_object_id() for the selected Node and copies the result to clipboard.")
+	
+	add_tool_submenu_item("MetSys", metsys_tools)
+	metsys_tools.index_pressed.connect(on_tool_option)
+	
 	get_singleton().settings.theme_changed.connect(func(): prev_theme_state.clear())
 
 func _exit_tree() -> void:
@@ -79,6 +88,7 @@ func _exit_tree() -> void:
 		editor_translation.remove_translation(translation)
 	
 	main.queue_free()
+	remove_tool_menu_item("MetSys")
 
 func _make_visible(visible: bool) -> void:
 	main.visible = visible
@@ -107,6 +117,29 @@ func check_theme():
 	var changed := theme.check_for_changes(prev_theme_state)
 	if not changed.is_empty():
 		get_singleton().theme_modified.emit(changed)
+
+func on_tool_option(idx: int):
+	match idx:
+		0, 1:
+			var currrent_scene := EditorInterface.get_edited_scene_root()
+			if not currrent_scene:
+				push_error(tr("No scene open to check Node."))
+				return
+			
+			var selection := EditorInterface.get_selection().get_selected_nodes()
+			if selection.size() != 1:
+				push_error(tr("You need to select a single Node."))
+				return
+			
+			var id: String = get_singleton().get_object_id(selection[0])
+			if id.is_empty():
+				push_warning(tr("Could not determine ID."))
+			else:
+				if idx == 0:
+					print(tr("ID of the selected Node is \"%s\".") % id)
+				else:
+					print(tr("ID \"%s\" copied to clipboard.") % id)
+					DisplayServer.clipboard_set(id)
 
 func POT_hack():
 	tr("Error!")
