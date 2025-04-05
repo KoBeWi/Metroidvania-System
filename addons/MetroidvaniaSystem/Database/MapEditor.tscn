@@ -670,11 +670,10 @@ func create_default_scene() -> Node:
 	else:
 		root.name = root_name.text
 	
-	var instance: MetroidvaniaSystem.RoomInstance = load(\"res://addons/MetroidvaniaSystem/Nodes/RoomInstance.tscn\").instantiate()
+	var instance: MetroidvaniaSystem.RoomInstance = load(\"uid://bsg0351mx3b4u\").instantiate()
 	root.add_child(instance)
-	
-	add_child(root)
 	instance.owner = root
+	
 	return root
 
 func create_scene_confirm() -> void:
@@ -713,7 +712,7 @@ func get_scene_name() -> String:
 	return neym + scene_extension.get_item_text(scene_extension.selected)
 
 func get_scene_path() -> String:
-	return file_dialog.root_subfolder.path_join(file_dialog.current_dir).path_join(get_scene_name())
+	return file_dialog.current_dir.path_join(get_scene_name())
 
 func can_drop_data(at_position: Vector2, data) -> bool:
 	if highlighted_room.is_empty():
@@ -1071,6 +1070,7 @@ text = "Root Name"
 
 [node name="RootName" type="LineEdit" parent="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign/CreateDialog/VBoxContainer/GridContainer"]
 unique_name_in_owner = true
+auto_translate_mode = 2
 layout_mode = 2
 size_flags_horizontal = 3
 placeholder_text = "Map"
