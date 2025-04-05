@@ -11,19 +11,13 @@ resource_name = "Settings"
 script/source = "@tool
 extends Button
 
-var plugin: EditorPlugin
-
-func _enter_tree() -> void:
-	if owner:
-		plugin = owner.plugin
-
 func _ready() -> void:
-	if not plugin:
+	if is_part_of_edited_scene():
 		return
 	
+	await get_tree().process_frame
 	_pressed()
 	
-	await get_tree().process_frame
 	for data in MetSys.settings._collectible_list:
 		var collectible := add_collectible()
 		collectible.set_data(data)
@@ -47,7 +41,7 @@ func save_collectible_list():
 	var list: Array[Dictionary]
 	for collectible in %CollectibleList.get_children():
 		if not collectible.is_queued_for_deletion():
-			list.append(collectible.get_data())
+			list.append(collectible.get_save_data())
 	MetSys.settings._collectible_list = list
 	ResourceSaver.save(MetSys.settings)
 "
@@ -57,12 +51,16 @@ resource_name = "Finder"
 script/source = "@tool
 extends Button
 
+const FoundElement = preload(\"uid://cdl44ebe6tc0h\").FoundElement
+
 @onready var scan_progress: ProgressBar = %ScanProgress
 @onready var show_on_map: CheckButton = %ShowOnMap
 @onready var summary: VBoxContainer = %Summary
+@onready var scan_button: Button = %ScanButton
+@onready var finder: Control = %Finder
 
 var thread: Thread
-var found_elements: Array[Dictionary]
+var found_elements: Array[FoundElement]
 
 func _ready() -> void:
 	scan_progress.hide()
@@ -73,18 +71,17 @@ func _pressed() -> void:
 	for button in button_group.get_buttons():
 		button.exit()
 	
-	%Finder.show()
+	finder.show()
 
 func exit():
-	%Finder.hide()
+	finder.hide()
 
 func start_scan() -> void:
 	summary.hide()
-	%ScanButton.disabled = true
+	scan_button.disabled = true
 	
-	var collectible_list: Array[Dictionary]
-	for item in %CollectibleList.get_children():
-		collectible_list.append(item.get_data2())
+	var collectible_list: Array[FoundElement]
+	collectible_list.assign(%CollectibleList.get_children().map(func(item: Node) -> FoundElement: return item.get_data()))
 	
 	found_elements.clear()
 	for item in summary.get_children():
@@ -108,10 +105,10 @@ func _process(delta: float) -> void:
 	scan_progress.hide()
 	show_on_map.show()
 	summary.show()
-	%ScanButton.disabled = false
+	scan_button.disabled = false
 	
 	for item in %CollectibleList.get_children():
-		var data: Dictionary = item.get_data2()
+		var data: FoundElement = item.get_data()
 		var count := 0
 		var count_label := setup_header(data)
 		
@@ -125,7 +122,7 @@ func _process(delta: float) -> void:
 		count_label.text = str(count)
 		summary.add_child(HSeparator.new())
 
-func scan_maps(element_list: Array[Dictionary]):
+func scan_maps(element_list: Array[FoundElement]):
 	Thread.set_thread_safety_checks_enabled(false)
 	
 	var maps: Array[String]
@@ -145,12 +142,12 @@ func scan_maps(element_list: Array[Dictionary]):
 	for map in maps:
 		var lines := FileAccess.open(map, FileAccess.READ).get_as_text().split(\"\\n\")
 		
-		var current_element: Dictionary
+		var current_element: FoundElement
 		for line in lines:
-			if not current_element.is_empty():
+			if current_element:
 				if line.begins_with(\"[\"):
 					found_elements.append(current_element)
-					current_element = {}
+					current_element = null
 				elif line.begins_with(\"position =\"):
 					current_element.position = str_to_var(line.get_slice(\"=\", 1))
 				else:
@@ -158,11 +155,11 @@ func scan_maps(element_list: Array[Dictionary]):
 			
 			for element in element_list:
 				if line.begins_with(\"[node name=\\\"%s\" % element.element):
-					current_element = element.duplicate()
+					current_element = element.make_result()
 					current_element.map = map
 					break
 		
-		if not current_element.is_empty():
+		if current_element:
 			found_elements.append(current_element)
 		
 		scan_progress.value += 1
@@ -173,13 +170,13 @@ func complete_element(element: Dictionary):
 	found.hovered.connect(owner._on_item_hover.bind(found))
 	summary.add_child.call_deferred(found)
 
-func setup_header(data: Dictionary) -> Label:
+func setup_header(data: FoundElement) -> Label:
 	var hbox := HBoxContainer.new()
 	summary.add_child(hbox)
 	
 	var tex := TextureRect.new()
 	hbox.add_child(tex)
-	tex.texture = data.get(\"icon\")
+	tex.texture = data.icon
 	
 	var label := Label.new()
 	hbox.add_child(label)
@@ -190,7 +187,7 @@ func setup_header(data: Dictionary) -> Label:
 	
 	return label
 
-func setup_found(data: Dictionary):
+func setup_found(data: FoundElement):
 	var label := Label.new()
 	summary.add_child(label)
 	label.mouse_filter = Control.MOUSE_FILTER_PASS
@@ -199,7 +196,7 @@ func setup_found(data: Dictionary):
 	data.map = data.map.trim_prefix(MetSys.settings.map_root_folder)
 	
 	var room := MetSys.map_data.get_cells_assigned_to(data.map)
-	if \"position\" in data and not room.is_empty():
+	if data.position.is_finite() and not room.is_empty():
 		var top_left := Vector2i.MAX
 		for coords in room:
 			top_left.x = mini(coords.x, top_left.x)
@@ -225,8 +222,8 @@ func draw_collectibles_on_map(canvas_item: CanvasItem):
 		var icon: Texture2D = element.icon
 		var target_size := icon.get_size() * (minf(MetSys.CELL_SIZE.x, MetSys.CELL_SIZE.y) / minf(icon.get_width(), icon.get_height()) * 0.9)
 		
-		if \"coords\" in element:
-			var coords: Vector3i = element.coords
+		if element.coords != Vector3i.MAX:
+			var coords := element.coords
 			if coords.z != owner.current_layer:
 				continue
 			
@@ -240,7 +237,6 @@ func draw_collectibles_on_map(canvas_item: CanvasItem):
 				var pos := Vector2(coords.x + owner.map_offset.x, coords.y + owner.map_offset.y) * MetSys.CELL_SIZE
 				canvas_item.draw_texture_rect(icon, Rect2(pos + MetSys.CELL_SIZE * 0.5 - target_size * 0.5, target_size), false)
 				break
-	
 "
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qbvjg"]

@@ -1,6 +1,19 @@
 @tool
 extends "res://addons/MetroidvaniaSystem/Scripts/EditorMapView.gd"
 
+class FoundElement:
+	var element: String
+	var icon: Texture2D
+	var map: String
+	var coords := Vector3i.MAX
+	var position := Vector2.INF
+	
+	func make_result() -> FoundElement:
+		var dup := FoundElement.new()
+		dup.element = element
+		dup.icon = icon
+		return dup
+
 enum {MODE_LAYOUT = 1, MODE_ROOM_SYMBOL, MODE_ROOM_COLOR, MODE_ROOM_GROUP, MODE_BORDER_TYPE, MODE_BORDER_COLOR, MODE_MAP}
 
 @export var mode_group: ButtonGroup
@@ -88,9 +101,9 @@ func _on_overlay_draw() -> void:
 			map_overlay.draw_rect(Rect2(Vector2(coords.x + map_offset.x, coords.y + map_offset.y) * MetSys.CELL_SIZE, MetSys.CELL_SIZE), theme_cache.current_scene_room)
 	
 	if current_hovered_item:
-		var data: Dictionary = current_hovered_item.get_meta(&"data")
-		if "coords" in data:
-			var coords: Vector3i = data.coords
+		var data: FoundElement = current_hovered_item.get_meta(&"data")
+		if data.coords != Vector3i.MAX:
+			var coords := data.coords
 			map_overlay.draw_rect(Rect2(Vector2(coords.x + map_offset.x, coords.y + map_offset.y) * MetSys.CELL_SIZE, MetSys.CELL_SIZE), theme_cache.marked_collectible_room if coords.z == current_layer else theme_cache.foreign_marked_collectible_room)
 		else:
 			for coords in MetSys.map_data.get_cells_assigned_to(data.map):
