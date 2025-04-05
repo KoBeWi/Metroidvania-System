@@ -5,19 +5,23 @@
 [ext_resource type="PackedScene" uid="uid://c8j6i3fx8p758" path="res://SampleProject/Objects/Collectible.tscn" id="3_whicd"]
 
 [sub_resource type="GDScript" id="GDScript_taojh"]
-resource_name = "Config"
-script/source = "# This is a special config node that determines the scene's content.  The \"content\" in this case are the available exits.
+script/source = "# This is a special config script that determines the scene's content.  The \"content\" in this case are the available exits and existence of collectible.
 extends Node
-# This variable is set when the scene is being \"generated\" (see DiceRoom.tscn).
-@export var exits: int
+# These variable are set after the scene is instantiated (see Game.gd).
+var exits: int
+var has_collectible: bool
 
-# When the player enters the room, remove the walls based on the assigned exits.
-func _ready() -> void:
+# Remove the walls and collectible, based on the config values.
+func apply_config():
 	for i in 4:
 		%TileMap.get_child(i + 2).enabled = not bool(exits & 1 << i)
+	
+	if not has_collectible:
+		%Collectible.free()
 "
 
 [node name="Map" type="Node2D"]
+script = SubResource("GDScript_taojh")
 
 [node name="TileMap" type="Node2D" parent="."]
 unique_name_in_owner = true
@@ -55,9 +59,7 @@ tile_set = ExtResource("1_oj4y1")
 
 [node name="RoomInstance" parent="." instance=ExtResource("2_mlr6y")]
 
-[node name="Config" type="Node" parent="."]
-script = SubResource("GDScript_taojh")
-
 [node name="Collectible" parent="." instance=ExtResource("3_whicd")]
+unique_name_in_owner = true
 position = Vector2(432, 232)
 metadata/object_id = "random_collectible"

@@ -40,20 +40,25 @@ func load_room(path: String):
 		return
 	
 	map_changing = true
-	if not path.is_absolute_path():
-		path = MetSys.get_full_room_path(path)
 	
 	if map:
 		map.queue_free()
 		await map.tree_exited
 		map = null
 	
-	map = load(path).instantiate()
+	map = _load_map(path)
 	add_child(map)
 	
 	MetSys.current_layer = MetSys.get_current_room_instance().get_layer()
 	map_changing = false
 	room_loaded.emit()
+
+## Virtual method to be optionally overriden in your game class. Return a Node representing a scene under given path. Mostly useful for procedurally generated maps.
+func _load_map(path: String) -> Node:
+	if not path.is_absolute_path():
+		path = MetSys.get_full_room_path(path)
+	
+	return load(path).instantiate()
 
 func get_save_data() -> Dictionary:
 	var data: Dictionary

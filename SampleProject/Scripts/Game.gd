@@ -94,3 +94,21 @@ func init_room():
 	# Initializes MetSys.get_current_coords(), so you can use it from the beginning.
 	if MetSys.last_player_position.x == Vector2i.MAX.x:
 		MetSys.set_player_position(player.position)
+
+# Customized load function that handles maps generated in Dice.tscn.
+func _load_map(path: String) -> Node:
+	if not path.begins_with("GEN"):
+		return super(path)
+	
+	# Base scene that will be customized (Junction.tscn).
+	var prototype := preload("uid://bikgu4uxf7vxt").instantiate()
+	prototype.scene_file_path = path
+	
+	var config := path.split("/")
+	# Assign values to the scene (see the script in Junction.tscn).
+	prototype.exits = config[2].to_int()
+	prototype.has_collectible = config[3] == "true"
+	# Apply the values. It has to happen before the scene enters tree.
+	prototype.apply_config()
+	
+	return prototype

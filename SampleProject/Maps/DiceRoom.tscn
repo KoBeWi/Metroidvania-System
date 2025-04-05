@@ -9,8 +9,6 @@
 resource_name = "Dice"
 script/source = "extends Area2D
 
-# The path where generated scenes are placed.
-const GENERATED_MAPS_PATH = \"user://Generated\"
 # Helper for translating direction constants to vectors.
 const FWD = { MetroidvaniaSystem.R: Vector2i.RIGHT, MetroidvaniaSystem.D: Vector2i.DOWN, MetroidvaniaSystem.L: Vector2i.LEFT, MetroidvaniaSystem.U: Vector2i.UP }
 # Generation thread.
@@ -19,9 +17,7 @@ var generating: Thread
 var new_generated_maps: Array[String]
 
 func _ready() -> void:
-	# Ensure the map dir exists.
-	DirAccess.make_dir_absolute(GENERATED_MAPS_PATH)
-	# Close off the exit if no rooms were generated.
+	# Open the exit if generated rooms exist.
 	if not Game.get_singleton().generated_rooms.is_empty():
 		%Gate.enabled = false
 	
@@ -38,12 +34,7 @@ func _on_body_entered(body: Node2D) -> void:
 	# Destroy all generated rooms.
 	for coords in Game.get_singleton().generated_rooms:
 		MetSys.get_cell_override(coords, false).destroy()
-		MetSys.save_data.discovered_cells.erase(coords)
 	Game.get_singleton().generated_rooms.clear()
-	
-	# Delete generated scenes.
-	for file in DirAccess.get_files_at(GENERATED_MAPS_PATH):
-		DirAccess.remove_absolute(GENERATED_MAPS_PATH.path_join(file))
 	
 	# Start the dice animation.
 	%DiceAnimator.play(&\"Spin\")
@@ -132,54 +123,18 @@ func generate_map():
 			# Also copy the color.
 			cell.border_colors[i] = dice_cell_data.border_colors[i]
 		
-		# Assign the scene (generate_cell() will create a new scene and return its path).
-		cell.set_assigned_scene(generate_scene(\"Junction.tscn\", grid[pos], pos == collectible_pos))
+		# Generate a fake path for the cell.
+		# All generated maps are instances of Junction.tscn, they aren't actually saved on disk.
+		# The path includes:
+		# - Prefix that allows to recognize the generated map (see Game.gd).
+		# - Unique map ID.
+		# - Config values that will be applied to the instance.
+		var fake_path := \"/\".join([\"GEN\", new_generated_maps.size(), grid[pos], pos == collectible_pos])
+		new_generated_maps.append(fake_path)
+		cell.set_assigned_scene(fake_path)
 	
 	# Update the map after the generation has finished.
 	builder.update_map()
-
-# This method generates the scene path.
-func generate_scene(from_map: String, exits: int, place_collectible: bool) -> String:
-	# Select the base scene. It's always the same one (though you can easily add more).
-	var scene: PackedScene = load(\"res://SampleProject/Maps/%s\" % from_map)
-	
-	from_map = from_map.get_basename()
-	var new_map: String
-	var files: Array[String]
-	
-	# If this is the first generated scene, the name is SceneName1.
-	if new_generated_maps.is_empty():
-		new_map = from_map + \"1.tscn\"
-	else:
-		# Otherwise increment the last scene.
-		new_map = \"%s%d.tscn\" % [from_map, new_generated_maps.back().to_int() + 1]
-	
-	# Append the new map name to the generated maps.
-	new_generated_maps.append(new_map)
-	# Get full path to the scene.
-	new_map = GENERATED_MAPS_PATH.path_join(new_map)
-	# Prepare the actual scene. This can't be done in thread, so the call is deferred.
-	prepare_scene.call_deferred(scene, exits, place_collectible, new_map)
-	# Return the new map path.
-	return new_map
-
-# This method \"generates\" the actual scene content.
-# This part is very project-specific and bare-bones in this case. We are using only a single pre-defined scene and do basic configuration.
-func prepare_scene(from_scene: PackedScene, exits: int, place_collectible: bool, target_name: String):
-	# Instantiate the base scene.
-	var map: Node2D = from_scene.instantiate()
-	# Get the config node and assign exits (see Junction.tscn for more details).
-	var config := map.get_node(^\"Config\")
-	config.exits = exits
-	
-	# If the current scene is not supposed to have the collectibe, free it.
-	if not place_collectible:
-		map.get_node(^\"Collectible\").free()
-	
-	# Pack the scene again and save it under the previously determined path.
-	var ps := PackedScene.new()
-	ps.pack(map)
-	ResourceSaver.save(ps, target_name)
 
 func _process(delta: float) -> void:
 	# Join thread when it has finished.
