@@ -11,7 +11,7 @@ func _initialize():
 	MetSys.room_changed.connect(_on_room_changed, CONNECT_DEFERRED)
 
 func _on_room_changed(target_room: String):
-	if target_room == MetSys.get_current_room_name():
+	if target_room == MetSys.get_current_room_id():
 		# This can happen when teleporting to another room.
 		return
 	

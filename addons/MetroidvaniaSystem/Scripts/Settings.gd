@@ -48,7 +48,7 @@ extends Resource
 		custom_elements_changed.emit()
 
 @export_storage var _collectible_list: Array[Dictionary]
-@export_storage var _assign_uid_to_rooms: bool
+@export_storage var _assign_uid_to_rooms: bool = true
 
 var custom_elements: MetroidvaniaSystem.CustomElementManager
 

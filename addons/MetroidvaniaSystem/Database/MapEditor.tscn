@@ -608,7 +608,7 @@ func clear_scene(from: Array[Vector3i]) -> String:
 
 func on_map_selected(path: String) -> void:
 	if assign_uid.button_pressed:
-		path = ResourceUID.id_to_text(ResourceLoader.get_resource_uid(path)).replace(\"uid://\", \":\")
+		path = ResourceUID.id_to_text(ResourceLoader.get_resource_uid(path))
 	else:
 		path = path.trim_prefix(MetSys.settings.map_root_folder)
 	

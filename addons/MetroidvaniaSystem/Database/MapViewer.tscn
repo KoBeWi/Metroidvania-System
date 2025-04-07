@@ -164,12 +164,6 @@ func scan_maps(element_list: Array[FoundElement]):
 		
 		scan_progress.value += 1
 
-func complete_element(element: Dictionary):
-	var found := preload(\"res://addons/MetroidvaniaSystem/Nodes/CollectibleFoundItem.tscn\").instantiate()
-	found.set_element(element)
-	found.hovered.connect(owner._on_item_hover.bind(found))
-	summary.add_child.call_deferred(found)
-
 func setup_header(data: FoundElement) -> Label:
 	var hbox := HBoxContainer.new()
 	summary.add_child(hbox)
@@ -220,8 +214,10 @@ func toggle_display_on_map(toggled_on: bool) -> void:
 func draw_collectibles_on_map(canvas_item: CanvasItem):
 	for element in found_elements:
 		var icon: Texture2D = element.icon
-		var target_size := icon.get_size() * (minf(MetSys.CELL_SIZE.x, MetSys.CELL_SIZE.y) / minf(icon.get_width(), icon.get_height()) * 0.9)
+		if not icon:
+			continue
 		
+		var target_size := icon.get_size() * (minf(MetSys.CELL_SIZE.x, MetSys.CELL_SIZE.y) / minf(icon.get_width(), icon.get_height()) * 0.9)
 		if element.coords != Vector3i.MAX:
 			var coords := element.coords
 			if coords.z != owner.current_layer:

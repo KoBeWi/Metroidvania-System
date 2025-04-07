@@ -80,7 +80,11 @@ func _on_overlay_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_LEFT:
 			if event.pressed and room_under_cursor and not room_under_cursor.assigned_scene.is_empty():
-				EditorInterface.open_scene_from_path(MetSys.settings.map_root_folder.path_join(MetSys.map_data.get_uid_room(room_under_cursor.assigned_scene)))
+				var scene := room_under_cursor.assigned_scene
+				if not scene.begins_with("uid://") and not scene.begins_with("res://"):
+					scene = MetSys.settings.map_root_folder.path_join(scene)
+				
+				EditorInterface.open_scene_from_path(scene)
 
 func _on_overlay_draw() -> void:
 	if not plugin:
@@ -94,7 +98,7 @@ func _on_overlay_draw() -> void:
 	if get_tree().edited_scene_root and get_tree().edited_scene_root.scene_file_path.begins_with(MetSys.settings.map_root_folder):
 		var current_scene := get_tree().edited_scene_root.scene_file_path
 		
-		for coords in MetSys.map_data.get_cells_assigned_to_path(current_scene):
+		for coords in MetSys.map_data.get_cells_assigned_to(current_scene):
 			if coords.z != current_layer:
 				break
 			

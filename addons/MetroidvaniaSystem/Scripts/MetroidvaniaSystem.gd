@@ -153,7 +153,7 @@ func visit_cell(coords: Vector3i):
 	var previous_map := map_data.get_assigned_scene_at(Vector3i(last_player_position.x, last_player_position.y, current_layer))
 	var new_map := map_data.get_assigned_scene_at(coords)
 	if not new_map.is_empty() and not previous_map.is_empty() and new_map != previous_map:
-		room_changed.emit(map_data.get_uid_room(new_map))
+		room_changed.emit(new_map)
 
 ## Returns [code]true[/code] if the call was discovered, either mapped (if [param include_mapped] is [code]true[/code]) or explored.
 func is_cell_discovered(coords: Vector3i, include_mapped := true) -> bool:
@@ -389,10 +389,17 @@ func get_current_room_instance() -> RoomInstance:
 		return current_room
 	return null
 
-## Returns the name of the current room, or empty string if there is no active RoomInstance. Use together with [method get_full_room_path] to get the full path.
+## Returns the unique ID of the current room, or empty string if there is no active RoomInstance. In most cases this is scene's UID.
+func get_current_room_id() -> String:
+	if current_room:
+		return current_room.room_id
+	else:
+		return ""
+
+## Like [method get_current_room_id], but returns scene name. Use together with [method get_full_room_path] to get the full path.
 func get_current_room_name() -> String:
 	if current_room:
-		return current_room.room_name
+		return map_data.get_room_friendly_name(current_room.room_id)
 	else:
 		return ""
 

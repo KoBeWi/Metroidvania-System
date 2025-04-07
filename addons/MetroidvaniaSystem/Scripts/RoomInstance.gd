@@ -9,7 +9,7 @@ var GRID_PASSAGE_COLOR: Color
 
 var cells: Array[Vector3i]
 var initialized: bool
-var room_name: String
+var room_id: String
 
 var min_cell := Vector2i.MAX
 var max_cell := Vector2i.MIN
@@ -54,11 +54,11 @@ func _update_assigned_scene():
 	queue_redraw()
 	
 	var owner_node := owner if owner != null else self
-	cells = MetSys.map_data.get_cells_assigned_to_path(owner_node.scene_file_path)
+	cells = MetSys.map_data.get_cells_assigned_to(owner_node.scene_file_path)
 	if cells.is_empty():
 		return
 	
-	room_name = MetSys.map_data.get_room_from_scene_path(owner_node.scene_file_path, false)
+	room_id = MetSys.map_data.get_room_id(owner_node.scene_file_path)
 	
 	layer = cells[0].z
 	for p in cells:
@@ -88,7 +88,7 @@ func _update_neighbor_previews():
 				var next_coords := coords + Vector3i(fwd.x, fwd.y, 0)
 				var scene: String = MetSys.map_data.get_assigned_scene_at(next_coords)
 				
-				if scene.is_empty() or scene == room_name:
+				if scene.is_empty() or scene == room_id:
 					continue
 				
 				var next_cells: Array[Vector3i] = MetSys.map_data.get_whole_room(next_coords)
@@ -101,12 +101,12 @@ func _update_neighbor_previews():
 				var preview: Control = load("res://addons/MetroidvaniaSystem/Nodes/RoomPreview.tscn").instantiate()
 				preview.position = Vector2i(next_coords.x, next_coords.y) - min_cell
 				preview.position *= MetSys.settings.in_game_cell_size
-				preview.tooltip_text = scene
+				preview.tooltip_text = MetSys.map_data.get_room_friendly_name(scene)
 				preview.offset = Vector2(next_coords.x, next_coords.y) - Vector2(min_cell)
 				preview.offset -= Vector2(next_coords.x, next_coords.y) - Vector2(next_min_cell)
 				add_child(preview)
 				
-				var temp_map: Node2D = load(MetSys.get_full_room_path(scene)).instantiate()
+				var temp_map: Node2D = load(scene).instantiate()
 				temp_map.modulate.a = 0.5
 				temp_map.set_meta(&"fake_map", true)
 				
@@ -160,8 +160,10 @@ func get_neighbor_rooms() -> Array[String]:
 			
 			if cell_data.borders[i] > 0:
 				var scene: String = MetSys.map_data.get_assigned_scene_at(coords + Vector3i(fwd.x, fwd.y, 0))
-				if not scene.is_empty() and scene != room_name and not scene in ret:
-					ret.append(scene)
+				if not scene.is_empty() and scene != room_id:
+					scene = MetSys.map_data.get_room_friendly_name(scene)
+					if not scene in ret:
+						ret.append(scene)
 	
 	return ret
 
