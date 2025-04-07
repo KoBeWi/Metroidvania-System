@@ -13,7 +13,7 @@ script/source = "extends Area2D
 const FWD = { MetroidvaniaSystem.R: Vector2i.RIGHT, MetroidvaniaSystem.D: Vector2i.DOWN, MetroidvaniaSystem.L: Vector2i.LEFT, MetroidvaniaSystem.U: Vector2i.UP }
 # Generation thread.
 var generating: Thread
-# 
+# The array of paths for generated maps. It's populated in thread and then assigned to Game.
 var new_generated_maps: Array[String]
 
 func _ready() -> void:
