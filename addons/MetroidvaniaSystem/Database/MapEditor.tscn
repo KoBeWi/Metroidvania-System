@@ -644,17 +644,17 @@ func validate_scene():
 	var scene_name_text := scene_name.text
 	
 	if scene_name_text.is_empty():
-		set_error(\"Scene name can't be empty.\")
+		set_error(tr(\"Scene name can't be empty.\"))
 		return
 	elif not scene_name_text.is_valid_filename():
-		set_error(\"Scene name contains invalid characters.\")
+		set_error(tr(\"Scene name contains invalid characters.\"))
 		return
 	elif not root_name.text.is_empty() and not root_name.text.is_valid_identifier():
-		set_error(\"Root node invalid.\")
+		set_error(tr(\"Root node invalid.\"))
 		return
 	
 	if FileAccess.file_exists(get_scene_path()):
-		set_error(\"File already exists.\")
+		set_error(tr(\"File already exists.\"))
 		return
 	
 	set_error(\"\")
@@ -1077,6 +1077,7 @@ placeholder_text = "Map"
 
 [node name="ErrorLabel" type="Label" parent="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign/CreateDialog/VBoxContainer"]
 unique_name_in_owner = true
+auto_translate_mode = 2
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0, 0, 1)
 

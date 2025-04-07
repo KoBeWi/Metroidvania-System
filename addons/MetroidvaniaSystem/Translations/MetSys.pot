@@ -330,6 +330,22 @@ msgid "Scene Assign"
 msgstr ""
 
 #: addons/MetroidvaniaSystem/Database/MapEditor.tscn
+msgid "Scene name can't be empty."
+msgstr ""
+
+#: addons/MetroidvaniaSystem/Database/MapEditor.tscn
+msgid "Scene name contains invalid characters."
+msgstr ""
+
+#: addons/MetroidvaniaSystem/Database/MapEditor.tscn
+msgid "Root node invalid."
+msgstr ""
+
+#: addons/MetroidvaniaSystem/Database/MapEditor.tscn
+msgid "File already exists."
+msgstr ""
+
+#: addons/MetroidvaniaSystem/Database/MapEditor.tscn
 msgid "Scene File"
 msgstr ""
 
@@ -343,10 +359,6 @@ msgstr ""
 
 #: addons/MetroidvaniaSystem/Database/MapEditor.tscn
 msgid "Root Name"
-msgstr ""
-
-#: addons/MetroidvaniaSystem/Database/MapEditor.tscn
-msgid "Map"
 msgstr ""
 
 #: addons/MetroidvaniaSystem/Database/MapEditor.tscn
