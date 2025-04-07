@@ -47,12 +47,14 @@ func _edit(object: Object) -> void:
 
 func _refresh():
 	assert(current_instance)
+	preview_list.clear()
 	current_instance._update_neighbor_previews()
 
 func update_preview_list():
 	preview_list.assign(get_tree().get_nodes_in_group(&"_MetSys_RoomPreview_"))
 
 func update_preview_list_after_frame():
+	preview_list.clear()
 	await get_tree().process_frame
 	update_preview_list()
 
