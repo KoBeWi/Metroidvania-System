@@ -59,9 +59,9 @@ func _on_room_changed(target_room: String):
 			if is_zero_approx(screen_delta.x) or is_zero_approx(screen_delta.y):
 				tween.tween_property(camera, ^"offset", Vector2(), SCROLL_TIME)
 			else:
-				var total := 1.0 / (screen_delta.x + screen_delta.y)
-				tween.tween_property(camera, ^"offset:x", 0.0, absf(screen_delta.x * total) * SCROLL_TIME)
-				tween.tween_property(camera, ^"offset:y", 0.0, absf(screen_delta.y * total) * SCROLL_TIME)
+				var total := 1.0 / (absf(screen_delta.x) + absf(screen_delta.y))
+				tween.tween_property(camera, ^"offset:x", 0.0, absf(screen_delta.x) * total * SCROLL_TIME)
+				tween.tween_property(camera, ^"offset:y", 0.0, absf(screen_delta.y) * total * SCROLL_TIME)
 			
 			await tween.finished
 			
