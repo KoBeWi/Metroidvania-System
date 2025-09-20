@@ -28,8 +28,7 @@ func _on_room_changed(target_room: String):
 		# This can happen when teleporting to another room.
 		return
 	
-	var camera: Camera2D = _player.get_node(^"Camera2D")
-	var original_player_position := _player.get_viewport().canvas_transform * _player.position
+	var camera: Camera2D = _player.get_viewport().get_camera_2d()
 	
 	var prev_room_instance := MetSys.get_current_room_instance()
 	if prev_room_instance:
@@ -61,8 +60,8 @@ func _on_room_changed(target_room: String):
 				tween.tween_property(camera, ^"offset", Vector2(), SCROLL_TIME)
 			else:
 				var total := 1.0 / (screen_delta.x + screen_delta.y)
-				tween.tween_property(camera, ^"offset:x", 0.0, screen_delta.x * total * SCROLL_TIME)
-				tween.tween_property(camera, ^"offset:y", 0.0, screen_delta.y * total * SCROLL_TIME)
+				tween.tween_property(camera, ^"offset:x", 0.0, absf(screen_delta.x * total) * SCROLL_TIME)
+				tween.tween_property(camera, ^"offset:y", 0.0, absf(screen_delta.y * total) * SCROLL_TIME)
 			
 			await tween.finished
 			
