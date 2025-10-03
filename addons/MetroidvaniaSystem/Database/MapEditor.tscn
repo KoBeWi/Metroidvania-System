@@ -595,16 +595,18 @@ func clear_scene(from: Array[Vector3i]) -> String:
 	if from.is_empty():
 		return \"\"
 	
-	var current_assigned: String = MetSys.map_data.get_cell_at(from[0]).assigned_scene
-	if current_assigned.is_empty():
+	var current_id: String = MetSys.map_data.get_cell_at(from[0]).id
+	if current_id.is_empty():
 		return \"\"
 	else:
-		MetSys.map_data.assigned_scenes.erase(current_assigned)
+		MetSys.map_data.assigned_scenes.erase(current_id)
 	
 	for p in from:
-		MetSys.map_data.get_cell_at(p).assigned_scene = \"\"
+		var cell_data := MetSys.map_data.get_cell_at(p)
+		cell_data.assigned_scene = \"\"
+		cell_data.id = \"\"
 	
-	return current_assigned
+	return current_id
 
 func on_map_selected(path: String) -> void:
 	if assign_uid.button_pressed:
@@ -612,19 +614,22 @@ func on_map_selected(path: String) -> void:
 	else:
 		path = path.trim_prefix(MetSys.settings.map_root_folder)
 	
+	var id := MetSys.map_data.get_room_id(path)
 	var prev_scene := clear_scene(highlighted_room)
 	
 	var current_assigned: Array[Vector3i]
-	current_assigned.assign(MetSys.map_data.assigned_scenes.get(path, []))
+	current_assigned.assign(MetSys.map_data.assigned_scenes.get(id, []))
 	
 	if not current_assigned.is_empty():
 		var other_prev_scene := clear_scene(current_assigned)
 		undo_handle_scene_remove(current_assigned, other_prev_scene)
 	
-	MetSys.map_data.assigned_scenes[path] = []
+	MetSys.map_data.assigned_scenes[id] = []
 	for coords in highlighted_room:
-		MetSys.map_data.get_cell_at(coords).assigned_scene = path
-		MetSys.map_data.assigned_scenes[path].append(coords)
+		var cell_data := MetSys.map_data.get_cell_at(coords)
+		cell_data.assigned_scene = path
+		cell_data.id = id
+		MetSys.map_data.assigned_scenes[id].append(coords)
 	
 	undo_handle_scene_add(highlighted_room.duplicate(), prev_scene)
 	undo_end_with_redraw()
