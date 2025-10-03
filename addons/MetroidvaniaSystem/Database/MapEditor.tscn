@@ -602,8 +602,9 @@ func clear_scene(from: Array[Vector3i]) -> String:
 		MetSys.map_data.assigned_scenes.erase(current_id)
 	
 	for p in from:
-		MetSys.map_data.get_cell_at(p).assigned_scene = \"\"
-		MetSys.map_data.get_cell_at(p).id = \"\"
+		var cell_data := MetSys.map_data.get_cell_at(p)
+		cell_data.assigned_scene = \"\"
+		cell_data.id = \"\"
 	
 	return current_id
 
