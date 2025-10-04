@@ -211,7 +211,7 @@ func undo_handle_scene_add(room: Array[Vector3i], old_scene: String, undo_only :
 	if not undo_active:
 		undo_begin()
 	
-	var new_scene := MetSys.map_data.get_cell_at(room[0]).assigned_scene
+	var new_scene := MetSys.map_data.get_cell_at(room[0]).scene
 	
 	if not undo_only:
 		editor.undo_redo.add_do_method(switch_scene.bind(room, new_scene, old_scene))
@@ -232,7 +232,7 @@ func switch_scene(room: Array[Vector3i], new_scene: String, old_scene: String):
 		if not cell_data:
 			continue
 		
-		cell_data.assigned_scene = new_scene
+		cell_data.scene = new_scene
 		
 		if not new_scene.is_empty():
 			if not new_scene in MetSys.map_data.assigned_scenes:

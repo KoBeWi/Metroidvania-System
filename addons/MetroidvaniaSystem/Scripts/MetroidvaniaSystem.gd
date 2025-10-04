@@ -85,9 +85,9 @@ func _update_theme():
 	CELL_SIZE = settings.theme.center_texture.get_size()
 	map_updated.emit()
 
-## Loads map data from the provided map root directory. Can be used to support multiple separate world maps (for custom campaigns etc.). 
-func load_map_data(folder: String):
-	settings.map_root_folder = folder
+## Loads map data from the provided map data file. Can be used to support multiple separate world maps (for custom campaigns etc.). 
+func load_map_data(file: String):
+	settings.map_data_file = file
 	map_data = MapData.new()
 	map_data.load_data()
 	map_updated.emit()
@@ -348,7 +348,7 @@ func get_cell_override_from_group(group_id: int, auto_create := true) -> MapData
 ## [br][br][b]Note:[/b] If the override was created with MapBuilder, use the [code]destroy()[/code] method instead.
 func remove_cell_override(coords: Vector3i):
 	var cell := map_data.get_cell_at(coords)
-	assert(cell, "Can't remove override of non-existent cell")
+	assert(cell, "Can't remove override of non-existent cell.")
 	if save_data.remove_cell_override(cell):
 		map_updated.emit()
 
@@ -389,14 +389,14 @@ func get_current_room_instance() -> RoomInstance:
 		return current_room
 	return null
 
-## Returns the unique ID of the current room, or empty string if there is no active RoomInstance. In most cases this is scene's UID.
+## Returns the ID of the current room, or empty string if there is no active RoomInstance. In most cases this is scene's UID.
 func get_current_room_id() -> String:
 	if current_room:
 		return current_room.room_id
 	else:
 		return ""
 
-## Like [method get_current_room_id], but returns scene name. Use together with [method get_full_room_path] to get the full path.
+## Like [method get_current_room_id], but returns scene file name.
 func get_current_room_name() -> String:
 	if current_room:
 		return map_data.get_room_friendly_name(current_room.room_id)
@@ -404,5 +404,6 @@ func get_current_room_name() -> String:
 		return ""
 
 ## Returns the full path to the provided [param room_name] scene. This method assumes that the scene is inside the base map folder.
+## @deprecated: Map root folder no longer exists, so this method just changes scene UID to path.
 func get_full_room_path(room_name: String) -> String:
-	return settings.map_root_folder.path_join(room_name)
+	return ResourceUID.uid_to_path(room_name)

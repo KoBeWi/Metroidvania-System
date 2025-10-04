@@ -80,7 +80,7 @@ func save_game():
 	save_manager.set_value("collectible_count", collectibles)
 	save_manager.set_value("generated_rooms", generated_rooms)
 	save_manager.set_value("events", events)
-	save_manager.set_value("current_room", MetSys.get_current_room_name())
+	save_manager.set_value("current_room", MetSys.get_current_room_id())
 	save_manager.set_value("abilities", player.abilities)
 	save_manager.save_as_text(SAVE_PATH)
 

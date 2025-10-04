@@ -49,4 +49,4 @@ script = SubResource("GDScript_r3e0s")
 [node name="MiniPortal" parent="." instance=ExtResource("3_1ystc")]
 modulate = Color(1, 1, 0, 1)
 position = Vector2(1558, 285)
-target_map = "SecretChamber.tscn"
+target_map = "uid://swme0gqqjneh"

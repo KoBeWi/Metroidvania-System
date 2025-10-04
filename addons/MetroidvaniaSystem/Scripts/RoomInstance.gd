@@ -58,7 +58,7 @@ func _update_assigned_scene():
 	if cells.is_empty():
 		return
 	
-	room_id = MetSys.map_data.get_room_id(owner_node.scene_file_path)
+	room_id = MetSys.map_data.get_room_from_scene_path(owner_node.scene_file_path)
 	
 	layer = cells[0].z
 	for p in cells:
@@ -118,8 +118,9 @@ func _update_neighbor_previews():
 func adjust_camera_limits(camera: Camera2D):
 	camera.limit_left = 0
 	camera.limit_top = 0
-	camera.limit_right = get_size().x
-	camera.limit_bottom = get_size().y
+	var size := get_size()
+	camera.limit_right = size.x
+	camera.limit_bottom = size.y
 
 ## Returns the full size of this room, based on the cells and [code]in_game_cell_size[/code] defined in MetSys Settings.
 func get_size() -> Vector2:

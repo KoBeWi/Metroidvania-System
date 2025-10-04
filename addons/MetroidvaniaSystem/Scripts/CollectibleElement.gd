@@ -31,7 +31,7 @@ func get_save_data() -> Dictionary:
 	
 	if resource_picker.edited_resource:
 		var path := resource_picker.edited_resource.resource_path
-		path = ResourceUID.id_to_text(ResourceLoader.get_resource_uid(path))
+		path = ResourceUID.path_to_uid(path)
 		data.icon = path
 		
 	return data

@@ -86,7 +86,7 @@ func _physics_process(delta: float) -> void:
 func kill():
 	# Player dies, reset the position to the entrance.
 	position = reset_position
-	Game.get_singleton().load_room(MetSys.get_current_room_name())
+	Game.get_singleton().load_room(MetSys.get_current_room_id())
 
 func on_enter():
 	# Position for kill system. Assigned when entering new room (see Game.gd).

@@ -255,6 +255,6 @@ horizontal_alignment = 1
 [node name="Portal" parent="." instance=ExtResource("5_m5jcc")]
 modulate = Color(0.207843, 0.870588, 0.121569, 1)
 position = Vector2(217, 263)
-target_map = "UpperElevatorRoom.tscn"
+target_map = "uid://dkcgx06o6celq"
 
 [connection signal="body_entered" from="Dice" to="Dice" method="_on_body_entered"]

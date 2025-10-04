@@ -4,7 +4,7 @@ extends "res://addons/MetroidvaniaSystem/Scripts/EditorMapView.gd"
 class FoundElement:
 	var element: String
 	var icon: Texture2D
-	var map: String
+	var scene: String
 	var coords := Vector3i.MAX
 	var position := Vector2.INF
 	
@@ -63,8 +63,8 @@ func _on_item_unhover(item: Control):
 func _update_status_label():
 	status_label.show()
 	status_label.modulate = theme_cache.room_assigned
-	if room_under_cursor and not room_under_cursor.assigned_scene.is_empty():
-		status_label.text = str(get_cursor_pos(), " ", get_assigned_scene_display(room_under_cursor.assigned_scene))
+	if room_under_cursor and not room_under_cursor.scene.is_empty():
+		status_label.text = str(get_cursor_pos(), " ", get_assigned_scene_display(room_under_cursor.scene))
 	else:
 		if room_under_cursor:
 			status_label.modulate = theme_cache.room_not_assigned
@@ -79,11 +79,8 @@ func _on_overlay_input(event: InputEvent) -> void:
 	
 	if event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_LEFT:
-			if event.pressed and room_under_cursor and not room_under_cursor.assigned_scene.is_empty():
-				var scene := room_under_cursor.assigned_scene
-				if not scene.begins_with("uid://") and not scene.begins_with("res://"):
-					scene = MetSys.settings.map_root_folder.path_join(scene)
-				
+			if event.pressed and room_under_cursor and not room_under_cursor.scene.is_empty():
+				var scene := room_under_cursor.scene
 				EditorInterface.open_scene_from_path(scene)
 
 func _on_overlay_draw() -> void:
@@ -95,9 +92,8 @@ func _on_overlay_draw() -> void:
 	if cursor_inside:
 		map_overlay.draw_rect(Rect2(Vector2(mouse + map_offset) * MetSys.CELL_SIZE, MetSys.CELL_SIZE), theme_cache.cursor_color, false, 2)
 	
-	if get_tree().edited_scene_root and get_tree().edited_scene_root.scene_file_path.begins_with(MetSys.settings.map_root_folder):
+	if get_tree().edited_scene_root:
 		var current_scene := get_tree().edited_scene_root.scene_file_path
-		
 		for coords in MetSys.map_data.get_cells_assigned_to(current_scene):
 			if coords.z != current_layer:
 				break
@@ -110,7 +106,7 @@ func _on_overlay_draw() -> void:
 			var coords := data.coords
 			map_overlay.draw_rect(Rect2(Vector2(coords.x + map_offset.x, coords.y + map_offset.y) * MetSys.CELL_SIZE, MetSys.CELL_SIZE), theme_cache.marked_collectible_room if coords.z == current_layer else theme_cache.foreign_marked_collectible_room)
 		else:
-			for coords in MetSys.map_data.get_cells_assigned_to(data.map):
+			for coords in MetSys.map_data.get_cells_assigned_to(data.scene):
 				if coords.z != current_layer:
 					break
 				

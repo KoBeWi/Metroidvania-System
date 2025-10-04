@@ -7,10 +7,7 @@ class CellData:
 	var borders: Array[int] = [-1, -1, -1, -1]
 	var border_colors: Array[Color] = [Color.TRANSPARENT, Color.TRANSPARENT, Color.TRANSPARENT, Color.TRANSPARENT]
 	var symbol := -1
-	
-	var assigned_scene: String
-	var id: String
-	var override_id: String
+	var scene: String
 	
 	var loading: Variant
 	
@@ -38,10 +35,13 @@ class CellData:
 		if not chunk.is_empty():
 			symbol = chunk.to_int()
 		
-		assigned_scene = load_next_chunk()
-		if assigned_scene.begins_with(":"):
-			assigned_scene = "uid://" + assigned_scene.substr(1)
-		id = MetSys.map_data.get_room_id(assigned_scene)
+		scene = load_next_chunk()
+		if not scene.begins_with("uid://"):
+		# Compat.
+			if scene.begins_with(":"):
+				scene = "uid://" + scene.trim_prefix(":")
+			else:
+				scene = ResourceUID.path_to_uid(MetSys.settings._legacy_map_root.path_join(scene))
 		
 		loading = null
 	
@@ -61,12 +61,7 @@ class CellData:
 		else:
 			data.append("")
 		
-		if MetSys.map_data.exporting_mode:
-			data.append(id)
-		elif assigned_scene.begins_with("uid://"):
-			data.append(":" + assigned_scene.substr(6))
-		else:
-			data.append(assigned_scene)
+		data.append(scene)
 		
 		return "|".join(data)
 	
@@ -110,13 +105,11 @@ class CellData:
 			return override.symbol
 		return symbol
 	
-	func get_assigned_id() -> String:
+	func get_assigned_scene() -> String:
 		var override := get_override()
-		if override and override.assigned_scene != "/":
-			return override.id
-		if not override_id.is_empty():
-			return override_id
-		return id
+		if override and override.scene != "/":
+			return override.scene
+		return scene
 	
 	func get_override() -> CellOverride:
 		if not MetSys.save_data:
@@ -138,7 +131,7 @@ class CellOverride extends CellData:
 		original_room = from
 		borders = [-2, -2, -2, -2]
 		symbol = -2
-		assigned_scene = "/"
+		scene = "/"
 	
 	static func load_from_line(line: String) -> CellOverride:
 		var cell: CellData
@@ -160,7 +153,7 @@ class CellOverride extends CellData:
 		override.border_colors = fake_cell.border_colors
 		override.color = fake_cell.color
 		override.symbol = fake_cell.symbol
-		override.set_assigned_scene(fake_cell.assigned_scene)
+		override.set_assigned_scene(fake_cell.scene)
 		
 		return override
 	
@@ -201,27 +194,24 @@ class CellOverride extends CellData:
 	
 	## Changes the scene assigned to the cell. Unlike other methods, this has effect on the whole room that contains this cell. Using the default value will reset it to the scene assigned in the editor.
 	func set_assigned_scene(value := "/"):
-		if value == assigned_scene:
+		if scene == value:
 			return
 		
 		if value == "/":
 			_cleanup_assigned_scene()
 		else:
-			id = MetSys.map_data.get_room_id(value)
 			if custom_cell_coords != Vector3i.MAX:
-				if not id in MetSys.map_data.assigned_scenes:
-					MetSys.map_data.assigned_scenes[id] = []
-				MetSys.map_data.assigned_scenes[id].append(custom_cell_coords)
+				if not value in MetSys.map_data.assigned_scenes:
+					MetSys.map_data.assigned_scenes[value] = []
+				MetSys.map_data.assigned_scenes[value].append(custom_cell_coords)
 			else:
-				MetSys.map_data.scene_overrides[id] = original_room.id
+				MetSys.map_data.scene_overrides[value] = original_room.scene
 				
 				for coords in MetSys.map_data.get_whole_room(original_room.get_coords()):
-					var cell: CellData = MetSys.map_data.cells[coords]
-					if not cell.override_id.is_empty():
-						push_warning("Assigned map already overriden at: %s" % coords)
-					cell.override_id = id
+					var override: CellOverride = MetSys.get_cell_override(coords)
+					override.scene = value
 		
-		assigned_scene = value
+		scene = value
 		MetSys.room_assign_updated.emit()
 		_queue_commit()
 	
@@ -256,8 +246,8 @@ class CellOverride extends CellData:
 		MetSys.map_data.erase_cell(cell_coords)
 		MetSys.map_data.custom_cells.erase(cell_coords)
 		
-		if assigned_scene != "/":
-			MetSys.map_data.assigned_scenes[id].erase(cell_coords)
+		if scene != "/":
+			MetSys.map_data.assigned_scenes[scene].erase(cell_coords)
 		
 		if MetSys.save_data:
 			MetSys.save_data.discovered_cells.erase(cell_coords)
@@ -265,12 +255,14 @@ class CellOverride extends CellData:
 		MetSys.map_updated.emit()
 	
 	func _cleanup_assigned_scene() -> void:
-		if assigned_scene == "/":
+		if scene == "/":
 			return
 		
-		MetSys.map_data.scene_overrides.erase(id)
+		MetSys.map_data.scene_overrides.erase(scene)
 		for coords in MetSys.map_data.get_whole_room(original_room.get_coords()):
-			MetSys.map_data.cells[coords].override_id = ""
+			var override: CellOverride = MetSys.get_cell_override(coords, false)
+			if override:
+				override.scene = "/"
 	
 	func _get_override_string(coords: Vector3i) -> String:
 		return str(get_string(), "|", coords.x, ",", coords.y, ",", coords.z, "|", custom_cell_coords != Vector3i.MAX)
@@ -301,7 +293,9 @@ var scene_overrides: Dictionary[String, String]
 var group_names: PackedStringArray
 var group_cache: Dictionary[Vector3i, PackedInt32Array]
 
-var exporting_mode: bool
+# Compat.
+var _legacy_map_root: String
+
 signal saved
 
 func load_data():
@@ -331,8 +325,8 @@ func load_data():
 			line = data[i].strip_edges()
 			
 			var cell_data := CellData.new(line)
-			if not cell_data.assigned_scene.is_empty():
-				assigned_scenes[cell_data.id] = [coords]
+			if not cell_data.scene.is_empty():
+				assigned_scenes[cell_data.scene] = [coords]
 			
 			cells[coords] = cell_data
 		elif current_section == 1 or current_section == 0 and line.contains("/"):
@@ -376,11 +370,9 @@ func load_data():
 		assigned_scenes[map] = get_whole_room(assigned_cells[0])
 
 func save_data(backup := false):
-	var file_path: String
+	var file_path := get_map_data_path()
 	if backup:
-		file_path = MetSys.settings.map_root_folder.path_join("MapData(Copy).txt")
-	else:
-		file_path = get_map_data_path()
+		file_path += ".bak"
 	
 	var file := FileAccess.open(file_path, FileAccess.WRITE)
 	if not file:
@@ -477,16 +469,15 @@ func get_whole_room(at: Vector3i) -> Array[Vector3i]:
 		if coords in cells:
 			room.append(coords)
 			for i in 4:
-				if cells[coords].borders[i] == -1:
+				if cells[coords].get_border(i) == -1:
 					var p2: Vector2i = p + FWD[i]
 					if not p2 in to_check and not p2 in checked:
 						to_check.append(p2)
 	
 	return room
 
-func get_cells_assigned_to(room: String) -> Array[Vector3i]:
-	room = get_room_id(room)
-	room = scene_overrides.get(room, room)
+func get_cells_assigned_to(scene: String) -> Array[Vector3i]:
+	var room := get_room_from_scene_path(scene, false)
 	
 	var ret: Array[Vector3i]
 	ret.assign(assigned_scenes.get(room, []))
@@ -495,12 +486,12 @@ func get_cells_assigned_to(room: String) -> Array[Vector3i]:
 func get_assigned_scene_at(coords: Vector3i) -> String:
 	var cell := get_cell_at(coords)
 	if cell:
-		return cell.get_assigned_id()
+		return cell.get_assigned_scene()
 	else:
 		return ""
 
 func erase_cell(coords: Vector3i):
-	var assigned_scene: String = cells[coords].id
+	var assigned_scene: String = cells[coords].scene
 	assigned_scenes.erase(assigned_scene)
 	
 	cells.erase(coords)
@@ -524,41 +515,17 @@ func transfer_cell(from_coords: Vector3i, to_coords: Vector3i):
 			group.erase(from_coords)
 			group.append(to_coords)
 
-func get_room_id(room: String) -> String:
-	if OS.has_feature("editor"):
-		var uid: int
-		if room.begins_with("res://"):
-			uid = ResourceLoader.get_resource_uid(room)
-		else:
-			uid = ResourceLoader.get_resource_uid(MetSys.settings.map_root_folder.path_join(room))
-		
-		if uid == ResourceUID.INVALID_ID:
-			return room
-		return ResourceUID.id_to_text(uid)
-	else:
-		if room.begins_with("uid://"):
-			room = ResourceUID.get_id_path(ResourceUID.text_to_id(room))
-		elif not room.begins_with("res://"):
-			var temp_room: String = MetSys.settings.map_root_folder.path_join(room)
-			if ResourceLoader.exists(temp_room):
-				room = temp_room
-		return room
-
-func get_room_from_scene_path(path: String, safe := true) -> String:
-	var room_name := get_room_id(path)
-	room_name = scene_overrides.get(room_name, room_name)
+func get_room_from_scene_path(scene: String, safe := true) -> String:
+	if scene.begins_with("res://"):
+		scene = ResourceUID.path_to_uid(scene)
+	
+	scene = scene_overrides.get(scene, scene)
 	if safe:
-		assert(room_name in assigned_scenes)
-	return room_name
+		assert(scene in assigned_scenes)
+	return scene
 
 func get_room_friendly_name(path: String) -> String:
-	if path.begins_with("uid://"):
-		path = ResourceUID.get_id_path(ResourceUID.text_to_id(path))
-	
-	if path.begins_with(MetSys.settings.map_root_folder):
-		return path.trim_prefix(MetSys.settings.map_root_folder)
-	
-	return ""
+	return ResourceUID.ensure_path(path).get_file()
 
 func get_map_data_path() -> String:
-	return MetSys.settings.map_root_folder.path_join("MapData.txt")
+	return MetSys.settings.map_data_file

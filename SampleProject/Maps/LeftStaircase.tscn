@@ -45,7 +45,7 @@ func start_water() -> void:
 	var override := MetSys.get_cell_override_from_group(1)
 	# Changes assigned scene to the one with extinguished lava and changes the cell color.
 	# The latter is immediately visible on the map, because map_updated signal is emitted.
-	override.set_assigned_scene(\"LavaCorridorAfterwater.tscn\")
+	override.set_assigned_scene(\"uid://dko1blssmx6yj\")
 	override.set_color(Color.BLUE)
 	# Applies the override to all cells in group.
 	override.apply_to_group(1)

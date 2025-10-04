@@ -24,4 +24,4 @@ tile_set = ExtResource("1_svur5")
 [node name="Portal" parent="." instance=ExtResource("5_1vjsn")]
 modulate = Color(0.870588, 0.117647, 0.466667, 1)
 position = Vector2(304, 263)
-target_map = "DarkPortalRoom.tscn"
+target_map = "uid://bfw23ln6e6532"

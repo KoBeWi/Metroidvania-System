@@ -125,22 +125,23 @@ func _process(delta: float) -> void:
 func scan_maps(element_list: Array[FoundElement]):
 	Thread.set_thread_safety_checks_enabled(false)
 	
-	var maps: Array[String]
-	var folders: Array[String]
-	folders.append(MetSys.settings.map_root_folder)
+	var scenes: Array[String]
+	scenes.assign(MetSys.map_data.assigned_scenes.keys())
+	#var folders: Array[String] # TODO?
+	#folders.append(MetSys.settings.map_data_file)
+	#
+	#while not folders.is_empty():
+		#var folder := folders.pop_back()
+		#folders.append_array(Array(DirAccess.get_directories_at(folder)).map(func(subfolder: String) -> String: return folder.path_join(subfolder)))
+		#maps.append_array(Array(DirAccess.get_files_at(folder)).map(func(file: String) -> String: return folder.path_join(file)))
 	
-	while not folders.is_empty():
-		var folder := folders.pop_back()
-		folders.append_array(Array(DirAccess.get_directories_at(folder)).map(func(subfolder: String) -> String: return folder.path_join(subfolder)))
-		maps.append_array(Array(DirAccess.get_files_at(folder)).map(func(file: String) -> String: return folder.path_join(file)))
-	
-	scan_progress.max_value = maps.size()
+	scan_progress.max_value = scenes.size()
 	scan_progress.value = 0
 	scan_progress.show()
 	show_on_map.hide()
 	
-	for map in maps:
-		var lines := FileAccess.open(map, FileAccess.READ).get_as_text().split(\"\\n\")
+	for scene in scenes:
+		var lines := FileAccess.open(scene, FileAccess.READ).get_as_text().split(\"\\n\")
 		
 		var current_element: FoundElement
 		for line in lines:
@@ -156,7 +157,7 @@ func scan_maps(element_list: Array[FoundElement]):
 			for element in element_list:
 				if line.begins_with(\"[node name=\\\"%s\" % element.element):
 					current_element = element.make_result()
-					current_element.map = map
+					current_element.scene = scene
 					break
 		
 		if current_element:
@@ -187,9 +188,10 @@ func setup_found(data: FoundElement):
 	label.mouse_filter = Control.MOUSE_FILTER_PASS
 	label.set_meta(&\"data\", data)
 	
-	data.map = data.map.trim_prefix(MetSys.settings.map_root_folder)
 	
-	var room := MetSys.map_data.get_cells_assigned_to(data.map)
+	var room := MetSys.map_data.get_cells_assigned_to(data.scene)
+	var room_name := ResourceUID.uid_to_path(data.scene).get_file()
+	
 	if data.position.is_finite() and not room.is_empty():
 		var top_left := Vector2i.MAX
 		for coords in room:
@@ -198,9 +200,9 @@ func setup_found(data: FoundElement):
 		
 		var pos := top_left + Vector2i(data.position / MetSys.settings.in_game_cell_size)
 		data.coords = Vector3i(pos.x, pos.y, room[0].z)
-		label.text = \"%s %s\" % [data.map, data.coords]
+		label.text = \"%s %s\" % [room_name, data.coords]
 	else:
-		label.text = \"%s\" % data.map
+		label.text = \"%s\" % room_name
 	
 	label.mouse_entered.connect(owner._on_item_hover.bind(label))
 

@@ -44,7 +44,7 @@ script = SubResource("GDScript_7vkwe")
 
 [node name="Elevator" parent="." instance=ExtResource("4_xc2rt")]
 position = Vector2(448, 368)
-target_map = "UpperElevatorRoom.tscn"
+target_map = "uid://dkcgx06o6celq"
 
 [node name="SavePoint" type="Area2D" parent="."]
 position = Vector2(448, 160)

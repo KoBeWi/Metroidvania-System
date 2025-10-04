@@ -7,13 +7,10 @@
 [resource]
 script = ExtResource("2_r56ns")
 theme = ExtResource("3_qyjha")
-map_root_folder = "res://SampleProject/Maps/"
-map_extents = 100
-scene_template = ""
+map_data_file = "res://SampleProject/Maps/MapData.txt"
 in_game_cell_size = Vector2(864, 480)
-discover_whole_rooms = false
-cache_group_reverse_lookup = true
 custom_element_script = ExtResource("1_v4ykp")
+_last_scene_folder = "res://SampleProject/Maps"
 _collectible_list = Array[Dictionary]([{
 &"element": "Collectible",
 &"icon": "uid://wiq0mic5m6is"
@@ -21,4 +18,3 @@ _collectible_list = Array[Dictionary]([{
 &"element": "MapItem",
 &"icon": "uid://l42te86waali"
 }])
-_assign_uid_to_rooms = false

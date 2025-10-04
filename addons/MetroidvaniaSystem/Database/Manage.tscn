@@ -86,8 +86,8 @@ func json_file_selected(path: String) -> void:
 		if cell_data.border_colors.any(func(color: Color) -> bool: return color.a > 0):
 			cell_to_save[\"border_colors\"] = cell_data.border_colors.map(func(color: Color) -> String:
 				return \"000000\" if color.a == 0 else color.to_html(false))
-		if not cell_data.assigned_scene.is_empty():
-			cell_to_save[\"assigned_scene\"] = cell_data.assigned_scene
+		if not cell_data.scene.is_empty():
+			cell_to_save[\"scene\"] = cell_data.scene
 	
 	var groups: Dictionary
 	
