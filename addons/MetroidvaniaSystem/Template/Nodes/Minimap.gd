@@ -11,10 +11,7 @@ extends Control
 		notify_property_list_changed()
 
 ## If [code]true[/code], the minimap scrolls with pixel precision, instead of changing when cell changes. Only effective when the current theme uses [member MapTheme.show_exact_player_location] enabled. [member track_position] must be enabled.
-@export var smooth_scroll := false:
-	set(ss):
-		smooth_scroll = ss
-		update_configuration_warnings()
+@export var smooth_scroll := false
 
 ## If [code]true[/code], player location scene will be automatically displayed and updated in the minimap.
 @export var display_player_location := false
@@ -65,10 +62,6 @@ var _center_offset: Vector3i
 var _update_all_queued: bool
 
 func _ready() -> void:
-	if not Engine.is_editor_hint() and smooth_scroll and not MetSys.settings.theme.show_exact_player_location:
-		push_warning("Minimap has smooth_scroll enabled, but the theme does not show exact position. Disabling.")
-		smooth_scroll = false
-	
 	var actual_size := area
 	if smooth_scroll:
 		actual_size += Vector2i(2, 2)
@@ -79,7 +72,6 @@ func _ready() -> void:
 	
 	if Engine.is_editor_hint():
 		set_physics_process(false)
-		MetSys.settings.theme_changed.connect(update_configuration_warnings)
 		return
 	
 	MetSys.map_updated.connect(_queue_update_all)
@@ -145,9 +137,6 @@ func _get_configuration_warnings() -> PackedStringArray:
 	var ret: PackedStringArray
 	if area.x % 2 == 0 or area.y % 2 == 0:
 		ret.append("Using even area dimensions is not recommended.")
-	
-	if smooth_scroll and not MetSys.settings.theme.show_exact_player_location:
-		ret.append("Smooth Scroll is enabled, but the MapTheme doesn't show exact player location. The property will have no effect.")
 	
 	return ret
 
