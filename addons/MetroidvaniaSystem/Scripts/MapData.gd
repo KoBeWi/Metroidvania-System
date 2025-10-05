@@ -306,7 +306,7 @@ func load_data():
 		if OS.has_feature("editor"):
 			push_warning("Map data file does not exist.")
 		else:
-			push_error("Map data file not found. Remember to add \"*.%s\" include filter in Resources tab of your export preset." % get_map_data_path().get_extension())
+			push_error("Map data file does not exist.")
 		return
 	
 	var data := file.get_as_text().split("\n")

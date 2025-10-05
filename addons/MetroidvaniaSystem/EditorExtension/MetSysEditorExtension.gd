@@ -7,6 +7,7 @@ var preview_list: Array[Control]
 var hovered_preview: Control
 
 var inspector_plugin: EditorInspectorPlugin
+var export_plugin: EditorExportPlugin
 
 func _enter_tree() -> void:
 	button = Button.new()
@@ -18,10 +19,14 @@ func _enter_tree() -> void:
 	
 	inspector_plugin = RoomLinkPlugin.new()
 	add_inspector_plugin(inspector_plugin)
+	
+	export_plugin = MetSysExportPlugin.new()
+	add_export_plugin(export_plugin)
 
 func _exit_tree() -> void:
 	remove_control_from_container(EditorPlugin.CONTAINER_CANVAS_EDITOR_MENU, button)
 	remove_inspector_plugin(inspector_plugin)
+	remove_export_plugin(export_plugin)
 
 func _make_visible(visible: bool) -> void:
 	button.visible = visible
@@ -191,3 +196,16 @@ class RoomLinkPlugin extends EditorInspectorPlugin:
 				_browse_file()
 			else:
 				EditorInterface.open_scene_from_path(get_edited_object().get(get_edited_property()))
+
+class MetSysExportPlugin extends EditorExportPlugin:
+	var map_data_path: String
+	
+	func _export_begin(features: PackedStringArray, is_debug: bool, path: String, flags: int) -> void:
+		map_data_path = MetSys.map_data.get_map_data_path()
+		var data := FileAccess.get_file_as_bytes(map_data_path)
+		assert(not data.is_empty(), "Could not export map data file.")
+		add_file(map_data_path, data, false)
+	
+	func _export_file(path: String, type: String, features: PackedStringArray) -> void:
+		if path == map_data_path:
+			skip()
