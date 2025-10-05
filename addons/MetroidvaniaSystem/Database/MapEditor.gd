@@ -127,8 +127,10 @@ func on_zoom_changed(new_zoom: float):
 func update_name():
 	if is_unsaved():
 		name = "Map Editor(*)"
+		plugin.is_unsaved = true
 	else:
 		name = "Map Editor"
+		plugin.is_unsaved = false
 
 func is_unsaved() -> bool:
 	return undo_redo.get_version() != saved_version

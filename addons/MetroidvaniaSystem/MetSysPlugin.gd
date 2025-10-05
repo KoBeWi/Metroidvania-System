@@ -10,6 +10,7 @@ var main: Control
 var theme_scanner: Timer
 var prev_theme_state: Array
 var translation_list: Array[Translation]
+var is_unsaved: bool
 
 signal saved
 
@@ -105,7 +106,7 @@ func _make_visible(visible: bool) -> void:
 		theme_scanner.stop()
 
 func _save_external_data() -> void:
-	if not is_inside_tree():
+	if not is_inside_tree() or not is_unsaved:
 		return
 	
 	get_singleton().map_data.save_data()
