@@ -42,6 +42,8 @@ class CellData:
 				scene = "uid://" + scene.trim_prefix(":")
 			else:
 				scene = ResourceUID.path_to_uid(MetSys.settings._legacy_map_root.path_join(scene))
+		elif OS.has_feature("template"): # Bugfix for exported projects.
+			scene = ResourceUID.uid_to_path(scene)
 		
 		loading = null
 	
@@ -516,7 +518,7 @@ func transfer_cell(from_coords: Vector3i, to_coords: Vector3i):
 			group.append(to_coords)
 
 func get_room_from_scene_path(scene: String, safe := true) -> String:
-	if scene.begins_with("res://"):
+	if scene.begins_with("res://") and OS.has_feature("editor"):
 		scene = ResourceUID.path_to_uid(scene)
 	
 	scene = scene_overrides.get(scene, scene)
