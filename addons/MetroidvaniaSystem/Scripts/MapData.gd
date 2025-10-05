@@ -303,7 +303,10 @@ signal saved
 func load_data():
 	var file := FileAccess.open(get_map_data_path(), FileAccess.READ)
 	if not file:
-		push_warning("Map data file does not exist.")
+		if OS.has_feature("editor"):
+			push_warning("Map data file does not exist.")
+		else:
+			push_error("Map data file not found. Remember to add \"*.%s\" include filter in Resources tab of your export preset." % get_map_data_path().get_extension())
 		return
 	
 	var data := file.get_as_text().split("\n")
