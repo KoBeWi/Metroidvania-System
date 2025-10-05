@@ -507,10 +507,10 @@ func erase_cell(coords: Vector3i):
 func transfer_cell(from_coords: Vector3i, to_coords: Vector3i):
 	var cell_data := get_cell_at(from_coords)
 	
-	var id: String = cells[from_coords].id
-	if not id.is_empty():
-		assigned_scenes[id].erase(from_coords)
-		assigned_scenes[id].append(to_coords)
+	var scene: String = cells[from_coords].scene
+	if not scene.is_empty():
+		assigned_scenes[scene].erase(from_coords)
+		assigned_scenes[scene].append(to_coords)
 	
 	cells.erase(from_coords)
 	cells[to_coords] = cell_data
