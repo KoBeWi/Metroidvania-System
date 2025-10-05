@@ -140,11 +140,25 @@ func _editor_draw(map_overlay: CanvasItem):
 func update_rooms(rect: Rect2i):
 	var map_data: MetroidvaniaSystem.MapData = MetSys.map_data
 	
+	var full_overlap := true
+	for y in range(rect.position.y, rect.end.y):
+		for x in range(rect.position.x, rect.end.x):
+			var coords := Vector3i(x, y, editor.current_layer)
+			if not map_data.get_cell_at(coords):
+				full_overlap = false
+				break
+		
+		if not full_overlap:
+			break
+	
+	if full_overlap:
+		return
+	
 	for y in range(rect.position.y, rect.end.y):
 		for x in range(rect.position.x, rect.end.x):
 			var coords := Vector3i(x, y, editor.current_layer)
 			
-			var cell = map_data.get_cell_at(coords)
+			var cell := map_data.get_cell_at(coords)
 			if cell:
 				var prev_borders = cell.borders.duplicate()
 				
