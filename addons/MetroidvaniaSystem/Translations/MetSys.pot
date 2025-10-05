@@ -496,7 +496,7 @@ msgid "Refresh Adjacent Previews"
 msgstr ""
 
 #: addons/MetroidvaniaSystem/EditorExtension/MetSysEditorExtension.gd
-msgid "<None>"
+msgid "Pick Scene..."
 msgstr ""
 
 #: addons/MetroidvaniaSystem/EditorExtension/MetSysEditorExtension.gd

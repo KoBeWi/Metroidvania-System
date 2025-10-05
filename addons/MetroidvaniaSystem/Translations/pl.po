@@ -549,12 +549,15 @@ msgid "Refresh Adjacent Previews"
 msgstr "Odśwież sąsiednie podglądy"
 
 #: addons/MetroidvaniaSystem/EditorExtension/MetSysEditorExtension.gd
-msgid "<None>"
-msgstr "<Brak>"
+msgid "Pick Scene..."
+msgstr "Wybierz scenę..."
 
 #: addons/MetroidvaniaSystem/EditorExtension/MetSysEditorExtension.gd
 msgid "<Invalid>"
 msgstr "<Nieprawidłowy>"
+
+#~ msgid "<None>"
+#~ msgstr "<Brak>"
 
 #~ msgid "Map"
 #~ msgstr "Mapa"

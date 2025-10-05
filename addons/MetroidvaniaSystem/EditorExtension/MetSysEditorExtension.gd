@@ -163,7 +163,7 @@ class RoomLinkPlugin extends EditorInspectorPlugin:
 				room_label.tooltip_text = ""
 				room_label.icon = null
 				if value.is_empty():
-					room_label.text = "<None>"
+					room_label.text = "Pick Scene..."
 					room_label.disabled = false
 				else:
 					room_label.text = "<Invalid>"
