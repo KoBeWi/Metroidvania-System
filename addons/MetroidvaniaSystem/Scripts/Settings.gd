@@ -50,6 +50,12 @@ var _legacy_map_root: String
 signal theme_changed
 signal custom_elements_changed
 
+func get_scene_folder() -> String:
+	if _last_scene_folder.is_empty():
+		return MetSys.settings.map_data_file.get_base_dir()
+	else:
+		return MetSys.settings._last_scene_folder
+
 # Compatibility
 
 func _set(property: StringName, value: Variant) -> bool:

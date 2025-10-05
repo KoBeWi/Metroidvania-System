@@ -5,8 +5,8 @@ class_name Game
 const SaveManager = preload("res://addons/MetroidvaniaSystem/Template/Scripts/SaveManager.gd")
 const SAVE_PATH = "user://example_save_data.sav"
 
-# The game starts in this map. Note that it's scene name only, just like MetSys refers to rooms.
-@export var starting_map: String
+# The game starts in this map. Uses special annotation that enabled dedicated inspector plugin.
+@export_file("room_link") var starting_map: String
 
 # Number of collected collectibles. Setting it also updates the counter.
 var collectibles: int:

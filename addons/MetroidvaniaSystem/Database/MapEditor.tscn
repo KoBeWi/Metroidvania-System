@@ -519,7 +519,7 @@ resource_name = "SceneAssign"
 script/source = "@tool
 extends \"res://addons/MetroidvaniaSystem/Database/SubEditor.gd\"
 
-@onready var file_dialog: FileDialog = $FileDialog
+@onready var file_dialog: EditorFileDialog = $FileDialog
 @onready var create_dialog: ConfirmationDialog = $CreateDialog
 
 @onready var scene_name: LineEdit = %SceneName
@@ -555,10 +555,7 @@ func _editor_input(event: InputEvent):
 		if event.button_index == MOUSE_BUTTON_LEFT:
 			if event.pressed:
 				if not highlighted_room.is_empty():
-					if MetSys.settings._last_scene_folder.is_empty():
-						file_dialog.current_dir = MetSys.settings.map_data_file.get_base_dir()
-					else:
-						file_dialog.current_dir = MetSys.settings._last_scene_folder
+					file_dialog.current_dir = MetSys.settings.get_scene_folder()
 					file_dialog.popup_centered_ratio(0.6)
 		elif event.button_index == MOUSE_BUTTON_RIGHT:
 			if event.pressed:
@@ -728,7 +725,7 @@ func drop_data(at_position: Vector2, data) -> void:
 
 [sub_resource type="GDScript" id="GDScript_5yej3"]
 script/source = "@tool
-extends FileDialog
+extends EditorFileDialog
 
 func _ready() -> void:
 	if is_part_of_edited_scene():
@@ -998,17 +995,17 @@ button_group = SubResource("ButtonGroup_pv7fp")
 text = "Scene Assign"
 script = SubResource("GDScript_p75ne")
 
-[node name="FileDialog" type="FileDialog" parent="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign"]
+[node name="FileDialog" type="EditorFileDialog" parent="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign"]
 size = Vector2i(600, 400)
 file_mode = 0
 filters = PackedStringArray("*.tscn,*.scn;Scene File")
 script = SubResource("GDScript_5yej3")
 
 [node name="Button" type="Button" parent="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign/FileDialog"]
-offset_left = 465.0
-offset_top = 35.0
-offset_right = 596.0
-offset_bottom = 65.0
+offset_left = 8.0
+offset_top = 8.0
+offset_right = 592.0
+offset_bottom = 351.0
 size_flags_horizontal = 8
 size_flags_vertical = 0
 text = "Create New Scene"

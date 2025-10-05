@@ -370,8 +370,20 @@ msgid "Scene Assign"
 msgstr "Przypisz scenę"
 
 #: addons/MetroidvaniaSystem/Database/MapEditor.tscn
-msgid "Scene File"
-msgstr "Plik sceny"
+msgid "Scene name can't be empty."
+msgstr "Nazwa sceny nie może być pusta."
+
+#: addons/MetroidvaniaSystem/Database/MapEditor.tscn
+msgid "Scene name contains invalid characters."
+msgstr "Nazwa sceny ma nieprawidłowe znaki."
+
+#: addons/MetroidvaniaSystem/Database/MapEditor.tscn
+msgid "Root node invalid."
+msgstr "Nieprawidłowy korzeń sceny."
+
+#: addons/MetroidvaniaSystem/Database/MapEditor.tscn
+msgid "File already exists."
+msgstr "Plik już istnieje."
 
 #: addons/MetroidvaniaSystem/Database/MapEditor.tscn
 msgid "Create New Scene"
@@ -386,24 +398,12 @@ msgid "Root Name"
 msgstr "Nazwa korzenia"
 
 #: addons/MetroidvaniaSystem/Database/MapEditor.tscn
-msgid "Map"
-msgstr "Mapa"
-
-#: addons/MetroidvaniaSystem/Database/MapEditor.tscn
 msgid "Custom Elements"
 msgstr "Własne Elementy"
 
 #: addons/MetroidvaniaSystem/Database/MapEditor.tscn
 msgid "Group ID"
 msgstr "ID grupy"
-
-#: addons/MetroidvaniaSystem/Database/MapEditor.tscn
-msgid "If enabled, the room will have scene's UID assigned instead of path."
-msgstr "Jeśli włączone, pokoje będą mieć przypisane UID scen zamiast ścieżek."
-
-#: addons/MetroidvaniaSystem/Database/MapEditor.tscn
-msgid "Assign UID"
-msgstr "Przypisz UID"
 
 #: addons/MetroidvaniaSystem/Database/MapEditor.tscn
 msgid "Click a room or drag and drop a file"
@@ -539,3 +539,29 @@ msgid ""
 "clipboard."
 msgstr ""
 "Uruchamia get_object_id() dla wybranego węzła i kopiuje rezultat do schowka."
+
+#: addons/MetroidvaniaSystem/MetSysPlugin.gd
+msgid "Scene File"
+msgstr "Plik sceny"
+
+#: addons/MetroidvaniaSystem/EditorExtension/MetSysEditorExtension.gd
+msgid "Refresh Adjacent Previews"
+msgstr "Odśwież sąsiednie podglądy"
+
+#: addons/MetroidvaniaSystem/EditorExtension/MetSysEditorExtension.gd
+msgid "<None>"
+msgstr "<Brak>"
+
+#: addons/MetroidvaniaSystem/EditorExtension/MetSysEditorExtension.gd
+msgid "<Invalid>"
+msgstr "<Nieprawidłowy>"
+
+#~ msgid "Map"
+#~ msgstr "Mapa"
+
+#~ msgid "If enabled, the room will have scene's UID assigned instead of path."
+#~ msgstr ""
+#~ "Jeśli włączone, pokoje będą mieć przypisane UID scen zamiast ścieżek."
+
+#~ msgid "Assign UID"
+#~ msgstr "Przypisz UID"

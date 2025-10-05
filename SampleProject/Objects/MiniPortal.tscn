@@ -6,7 +6,7 @@
 script/source = "# A portal object that transports to another room.
 extends Area2D
 # The target map after entering the portal.
-@export_file var target_map: String
+@export_file(\"room_link\") var target_map: String
 
 func _on_body_entered(body: Node2D) -> void:
 	# If player entered and isn't doing an event (event in this case is entering the portal).

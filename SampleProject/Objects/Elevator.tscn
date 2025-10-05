@@ -12,7 +12,7 @@ extends StaticBody2D
 # Whether the elevator should go up or down.
 @export var up := true
 # Map to teleport to after reaching the target.
-@export_file var target_map: String
+@export_file(\"room_link\") var target_map: String
 # Initial position of the elevator.
 @onready var start_y := position.y
 

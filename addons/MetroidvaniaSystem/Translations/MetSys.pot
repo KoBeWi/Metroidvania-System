@@ -6,6 +6,7 @@
 # res://addons/MetroidvaniaSystem/Nodes/LayerSelector.tscn
 # res://addons/MetroidvaniaSystem/Nodes/CollectibleElement.tscn
 # res://addons/MetroidvaniaSystem/MetSysPlugin.gd
+# res://addons/MetroidvaniaSystem/EditorExtension/MetSysEditorExtension.gd
 #
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
@@ -346,10 +347,6 @@ msgid "File already exists."
 msgstr ""
 
 #: addons/MetroidvaniaSystem/Database/MapEditor.tscn
-msgid "Scene File"
-msgstr ""
-
-#: addons/MetroidvaniaSystem/Database/MapEditor.tscn
 msgid "Create New Scene"
 msgstr ""
 
@@ -367,14 +364,6 @@ msgstr ""
 
 #: addons/MetroidvaniaSystem/Database/MapEditor.tscn
 msgid "Group ID"
-msgstr ""
-
-#: addons/MetroidvaniaSystem/Database/MapEditor.tscn
-msgid "If enabled, the room will have scene's UID assigned instead of path."
-msgstr ""
-
-#: addons/MetroidvaniaSystem/Database/MapEditor.tscn
-msgid "Assign UID"
 msgstr ""
 
 #: addons/MetroidvaniaSystem/Database/MapEditor.tscn
@@ -496,4 +485,20 @@ msgstr ""
 
 #: addons/MetroidvaniaSystem/MetSysPlugin.gd
 msgid "Runs get_object_id() for the selected Node and copies the result to clipboard."
+msgstr ""
+
+#: addons/MetroidvaniaSystem/MetSysPlugin.gd
+msgid "Scene File"
+msgstr ""
+
+#: addons/MetroidvaniaSystem/EditorExtension/MetSysEditorExtension.gd
+msgid "Refresh Adjacent Previews"
+msgstr ""
+
+#: addons/MetroidvaniaSystem/EditorExtension/MetSysEditorExtension.gd
+msgid "<None>"
+msgstr ""
+
+#: addons/MetroidvaniaSystem/EditorExtension/MetSysEditorExtension.gd
+msgid "<Invalid>"
 msgstr ""

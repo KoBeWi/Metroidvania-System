@@ -6,6 +6,8 @@ var current_instance: MetroidvaniaSystem.RoomInstance
 var preview_list: Array[Control]
 var hovered_preview: Control
 
+var inspector_plugin: EditorInspectorPlugin
+
 func _enter_tree() -> void:
 	button = Button.new()
 	button.text = "Refresh Adjacent Previews"
@@ -13,9 +15,13 @@ func _enter_tree() -> void:
 	button.hide()
 	
 	add_control_to_container(EditorPlugin.CONTAINER_CANVAS_EDITOR_MENU, button)
+	
+	inspector_plugin = RoomLinkPlugin.new()
+	add_inspector_plugin(inspector_plugin)
 
 func _exit_tree() -> void:
 	remove_control_from_container(EditorPlugin.CONTAINER_CANVAS_EDITOR_MENU, button)
+	remove_inspector_plugin(inspector_plugin)
 
 func _make_visible(visible: bool) -> void:
 	button.visible = visible
@@ -102,3 +108,86 @@ func _forward_canvas_gui_input(event: InputEvent) -> bool:
 			return true
 	
 	return false
+
+class RoomLinkPlugin extends EditorInspectorPlugin:
+	func is_valid_property(type: int, hint: int, hint_string: String) -> bool:
+		return type == TYPE_STRING and hint == PROPERTY_HINT_FILE and hint_string == "room_link"
+	
+	func _can_handle(object: Object) -> bool:
+		for property in object.get_property_list():
+			if is_valid_property(property["type"], property["hint"], property["hint_string"]):
+				return true
+		return false
+	
+	func _parse_property(object: Object, type: Variant.Type, name: String, hint_type: PropertyHint, hint_string: String, usage_flags: int, wide: bool) -> bool:
+		if not is_valid_property(type, hint_type, hint_string):
+			return false
+		
+		var property := EditorPropertyRoomLink.new()
+		property.set_object_and_property(object, name)
+		add_property_editor(name, property)
+		
+		return true
+	
+	class EditorPropertyRoomLink extends EditorProperty:
+		var room_label: Button
+		var pick_button: Button
+		var file_dialog: EditorFileDialog
+		
+		func _init() -> void:
+			var hbox := HBoxContainer.new()
+			add_child(hbox)
+			
+			room_label = Button.new()
+			room_label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+			room_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			hbox.add_child(room_label)
+			room_label.pressed.connect(_on_label_pressed, CONNECT_DEFERRED)
+			
+			pick_button = Button.new()
+			hbox.add_child(pick_button)
+			pick_button.pressed.connect(_browse_file)
+		
+		func _notification(what: int) -> void:
+			if what == NOTIFICATION_THEME_CHANGED:
+				pick_button.icon = get_theme_icon(&"FileBrowse", &"EditorIcons")
+		
+		func _update_property() -> void:
+			var value: String = get_edited_object().get(get_edited_property())
+			if ResourceLoader.exists(value):
+				room_label.text = ResourceUID.uid_to_path(value).get_file()
+				room_label.tooltip_text = room_label.text
+				room_label.icon = get_theme_icon(&"ExternalLink", &"EditorIcons")
+				room_label.disabled = false
+			else:
+				room_label.tooltip_text = ""
+				room_label.icon = null
+				if value.is_empty():
+					room_label.text = "<None>"
+					room_label.disabled = false
+				else:
+					room_label.text = "<Invalid>"
+					room_label.disabled = true
+		
+		func _browse_file():
+			if not file_dialog:
+				file_dialog = EditorFileDialog.new()
+				file_dialog.file_mode = EditorFileDialog.FILE_MODE_OPEN_FILE
+				file_dialog.add_filter("*.tscn,*.scn", "Scene File")
+				add_child(file_dialog)
+				file_dialog.file_selected.connect(_assign_scene)
+			
+			file_dialog.current_dir = MetSys.settings.get_scene_folder()
+			file_dialog.popup_file_dialog()
+		
+		func _assign_scene(scene: String):
+			emit_changed(get_edited_property(), ResourceUID.path_to_uid(scene))
+			update_property()
+			
+			MetSys.settings._last_scene_folder = scene.get_base_dir()
+		
+		func _on_label_pressed():
+			if room_label.tooltip_text.is_empty():
+				_browse_file()
+			else:
+				EditorInterface.open_scene_from_path(get_edited_object().get(get_edited_property()))

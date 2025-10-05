@@ -153,3 +153,4 @@ func POT_hack():
 	tr("MetSys restart failed, the singleton still can't be loaded. Make sure the \"MetroidvaniaSystem.gd\" script has no errors.\n\nCommon cause of errors are:\n- Using Godot version older than 4.4.\n- Name conflicts with one of the classes.\n\nThe plugin will be now disabled. Fix the errors and try again.")
 	tr("Runs get_object_id() for the selected Node and prints the result.")
 	tr("Runs get_object_id() for the selected Node and copies the result to clipboard.")
+	tr("Scene File") # POT generator bug.
