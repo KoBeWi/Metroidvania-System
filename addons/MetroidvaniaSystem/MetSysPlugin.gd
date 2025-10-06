@@ -12,6 +12,7 @@ var prev_theme_state: Array
 var translation_list: Array[Translation]
 var is_unsaved: bool
 
+signal presaved
 signal saved
 
 func _has_main_screen() -> bool:
@@ -107,7 +108,12 @@ func _make_visible(visible: bool) -> void:
 		theme_scanner.stop()
 
 func _save_external_data() -> void:
-	if not is_inside_tree() or not is_unsaved:
+	if not is_inside_tree():
+		return
+	
+	presaved.emit()
+	
+	if not is_unsaved:
 		return
 	
 	get_singleton().map_data.save_data()

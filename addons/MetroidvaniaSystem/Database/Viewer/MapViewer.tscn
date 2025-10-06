@@ -211,6 +211,6 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_qbvjg")
 vertical_alignment = 1
 
 [connection signal="toggled" from="Sidebar/ScrollContainer/VBoxContainer/Layer/MappedCheckbox" to="." method="toggle_mapped"]
-[connection signal="pressed" from="Sidebar/ScrollContainer/VBoxContainer/EditControls/Settings/Button" to="Sidebar/ScrollContainer/VBoxContainer/Modes/Settings" method="add_collectible"]
+[connection signal="pressed" from="Sidebar/ScrollContainer/VBoxContainer/EditControls/Settings/Button" to="Sidebar/ScrollContainer/VBoxContainer/Modes/Settings" method="add_collectible" binds= [true]]
 [connection signal="pressed" from="Sidebar/ScrollContainer/VBoxContainer/EditControls/Finder/ScanButton" to="Sidebar/ScrollContainer/VBoxContainer/Modes/Finder" method="start_scan"]
 [connection signal="toggled" from="Sidebar/ScrollContainer/VBoxContainer/EditControls/Finder/ShowOnMap" to="Sidebar/ScrollContainer/VBoxContainer/Modes/Finder" method="toggle_display_on_map"]

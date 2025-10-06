@@ -25,7 +25,6 @@ script = ExtResource("2_3d05g")
 icon_name = "Remove"
 
 [node name="IconContainer" type="HBoxContainer" parent="VBoxContainer"]
-unique_name_in_owner = true
 layout_mode = 2
 
 [node name="Label" type="Label" parent="VBoxContainer/IconContainer"]
@@ -33,10 +32,17 @@ layout_mode = 2
 size_flags_horizontal = 0
 text = "Icon"
 
+[node name="ResourcePicker" type="EditorResourcePicker" parent="VBoxContainer/IconContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+base_type = "Texture2D"
+
 [node name="SaveTimer" type="Timer" parent="."]
 wait_time = 0.5
 one_shot = true
 
 [connection signal="text_changed" from="VBoxContainer/HBoxContainer2/LineEdit" to="SaveTimer" method="start" unbinds=1]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer2/Button" to="." method="delete"]
-[connection signal="timeout" from="SaveTimer" to="." method="emit_signal" binds= [&"save_request"]]
+[connection signal="resource_changed" from="VBoxContainer/IconContainer/ResourcePicker" to="." method="_on_resource_selected"]
+[connection signal="timeout" from="SaveTimer" to="." method="_on_name_changed"]
