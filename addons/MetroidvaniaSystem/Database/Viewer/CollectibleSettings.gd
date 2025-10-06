@@ -1,21 +1,24 @@
 @tool
 extends Button
 
+var initialized: bool
+
 func _ready() -> void:
 	if is_part_of_edited_scene():
 		return
 	
-	await get_tree().process_frame
-	_pressed()
-	
-	for data in MetSys.settings._collectible_list:
-		var collectible := add_collectible()
-		collectible.set_data(data)
+	%Settings.show()
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_VISIBILITY_CHANGED:
+		if not initialized and is_visible_in_tree():
+			for data in MetSys.settings._collectible_list:
+				var collectible := add_collectible()
+				collectible.set_data(data)
+			
+			initialized = true
 
 func _pressed() -> void:
-	for button in button_group.get_buttons():
-		button.exit()
-	
 	%Settings.show()
 
 func exit():

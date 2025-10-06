@@ -5,7 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://dch8dyylb7526" path="res://addons/MetroidvaniaSystem/Template/Nodes/Minimap.tscn" id="3_a3gfy"]
 [ext_resource type="Texture2D" uid="uid://wiq0mic5m6is" path="res://SampleProject/Sprites/Collectible.png" id="3_kng3d"]
 [ext_resource type="PackedScene" uid="uid://bd5w7n7gew76f" path="res://SampleProject/Objects/CollectionGridItem.tscn" id="4_uuja8"]
-[ext_resource type="Texture2D" uid="uid://l42te86waali" path="res://SampleProject/Sprites/MapItem.png" id="6_lpbfn"]
+[ext_resource type="Texture2D" uid="uid://dpwli04va881g" path="res://SampleProject/Sprites/MapItem.png" id="6_lpbfn"]
 
 [sub_resource type="GDScript" id="GDScript_u7odr"]
 resource_name = "MapWindow"
