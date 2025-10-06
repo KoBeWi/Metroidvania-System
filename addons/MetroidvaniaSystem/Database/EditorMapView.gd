@@ -8,8 +8,6 @@ extends Control
 @onready var zoom_slider: HSlider = %ZoomSlider
 @onready var zoom_value_label: Label = %ZoomValue
 
-var plugin: EditorPlugin
-
 var view_drag: Vector4
 var map_offset := Vector2i(10, 10)
 
@@ -18,10 +16,6 @@ var cursor_inside: bool
 
 var layers: Dictionary[int, MapView]
 var current_map_view: MapView
-
-func _enter_tree() -> void:
-	if owner:
-		plugin = owner.plugin
 
 func _ready() -> void:
 	$Sidebar.custom_minimum_size.x = 200 * EditorInterface.get_editor_scale()

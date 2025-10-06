@@ -68,8 +68,9 @@ func _enter_tree() -> void:
 			DirAccess.remove_absolute("user://MetSysFail")
 			EditorInterface.set_plugin_enabled(EXTENSION_PATH, true)
 	
-	main = load("res://addons/MetroidvaniaSystem/Database/Main.tscn").instantiate()
-	main.plugin = self
+	get_singleton().editor_plugin = self
+	
+	main = load("uid://crxgu2q73va5y").instantiate()
 	EditorInterface.get_editor_main_screen().add_child(main)
 	main.hide()
 	

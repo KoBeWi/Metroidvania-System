@@ -22,6 +22,8 @@ enum { R, ## Right border.
 	}
 
 var settings: MetSysSettings
+var editor_plugin: Node
+
 ## The size of a map cell. Automatically set to the size of [member MapTheme.center_texture]. Read only.
 var CELL_SIZE: Vector2
 

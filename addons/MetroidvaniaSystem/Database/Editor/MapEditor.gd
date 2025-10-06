@@ -15,13 +15,13 @@ var undo_redo: UndoRedo
 var saved_version := 1
 
 func _ready() -> void:
-	if not plugin:
+	if is_part_of_edited_scene():
 		return
 	
 	undo_redo = UndoRedo.new()
 	%Shortcuts.hide()
 	
-	plugin.saved.connect(mark_saved)
+	MetSys.editor_plugin.saved.connect(mark_saved)
 	await super()
 	
 	viewer_layers = %"Map Viewer".layers
@@ -96,7 +96,7 @@ func _on_overlay_input(event: InputEvent) -> void:
 				accept_event()
 
 func _on_overlay_draw() -> void:
-	if not plugin:
+	if is_part_of_edited_scene():
 		return
 	
 	map_overlay.draw_set_transform(Vector2(map_offset) * MetSys.CELL_SIZE)
@@ -109,7 +109,7 @@ func _on_overlay_draw() -> void:
 		sub.top_draw.call(map_overlay)
 
 func _on_grid_draw() -> void:
-	if not plugin:
+	if is_part_of_edited_scene():
 		return
 	
 	if MetSys.settings.theme.empty_space_texture:
@@ -127,10 +127,10 @@ func on_zoom_changed(new_zoom: float):
 func update_name():
 	if is_unsaved():
 		name = "Map Editor(*)"
-		plugin.is_unsaved = true
+		MetSys.editor_plugin.is_unsaved = true
 	else:
 		name = "Map Editor"
-		plugin.is_unsaved = false
+		MetSys.editor_plugin.is_unsaved = false
 
 func is_unsaved() -> bool:
 	return undo_redo.get_version() != saved_version

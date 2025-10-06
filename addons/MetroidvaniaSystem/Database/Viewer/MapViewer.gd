@@ -25,11 +25,11 @@ var current_hovered_item: Control
 var extra_draw: Callable
 
 func _ready() -> void:
-	if not plugin:
+	if is_part_of_edited_scene():
 		return
 	super()
 	
-	plugin.scene_changed.connect(map_overlay.queue_redraw.unbind(1))
+	MetSys.editor_plugin.scene_changed.connect(map_overlay.queue_redraw.unbind(1))
 	MetSys.map_updated.connect(map.queue_redraw)
 
 func _notification(what: int) -> void:
@@ -84,7 +84,7 @@ func _on_overlay_input(event: InputEvent) -> void:
 				EditorInterface.open_scene_from_path(scene)
 
 func _on_overlay_draw() -> void:
-	if not plugin:
+	if is_part_of_edited_scene():
 		return
 	
 	var mouse := get_cursor_pos()

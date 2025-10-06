@@ -12,7 +12,6 @@ extends VBoxContainer
 @onready var changes_detected: ConfirmationDialog = $ChangesDetected
 @onready var tabs = $TabContainer
 
-var plugin: EditorPlugin
 var plugin_version: String
 var header_text: String
 

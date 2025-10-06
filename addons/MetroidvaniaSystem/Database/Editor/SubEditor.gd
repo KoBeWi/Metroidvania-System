@@ -20,7 +20,7 @@ var highlighted_border := -1
 var top_draw: Callable
 
 func _ready() -> void:
-	if not owner.plugin:
+	if is_part_of_edited_scene():
 		return
 	
 	editor = owner
@@ -114,7 +114,7 @@ func get_cell_at_cursor() -> MetroidvaniaSystem.MapData.CellData:
 	return MetSys.map_data.get_cell_at(get_coords(get_cursor_pos()))
 
 func mark_modified():
-	editor.plugin.modified = true
+	MetSys.editor_plugin.modified = true
 
 func redraw_overlay():
 	editor.map_overlay.queue_redraw()
