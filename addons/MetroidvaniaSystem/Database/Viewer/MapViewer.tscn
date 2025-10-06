@@ -1,0 +1,216 @@
+[gd_scene load_steps=8 format=3 uid="uid://df5fuj4vjr11p"]
+
+[ext_resource type="Script" uid="uid://cdl44ebe6tc0h" path="res://addons/MetroidvaniaSystem/Database/Viewer/MapViewer.gd" id="1_s16ok"]
+[ext_resource type="Script" uid="uid://celtpddhdfods" path="res://addons/MetroidvaniaSystem/Database/EditorIconButton.gd" id="2_tjngl"]
+[ext_resource type="PackedScene" uid="uid://w34y4dyx84y8" path="res://addons/MetroidvaniaSystem/Database/LayerSelector.tscn" id="2_yqo4d"]
+[ext_resource type="Script" uid="uid://b7wgj7dyledyf" path="res://addons/MetroidvaniaSystem/Database/Viewer/CollectibleSettings.gd" id="3_2xj2u"]
+[ext_resource type="Script" uid="uid://bfmpip6ko1vyw" path="res://addons/MetroidvaniaSystem/Database/Viewer/CollectibleFinder.gd" id="4_gyv3y"]
+
+[sub_resource type="ButtonGroup" id="ButtonGroup_lmh17"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qbvjg"]
+content_margin_left = 4.0
+content_margin_right = 4.0
+bg_color = Color(0, 0, 0, 0.501961)
+
+[node name="MapViewer" type="HBoxContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_s16ok")
+metadata/_edit_lock_ = true
+
+[node name="Sidebar" type="PanelContainer" parent="."]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Sidebar"]
+layout_mode = 2
+horizontal_scroll_mode = 0
+vertical_scroll_mode = 4
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Sidebar/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Layer" type="VBoxContainer" parent="Sidebar/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="Label" type="Label" parent="Sidebar/ScrollContainer/VBoxContainer/Layer"]
+layout_mode = 2
+text = "Current Layer"
+horizontal_alignment = 1
+
+[node name="CurrentLayer" parent="Sidebar/ScrollContainer/VBoxContainer/Layer" instance=ExtResource("2_yqo4d")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="RecenterButton" type="Button" parent="Sidebar/ScrollContainer/VBoxContainer/Layer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Recenter View"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Sidebar/ScrollContainer/VBoxContainer/Layer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Sidebar/ScrollContainer/VBoxContainer/Layer/HBoxContainer"]
+layout_mode = 2
+text = "Zoom"
+
+[node name="ZoomSlider" type="HSlider" parent="Sidebar/ScrollContainer/VBoxContainer/Layer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+min_value = 1.0
+max_value = 3.0
+step = 0.5
+value = 1.0
+
+[node name="ZoomValue" type="Label" parent="Sidebar/ScrollContainer/VBoxContainer/Layer/HBoxContainer"]
+unique_name_in_owner = true
+auto_translate_mode = 2
+layout_mode = 2
+text = "x1.0"
+
+[node name="MappedCheckbox" type="CheckButton" parent="Sidebar/ScrollContainer/VBoxContainer/Layer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Preview Mapped"
+
+[node name="HSeparator" type="HSeparator" parent="Sidebar/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Modes" type="VBoxContainer" parent="Sidebar/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Settings" type="Button" parent="Sidebar/ScrollContainer/VBoxContainer/Modes"]
+layout_mode = 2
+toggle_mode = true
+button_pressed = true
+button_group = SubResource("ButtonGroup_lmh17")
+text = "Collectible Settings"
+script = ExtResource("3_2xj2u")
+
+[node name="Finder" type="Button" parent="Sidebar/ScrollContainer/VBoxContainer/Modes"]
+layout_mode = 2
+toggle_mode = true
+button_group = SubResource("ButtonGroup_lmh17")
+text = "Collectible Finder"
+script = ExtResource("4_gyv3y")
+
+[node name="HSeparator2" type="HSeparator" parent="Sidebar/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="EditControls" type="VBoxContainer" parent="Sidebar/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Settings" type="VBoxContainer" parent="Sidebar/ScrollContainer/VBoxContainer/EditControls"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Sidebar/ScrollContainer/VBoxContainer/EditControls/Settings"]
+layout_mode = 2
+size_flags_vertical = 3
+vertical_scroll_mode = 2
+
+[node name="CollectibleList" type="VBoxContainer" parent="Sidebar/ScrollContainer/VBoxContainer/EditControls/Settings/ScrollContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Button" type="Button" parent="Sidebar/ScrollContainer/VBoxContainer/EditControls/Settings"]
+layout_mode = 2
+icon_alignment = 1
+script = ExtResource("2_tjngl")
+icon_name = "Add"
+
+[node name="Finder" type="VBoxContainer" parent="Sidebar/ScrollContainer/VBoxContainer/EditControls"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ScanButton" type="Button" parent="Sidebar/ScrollContainer/VBoxContainer/EditControls/Finder"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Scan Maps"
+
+[node name="ScanProgress" type="ProgressBar" parent="Sidebar/ScrollContainer/VBoxContainer/EditControls/Finder"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="ShowOnMap" type="CheckButton" parent="Sidebar/ScrollContainer/VBoxContainer/EditControls/Finder"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+text = "Display on Map"
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Sidebar/ScrollContainer/VBoxContainer/EditControls/Finder"]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 3
+vertical_scroll_mode = 2
+
+[node name="Summary" type="VBoxContainer" parent="Sidebar/ScrollContainer/VBoxContainer/EditControls/Finder/ScrollContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 0
+
+[node name="MapView" type="Control" parent="."]
+texture_filter = 1
+clip_contents = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ColorRect" type="ColorRect" parent="MapView"]
+modulate = Color(0, 0, 0, 0.12549)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Map" type="Node2D" parent="MapView"]
+unique_name_in_owner = true
+
+[node name="OverlayLayer" type="Control" parent="MapView"]
+unique_name_in_owner = true
+z_index = 5
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+focus_mode = 2
+mouse_filter = 1
+
+[node name="StatusLabel" type="Label" parent="MapView"]
+unique_name_in_owner = true
+z_index = 5
+layout_mode = 0
+offset_right = 1.0
+offset_bottom = 23.0
+mouse_filter = 1
+theme_override_styles/normal = SubResource("StyleBoxFlat_qbvjg")
+vertical_alignment = 1
+
+[connection signal="toggled" from="Sidebar/ScrollContainer/VBoxContainer/Layer/MappedCheckbox" to="." method="toggle_mapped"]
+[connection signal="pressed" from="Sidebar/ScrollContainer/VBoxContainer/EditControls/Settings/Button" to="Sidebar/ScrollContainer/VBoxContainer/Modes/Settings" method="add_collectible"]
+[connection signal="pressed" from="Sidebar/ScrollContainer/VBoxContainer/EditControls/Finder/ScanButton" to="Sidebar/ScrollContainer/VBoxContainer/Modes/Finder" method="start_scan"]
+[connection signal="toggled" from="Sidebar/ScrollContainer/VBoxContainer/EditControls/Finder/ShowOnMap" to="Sidebar/ScrollContainer/VBoxContainer/Modes/Finder" method="toggle_display_on_map"]

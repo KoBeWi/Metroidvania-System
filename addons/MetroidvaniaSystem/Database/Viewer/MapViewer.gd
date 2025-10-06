@@ -1,5 +1,5 @@
 @tool
-extends "res://addons/MetroidvaniaSystem/Scripts/EditorMapView.gd"
+extends "res://addons/MetroidvaniaSystem/Database/EditorMapView.gd"#"uid://dpi3c1f5q7s70"
 
 class FoundElement:
 	var element: String

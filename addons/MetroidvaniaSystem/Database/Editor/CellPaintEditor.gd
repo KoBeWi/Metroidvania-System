@@ -1,5 +1,5 @@
 @tool
-extends "res://addons/MetroidvaniaSystem/Database/SubEditor.gd"
+extends "res://addons/MetroidvaniaSystem/Database/Editor/SubEditor.gd"#"uid://cyob148ixrqef"
 
 enum { MODE_DRAW, MODE_ERASE, MODE_PICK }
 

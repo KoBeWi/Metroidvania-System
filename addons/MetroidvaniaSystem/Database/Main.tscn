@@ -1,9 +1,9 @@
 [gd_scene load_steps=8 format=3 uid="uid://crxgu2q73va5y"]
 
 [ext_resource type="Theme" uid="uid://dfyoc5jqnnpf5" path="res://addons/MetroidvaniaSystem/Database/DatabaseTheme.tres" id="1_hfop4"]
-[ext_resource type="PackedScene" uid="uid://dfbykrvyqnqr5" path="res://addons/MetroidvaniaSystem/Database/MapEditor.tscn" id="1_lpqq2"]
-[ext_resource type="PackedScene" uid="uid://df5fuj4vjr11p" path="res://addons/MetroidvaniaSystem/Database/MapViewer.tscn" id="2_0tuq7"]
-[ext_resource type="PackedScene" uid="uid://he12yvtcmf87" path="res://addons/MetroidvaniaSystem/Database/Manage.tscn" id="2_1dme8"]
+[ext_resource type="PackedScene" uid="uid://dfbykrvyqnqr5" path="res://addons/MetroidvaniaSystem/Database/Editor/MapEditor.tscn" id="1_lpqq2"]
+[ext_resource type="PackedScene" uid="uid://df5fuj4vjr11p" path="res://addons/MetroidvaniaSystem/Database/Viewer/MapViewer.tscn" id="2_0tuq7"]
+[ext_resource type="PackedScene" uid="uid://he12yvtcmf87" path="res://addons/MetroidvaniaSystem/Database/Manage/Manage.tscn" id="2_1dme8"]
 
 [sub_resource type="GDScript" id="GDScript_ov8k3"]
 script/source = "@tool

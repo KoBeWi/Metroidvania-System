@@ -37,7 +37,7 @@ func _enter_tree() -> void:
 	
 	if Engine.is_editor_hint():
 		MetSys.room_assign_updated.connect(_update_assigned_scene)
-		var theme: Theme = load("res://addons/MetroidvaniaSystem/Database/DatabaseTheme.tres")
+		var theme: Theme = load("uid://dfyoc5jqnnpf5")
 		GRID_COLOR = theme.get_color(&"scene_cell_border", &"MetSys")
 		GRID_PASSAGE_COLOR = theme.get_color(&"scene_room_exit", &"MetSys")
 	
@@ -98,7 +98,7 @@ func _update_neighbor_previews():
 					next_min_cell.x = mini(next_min_cell.x, p.x)
 					next_min_cell.y = mini(next_min_cell.y, p.y)
 				
-				var preview: Control = load("res://addons/MetroidvaniaSystem/Nodes/RoomPreview.tscn").instantiate()
+				var preview: Control = load("uid://bx8a6r0ee0l1b").instantiate()
 				preview.position = Vector2i(next_coords.x, next_coords.y) - min_cell
 				preview.position *= MetSys.settings.in_game_cell_size
 				preview.tooltip_text = MetSys.map_data.get_room_friendly_name(scene)

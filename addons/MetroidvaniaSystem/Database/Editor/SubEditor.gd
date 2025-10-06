@@ -1,7 +1,7 @@
 @tool
 extends Control
 
-const EDITOR_SCRIPT = preload("res://addons/MetroidvaniaSystem/Database/MapEditor.gd")
+const EDITOR_SCRIPT = preload("uid://cmjsph053oe5d")
 var editor: EDITOR_SCRIPT
 var theme_cache: Dictionary[StringName, Variant]
 

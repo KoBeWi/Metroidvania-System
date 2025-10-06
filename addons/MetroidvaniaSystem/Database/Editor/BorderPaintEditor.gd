@@ -1,5 +1,5 @@
 @tool
-extends "res://addons/MetroidvaniaSystem/Database/CellPaintEditor.gd"
+extends "res://addons/MetroidvaniaSystem/Database/Editor/CellPaintEditor.gd"#"uid://byyfy6e5ygtyx"
 
 var border_property = &"borders"
 

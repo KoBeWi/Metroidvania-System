@@ -1,0 +1,428 @@
+[gd_scene load_steps=14 format=3 uid="uid://dfbykrvyqnqr5"]
+
+[ext_resource type="Script" uid="uid://cmjsph053oe5d" path="res://addons/MetroidvaniaSystem/Database/Editor/MapEditor.gd" id="1_i7yda"]
+[ext_resource type="PackedScene" uid="uid://w34y4dyx84y8" path="res://addons/MetroidvaniaSystem/Database/LayerSelector.tscn" id="2_rinoa"]
+[ext_resource type="Script" uid="uid://8tj44xlognb7" path="res://addons/MetroidvaniaSystem/Database/Editor/ModeRoomLayout.gd" id="3_7wfw0"]
+[ext_resource type="Script" uid="uid://c5ldqibr08vwb" path="res://addons/MetroidvaniaSystem/Database/Editor/ModeCellColor.gd" id="4_bsj0k"]
+[ext_resource type="Script" uid="uid://cvs0nytxe6uek" path="res://addons/MetroidvaniaSystem/Database/Editor/ModeCellSymbol.gd" id="5_6qbrp"]
+[ext_resource type="Script" uid="uid://bjw6jlag0ecp1" path="res://addons/MetroidvaniaSystem/Database/Editor/ModeBorderType.gd" id="6_f7kq4"]
+[ext_resource type="Script" uid="uid://dlntcxhhrx6r8" path="res://addons/MetroidvaniaSystem/Database/Editor/ModeCellGroup.gd" id="6_sce4u"]
+[ext_resource type="Script" uid="uid://cn1sud5tkprm3" path="res://addons/MetroidvaniaSystem/Database/Editor/ModeBorderColor.gd" id="7_sce4u"]
+[ext_resource type="Script" uid="uid://bdsdmhagoblsp" path="res://addons/MetroidvaniaSystem/Database/Editor/ModeSceneAssign.gd" id="8_bhmd4"]
+[ext_resource type="Script" uid="uid://dvkyaghuw3em5" path="res://addons/MetroidvaniaSystem/Database/Editor/ModeCustomElements.gd" id="10_bhmd4"]
+
+[sub_resource type="ButtonGroup" id="ButtonGroup_pv7fp"]
+
+[sub_resource type="GDScript" id="GDScript_5yej3"]
+script/source = "@tool
+extends EditorFileDialog
+
+func _ready() -> void:
+	if is_part_of_edited_scene():
+		return
+	
+	var create_new := $Button
+	create_new.reparent(get_ok_button().get_parent())
+	create_new.get_parent().move_child(create_new, 0)
+
+func _validate_property(property: Dictionary) -> void:
+	# Hack until Godot handles this properly.
+	if property[\"name\"] == \"ok_button_text\" or property[\"name\"] == \"title\":
+		property[\"usage\"] = 0
+"
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xiyo8"]
+content_margin_left = 4.0
+content_margin_right = 4.0
+bg_color = Color(0, 0, 0, 0.501961)
+
+[node name="MapEditor" type="HBoxContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 813.0
+offset_bottom = 448.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_i7yda")
+mode_group = SubResource("ButtonGroup_pv7fp")
+metadata/_edit_lock_ = true
+
+[node name="Sidebar" type="PanelContainer" parent="."]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Sidebar"]
+layout_mode = 2
+horizontal_scroll_mode = 0
+vertical_scroll_mode = 4
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Sidebar/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Layer" type="VBoxContainer" parent="Sidebar/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+mouse_filter = 2
+metadata/_edit_lock_ = true
+
+[node name="Label" type="Label" parent="Sidebar/ScrollContainer/VBoxContainer/Layer"]
+layout_mode = 2
+text = "Current Layer"
+horizontal_alignment = 1
+
+[node name="CurrentLayer" parent="Sidebar/ScrollContainer/VBoxContainer/Layer" instance=ExtResource("2_rinoa")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Label2" type="Label" parent="Sidebar/ScrollContainer/VBoxContainer/Layer"]
+layout_mode = 2
+text = "Preview Layer"
+horizontal_alignment = 1
+
+[node name="PreviewLayer" parent="Sidebar/ScrollContainer/VBoxContainer/Layer" instance=ExtResource("2_rinoa")]
+unique_name_in_owner = true
+layout_mode = 2
+allow_none = true
+
+[node name="RecenterButton" type="Button" parent="Sidebar/ScrollContainer/VBoxContainer/Layer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Recenter View"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Sidebar/ScrollContainer/VBoxContainer/Layer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Sidebar/ScrollContainer/VBoxContainer/Layer/HBoxContainer"]
+layout_mode = 2
+text = "Zoom"
+
+[node name="ZoomSlider" type="HSlider" parent="Sidebar/ScrollContainer/VBoxContainer/Layer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+min_value = 1.0
+max_value = 3.0
+step = 0.5
+value = 1.0
+
+[node name="ZoomValue" type="Label" parent="Sidebar/ScrollContainer/VBoxContainer/Layer/HBoxContainer"]
+unique_name_in_owner = true
+auto_translate_mode = 2
+layout_mode = 2
+text = "x1.0"
+
+[node name="HSeparator" type="HSeparator" parent="Sidebar/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Modes" type="VBoxContainer" parent="Sidebar/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="Label" type="Label" parent="Sidebar/ScrollContainer/VBoxContainer/Modes"]
+layout_mode = 2
+text = "Mode"
+horizontal_alignment = 1
+
+[node name="RoomLayout" type="Button" parent="Sidebar/ScrollContainer/VBoxContainer/Modes"]
+layout_mode = 2
+toggle_mode = true
+button_pressed = true
+button_group = SubResource("ButtonGroup_pv7fp")
+text = "Room Layout"
+script = ExtResource("3_7wfw0")
+
+[node name="CellColor" type="Button" parent="Sidebar/ScrollContainer/VBoxContainer/Modes"]
+layout_mode = 2
+toggle_mode = true
+button_group = SubResource("ButtonGroup_pv7fp")
+text = "Cell Color"
+script = ExtResource("4_bsj0k")
+
+[node name="CellSymbol" type="Button" parent="Sidebar/ScrollContainer/VBoxContainer/Modes"]
+layout_mode = 2
+toggle_mode = true
+button_group = SubResource("ButtonGroup_pv7fp")
+text = "Cell Symbol"
+script = ExtResource("5_6qbrp")
+
+[node name="CellGroup" type="Button" parent="Sidebar/ScrollContainer/VBoxContainer/Modes"]
+layout_mode = 2
+toggle_mode = true
+button_group = SubResource("ButtonGroup_pv7fp")
+text = "Cell Group"
+script = ExtResource("6_sce4u")
+
+[node name="BorderType" type="Button" parent="Sidebar/ScrollContainer/VBoxContainer/Modes"]
+layout_mode = 2
+toggle_mode = true
+button_group = SubResource("ButtonGroup_pv7fp")
+text = "Border Type"
+script = ExtResource("6_f7kq4")
+
+[node name="BorderColor" type="Button" parent="Sidebar/ScrollContainer/VBoxContainer/Modes"]
+layout_mode = 2
+toggle_mode = true
+button_group = SubResource("ButtonGroup_pv7fp")
+text = "Border Color"
+script = ExtResource("7_sce4u")
+
+[node name="SceneAssign" type="Button" parent="Sidebar/ScrollContainer/VBoxContainer/Modes"]
+layout_mode = 2
+toggle_mode = true
+button_group = SubResource("ButtonGroup_pv7fp")
+text = "Scene Assign"
+script = ExtResource("8_bhmd4")
+
+[node name="FileDialog" type="EditorFileDialog" parent="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign"]
+size = Vector2i(600, 400)
+file_mode = 0
+filters = PackedStringArray("*.tscn,*.scn;Scene File")
+script = SubResource("GDScript_5yej3")
+
+[node name="Button" type="Button" parent="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign/FileDialog"]
+offset_left = 8.0
+offset_top = 8.0
+offset_right = 592.0
+offset_bottom = 351.0
+size_flags_horizontal = 8
+size_flags_vertical = 0
+text = "Create New Scene"
+
+[node name="CreateDialog" type="ConfirmationDialog" parent="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign"]
+title = "Create New Scene"
+position = Vector2i(300, 25)
+size = Vector2i(400, 166)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign/CreateDialog"]
+offset_left = 4.0
+offset_top = 4.0
+offset_right = 396.0
+offset_bottom = 124.0
+
+[node name="GridContainer" type="GridContainer" parent="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign/CreateDialog/VBoxContainer"]
+layout_mode = 2
+columns = 2
+
+[node name="Label" type="Label" parent="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign/CreateDialog/VBoxContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 8
+text = "Scene Name"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign/CreateDialog/VBoxContainer/GridContainer"]
+layout_mode = 2
+
+[node name="SceneName" type="LineEdit" parent="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign/CreateDialog/VBoxContainer/GridContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="SceneExtension" type="OptionButton" parent="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign/CreateDialog/VBoxContainer/GridContainer/HBoxContainer"]
+unique_name_in_owner = true
+auto_translate_mode = 2
+layout_mode = 2
+selected = 0
+item_count = 2
+popup/item_0/text = "tscn"
+popup/item_0/id = 0
+popup/item_1/text = "scn"
+popup/item_1/id = 1
+
+[node name="Label2" type="Label" parent="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign/CreateDialog/VBoxContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 8
+text = "Root Name"
+
+[node name="RootName" type="LineEdit" parent="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign/CreateDialog/VBoxContainer/GridContainer"]
+unique_name_in_owner = true
+auto_translate_mode = 2
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Map"
+
+[node name="ErrorLabel" type="Label" parent="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign/CreateDialog/VBoxContainer"]
+unique_name_in_owner = true
+auto_translate_mode = 2
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+
+[node name="CustomElements" type="Button" parent="Sidebar/ScrollContainer/VBoxContainer/Modes"]
+layout_mode = 2
+toggle_mode = true
+button_group = SubResource("ButtonGroup_pv7fp")
+text = "Custom Elements"
+script = ExtResource("10_bhmd4")
+
+[node name="HSeparator2" type="HSeparator" parent="Sidebar/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="EditControls" type="VBoxContainer" parent="Sidebar/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 0
+mouse_filter = 2
+alignment = 2
+metadata/_edit_lock_ = true
+
+[node name="Symbols" type="VBoxContainer" parent="Sidebar/ScrollContainer/VBoxContainer/EditControls"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="SymbolContainer" type="HFlowContainer" parent="Sidebar/ScrollContainer/VBoxContainer/EditControls/Symbols"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Borders" type="VBoxContainer" parent="Sidebar/ScrollContainer/VBoxContainer/EditControls"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="BorderContainer" type="HFlowContainer" parent="Sidebar/ScrollContainer/VBoxContainer/EditControls/Borders"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Groups" type="VBoxContainer" parent="Sidebar/ScrollContainer/VBoxContainer/EditControls"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Sidebar/ScrollContainer/VBoxContainer/EditControls/Groups"]
+layout_mode = 2
+text = "Group ID"
+horizontal_alignment = 1
+
+[node name="CurrentGroup" parent="Sidebar/ScrollContainer/VBoxContainer/EditControls/Groups" instance=ExtResource("2_rinoa")]
+unique_name_in_owner = true
+layout_mode = 2
+mode = 1
+
+[node name="Colors" type="VBoxContainer" parent="Sidebar/ScrollContainer/VBoxContainer/EditControls"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="CurrentColor" type="ColorPickerButton" parent="Sidebar/ScrollContainer/VBoxContainer/EditControls/Colors"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 30)
+layout_mode = 2
+edit_alpha = false
+
+[node name="SceneAssign" type="VBoxContainer" parent="Sidebar/ScrollContainer/VBoxContainer/EditControls"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Sidebar/ScrollContainer/VBoxContainer/EditControls/SceneAssign"]
+layout_mode = 2
+text = "Click a room or drag and drop a file"
+autowrap_mode = 2
+
+[node name="CustomElements" type="VBoxContainer" parent="Sidebar/ScrollContainer/VBoxContainer/EditControls"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Sidebar/ScrollContainer/VBoxContainer/EditControls/CustomElements"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Sidebar/ScrollContainer/VBoxContainer/EditControls/CustomElements/HBoxContainer"]
+layout_mode = 2
+text = "Data"
+
+[node name="CustomData" type="LineEdit" parent="Sidebar/ScrollContainer/VBoxContainer/EditControls/CustomElements/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="NoElements" type="Label" parent="Sidebar/ScrollContainer/VBoxContainer/EditControls/CustomElements"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "No Custom Elements Registered"
+autowrap_mode = 2
+
+[node name="CustomElementContainer" type="VBoxContainer" parent="Sidebar/ScrollContainer/VBoxContainer/EditControls/CustomElements"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Shortcuts" type="VBoxContainer" parent="Sidebar/ScrollContainer/VBoxContainer/EditControls"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="ShortcutPick" type="Label" parent="Sidebar/ScrollContainer/VBoxContainer/EditControls/Shortcuts"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Ctrl+Click: Pick from map"
+autowrap_mode = 2
+
+[node name="ShortcutDrag" type="Label" parent="Sidebar/ScrollContainer/VBoxContainer/EditControls/Shortcuts"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+text = "Shift+Drag: Move rooms"
+autowrap_mode = 2
+
+[node name="ShortcutWhole" type="Label" parent="Sidebar/ScrollContainer/VBoxContainer/EditControls/Shortcuts"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Shift+Click: Set for the whole room"
+autowrap_mode = 2
+
+[node name="MapView" type="Control" parent="."]
+texture_filter = 1
+clip_contents = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ColorRect" type="ColorRect" parent="MapView"]
+modulate = Color(0, 0, 0, 0.12549)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Grid" type="Control" parent="MapView"]
+unique_name_in_owner = true
+clip_contents = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+
+[node name="Map" type="Node2D" parent="MapView"]
+unique_name_in_owner = true
+
+[node name="OverlayLayer" type="Control" parent="MapView"]
+unique_name_in_owner = true
+z_index = 5
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+focus_mode = 2
+mouse_filter = 1
+
+[node name="StatusLabel" type="Label" parent="MapView"]
+unique_name_in_owner = true
+z_index = 5
+layout_mode = 0
+offset_right = 1.0
+offset_bottom = 23.0
+mouse_filter = 1
+theme_override_styles/normal = SubResource("StyleBoxFlat_xiyo8")
+vertical_alignment = 1
+
+[connection signal="value_changed" from="Sidebar/ScrollContainer/VBoxContainer/Layer/PreviewLayer" to="." method="preview_layer_changed"]
+[connection signal="file_selected" from="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign/FileDialog" to="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign" method="on_map_selected"]
+[connection signal="pressed" from="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign/FileDialog/Button" to="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign" method="create_new_scene"]
+[connection signal="confirmed" from="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign/CreateDialog" to="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign" method="create_scene_confirm"]
+[connection signal="draw" from="MapView/Grid" to="." method="_on_grid_draw"]

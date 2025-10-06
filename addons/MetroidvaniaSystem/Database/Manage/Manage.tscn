@@ -1,0 +1,136 @@
+[gd_scene load_steps=4 format=3 uid="uid://he12yvtcmf87"]
+
+[ext_resource type="Script" uid="uid://bygspb8mbbsgw" path="res://addons/MetroidvaniaSystem/Database/Manage/Manage.gd" id="1_dwgkh"]
+[ext_resource type="Script" uid="uid://dr3xoib02wmf1" path="res://addons/MetroidvaniaSystem/Database/Manage/Validation.gd" id="2_0llw0"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6lvlf"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 5.0
+bg_color = Color(0.1, 0.1, 0.1, 0.6)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 5
+
+[node name="Manage" type="MarginContainer"]
+anchors_preset = 13
+anchor_left = 0.5
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -200.0
+offset_right = 200.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 3
+theme_override_constants/margin_top = 32
+script = ExtResource("1_dwgkh")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+custom_minimum_size = Vector2(400, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="Button" type="Button" parent="VBoxContainer/VBoxContainer"]
+layout_mode = 2
+text = "General Settings"
+
+[node name="Button6" type="Button" parent="VBoxContainer/VBoxContainer"]
+layout_mode = 2
+text = "Refresh Custom Elements"
+
+[node name="Button2" type="Button" parent="VBoxContainer/VBoxContainer"]
+layout_mode = 2
+text = "Reload and Cleanup Map Data"
+
+[node name="HSeparator3" type="HSeparator" parent="VBoxContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Button4" type="Button" parent="VBoxContainer/VBoxContainer"]
+layout_mode = 2
+text = "Validate Map Data"
+
+[node name="Button5" type="Button" parent="VBoxContainer/VBoxContainer"]
+layout_mode = 2
+text = "Validate Map Theme"
+
+[node name="Button7" type="Button" parent="VBoxContainer/VBoxContainer"]
+layout_mode = 2
+text = "Export Map Data as JSON"
+
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Button3" type="Button" parent="VBoxContainer/VBoxContainer"]
+layout_mode = 2
+text = "Edit Database Theme"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="AllowReset" type="CheckBox" parent="VBoxContainer/VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="ResetButton" type="Button" parent="VBoxContainer/VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+disabled = true
+text = "Reset Database Theme"
+
+[node name="HSeparator2" type="HSeparator" parent="VBoxContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="ValidationPanel" type="PanelContainer" parent="VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_6lvlf")
+script = ExtResource("2_0llw0")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/ValidationPanel"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/ValidationPanel/VBoxContainer"]
+layout_mode = 2
+text = "Validation Result"
+horizontal_alignment = 1
+
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/ValidationPanel/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Output" type="VBoxContainer" parent="VBoxContainer/ValidationPanel/VBoxContainer/ScrollContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Button" type="Button" parent="VBoxContainer/ValidationPanel/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Close"
+
+[node name="FileDialog" type="FileDialog" parent="."]
+size = Vector2i(483, 175)
+access = 2
+filters = PackedStringArray("*.json;JSON File")
+
+[connection signal="pressed" from="VBoxContainer/VBoxContainer/Button" to="." method="edit_settings_pressed"]
+[connection signal="pressed" from="VBoxContainer/VBoxContainer/Button6" to="." method="refresh_custom_elements"]
+[connection signal="pressed" from="VBoxContainer/VBoxContainer/Button2" to="." method="force_reload"]
+[connection signal="pressed" from="VBoxContainer/VBoxContainer/Button4" to="VBoxContainer/ValidationPanel" method="validate_map_data"]
+[connection signal="pressed" from="VBoxContainer/VBoxContainer/Button5" to="VBoxContainer/ValidationPanel" method="validate_map_theme"]
+[connection signal="pressed" from="VBoxContainer/VBoxContainer/Button7" to="." method="export_json"]
+[connection signal="pressed" from="VBoxContainer/VBoxContainer/Button3" to="." method="edit_database_theme"]
+[connection signal="toggled" from="VBoxContainer/VBoxContainer/HBoxContainer/AllowReset" to="." method="toggle_allow_reset"]
+[connection signal="pressed" from="VBoxContainer/VBoxContainer/HBoxContainer/ResetButton" to="." method="reset_theme"]
+[connection signal="pressed" from="VBoxContainer/ValidationPanel/VBoxContainer/Button" to="VBoxContainer/ValidationPanel" method="dismiss"]
+[connection signal="file_selected" from="FileDialog" to="." method="json_file_selected"]
