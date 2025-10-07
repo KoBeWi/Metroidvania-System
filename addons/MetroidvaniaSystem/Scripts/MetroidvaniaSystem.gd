@@ -401,7 +401,11 @@ func get_current_room_id() -> String:
 ## Like [method get_current_room_id], but returns scene file name.
 func get_current_room_name() -> String:
 	if current_room:
-		return map_data.get_room_friendly_name(current_room.room_id)
+		var id := current_room.room_id
+		var remap = map_data.scene_overrides.find_key(id)
+		if remap:
+			id = remap
+		return map_data.get_room_friendly_name(id)
 	else:
 		return ""
 

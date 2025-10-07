@@ -52,6 +52,9 @@ func delete_collectible(collectible: Node):
 	undo_redo.commit_action()
 
 func save_collectible_list():
+	if not initialized:
+		return
+	
 	var list: Array[Dictionary]
 	for collectible in %CollectibleList.get_children():
 		if not collectible.is_queued_for_deletion():
