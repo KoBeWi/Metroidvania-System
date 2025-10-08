@@ -110,6 +110,7 @@ enum SeparatorMode {
 @export var cross_corner: Texture2D
 
 var rectangle: bool
+var _property_name_cache: Array[StringName]
 
 func _validate_property(property: Dictionary) -> void:
 	var pname: String = property["name"]
@@ -143,14 +144,16 @@ func is_nocorner():
 	else:
 		return inner_corner == null and outer_corner == null
 
-func check_for_changes(prev_state: Array) -> Array[String]:
-	var new_state: Array
-	var changed: Array[String]
+func check_for_changes(prev_state: Array) -> Array[StringName]:
+	if _property_name_cache.is_empty():
+		_property_name_cache.assign(get_property_list().map(func(pinfo: Dictionary) -> StringName: return pinfo["name"]))
 	
-	var properties := get_property_list()
-	for property in properties:
-		new_state.append(get(property["name"]))
-		if changed:
+	var new_state: Array
+	var changed: Array[StringName]
+	
+	for property in _property_name_cache:
+		new_state.append(get(property))
+		if not changed.is_empty():
 			continue
 		
 		var idx := new_state.size() - 1
@@ -158,7 +161,7 @@ func check_for_changes(prev_state: Array) -> Array[String]:
 			continue
 		
 		if new_state[idx] != prev_state[idx]:
-			changed.append(property["name"])
+			changed.append(property)
 	
 	if not changed.is_empty() or prev_state.size() != new_state.size():
 		prev_state.assign(new_state)

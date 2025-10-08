@@ -11,6 +11,7 @@ var theme_scanner: Timer
 var prev_theme_state: Array
 var translation_list: Array[Translation]
 var is_unsaved: bool
+var cumulative_change: Array[StringName]
 
 signal presaved
 signal saved
@@ -142,7 +143,12 @@ func check_theme():
 	var theme: MapTheme = get_singleton().settings.theme
 	var changed := theme.check_for_changes(prev_theme_state)
 	if not changed.is_empty():
-		get_singleton().theme_modified.emit(changed)
+		for change in changed:
+			if not change in cumulative_change:
+				cumulative_change.append(change)
+	elif not cumulative_change.is_empty():
+		get_singleton().theme_modified.emit(cumulative_change)
+		cumulative_change.clear()
 
 func on_tool_option(idx: int):
 	match idx:
