@@ -207,7 +207,7 @@ class CellOverride extends CellData:
 					MetSys.map_data.assigned_scenes[value] = []
 				MetSys.map_data.assigned_scenes[value].append(custom_cell_coords)
 			else:
-				MetSys.map_data.scene_overrides[value] = original_room.scene
+				MetSys.map_data.scene_remaps[value] = original_room.scene
 				
 				for coords in MetSys.map_data.get_whole_room(original_room.get_coords()):
 					var override: CellOverride = MetSys.get_cell_override(coords)
@@ -260,7 +260,7 @@ class CellOverride extends CellData:
 		if scene == "/":
 			return
 		
-		MetSys.map_data.scene_overrides.erase(scene)
+		MetSys.map_data.scene_remaps.erase(scene)
 		for coords in MetSys.map_data.get_whole_room(original_room.get_coords()):
 			var override: CellOverride = MetSys.get_cell_override(coords, false)
 			if override:
@@ -291,12 +291,9 @@ var cell_groups: Dictionary[int, Array]#[Vector3i]]
 var custom_elements: Dictionary[Vector3i, CustomElement]
 
 var layer_names: PackedStringArray
-var scene_overrides: Dictionary[String, String]
+var scene_remaps: Dictionary[String, String]
 var group_names: PackedStringArray
 var group_cache: Dictionary[Vector3i, PackedInt32Array]
-
-# Compat.
-var _legacy_map_root: String
 
 signal saved
 
@@ -524,7 +521,7 @@ func get_room_from_scene_path(scene: String, safe := true) -> String:
 	if scene.begins_with("res://") and OS.has_feature("editor"):
 		scene = ResourceUID.path_to_uid(scene)
 	
-	scene = scene_overrides.get(scene, scene)
+	scene = scene_remaps.get(scene, scene)
 	if safe:
 		assert(scene in assigned_scenes)
 	return scene

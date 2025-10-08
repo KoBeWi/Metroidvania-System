@@ -402,7 +402,7 @@ func get_current_room_id() -> String:
 func get_current_room_name() -> String:
 	if current_room:
 		var id := current_room.room_id
-		var remap = map_data.scene_overrides.find_key(id)
+		var remap = map_data.scene_remaps.find_key(id)
 		if remap:
 			id = remap
 		return map_data.get_room_friendly_name(id)
