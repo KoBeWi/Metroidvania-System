@@ -4,12 +4,10 @@ extends "res://addons/MetroidvaniaSystem/Database/Editor/SubEditor.gd"#"uid://cy
 const CustomElement = MetroidvaniaSystem.MapData.CustomElement
 
 var current_element: String
-var custom_elements: Dictionary
 
 func _editor_init() -> void:
 	room_only_cursor = false
 	overlay_mode = true
-	custom_elements = MetSys.map_data.custom_elements
 	MetSys.settings.custom_elements_changed.connect(reload_custom_elements)
 	
 	reload_custom_elements()
@@ -56,6 +54,7 @@ func set_current_element(element: String):
 func _editor_draw(map_overlay: CanvasItem):
 	super(map_overlay)
 	
+	var custom_elements := MetSys.map_data.custom_elements
 	for coords in custom_elements:
 		if coords.z != editor.current_layer:
 			continue

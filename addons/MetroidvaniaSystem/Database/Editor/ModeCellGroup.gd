@@ -1,14 +1,12 @@
 @tool
 extends "res://addons/MetroidvaniaSystem/Database/Editor/CellPaintEditor.gd"#"uid://byyfy6e5ygtyx"
 
-var cell_groups: Dictionary
 var drawing: int
 
 func _editor_init() -> void:
 	super()
 	room_only_cursor = true
 	overlay_mode = true
-	cell_groups = MetSys.map_data.cell_groups
 	%CurrentGroup.value_changed.connect(redraw_overlay.unbind(1))
 
 func _update_theme():
@@ -25,6 +23,7 @@ func _editor_exit():
 func _editor_draw(map_overlay: CanvasItem):
 	super(map_overlay)
 	
+	var cell_groups := MetSys.map_data.cell_groups
 	for p in cell_groups.get(%CurrentGroup.value as int, []):
 		if p.z == editor.current_layer:
 			map_overlay.draw_rect(Rect2(Vector2(p.x, p.y) * MetSys.CELL_SIZE, MetSys.CELL_SIZE), theme_cache.group_color)
@@ -32,6 +31,7 @@ func _editor_draw(map_overlay: CanvasItem):
 func modify_coords(coords: Vector3i, mode: int) -> bool:
 	var current_group: int = %CurrentGroup.value
 	
+	var cell_groups := MetSys.map_data.cell_groups
 	if mode == MODE_DRAW:
 		if not current_group in cell_groups:
 			cell_groups[current_group] = []
