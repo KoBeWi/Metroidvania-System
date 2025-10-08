@@ -1,0 +1,142 @@
+[gd_scene load_steps=5 format=3 uid="uid://xxqfc6h2rll"]
+
+[ext_resource type="Texture2D" uid="uid://oab88qe0m6jn" path="res://addons/MetroidvaniaSystem/Themes/Fuzzy/PlayerLocation.png" id="1_cf0gc"]
+
+[sub_resource type="Animation" id="Animation_jyl5k"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(7, 7.0000005)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite2D2:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(-7.0000005, 7)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Sprite2D3:position")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(-6.9999995, -7)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Sprite2D4:position")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(7, -7)]
+}
+
+[sub_resource type="Animation" id="Animation_cf0gc"]
+resource_name = "new_animation"
+length = 1.2
+loop_mode = 1
+step = 0.1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5, 1),
+"transitions": PackedFloat32Array(0.5, 2, 0),
+"update": 0,
+"values": [Vector2(7, 7.0000005), Vector2(14, 14), Vector2(7, 7.0000005)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite2D2:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.5, 1),
+"transitions": PackedFloat32Array(0.5, 2, 0),
+"update": 0,
+"values": [Vector2(-7.0000005, 7), Vector2(-14, 14), Vector2(-7.0000005, 7)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Sprite2D3:position")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.5, 1),
+"transitions": PackedFloat32Array(0.5, 2, 0),
+"update": 0,
+"values": [Vector2(-6.9999995, -7), Vector2(-14, -14), Vector2(-6.9999995, -7)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Sprite2D4:position")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 0.5, 1),
+"transitions": PackedFloat32Array(0.5, 2, 0),
+"update": 0,
+"values": [Vector2(7, -7), Vector2(14, -14), Vector2(7, -7)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_jyl5k"]
+_data = {
+&"RESET": SubResource("Animation_jyl5k"),
+&"new_animation": SubResource("Animation_cf0gc")
+}
+
+[node name="PlayerLocation" type="Node2D"]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(7, 7.0000005)
+rotation = 0.7853982
+texture = ExtResource("1_cf0gc")
+
+[node name="Sprite2D2" type="Sprite2D" parent="."]
+position = Vector2(-7.0000005, 7)
+rotation = 2.3561945
+texture = ExtResource("1_cf0gc")
+
+[node name="Sprite2D3" type="Sprite2D" parent="."]
+position = Vector2(-6.9999995, -7)
+rotation = 3.926991
+texture = ExtResource("1_cf0gc")
+
+[node name="Sprite2D4" type="Sprite2D" parent="."]
+position = Vector2(7, -7)
+rotation = 5.4977875
+texture = ExtResource("1_cf0gc")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_jyl5k")
+}
+autoplay = "new_animation"

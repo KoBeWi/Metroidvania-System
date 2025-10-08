@@ -1,0 +1,31 @@
+[gd_resource type="Resource" script_class="MapTheme" load_steps=15 format=3 uid="uid://e6e8dk7dxvt0"]
+
+[ext_resource type="Texture2D" uid="uid://biol1vsvxqe6y" path="res://addons/MetroidvaniaSystem/Themes/Fuzzy/Borders/HalfWall.png" id="1_jcvj8"]
+[ext_resource type="Texture2D" uid="uid://b58o75mw5xjej" path="res://addons/MetroidvaniaSystem/Themes/Fuzzy/Borders/HalfWall2.png" id="2_uc5ur"]
+[ext_resource type="Texture2D" uid="uid://dw103qvnb2dw1" path="res://addons/MetroidvaniaSystem/Themes/Fuzzy/Borders/Blockade.png" id="3_hla3f"]
+[ext_resource type="Texture2D" uid="uid://rllbicrikp4o" path="res://addons/MetroidvaniaSystem/Themes/Fuzzy/RoomFill.png" id="4_cc103"]
+[ext_resource type="Texture2D" uid="uid://d0ma0ydgairdx" path="res://addons/MetroidvaniaSystem/Themes/Fuzzy/Empty.png" id="5_agb80"]
+[ext_resource type="Texture2D" uid="uid://cmmovarouml1y" path="res://addons/MetroidvaniaSystem/Themes/Fuzzy/BorderPassage.png" id="6_ddgo8"]
+[ext_resource type="PackedScene" uid="uid://xxqfc6h2rll" path="res://addons/MetroidvaniaSystem/Themes/Fuzzy/PlayerLocation.tscn" id="7_wv2s8"]
+[ext_resource type="Script" uid="uid://b7ofctgav4kq4" path="res://addons/MetroidvaniaSystem/Scripts/MapTheme.gd" id="8_uf8y1"]
+[ext_resource type="Texture2D" uid="uid://cg7jjwwc4yxa0" path="res://addons/MetroidvaniaSystem/Themes/Fuzzy/Symbols/Collectible.png" id="9_gcoox"]
+[ext_resource type="Texture2D" uid="uid://b4oe25risqgsc" path="res://addons/MetroidvaniaSystem/Themes/Fuzzy/Symbols/Collected.png" id="10_fi4kb"]
+[ext_resource type="Texture2D" uid="uid://d1gnlr3nba416" path="res://addons/MetroidvaniaSystem/Themes/Fuzzy/Symbols/+.png" id="11_3sniq"]
+[ext_resource type="Texture2D" uid="uid://c5a2xgk62k3hv" path="res://addons/MetroidvaniaSystem/Themes/Fuzzy/Symbols/X.png" id="12_vhbsp"]
+[ext_resource type="Texture2D" uid="uid://b7nlobxf6vl87" path="res://addons/MetroidvaniaSystem/Themes/Fuzzy/Symbols/Eyes.png" id="13_5lcrc"]
+[ext_resource type="Texture2D" uid="uid://cc13kn0y8bxy3" path="res://addons/MetroidvaniaSystem/Themes/Fuzzy/BorderWall.png" id="14_d70fq"]
+
+[resource]
+script = ExtResource("8_uf8y1")
+center_texture = ExtResource("4_cc103")
+empty_space_texture = ExtResource("5_agb80")
+player_location_scene = ExtResource("7_wv2s8")
+default_center_color = Color(0.1333334, 0, 0.2, 1)
+default_border_color = Color(1, 0, 1, 1)
+symbols = Array[Texture2D]([ExtResource("9_gcoox"), ExtResource("10_fi4kb"), ExtResource("11_3sniq"), ExtResource("12_vhbsp"), ExtResource("13_5lcrc")])
+uncollected_item_symbol = 0
+collected_item_symbol = 1
+wall = ExtResource("14_d70fq")
+passage = ExtResource("6_ddgo8")
+borders = Array[Texture2D]([ExtResource("1_jcvj8"), ExtResource("2_uc5ur"), ExtResource("3_hla3f")])
+metadata/_custom_type_script = "uid://b7ofctgav4kq4"
