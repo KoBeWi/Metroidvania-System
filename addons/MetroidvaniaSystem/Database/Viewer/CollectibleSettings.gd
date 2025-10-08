@@ -14,7 +14,7 @@ func _ready() -> void:
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_VISIBILITY_CHANGED:
-		if not initialized and is_visible_in_tree():
+		if not initialized and is_visible_in_tree() and is_node_ready():
 			for data in MetSys.settings._collectible_list:
 				var collectible := add_collectible(false)
 				collectible.set_data(data)

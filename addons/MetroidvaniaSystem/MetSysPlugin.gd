@@ -124,6 +124,17 @@ func _get_unsaved_status(for_scene: String) -> String:
 		return tr("MetSys map has been modified.\nDo you want to save?")
 	return ""
 
+func _get_window_layout(configuration: ConfigFile) -> void:
+	configuration.set_value("MetSys", "editor_offset", main.editor.map_offset)
+	configuration.set_value("MetSys", "viewer_offset", main.viewer.map_offset)
+
+func _set_window_layout(configuration: ConfigFile) -> void:
+	if configuration.has_section("MetSys"):
+		main.editor.map_offset = configuration.get_value("MetSys", "editor_offset")
+		main.editor.update_map_position()
+		main.viewer.map_offset = configuration.get_value("MetSys", "viewer_offset")
+		main.viewer.update_map_position()
+
 func get_singleton():# -> MetroidvaniaSystem:
 	return get_tree().root.get_node_or_null(^"MetSys")
 
