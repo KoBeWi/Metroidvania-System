@@ -82,20 +82,23 @@ func on_zoom_changed(new_zoom: float):
 
 func _on_overlay_input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion:
+		var zoomed_overlay := map_overlay.size / map.scale
+		var real_mouse := event.position * map.scale as Vector2
+		
 		if view_drag != Vector4():
-			if event.position.x >= map_overlay.size.x:
-				map_view_container.warp_mouse(Vector2(event.position.x - map_overlay.size.x, event.position.y))
-				view_drag.x -= map_overlay.size.x
+			if event.position.x >= zoomed_overlay.x:
+				map_view_container.warp_mouse(Vector2(event.position.x - zoomed_overlay.x, real_mouse.y))
+				view_drag.x -= zoomed_overlay.x
 			elif event.position.x < 0:
-				map_view_container.warp_mouse(Vector2(map_overlay.size.x + event.position.x, event.position.y))
-				view_drag.x += map_overlay.size.x
+				map_view_container.warp_mouse(Vector2(map_overlay.size.x + event.position.x, real_mouse.y))
+				view_drag.x += zoomed_overlay.x
 			
-			if event.position.y >= map_overlay.size.y:
-				map_view_container.warp_mouse(Vector2(event.position.x, event.position.y - map_overlay.size.y))
-				view_drag.y -= map_overlay.size.y
+			if event.position.y >= zoomed_overlay.y:
+				map_view_container.warp_mouse(Vector2(real_mouse.x, event.position.y - zoomed_overlay.y))
+				view_drag.y -= zoomed_overlay.y
 			elif event.position.y < 0:
-				map_view_container.warp_mouse(Vector2(event.position.x, map_overlay.size.y + event.position.y))
-				view_drag.y += map_overlay.size.y
+				map_view_container.warp_mouse(Vector2(real_mouse.x, map_overlay.size.y + event.position.y))
+				view_drag.y += zoomed_overlay.y
 			
 			map_offset = Vector2(view_drag.z, view_drag.w) + (map_overlay.get_local_mouse_position() - Vector2(view_drag.x, view_drag.y)) / MetSys.CELL_SIZE
 			update_map_position()
@@ -116,7 +119,11 @@ func _on_overlay_input(event: InputEvent) -> void:
 				view_drag = Vector4()
 		elif event.button_index == MOUSE_BUTTON_WHEEL_UP or event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
 			if event.pressed and event.is_command_or_control_pressed():
+				var prev_mouse := map.get_local_mouse_position()
 				zoom_slider.value += zoom_slider.step * (-1 if event.button_index == MOUSE_BUTTON_WHEEL_DOWN else 1)
+				var shift := map.get_local_mouse_position() - prev_mouse
+				map_offset += Vector2i(shift / MetSys.CELL_SIZE)
+				update_map_position()
 
 func _update_status_label():
 	status_label.show()
