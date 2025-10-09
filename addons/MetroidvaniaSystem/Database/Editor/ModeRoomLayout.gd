@@ -130,20 +130,7 @@ func _editor_draw(map_overlay: CanvasItem):
 
 func update_rooms(rect: Rect2i):
 	var map_data: MetroidvaniaSystem.MapData = MetSys.map_data
-	
-	var full_overlap := true
-	for y in range(rect.position.y, rect.end.y):
-		for x in range(rect.position.x, rect.end.x):
-			var coords := Vector3i(x, y, editor.current_layer)
-			if not map_data.get_cell_at(coords):
-				full_overlap = false
-				break
-		
-		if not full_overlap:
-			break
-	
-	if full_overlap:
-		return
+	var changed: bool
 	
 	for y in range(rect.position.y, rect.end.y):
 		for x in range(rect.position.x, rect.end.x):
@@ -154,13 +141,17 @@ func update_rooms(rect: Rect2i):
 				var prev_borders = cell.borders.duplicate()
 				
 				if x != rect.end.x - 1:
-					cell.borders[0] = -1
+					cell.borders[MetroidvaniaSystem.R] = -1
 				if y != rect.end.y - 1:
-					cell.borders[1] = -1
+					cell.borders[MetroidvaniaSystem.D] = -1
 				if x != rect.position.x:
-					cell.borders[2] = -1
+					cell.borders[MetroidvaniaSystem.L] = -1
 				if y != rect.position.y:
-					cell.borders[3] = -1
+					cell.borders[MetroidvaniaSystem.U] = -1
+				
+				changed = changed or cell.borders != prev_borders
+				if not changed:
+					continue
 				
 				if undo_handle_cell_property(cell, &"borders", prev_borders):
 					var prev_assign: String = MetSys.map_data.cells[coords].scene
@@ -170,15 +161,19 @@ func update_rooms(rect: Rect2i):
 			else:
 				cell = map_data.create_cell_at(coords)
 				if x == rect.end.x - 1:
-					cell.borders[0] = 0
+					cell.borders[MetroidvaniaSystem.R] = 0
 				if y == rect.end.y - 1:
-					cell.borders[1] = 0
+					cell.borders[MetroidvaniaSystem.D] = 0
 				if x == rect.position.x:
-					cell.borders[2] = 0
+					cell.borders[MetroidvaniaSystem.L] = 0
 				if y == rect.position.y:
-					cell.borders[3] = 0
+					cell.borders[MetroidvaniaSystem.U] = 0
 				
 				undo_handle_cell_spawn(coords, cell)
+				changed = true
+	
+	if not changed:
+		return
 	
 	editor.update_rect(rect)
 	undo_handle_rect_redraw(rect)
