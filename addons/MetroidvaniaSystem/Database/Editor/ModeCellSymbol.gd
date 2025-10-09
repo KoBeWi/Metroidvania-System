@@ -10,8 +10,8 @@ func _editor_init() -> void:
 	symbol_group = ButtonGroup.new()
 	reload_symbols()
 	MetSys.settings.theme_changed.connect(reload_symbols)
-	MetSys.theme_modified.connect(func(changes: Array[String]):
-		if "symbols" in changes:
+	MetSys.theme_modified.connect(func(changes: Array[StringName]):
+		if &"symbols" in changes:
 			reload_symbols())
 
 func reload_symbols():

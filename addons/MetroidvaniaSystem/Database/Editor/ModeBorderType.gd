@@ -11,8 +11,8 @@ func _editor_init() -> void:
 	
 	reload_borders()
 	MetSys.settings.theme_changed.connect(reload_borders)
-	MetSys.theme_modified.connect(func(changes: Array[String]):
-		if "borders" in changes or "vertical_borders" or "vertical_borders" in changes:
+	MetSys.theme_modified.connect(func(changes: Array[StringName]):
+		if &"borders" in changes or &"vertical_borders" or &"vertical_borders" in changes:
 			reload_borders())
 
 func reload_borders():
