@@ -31,9 +31,11 @@ extends Control
 
 @onready var hover: ReferenceRect = $Hover
 
+var scene: String
 var offset: Vector2
 
 func _ready() -> void:
+	tooltip_text = MetSys.map_data.get_room_friendly_name(scene)
 	%Label.text = tooltip_text
 
 func _notification(what: int) -> void:

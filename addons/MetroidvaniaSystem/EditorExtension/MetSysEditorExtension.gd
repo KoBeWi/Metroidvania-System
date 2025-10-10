@@ -92,7 +92,7 @@ func _forward_canvas_gui_input(event: InputEvent) -> bool:
 			
 			pos -= hovered_preview.offset * MetSys.settings.in_game_cell_size
 			
-			EditorInterface.open_scene_from_path(MetSys.get_full_room_path(hovered_preview.tooltip_text))
+			EditorInterface.open_scene_from_path(hovered_preview.scene)
 			await get_tree().process_frame
 			
 			var zoomer = editor.find_child("@EditorZoomWidget*", true, false)

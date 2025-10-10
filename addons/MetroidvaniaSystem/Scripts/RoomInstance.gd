@@ -101,7 +101,7 @@ func _update_neighbor_previews():
 				var preview: Control = load("uid://bx8a6r0ee0l1b").instantiate()
 				preview.position = Vector2i(next_coords.x, next_coords.y) - min_cell
 				preview.position *= MetSys.settings.in_game_cell_size
-				preview.tooltip_text = MetSys.map_data.get_room_friendly_name(scene)
+				preview.scene = scene
 				preview.offset = Vector2(next_coords.x, next_coords.y) - Vector2(min_cell)
 				preview.offset -= Vector2(next_coords.x, next_coords.y) - Vector2(next_min_cell)
 				add_child(preview)
