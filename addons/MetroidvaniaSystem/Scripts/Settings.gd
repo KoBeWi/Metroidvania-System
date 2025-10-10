@@ -10,7 +10,12 @@ extends Resource
 		theme = t
 		theme_changed.emit()
 
-@export_custom(PROPERTY_HINT_SAVE_FILE, "") var map_data_file: String = "res://MapData.txt"
+@export_custom(PROPERTY_HINT_SAVE_FILE, "") var map_data_file: String = "res://MapData.txt":
+	set(mdf):
+		if map_data_file == mdf:
+			return
+		map_data_file = mdf
+		map_data_file_changed.emit()
 
 ## Size of the map drawn in the editor, in both directions. Cells beyond this value on any side will not be drawn. Adjust this to your needs, but keep in mind that big values will cause editor slowdowns.
 @export_range(50, 1000) var map_extents: int = 100
@@ -48,6 +53,7 @@ var custom_elements: MetroidvaniaSystem.CustomElementManager
 var _legacy_map_root: String
 
 signal theme_changed
+signal map_data_file_changed
 signal custom_elements_changed
 
 func get_scene_folder() -> String:

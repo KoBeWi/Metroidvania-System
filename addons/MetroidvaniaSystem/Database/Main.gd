@@ -31,7 +31,9 @@ func _ready() -> void:
 	
 	modtime = FileAccess.get_modified_time(MetSys.map_data.get_map_data_path())
 	md5 = FileAccess.get_md5(MetSys.map_data.get_map_data_path())
-	MetSys.map_data.saved.connect(update_md_info, CONNECT_DEFERRED)
+	MetSys.editor_plugin.saved.connect(update_md_info, CONNECT_DEFERRED)
+	
+	MetSys.settings.map_data_file_changed.connect(%Manage.force_reload)
 
 func _notification(what: int) -> void:
 	if is_part_of_edited_scene():

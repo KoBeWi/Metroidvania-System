@@ -295,8 +295,6 @@ var scene_remaps: Dictionary[String, String]
 var group_names: PackedStringArray
 var group_cache: Dictionary[Vector3i, PackedInt32Array]
 
-signal saved
-
 func load_data():
 	var file := FileAccess.open(get_map_data_path(), FileAccess.READ)
 	if not file:
@@ -428,7 +426,6 @@ func save_data(backup := false):
 		file.store_line(cell_data.get_string())
 	
 	file.close()
-	saved.emit()
 
 func cache_groups():
 	for group in cell_groups:

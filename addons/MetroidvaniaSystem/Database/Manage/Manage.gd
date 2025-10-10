@@ -25,6 +25,7 @@ func force_reload() -> void:
 	
 	%"Map Editor".refresh()
 	%"Map Viewer".refresh()
+	owner.update_md_info()
 
 func edit_database_theme() -> void:
 	EditorInterface.edit_resource(owner.theme)
