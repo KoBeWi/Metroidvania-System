@@ -6,6 +6,8 @@ extends VBoxContainer
 @onready var changes_detected: ConfirmationDialog = $ChangesDetected
 @onready var tabs = $TabContainer
 
+var backup_button: Button
+
 var plugin_version: String
 var header_text: String
 
@@ -23,11 +25,10 @@ func _ready() -> void:
 	
 	changes_detected.get_ok_button().tooltip_text = "Discards local map data and loads the external one instead.\nIf you made any local changes to the map, they will be lost."
 	changes_detected.get_cancel_button().tooltip_text = "Saves local map data to the file, overwriting whatever is stored on disk. If you are using version control (e.g. git), this allows you to manually merge changes."
-	var new_button := changes_detected.add_button("Save Copy and Reload", true)
-	new_button.tooltip_text = "Save local map data into a backup file called \"MapData(Copy).txt\", then reloads map data. You can use the backup file to manually merge changes."
+	backup_button = changes_detected.add_button("Save Copy and Reload", true)
 	
 	changes_detected.get_cancel_button().pressed.connect(_on_changes_detected_cancelled)
-	new_button.pressed.connect(_on_changes_detected_third)
+	backup_button.pressed.connect(_on_changes_detected_third)
 	
 	modtime = FileAccess.get_modified_time(MetSys.map_data.get_map_data_path())
 	md5 = FileAccess.get_md5(MetSys.map_data.get_map_data_path())
@@ -46,6 +47,7 @@ func _notification(what: int) -> void:
 			var new_md5 := FileAccess.get_md5(MetSys.map_data.get_map_data_path())
 			if new_md5 != md5:
 				md5 = new_md5
+				backup_button.tooltip_text = tr("Save local map data into a backup file called \"%s.bak\", then reloads map data. You can use the backup file to manually merge changes.") % MetSys.settings.map_data_file.get_file()
 				changes_detected.popup_centered()
 	elif what == NOTIFICATION_TRANSLATION_CHANGED:
 		if header_text.is_empty():
