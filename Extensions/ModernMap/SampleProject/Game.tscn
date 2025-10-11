@@ -4,36 +4,57 @@
 [ext_resource type="PackedScene" uid="uid://xpbhai8nlgtx" path="res://SampleProject/Player.tscn" id="2_bam1a"]
 [ext_resource type="PackedScene" uid="uid://dch8dyylb7526" path="res://addons/MetroidvaniaSystem/Template/Nodes/Minimap.tscn" id="3_a3gfy"]
 [ext_resource type="Texture2D" uid="uid://wiq0mic5m6is" path="res://SampleProject/Sprites/Collectible.png" id="3_kng3d"]
+[ext_resource type="PackedScene" uid="uid://bd5w7n7gew76f" path="res://SampleProject/Objects/CollectionGridItem.tscn" id="4_uuja8"]
+[ext_resource type="Texture2D" uid="uid://dpwli04va881g" path="res://SampleProject/Sprites/MapItem.png" id="6_lpbfn"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5kobx"]
-draw_center = false
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(1, 1, 1, 1)
+[sub_resource type="GDScript" id="GDScript_u7odr"]
+resource_name = "MapWindow"
+script/source = "# The window that contains a bigger map overview than minimap. Toggled with M.
+extends Panel
 
-[sub_resource type="Gradient" id="Gradient_p30je"]
-colors = PackedColorArray(0.00850003, 0, 0.17, 1, 0, 0, 0.4, 1)
+@onready var player: CharacterBody2D = %Player
+@onready var minimap: Control = %Minimap
+@onready var top_draw: Control = $TopDraw
 
-[sub_resource type="GradientTexture2D" id="GradientTexture2D_aruf4"]
-gradient = SubResource("Gradient_p30je")
-width = 128
-height = 128
-fill_to = Vector2(0.115385, 0.0854701)
-repeat = 2
+# The size of the window in cells.
+var SIZE: Vector2i
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_kqkec"]
-texture = SubResource("GradientTexture2D_aruf4")
+# MapView object that draws cells.
+var map_view: MapView
 
-[sub_resource type="GDScript" id="GDScript_i0wlt"]
-resource_name = "FullMap"
-script/source = "@tool
-extends \"res://addons/MetroidvaniaSystem/Template/Nodes/Minimap.gd\"
+# The position where the player started (for the vector feature).
+var starting_coords: Vector2i
+# The player location node from MetSys.add_player_location()
+var player_location: Node2D
+# The vector feature, toggled with D. It displays an arrow from player's starting point to the current position.
+# It's purely to show custom drawing on the map.
+var show_delta: bool
+# The offset for drawing delta vector, updated with map panning.
+var offset: Vector2i
 
-const SCROLL_SPEED = 10
+func _ready() -> void:
+	# Cellular size is total size divided by cell size.
+	SIZE = Vector2i(size / MetSys.CELL_SIZE) + Vector2i.ONE
+	map_view = MetSys.make_map_view(self, -SIZE / 2, SIZE, 0)
+	
+	# Create player location. We need a reference to update its offset.
+	player_location = MetSys.add_player_location(self)
 
-@onready var initial_position = position
+# Draws the delta vector. Note that TopDraw node is used, to make sure that it appears above cells.
+func _on_top_draw() -> void:
+	# Get the current player coordinates.
+	var coords := MetSys.get_current_flat_coords()
+	# If the delta vector (D) is enabled and player isn't on the starting position...
+	if show_delta and coords != starting_coords:
+		var start_pos := MetSys.get_cell_position(starting_coords - offset)
+		var current_pos := MetSys.get_cell_position(coords - offset)
+		# draw the vector...
+		top_draw.draw_line(start_pos, current_pos, Color.WHITE, 2)
+		
+		const arrow_size = 4
+		# and arrow. This code shows how to draw custom stuff on the map outside the MetSys functions.
+		top_draw.draw_set_transform(current_pos, start_pos.angle_to_point(current_pos), Vector2.ONE)
+		top_draw.draw_primitive([Vector2(-arrow_size, -arrow_size), Vector2(arrow_size, 0), Vector2(-arrow_size, arrow_size)], [Color.WHITE], [])
 
 func _input(event: InputEvent) -> void:
 	if event is InputEventKey:
@@ -41,22 +62,54 @@ func _input(event: InputEvent) -> void:
 			# Toggle visibility when pressing M.
 			if event.keycode == KEY_M:
 				visible = not visible
-				%Background.visible = visible
-				Game.get_singleton().player.event = visible
+				minimap.visible = not visible # Make minimap invisible when full map is visible.
 				
 				if visible:
-					layer = MetSys.current_layer
-					position = initial_position - Vector2(MetSys.last_player_position.x, MetSys.last_player_position.y) * MetSys.CELL_SIZE
-			
-			if visible:
+					# Pause the player when opening map.
+					player.process_mode = Node.PROCESS_MODE_DISABLED
+					# Update map offset when opening it.
+					update_offset()
+				else:
+					player.process_mode = Node.PROCESS_MODE_INHERIT
+			elif event.keycode == KEY_D:
+				# D toggles position tracking (delta vector).
+				#show_delta = not show_delta
+				top_draw.queue_redraw()
+			elif visible:
+				# Move with arrow keys.
+				var move_offset: Vector2i
 				if event.keycode == KEY_LEFT:
-					position += Vector2.RIGHT * SCROLL_SPEED
+					move_offset = Vector2i.LEFT
 				elif event.keycode == KEY_RIGHT:
-					position += Vector2.LEFT * SCROLL_SPEED
+					move_offset = Vector2i.RIGHT
 				elif event.keycode == KEY_UP:
-					position += Vector2.DOWN * SCROLL_SPEED
+					move_offset = Vector2i.UP
 				elif event.keycode == KEY_DOWN:
-					position += Vector2.UP * SCROLL_SPEED
+					move_offset = Vector2i.DOWN
+				
+				# This moves the MapView's visible area, ensuring that only newly visible cells are redrawn.
+				map_view.move(move_offset)
+				# Player position node needs to be moved accordingly.
+				player_location.offset = -Vector2(map_view.begin) * MetSys.CELL_SIZE
+				# Update delta vector.
+				offset += move_offset
+				top_draw.queue_redraw()
+
+# Assigns the initial offset when the map is opened. It centers on the player position.
+func update_offset():
+	offset = MetSys.get_current_flat_coords() - SIZE / 2
+	# Player position node needs to be moved accordingly.
+	player_location.offset = -Vector2(offset) * MetSys.CELL_SIZE
+	# Updates map view initial position.
+	map_view.move_to(Vector3i(offset.x, offset.y, MetSys.current_layer))
+	# Update all cells of MapView to reflect the current state.
+	map_view.update_all()
+
+func reset_starting_coords():
+	# Starting position for the delta vector.
+	var coords := MetSys.get_current_flat_coords()
+	starting_coords = Vector2i(coords.x, coords.y)
+	top_draw.queue_redraw()
 "
 
 [sub_resource type="GDScript" id="GDScript_66suq"]
@@ -80,82 +133,163 @@ func update():
 		text = \"%03d%%\" % int(MetSys.get_explored_ratio() * 100)
 "
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vdqrf"]
+content_margin_left = 2.0
+content_margin_right = 2.0
+bg_color = Color(0, 0, 0, 0.752941)
+
+[sub_resource type="GDScript" id="GDScript_lpbfn"]
+resource_name = "CollectionGrid"
+script/source = "extends PanelContainer
+
+func _input(event: InputEvent) -> void:
+	if event is InputEventKey:
+		if event.pressed:
+			# Toggle visibility when pressing M.
+			if event.keycode == KEY_M:
+				visible = not visible
+				# If visible, update collection grid items.
+				if visible:
+					propagate_call(&\"update_collectible\")
+"
+
 [node name="Game" type="Node2D"]
 script = ExtResource("1_xdpfu")
-starting_map = "StartingPoint.tscn"
+starting_map = "uid://cv55nv1c2sbiq"
 
 [node name="Player" parent="." groups=["player"] instance=ExtResource("2_bam1a")]
+unique_name_in_owner = true
 position = Vector2(368, 248)
 
 [node name="Camera2D" type="Camera2D" parent="Player"]
 
 [node name="UI" type="CanvasLayer" parent="."]
 
-[node name="Panel" type="Panel" parent="UI"]
-clip_contents = true
+[node name="Minimap" parent="UI" instance=ExtResource("3_a3gfy")]
+unique_name_in_owner = true
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -296.0
+offset_left = -152.0
 offset_top = 8.0
 offset_right = -8.0
-offset_bottom = 170.0
+offset_bottom = 104.0
 grow_horizontal = 0
-theme_override_styles/panel = SubResource("StyleBoxFlat_5kobx")
-
-[node name="Minimap" parent="UI/Panel" instance=ExtResource("3_a3gfy")]
-texture_filter = 1
-clip_contents = false
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -96.0
-offset_top = -54.0
-offset_right = 96.0
-offset_bottom = 54.0
-grow_horizontal = 2
-grow_vertical = 2
 display_player_location = true
 area = Vector2i(1, 1)
 
-[node name="Background" type="Panel" parent="UI"]
-unique_name_in_owner = true
-visible = false
+[node name="Background" type="Panel" parent="UI/Minimap"]
+show_behind_parent = true
+layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_styles/panel = SubResource("StyleBoxTexture_kqkec")
 
-[node name="Map" parent="UI" instance=ExtResource("3_a3gfy")]
+[node name="MapWindow" type="Panel" parent="UI"]
 visible = false
-texture_filter = 1
+clip_contents = true
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -384.0
-offset_top = -216.0
-offset_right = 384.0
-offset_bottom = 216.0
+offset_left = -240.0
+offset_top = -160.0
+offset_right = 240.0
+offset_bottom = 160.0
 grow_horizontal = 2
 grow_vertical = 2
-script = SubResource("GDScript_i0wlt")
-track_position = false
-display_player_location = true
-area = Vector2i(11, 11)
+script = SubResource("GDScript_u7odr")
 
-[node name="Percent" type="Label" parent="UI/Map"]
+[node name="Percent" type="Label" parent="UI/MapWindow"]
 layout_mode = 0
 offset_right = 40.0
-offset_bottom = 26.0
+offset_bottom = 23.0
 text = "0%"
 script = SubResource("GDScript_66suq")
+
+[node name="Label" type="Label" parent="UI/MapWindow"]
+visible = false
+z_index = 5
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -23.0
+offset_right = 40.0
+grow_vertical = 0
+theme_override_styles/normal = SubResource("StyleBoxFlat_vdqrf")
+text = "Press D to toggle delta vector"
+
+[node name="TopDraw" type="Control" parent="UI/MapWindow"]
+z_index = 5
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="CollectionGrid" type="PanelContainer" parent="UI"]
+visible = false
+offset_left = 85.0
+offset_top = 81.0
+offset_right = 129.0
+offset_bottom = 248.0
+script = SubResource("GDScript_lpbfn")
+
+[node name="CollectionGrid" type="HBoxContainer" parent="UI/CollectionGrid"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/CollectionGrid/CollectionGrid"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="UI/CollectionGrid/CollectionGrid/VBoxContainer"]
+layout_mode = 2
+text = "D"
+horizontal_alignment = 1
+
+[node name="CollectionGridItem" parent="UI/CollectionGrid/CollectionGrid/VBoxContainer" instance=ExtResource("4_uuja8")]
+layout_mode = 2
+texture = ExtResource("3_kng3d")
+id = "StartingPoint/./Collectible"
+
+[node name="CollectionGridItem2" parent="UI/CollectionGrid/CollectionGrid/VBoxContainer" instance=ExtResource("4_uuja8")]
+layout_mode = 2
+texture = ExtResource("3_kng3d")
+id = "RelicRoom/./Collectible"
+
+[node name="CollectionGridItem3" parent="UI/CollectionGrid/CollectionGrid/VBoxContainer" instance=ExtResource("4_uuja8")]
+layout_mode = 2
+texture = ExtResource("3_kng3d")
+id = "Corridor/./Collectible"
+
+[node name="CollectionGridItem4" parent="UI/CollectionGrid/CollectionGrid/VBoxContainer" instance=ExtResource("4_uuja8")]
+layout_mode = 2
+texture = ExtResource("3_kng3d")
+id = "lava_orb"
+
+[node name="CollectionGridItem6" parent="UI/CollectionGrid/CollectionGrid/VBoxContainer" instance=ExtResource("4_uuja8")]
+layout_mode = 2
+texture = ExtResource("3_kng3d")
+id = "UpperElevatorRoom/./Collectible"
+
+[node name="CollectionGridItem5" parent="UI/CollectionGrid/CollectionGrid/VBoxContainer" instance=ExtResource("4_uuja8")]
+layout_mode = 2
+texture = ExtResource("6_lpbfn")
+id = "RightStaircase/./MapItem"
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="UI/CollectionGrid/CollectionGrid"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="UI/CollectionGrid/CollectionGrid/VBoxContainer2"]
+layout_mode = 2
+text = "S"
+horizontal_alignment = 1
+
+[node name="CollectionGridItem5" parent="UI/CollectionGrid/CollectionGrid/VBoxContainer2" instance=ExtResource("4_uuja8")]
+layout_mode = 2
+texture = ExtResource("3_kng3d")
+id = "SecretChamber/./Collectible"
 
 [node name="HBoxContainer" type="HBoxContainer" parent="UI"]
 offset_left = 8.0
@@ -174,3 +308,5 @@ unique_name_in_owner = true
 layout_mode = 2
 text = "0"
 vertical_alignment = 1
+
+[connection signal="draw" from="UI/MapWindow/TopDraw" to="UI/MapWindow" method="_on_top_draw"]

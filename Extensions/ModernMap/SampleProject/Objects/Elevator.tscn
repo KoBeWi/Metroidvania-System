@@ -9,12 +9,10 @@ script/source = "# Simple elevator script. This scene exists in ElevatorRoom.tsc
 # new room is activated.
 extends StaticBody2D
 
-const FogOfMystery = preload(\"res://addons/MetroidvaniaSystem/Template/Scripts/Modules/FogOfMystery.gd\")
-
 # Whether the elevator should go up or down.
 @export var up := true
 # Map to teleport to after reaching the target.
-@export var target_map: String
+@export_file(\"room_link\") var target_map: String
 # Initial position of the elevator.
 @onready var start_y := position.y
 
@@ -29,8 +27,7 @@ func _physics_process(delta: float) -> void:
 		
 		# Detect when the elevator goes out of the screen and teleport appropriately.
 		if moving == -1 and position.y < -64:
-			FogOfMystery.fom.pre_new_room(target_map)
-			await Game.get_singleton().load_room(target_map)
+			await Game.get_singleton().teleport_to_room(target_map)
 			# Activate the elevator in the next room.
 			Game.get_singleton().map.get_node(^\"Elevator\").enter()
 		elif moving == -2 and position.y < start_y:
@@ -39,8 +36,7 @@ func _physics_process(delta: float) -> void:
 			player.event = false
 			moving = 0
 		elif moving == 1 and position.y > MetSys.current_room.get_size().y:
-			FogOfMystery.fom.pre_new_room(target_map)
-			await Game.get_singleton().load_room(target_map)
+			await Game.get_singleton().teleport_to_room(target_map)
 			Game.get_singleton().map.get_node(^\"Elevator\").enter()
 		elif moving == 2 and position.y > start_y:
 			position.y = start_y

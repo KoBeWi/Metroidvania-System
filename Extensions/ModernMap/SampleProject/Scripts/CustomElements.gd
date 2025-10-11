@@ -2,8 +2,6 @@
 @tool
 extends MetroidvaniaSystem.CustomElementManager
 
-const FogOfMystery = preload("res://addons/MetroidvaniaSystem/Template/Scripts/Modules/FogOfMystery.gd")
-
 func _init() -> void:
 	# Metroid-esque elevator shaft.
 	register_element("elevator", draw_elevator)

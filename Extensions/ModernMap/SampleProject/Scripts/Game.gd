@@ -5,8 +5,8 @@ class_name Game
 const SaveManager = preload("res://addons/MetroidvaniaSystem/Template/Scripts/SaveManager.gd")
 const SAVE_PATH = "user://modern_example_save_data.sav"
 
-# The game starts in this map. Note that it's scene name only, just like MetSys refers to rooms.
-@export var starting_map: String
+# The game starts in this map. Uses special annotation that enabled dedicated inspector plugin.
+@export_file("room_link") var starting_map: String
 
 # Number of collected collectibles. Setting it also updates the counter.
 var collectibles: int:
@@ -78,10 +78,32 @@ func save_game():
 	save_manager.set_value("collectible_count", collectibles)
 	save_manager.set_value("generated_rooms", generated_rooms)
 	save_manager.set_value("events", events)
-	save_manager.set_value("current_room", MetSys.get_current_room_name())
+	save_manager.set_value("current_room", MetSys.get_current_room_id())
 	save_manager.set_value("abilities", player.abilities)
 	save_manager.save_as_text(SAVE_PATH)
 
 func init_room():
 	MetSys.get_current_room_instance().adjust_camera_limits($Player/Camera2D)
 	player.on_enter()
+	
+	# Initializes MetSys.get_current_coords(), so you can use it from the beginning.
+	if MetSys.last_player_position.x == Vector2i.MAX.x:
+		MetSys.set_player_position(player.position)
+
+# Customized load function that handles maps generated in Dice.tscn.
+func _load_map(path: String) -> Node:
+	if not path.begins_with("GEN"):
+		return super(path)
+	
+	# Base scene that will be customized (Junction.tscn).
+	var prototype := preload("uid://bikgu4uxf7vxt").instantiate()
+	prototype.scene_file_path = path
+	
+	var config := path.split("/")
+	# Assign values to the scene (see the script in Junction.tscn).
+	prototype.exits = config[2].to_int()
+	prototype.has_collectible = config[3] == "true"
+	# Apply the values. It has to happen before the scene enters tree.
+	prototype.apply_config()
+	
+	return prototype

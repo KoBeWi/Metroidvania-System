@@ -20,9 +20,8 @@ func _on_body_entered(body: Node2D) -> void:
 	# \"Store\" the button, i.e. remember its persistent state.
 	MetSys.store_object(self)
 	# Hack to keep the room discovered.
-	const FogOfMystery = preload(\"res://addons/MetroidvaniaSystem/Template/Scripts/Modules/FogOfMystery.gd\")
-	FogOfMystery.fom.discover_cache[\"LavaCorridorAfterwater.tscn\"] = FogOfMystery.fom.discover_cache[\"LavaCorridor.tscn\"]
-	FogOfMystery.fom.cache_overlays_from_discovers([\"LavaCorridorAfterwater.tscn\"])
+	FogOfMystery.singleton.discover_cache[\"LavaCorridorAfterwater.tscn\"] = FogOfMystery.singleton.discover_cache[\"LavaCorridor.tscn\"]
+	FogOfMystery.singleton.cache_overlays_from_discovers([\"LavaCorridorAfterwater.tscn\"])
 	# The callback needs to be called manually when storing.
 	press()
 

@@ -2,14 +2,14 @@
 ##
 ## The module integrates with "overlay" custom element. When player moves within a room, portions of the room surrounding the player will be discovered. The discovered data is stored in your save file.
 @tool
-extends "res://addons/MetroidvaniaSystem/Template/Scripts/MetSysModule.gd"
+class_name FogOfMystery extends "res://addons/MetroidvaniaSystem/Template/Scripts/MetSysModule.gd"
 
 ## Path to overlays directory. Every room needs a corresponding overlay to display properly. You can use GenerateOverlay.gd from Sample Project to generate it or make a custom one.
 const OVERLAYS_PATH = "res://SampleProject/Sprites/Overlays"
 ## Radius in which the player discovers the room's area. This is expressed in in-game cell size, not map size.
 const DISCOVER_RADIUS = 120.0
 
-static var fom
+static var singleton: FogOfMystery
 
 var base_overlays: Dictionary#[String, Texture2D]
 var discover_cache: Dictionary#[String, Texture2D]
@@ -28,7 +28,7 @@ var last_player_pos := Vector2.INF
 var blocked: bool
 
 func _initialize():
-	fom = self
+	singleton = self
 	
 	if Engine.is_editor_hint():
 		return
@@ -51,7 +51,7 @@ func _initialize():
 	discover_clear.set_anchors_preset(Control.PRESET_FULL_RECT)
 	discover_render.add_child(discover_clear)
 	
-	var grad := preload("res://addons/MetroidvaniaSystem/Template/Scripts/Modules/FogDiscoverGradient.tres")
+	var grad := preload("uid://0tn2godtx7fj")
 	grad.width = DISCOVER_RADIUS * 2
 	grad.height = DISCOVER_RADIUS * 2
 	
@@ -64,7 +64,7 @@ func _initialize():
 	game.add_child(compositor)
 	
 	compositor_base = TextureRect.new()
-	compositor_base.material = preload("res://addons/MetroidvaniaSystem/Template/Scripts/Modules/FogMaterial.tres")
+	compositor_base.material = preload("uid://cl5i4m4jyead5")
 	compositor_base.material.set_shader_parameter(&"mask", discover_render.get_texture())
 	compositor_base.set_anchors_preset(Control.PRESET_FULL_RECT)
 	compositor.add_child(compositor_base)
@@ -72,6 +72,10 @@ func _initialize():
 	player_pos_ratio = MetSys.CELL_SIZE / MetSys.settings.in_game_cell_size
 
 func pre_new_room(room: String):
+	var new_room := MetSys.map_data.get_room_friendly_name(room)
+	if current_room == new_room:
+		return
+	
 	if not current_room.is_empty():
 		var image := compositor.get_texture().get_image()
 		overlay_cache[current_room] = ImageTexture.create_from_image(image)
@@ -80,18 +84,14 @@ func pre_new_room(room: String):
 	
 	blocked = true
 	discover.hide()
-	current_room = MetSys.map_data.get_uid_room(room)
+	current_room = new_room
 
 func on_new_room():
 	var prev_room := current_room
 	if not blocked:
 		await MetSys.room_changed
 	
-	current_room = MetSys.map_data.get_assigned_scene_at(MetSys.get_current_coords())
-	if current_room.is_empty() or current_room == prev_room:
-		current_room = MetSys.get_current_room_name()
-	current_room = MetSys.map_data.get_uid_room(current_room)
-	
+	current_room = MetSys.get_current_room_name()
 	compositor_base.texture = get_base_overlay_texture(current_room)
 	compositor.size = compositor_base.texture.get_size()
 	
@@ -122,7 +122,7 @@ func tick():
 		discover_render.render_target_update_mode = SubViewport.UPDATE_ONCE
 
 func get_base_overlay_texture(room: String) -> Texture2D:
-	room = MetSys.map_data.get_uid_room(room)
+	room = MetSys.map_data.get_room_friendly_name(room)
 	var overlay_path := OVERLAYS_PATH.path_join(room + ".png")
 	
 	if not ResourceLoader.exists(overlay_path):
@@ -133,11 +133,11 @@ func get_base_overlay_texture(room: String) -> Texture2D:
 	return texture
 
 func get_drawable_overlay_texture(room: String) -> Texture2D:
-	room = MetSys.map_data.get_uid_room(room)
+	room = MetSys.map_data.get_room_friendly_name(room)
 	if Engine.is_editor_hint():
 		return get_base_overlay_texture(room)
 	elif room == current_room:
-		compositor.get_texture().get_image().save_png("res://.godot/dump.png")
+		#compositor.get_texture().get_image().save_png("res://.godot/dump.png") # debug
 		return compositor.get_texture()
 	else:
 		return overlay_cache.get(room)
@@ -186,10 +186,10 @@ static func draw_overlay(canvas_item: RID, coords: Vector3i, pos: Vector2, size:
 	if not MetSys.is_cell_discovered(coords):
 		return
 	
-	if Engine.is_editor_hint() and not fom:
-		fom = load("res://addons/MetroidvaniaSystem/Template/Scripts/Modules/FogOfMystery.gd").new(null)
+	if Engine.is_editor_hint() and not singleton:
+		singleton = load("uid://bjss5frdrne0k").new(null)
 	
 	var room := MetSys.map_data.get_assigned_scene_at(coords)
-	var overlay: Texture2D = fom.get_drawable_overlay_texture(room)
+	var overlay: Texture2D = singleton.get_drawable_overlay_texture(room)
 	if overlay:
 		overlay.draw_rect(canvas_item, Rect2(pos, size), false)

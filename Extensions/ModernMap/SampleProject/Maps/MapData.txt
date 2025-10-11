@@ -2,10 +2,8 @@ $ln;Defaltia;Shadia;Renegia
 0;Map 1:-5,1,0:-4,1,0:-3,1,0:-2,1,0:-2,0,0:-2,-1,0:-1,-1,0:-1,0,0:0,-1,0:0,0,0:1,0,0:1,-1,0:2,-1,0:2,0,0:-1,-7,0
 1;LavaWater:0,-1,0:1,-1,0
 -1,-6,0/elevator/1x5
--5,1,0/label/1x1/Shadia
--1,-7,0/label/1x1/Renegia
--5,1,1/label/1x1/Defaltia
--1,-7,2/label/1x1/Defaltia
+-5,1,0/overlay/1x1
+-5,1,1/overlay/1x1
 -1,0,0/overlay/3x1
 -2,-1,0/overlay/1x3
 -1,-1,0/overlay/1x1
@@ -13,13 +11,13 @@ $ln;Defaltia;Shadia;Renegia
 2,-1,0/overlay/1x2
 3,0,0/overlay/1x1
 -4,1,0/overlay/2x1
--5,1,0/overlay/1x1
--5,1,1/overlay/1x1
 -4,1,1/overlay/2x1
 -2,0,1/overlay/2x2
 -1,1,1/overlay/3x1
 3,0,1/overlay/1x1
--1,-3,0/overlay/1x1
+-1,-7,0/overlay/1x1
+-6,2,0/label/1x1/Shadia
+-6,2,1/label/1x1/Defaltia
 [-1,0,0]
 -1,0,1,0|||uid://cv55nv1c2sbiq
 [0,0,0]
@@ -66,8 +64,6 @@ $ln;Defaltia;Shadia;Renegia
 0,0,-1,0|e646ff,e68bff,e68bff,,e68bff||uid://th6yo5pc7h8e
 [-1,-7,0]
 0,1,0,0||1|uid://dkcgx06o6celq
-[-1,-7,2]
-1,0,0,0|8ca1ff,3d4e99,3d4e99,3d4e99,3d4e99|1|uid://cjk52vjugqh5
 [-2,0,1]
 -1,-1,0,0|e646ff,,,e68bff,e68bff||uid://bj1ygvl0h6s6s
 [-1,0,1]
