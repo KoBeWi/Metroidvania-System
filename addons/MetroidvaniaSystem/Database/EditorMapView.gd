@@ -70,9 +70,9 @@ func setup_new_layer(layer: MapView):
 	pass
 
 func on_recenter_view() -> void:
-	
 	map_offset = map_overlay.size * 0.5 / MetSys.CELL_SIZE
 	update_map_position()
+	map_overlay.queue_redraw()
 
 func on_zoom_changed(new_zoom: float):
 	zoom_value_label.text = "x%0.1f" % new_zoom
