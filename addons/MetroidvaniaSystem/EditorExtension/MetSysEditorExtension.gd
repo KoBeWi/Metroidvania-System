@@ -148,6 +148,7 @@ class RoomLinkPlugin extends EditorInspectorPlugin:
 			room_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 			hbox.add_child(room_label)
 			room_label.pressed.connect(_on_label_pressed, CONNECT_DEFERRED)
+			room_label.set_drag_forwarding(Callable(), _can_drop_fw, _drop_fw)
 			
 			pick_button = Button.new()
 			hbox.add_child(pick_button)
@@ -196,6 +197,20 @@ class RoomLinkPlugin extends EditorInspectorPlugin:
 				_browse_file()
 			else:
 				EditorInterface.open_scene_from_path(get_edited_object().get(get_edited_property()))
+		
+		func _can_drop_fw(at_position: Vector2, data: Variant) -> bool:
+			if data.get("type", "") != "files":
+				return false
+			
+			var files: PackedStringArray = data.get("files", PackedStringArray())
+			if files.size() != 1:
+				return false
+			
+			var ext := files[0].get_extension()
+			return ext == "tscn" or ext == "scn"
+		
+		func _drop_fw(at_position: Vector2, data: Variant) -> void:
+			_assign_scene(data["files"][0])
 
 class MetSysExportPlugin extends EditorExportPlugin:
 	var map_data_path: String
