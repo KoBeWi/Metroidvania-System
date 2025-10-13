@@ -62,4 +62,3 @@ tile_set = ExtResource("1_oj4y1")
 [node name="Collectible" parent="." instance=ExtResource("3_whicd")]
 unique_name_in_owner = true
 position = Vector2(432, 232)
-metadata/object_id = "random_collectible"

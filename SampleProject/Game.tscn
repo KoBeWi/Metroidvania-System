@@ -140,7 +140,9 @@ bg_color = Color(0, 0, 0, 0.752941)
 
 [sub_resource type="GDScript" id="GDScript_lpbfn"]
 resource_name = "CollectionGrid"
-script/source = "extends PanelContainer
+script/source = "# This element displays a grid of all collectibles (orbs and map), divided into areas.
+# See also CollectibleGridItem.tscn. An item is visible in the grid if it was collected.
+extends PanelContainer
 
 func _input(event: InputEvent) -> void:
 	if event is InputEventKey:

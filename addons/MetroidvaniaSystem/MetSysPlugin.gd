@@ -85,8 +85,8 @@ func _enter_tree() -> void:
 	add_tool_submenu_item("MetSys", metsys_tools)
 	metsys_tools.index_pressed.connect(on_tool_option)
 	
-	EditorInterface.get_command_palette().add_command("Print Object ID", "met_sys/print_object_id", on_tool_option.bind(0))
-	EditorInterface.get_command_palette().add_command("Copy Object ID to Clipboard", "met_sys/copy_object_id_to_clipboard", on_tool_option.bind(1))
+	EditorInterface.get_command_palette().add_command("Print Object ID", "met_sys/print_object_id", on_tool_option.bind(TOOL_PRINT_ID))
+	EditorInterface.get_command_palette().add_command("Copy Object ID to Clipboard", "met_sys/copy_object_id_to_clipboard", on_tool_option.bind(TOOL_COPY_ID))
 	
 	get_singleton().settings.theme_changed.connect(func(): prev_theme_state.clear())
 
@@ -155,23 +155,23 @@ func on_tool_option(idx: int):
 		TOOL_PRINT_ID, TOOL_COPY_ID:
 			var currrent_scene := EditorInterface.get_edited_scene_root()
 			if not currrent_scene:
-				push_error(tr("No scene open to check Node."))
+				EditorInterface.get_editor_toaster().push_toast(tr("No scene open to check Node."), EditorToaster.SEVERITY_ERROR)
 				return
 			
 			var selection := EditorInterface.get_selection().get_selected_nodes()
 			if selection.size() != 1:
-				push_error(tr("You need to select a single Node."))
+				EditorInterface.get_editor_toaster().push_toast(tr("You need to select a single Node."), EditorToaster.SEVERITY_ERROR)
 				return
 			
 			var id: String = get_singleton().get_object_id(selection[0])
 			if id.is_empty():
-				push_warning(tr("Could not determine ID."))
+				EditorInterface.get_editor_toaster().push_toast(tr("Could not determine ID."), EditorToaster.SEVERITY_WARNING)
 			else:
 				if idx == TOOL_PRINT_ID:
 					print(tr("ID of the selected Node is \"%s\".") % id)
 				else:
-					print(tr("ID \"%s\" copied to clipboard.") % id)
 					DisplayServer.clipboard_set(id)
+					EditorInterface.get_editor_toaster().push_toast(tr("ID \"%s\" copied to clipboard.") % id)
 
 func POT_hack():
 	tr("Error!")

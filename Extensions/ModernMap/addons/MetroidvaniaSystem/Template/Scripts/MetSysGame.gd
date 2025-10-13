@@ -60,9 +60,6 @@ func teleport_to_room(room: String):
 
 ## Virtual method to be optionally overriden in your game class. Return a Node representing a scene under given path. Mostly useful for procedurally generated maps.
 func _load_map(path: String) -> Node:
-	if not path.is_absolute_path():
-		path = MetSys.get_full_room_path(path)
-	
 	return load(path).instantiate()
 
 func get_save_data() -> Dictionary:
