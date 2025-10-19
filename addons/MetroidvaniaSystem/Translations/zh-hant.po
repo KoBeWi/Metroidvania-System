@@ -239,7 +239,7 @@ msgstr "%s 大於中心紋理的一半；這可能會導致重疊。"
 msgid "Validation Result"
 msgstr "驗證結果"
 
-ADD_FRIEND_TO_YOUR_CIRCLE_OF_TRUST
+#: addons/MetroidvaniaSystem/Database/Manage.tscn
 msgid "Close"
 msgstr "關閉"
 
@@ -471,7 +471,7 @@ msgstr ""
 
 #: addons/MetroidvaniaSystem/MetSysPlugin.gd
 msgid "Error!"
-msgstr "錯誤！"
+msgstr ""
 
 #: addons/MetroidvaniaSystem/MetSysPlugin.gd
 msgid ""
