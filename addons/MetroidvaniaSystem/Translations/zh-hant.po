@@ -7,7 +7,7 @@
 # res://addons/MetroidvaniaSystem/Nodes/CollectibleElement.tscn
 # res://addons/MetroidvaniaSystem/MetSysPlugin.gd
 #
-# DE-YU <delsin_yu@qq.com>, 2025.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 #, fuzzy
 msgid ""
