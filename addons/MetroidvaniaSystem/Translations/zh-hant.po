@@ -1,0 +1,532 @@
+# LANGUAGE translation for Metroidvania System for the following files:
+# res://addons/MetroidvaniaSystem/Database/Editor/MapEditor.gd
+# res://addons/MetroidvaniaSystem/Database/Editor/MapEditor.tscn
+# res://addons/MetroidvaniaSystem/Database/Editor/ModeSceneAssign.gd
+# res://addons/MetroidvaniaSystem/Database/LayerSelector.tscn
+# res://addons/MetroidvaniaSystem/Database/Main.tscn
+# res://addons/MetroidvaniaSystem/Database/Manage/Manage.tscn
+# res://addons/MetroidvaniaSystem/Database/Manage/Validation.gd
+# res://addons/MetroidvaniaSystem/Database/Viewer/CollectibleElement.gd
+# res://addons/MetroidvaniaSystem/Database/Viewer/CollectibleElement.tscn
+# res://addons/MetroidvaniaSystem/Database/Viewer/CollectibleFinder.gd
+# res://addons/MetroidvaniaSystem/Database/Viewer/CollectibleSettings.gd
+# res://addons/MetroidvaniaSystem/Database/Viewer/MapViewer.gd
+# res://addons/MetroidvaniaSystem/Database/Viewer/MapViewer.tscn
+# res://addons/MetroidvaniaSystem/EditorExtension/MetSysEditorExtension.gd
+# res://addons/MetroidvaniaSystem/MetSysPlugin.gd
+#
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Metroidvania System\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8-bit\n"
+"Language: zh_TW\n"
+
+#: addons/MetroidvaniaSystem/Database/Editor/MapEditor.tscn
+#: addons/MetroidvaniaSystem/Database/Viewer/MapViewer.tscn
+msgid "Current Layer"
+msgstr "目前圖層"
+
+#: addons/MetroidvaniaSystem/Database/Editor/MapEditor.tscn
+msgid "Preview Layer"
+msgstr "預覽圖層"
+
+#: addons/MetroidvaniaSystem/Database/Editor/MapEditor.tscn
+#: addons/MetroidvaniaSystem/Database/Viewer/MapViewer.tscn
+msgid "Recenter View"
+msgstr "重新置中檢視"
+
+#: addons/MetroidvaniaSystem/Database/Editor/MapEditor.tscn
+#: addons/MetroidvaniaSystem/Database/Viewer/MapViewer.tscn
+msgid "Zoom"
+msgstr "縮放"
+
+#: addons/MetroidvaniaSystem/Database/Editor/MapEditor.tscn
+msgid "Mode"
+msgstr "模式"
+
+#: addons/MetroidvaniaSystem/Database/Editor/MapEditor.tscn
+msgid "Room Layout"
+msgstr "房間佈局"
+
+#: addons/MetroidvaniaSystem/Database/Editor/MapEditor.tscn
+msgid "Cell Color"
+msgstr "單元格顏色"
+
+#: addons/MetroidvaniaSystem/Database/Editor/MapEditor.tscn
+msgid "Cell Symbol"
+msgstr "單元格符號"
+
+#: addons/MetroidvaniaSystem/Database/Editor/MapEditor.tscn
+msgid "Cell Group"
+msgstr "單元格群組"
+
+#: addons/MetroidvaniaSystem/Database/Editor/MapEditor.tscn
+msgid "Border Type"
+msgstr "邊界類型"
+
+#: addons/MetroidvaniaSystem/Database/Editor/MapEditor.tscn
+msgid "Border Color"
+msgstr "邊界顏色"
+
+#: addons/MetroidvaniaSystem/Database/Editor/MapEditor.tscn
+msgid "Scene Assign"
+msgstr "場景分配"
+
+#: addons/MetroidvaniaSystem/Database/Editor/MapEditor.tscn
+msgid "Create New Scene"
+msgstr "建立新場景"
+
+#: addons/MetroidvaniaSystem/Database/Editor/MapEditor.tscn
+msgid "Scene Name"
+msgstr "場景名稱"
+
+#: addons/MetroidvaniaSystem/Database/Editor/MapEditor.tscn
+msgid "Root Name"
+msgstr "根名稱"
+
+#: addons/MetroidvaniaSystem/Database/Editor/MapEditor.tscn
+msgid "Custom Elements"
+msgstr "自訂元素"
+
+#: addons/MetroidvaniaSystem/Database/Editor/MapEditor.tscn
+msgid "Group ID"
+msgstr "群組 ID"
+
+#: addons/MetroidvaniaSystem/Database/Editor/MapEditor.tscn
+msgid "Click a room or drag and drop a file"
+msgstr "點擊一個房間或拖放一個檔案"
+
+#: addons/MetroidvaniaSystem/Database/Editor/MapEditor.tscn
+msgid "Data"
+msgstr "資料"
+
+#: addons/MetroidvaniaSystem/Database/Editor/MapEditor.tscn
+msgid "No Custom Elements Registered"
+msgstr "沒有註冊自訂元素"
+
+#: addons/MetroidvaniaSystem/Database/Editor/MapEditor.tscn
+msgid "Ctrl+Click: Pick from map"
+msgstr "Ctrl+點擊：從地圖中選取"
+
+#: addons/MetroidvaniaSystem/Database/Editor/MapEditor.tscn
+msgid "Shift+Drag: Move rooms"
+msgstr "Shift+拖曳：移動房間"
+
+#: addons/MetroidvaniaSystem/Database/Editor/MapEditor.tscn
+msgid "Shift+Click: Set for the whole room"
+msgstr "Shift+點擊：設定整個房間"
+
+#: addons/MetroidvaniaSystem/Database/Editor/ModeSceneAssign.gd
+msgid "Scene name can't be empty."
+msgstr "場景名稱不可為空。"
+
+#: addons/MetroidvaniaSystem/Database/Editor/ModeSceneAssign.gd
+msgid "Scene name contains invalid characters."
+msgstr "場景名稱包含無效字元。"
+
+#: addons/MetroidvaniaSystem/Database/Editor/ModeSceneAssign.gd
+msgid "Root node invalid."
+msgstr "根節點無效。"
+
+#: addons/MetroidvaniaSystem/Database/Editor/ModeSceneAssign.gd
+msgid "File already exists."
+msgstr "檔案已存在。"
+
+#: addons/MetroidvaniaSystem/Database/LayerSelector.tscn
+msgid "None"
+msgstr "無"
+
+#: addons/MetroidvaniaSystem/Database/LayerSelector.tscn
+msgid "Unnamed"
+msgstr "未命名"
+
+#: addons/MetroidvaniaSystem/Database/LayerSelector.tscn
+msgid "Double-click to edit name."
+msgstr "雙擊以編輯名稱。"
+
+#: addons/MetroidvaniaSystem/Database/Main.tscn
+msgid ""
+"Discards local map data and loads the external one instead.\n"
+"If you made any local changes to the map, they will be lost."
+msgstr "捨棄本地地圖資料並載入外部資料。\n如果你對地圖進行了任何本地變更，它們將會遺失。"
+
+#: addons/MetroidvaniaSystem/Database/Main.tscn
+msgid "Saves local map data to the file, overwriting whatever is stored on disk. If you are using version control (e.g. git), this allows you to manually merge changes."
+msgstr "將本地地圖資料儲存到檔案中，覆蓋磁碟上儲存的內容。如果你使用版本控制 (例如 git)，這允許你手動合併變更。"
+
+#: addons/MetroidvaniaSystem/Database/Main.tscn
+msgid "Save local map data into a backup file called \"MapData(Copy).txt\", then reloads map data. You can use the backup file to manually merge changes."
+msgstr "將本地地圖資料儲存到名為 \"MapData(Copy).txt\" 的備份檔案中，然後重新載入地圖資料。你可以使用備份檔案手動合併變更。"
+
+#: addons/MetroidvaniaSystem/Database/Main.tscn
+msgid "Save Copy and Reload"
+msgstr "儲存副本並重新載入"
+
+#: addons/MetroidvaniaSystem/Database/Main.tscn
+msgid "Metroidvania System Database v.%s"
+msgstr "類銀河戰士惡魔城系統資料庫 v.%s"
+
+#: addons/MetroidvaniaSystem/Database/Main.tscn
+msgid "Map Editor"
+msgstr "地圖編輯器"
+
+#: addons/MetroidvaniaSystem/Database/Main.tscn
+msgid "Map Viewer"
+msgstr "地圖檢視器"
+
+#: addons/MetroidvaniaSystem/Database/Main.tscn
+msgid "Manage"
+msgstr "管理"
+
+#: addons/MetroidvaniaSystem/Database/Main.tscn
+msgid "Reload From Disk"
+msgstr "從磁碟重新載入"
+
+#: addons/MetroidvaniaSystem/Database/Main.tscn
+msgid ""
+"Map data file was modified externally.\n"
+"What action should be taken?\n"
+"(hover a button for more info)"
+msgstr "地圖資料檔案被外部修改。\n應該採取什麼操作？\n(將滑鼠懸停在按鈕上以取得更多資訊)"
+
+#: addons/MetroidvaniaSystem/Database/Main.tscn
+msgid "Re-save Map Data"
+msgstr "重新儲存地圖資料"
+
+#: addons/MetroidvaniaSystem/Database/Manage/Manage.tscn
+msgid "General Settings"
+msgstr "一般設定"
+
+#: addons/MetroidvaniaSystem/Database/Manage/Manage.tscn
+msgid "Refresh Custom Elements"
+msgstr "刷新自訂元素"
+
+#: addons/MetroidvaniaSystem/Database/Manage/Manage.tscn
+msgid "Reload and Cleanup Map Data"
+msgstr "重新載入並清理地圖資料"
+
+#: addons/MetroidvaniaSystem/Database/Manage/Manage.tscn
+msgid "Validate Map Data"
+msgstr "驗證地圖資料"
+
+#: addons/MetroidvaniaSystem/Database/Manage/Manage.tscn
+msgid "Validate Map Theme"
+msgstr "驗證地圖主題"
+
+#: addons/MetroidvaniaSystem/Database/Manage/Manage.tscn
+msgid "Export Map Data as JSON"
+msgstr "將地圖資料匯出為 JSON"
+
+#: addons/MetroidvaniaSystem/Database/Manage/Manage.tscn
+msgid "Edit Database Theme"
+msgstr "編輯資料庫主題"
+
+#: addons/MetroidvaniaSystem/Database/Manage/Manage.tscn
+msgid "Reset Database Theme"
+msgstr "重設資料庫主題"
+
+#: addons/MetroidvaniaSystem/Database/Manage/Manage.tscn
+msgid "Validation Result"
+msgstr "驗證結果"
+
+#: addons/MetroidvaniaSystem/Database/Manage/Manage.tscn
+msgid "Close"
+msgstr "關閉"
+
+#: addons/MetroidvaniaSystem/Database/Manage/Manage.tscn
+msgid "JSON File"
+msgstr "JSON 檔案"
+
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd
+msgid "No assigned map at: %s"
+msgstr "未指定地圖：%s"
+
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd
+msgid "Invalid symbol (%d) at: %s"
+msgstr "無效符號 (%d) 位於：%s"
+
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd
+msgid "Invalid border (%d) at: %s"
+msgstr "無效邊界 (%d) 位於：%s"
+
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd
+msgid "Passage to nowhere at: %s"
+msgstr "無效通道位於：%s"
+
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd
+msgid "Potentially unused symbol: %d"
+msgstr "可能未使用的符號：%d"
+
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd
+msgid "Map data is valid."
+msgstr "地圖資料有效。"
+
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd
+msgid "Cell Shape: %s"
+msgstr "單元格形狀：%s"
+
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd
+msgid "Rectangle"
+msgstr "矩形"
+
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd
+msgid "Square"
+msgstr "正方形"
+
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd
+msgid "Base Cell Size: %s"
+msgstr "基本單元格大小：%s"
+
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd
+msgid "Theme is missing center texture. Map can't be drawn."
+msgstr "主題缺少中心紋理；無法繪製地圖。"
+
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd
+msgid "Uses unified corners."
+msgstr "使用統一角落。"
+
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd
+msgid "Size mismatch between empty texture (%s) and center texture."
+msgstr "空紋理 (%s) 和中心紋理大小不符。"
+
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd
+msgid "Number of horizontal and vertical borders do not match."
+msgstr "水平和垂直邊界的數量不符。"
+
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd
+msgid "Vertical wall texture"
+msgstr "垂直牆壁紋理"
+
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd
+msgid "Vertical passage texture"
+msgstr "垂直通道紋理"
+
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd
+msgid "Vertical border texture at index %d"
+msgstr "索引 %d 處的垂直邊界紋理"
+
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd
+msgid "Horizontal wall texture"
+msgstr "水平牆壁紋理"
+
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd
+msgid "Horizontal passage texture"
+msgstr "水平通道紋理"
+
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd
+msgid "Horizontal border texture at index %d"
+msgstr "索引 %d 處的水平邊界紋理"
+
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd
+msgid "Wall texture"
+msgstr "牆壁紋理"
+
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd
+msgid "Passage texture"
+msgstr "通道紋理"
+
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd
+msgid "Border texture at index %d"
+msgstr "索引 %d 處的邊界紋理"
+
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd
+msgid "Uncollected item symbol index is greater than number of available symbols."
+msgstr "未收集物品的符號索引大於可用符號的數量。"
+
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd
+msgid "Collected item symbol index is greater than number of available symbols."
+msgstr "已收集物品的符號索引大於可用符號的數量。"
+
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd
+msgid "Symbol %d texture"
+msgstr "符號 %d 紋理"
+
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd
+msgid "U corner texture"
+msgstr "U 角紋理"
+
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd
+msgid "L corner texture"
+msgstr "L 角紋理"
+
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd
+msgid "T corner texture"
+msgstr "T 角紋理"
+
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd
+msgid "Cross corner texture"
+msgstr "對角紋理"
+
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd
+msgid "Inner corner texture"
+msgstr "內角紋理"
+
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd
+msgid "Outer corner texture"
+msgstr "外角紋理"
+
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd
+msgid "Player location scene is not a Node2D."
+msgstr "玩家位置場景不是 Node2D。"
+
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd
+msgid "Missing player location scene. Player location can't be displayed using built-in methods."
+msgstr "缺少玩家位置場景；無法使用內建方法顯示玩家位置。"
+
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd
+msgid "Theme is valid."
+msgstr "主題有效。"
+
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd
+msgid "%s has invalid height (%d). It should be vertical, oriented towards the right side and match the height of the center texture."
+msgstr "%s 的高度無效 (%d)。它應該是垂直且朝向右側的，並與中心紋理的高度相符。"
+
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd
+msgid "%s is wider than half of the center texture. It may cause overlaps."
+msgstr "%s 寬於中心紋理的一半；這可能會導致重疊。"
+
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd
+msgid "%s is empty."
+msgstr "%s 是空的。"
+
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd
+msgid "%s has invalid height (%d). It should be vertical, oriented towards the right side and height should match the width of the center texture."
+msgstr "%s 的高度無效 (%d)。它 dovrebbe是垂直且朝向右側的，並且高度應該與中心紋理的寬度相符。"
+
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd
+msgid "%s is wider than half of the height of the center texture. It may cause overlaps."
+msgstr "%s 寬於中心紋理高度的一半；這可能會導致重疊。"
+
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd
+msgid "%s is bigger than center texture. It will stick out of cells."
+msgstr "%s 大於中心紋理；它將突出單元格外。"
+
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd
+msgid "%s is bigger than half of the center texture. It may cause overlaps."
+msgstr "%s 大於中心紋理的一半；這可能會導致重疊。"
+
+#: addons/MetroidvaniaSystem/Database/Viewer/CollectibleElement.gd
+msgid "Set Collectible Icon"
+msgstr "設定可收集物品圖示"
+
+#: addons/MetroidvaniaSystem/Database/Viewer/CollectibleElement.gd
+msgid "Rename Collectible"
+msgstr "重新命名可收集物品"
+
+#: addons/MetroidvaniaSystem/Database/Viewer/CollectibleElement.tscn
+msgid "Node Name"
+msgstr "節點名稱"
+
+#: addons/MetroidvaniaSystem/Database/Viewer/CollectibleElement.tscn
+msgid "Icon"
+msgstr "圖示"
+
+#: addons/MetroidvaniaSystem/Database/Viewer/CollectibleSettings.gd
+msgid "Add Collectible"
+msgstr "新增可收集物品"
+
+#: addons/MetroidvaniaSystem/Database/Viewer/CollectibleSettings.gd
+msgid "Remove Collectible"
+msgstr "移除可收集物品"
+
+#: addons/MetroidvaniaSystem/Database/Viewer/MapViewer.tscn
+msgid "Preview Mapped"
+msgstr "預覽映射"
+
+#: addons/MetroidvaniaSystem/Database/Viewer/MapViewer.tscn
+msgid "Collectible Settings"
+msgstr "可收集物品設定"
+
+#: addons/MetroidvaniaSystem/Database/Viewer/MapViewer.tscn
+msgid "Collectible Finder"
+msgstr "可收集物品尋找器"
+
+#: addons/MetroidvaniaSystem/Database/Viewer/MapViewer.tscn
+msgid "Scan Maps"
+msgstr "掃描地圖"
+
+#: addons/MetroidvaniaSystem/Database/Viewer/MapViewer.tscn
+msgid "Display on Map"
+msgstr "在地圖上顯示"
+
+#: addons/MetroidvaniaSystem/EditorExtension/MetSysEditorExtension.gd
+msgid "Refresh Adjacent Previews"
+msgstr "刷新相鄰預覽"
+
+#: addons/MetroidvaniaSystem/EditorExtension/MetSysEditorExtension.gd
+msgid ""
+msgstr ""
+
+#: addons/MetroidvaniaSystem/EditorExtension/MetSysEditorExtension.gd
+msgid "Pick Scene..."
+msgstr "選取場景..."
+
+#: addons/MetroidvaniaSystem/EditorExtension/MetSysEditorExtension.gd
+msgid "<Invalid>"
+msgstr "<無效>"
+
+#: addons/MetroidvaniaSystem/MetSysPlugin.gd
+msgid "Print Object ID"
+msgstr "列印物件 ID"
+
+#: addons/MetroidvaniaSystem/MetSysPlugin.gd
+msgid "Copy Object ID to Clipboard"
+msgstr "複製物件 ID 到剪貼簿"
+
+#: addons/MetroidvaniaSystem/MetSysPlugin.gd
+msgid ""
+"MetSys map has been modified.\n"
+"Do you want to save?"
+msgstr "MetSys 地圖已被修改。\n是否要儲存？"
+
+#: addons/MetroidvaniaSystem/MetSysPlugin.gd
+msgid "No scene open to check Node."
+msgstr "未開啟場景以檢查節點。"
+
+#: addons/MetroidvaniaSystem/MetSysPlugin.gd
+msgid "You need to select a single Node."
+msgstr "你需要選取一個節點。"
+
+#: addons/MetroidvaniaSystem/MetSysPlugin.gd
+msgid "Could not determine ID."
+msgstr "無法確定 ID。"
+
+#: addons/MetroidvaniaSystem/MetSysPlugin.gd
+msgid "ID of the selected Node is \"%s\"."
+msgstr "所選節點的 ID 為 \"%s\"。"
+
+#: addons/MetroidvaniaSystem/MetSysPlugin.gd
+msgid "ID \"%s\" copied to clipboard."
+msgstr "ID \"%s\" 已複製到剪貼簿。"
+
+#: addons/MetroidvaniaSystem/MetSysPlugin.gd
+msgid "Error!"
+msgstr "錯誤！"
+
+#: addons/MetroidvaniaSystem/MetSysPlugin.gd
+msgid ""
+"MetSys restart failed, the singleton still can't be loaded. Make sure the \"MetroidvaniaSystem.gd\" script has no errors.\n"
+"\n"
+"Common cause of errors are:\n"
+"- Using Godot version older than 4.4.\n"
+"- Name conflicts with one of the classes.\n"
+"\n"
+"The plugin will be now disabled. Fix the errors and try again."
+msgstr "MetSys 重啟失敗，單例仍然無法載入。確保 \"MetroidvaniaSystem.gd\" 指令稿沒有錯誤。\n\n常見的錯誤原因是：\n- 使用 Godot 版本低於 4.4。\n- 與某個類別的名稱衝突。\n\n外掛程式現在將被停用。請修復錯誤後再試一次。"
+
+#: addons/MetroidvaniaSystem/MetSysPlugin.gd
+msgid "Runs get_object_id() for the selected Node and prints the result."
+msgstr "為所選節點執行 get_object_id() 並列印結果。"
+
+#: addons/MetroidvaniaSystem/MetSysPlugin.gd
+msgid "Runs get_object_id() for the selected Node and copies the result to clipboard."
+msgstr "為所選節點執行 get_object_id() 並將結果複製到剪貼簿。"
+
+#: addons/MetroidvaniaSystem/MetSysPlugin.gd
+msgid "Scene File"
+msgstr "場景檔案"
