@@ -66,7 +66,7 @@ func _physics_process(delta: float) -> void:
 	prev_on_floor = is_on_floor()
 	move_and_slide()
 	
-	var new_animation = &"Idle"
+	var new_animation := &"Idle"
 	if velocity.y < 0:
 		new_animation = &"Jump"
 	elif velocity.y >= 0 and not is_on_floor():
@@ -83,11 +83,11 @@ func _physics_process(delta: float) -> void:
 	elif velocity.x < -1:
 		$Sprite2D.flip_h = true
 
-func kill():
+func kill() -> void:
 	# Player dies, reset the position to the entrance.
 	position = reset_position
 	Game.get_singleton().load_room(MetSys.get_current_room_id())
 
-func on_enter():
+func on_enter() -> void:
 	# Position for kill system. Assigned when entering new room (see Game.gd).
 	reset_position = position
