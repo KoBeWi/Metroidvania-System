@@ -264,22 +264,23 @@ func store_object(object: Object, map_marker := DEFAULT_SYMBOL):
 
 ## Returns [code]true[/code] if the given [param id] was stored with [method store_object]. Useful if you want to display status of collected items.
 func is_object_id_stored(id: String) -> bool:
-	return id in save_data.stored_objects
+	return save_data.stored_objects.get(id, false)
 
 ## Returns the game-unique ID of an object. It's used to identify instances of objects in the game's world. It can be used manually when storable objects are insufficient for whatever reason.
 ## [br][br]The ID is first determined from [code]object_id[/code] metadata (see [method Object.set_meta]), then using [code]_get_object_id()[/code] method and finally using a heuristic based on the current scene and node's path in scene. If the [param object] is not a [Node] and no custom ID is provided, this method returns empty string.
-func get_object_id(object: Object) -> String:
-	if object.has_meta(&"object_id"):
-		return object.get_meta(&"object_id")
-	elif object.has_method(&"_get_object_id"):
-		var id: String = object._get_object_id()
-		object.set_meta(&"object_id", id)
+func get_object_id(object: Object) -> StringName:
+	var id: StringName = object.get_meta(&"object_id", StringName())
+	if not id.is_empty():
 		return id
+	
+	if object.has_method(&"_get_object_id"):
+		id = object._get_object_id()
+		object.set_meta(&"object_id", id)
 	elif object is Node:
-		var id := str(object.owner.scene_file_path.get_file().get_basename(), "/", object.get_parent().name if object.get_parent() != object.owner else ".", "/", object.name)
+		id = object.owner.scene_file_path.get_file().get_basename() + "/" + (str(object.get_parent().name) if object.get_parent() != object.owner else ".") + "/" + object.name
 		object.set_meta(&"object_id", id)
-		return id
-	return ""
+	
+	return id
 
 ## Returns the map coordinates of an object on the scene. It can be used e.g. to place custom markers for non-storable objects.
 ## [br][br]Similar to [method get_object_id], the method will first use [code]object_coords[/code] metadata and [code]_get_object_coords()[/code] method. If the [param object] is a [Node], the top-left coordinate of the current scene's location on map will be used. If the object is a [CanvasItem], it will return a precise coordinate based on the object's position on the scene.

@@ -108,7 +108,7 @@ autoplay = "Lava"
 
 [node name="Collectible" parent="." instance=ExtResource("4_qtkhd")]
 position = Vector2(1176, 424)
-metadata/object_id = "lava_orb"
+metadata/object_id = &"lava_orb"
 
 [node name="Pipe" parent="." instance=ExtResource("5_7l6gd")]
 position = Vector2(0, 312)

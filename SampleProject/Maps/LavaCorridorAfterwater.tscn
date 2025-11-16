@@ -34,7 +34,7 @@ tile_set = ExtResource("1_5c8m2")
 
 [node name="Collectible" parent="." instance=ExtResource("4_sq6ct")]
 position = Vector2(1176, 424)
-metadata/object_id = "lava_orb"
+metadata/object_id = &"lava_orb"
 
 [node name="Pipe" parent="." instance=ExtResource("4_8wl32")]
 position = Vector2(0, 312)

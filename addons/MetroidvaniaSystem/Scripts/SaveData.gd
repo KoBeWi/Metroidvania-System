@@ -1,10 +1,9 @@
 extends RefCounted
 
-const SIMPLE_STORABLE_PROPERTIES: Array[StringName] = [&"discovered_cells", &"registered_objects", &"stored_objects", &"custom_markers"]
+const SIMPLE_STORABLE_PROPERTIES: Array[StringName] = [&"discovered_cells", &"stored_objects", &"custom_markers"]
 
 var discovered_cells: Dictionary[Vector3i, int]
-var registered_objects: Dictionary[String, bool]
-var stored_objects: Dictionary[String, bool]
+var stored_objects: Dictionary[StringName, bool]
 
 var custom_markers: Dictionary[Vector3i, int]
 var cell_overrides: Dictionary[MetroidvaniaSystem.MapData.CellData, MetroidvaniaSystem.MapData.CellOverride]
@@ -26,22 +25,20 @@ func is_cell_discovered(coords: Vector3i) -> int:
 	return discovered_cells.get(coords, 0)
 
 func register_storable_object(object: Object) -> bool:
-	var id: String = MetSys.get_object_id(object)
-	if not id in registered_objects:
-		registered_objects[id] = true
+	var id: StringName = MetSys.get_object_id(object)
+	if not id in stored_objects:
+		stored_objects[id] = false
 		return true
 	return false
 
-func store_object(object: Object):
-	var id: String = MetSys.get_object_id(object)
-	assert(id in registered_objects)
-	assert(not id in stored_objects)
-	registered_objects.erase(id)
+func store_object(object: Object) -> void:
+	var id: StringName = MetSys.get_object_id(object)
+	assert(id in stored_objects and not stored_objects[id])
 	stored_objects[id] = true
 
 func is_object_stored(object: Object) -> bool:
-	var id: String = MetSys.get_object_id(object)
-	return id in stored_objects
+	var id: StringName = MetSys.get_object_id(object)
+	return stored_objects.get(id, false)
 
 func add_cell_override(room: MetroidvaniaSystem.MapData.CellData) -> MetroidvaniaSystem.MapData.CellOverride:
 	if not room in cell_overrides:
