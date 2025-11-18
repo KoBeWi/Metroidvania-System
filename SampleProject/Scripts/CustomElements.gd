@@ -8,7 +8,7 @@ func _init() -> void:
 	# Some text that displays on the map.
 	register_element("label", draw_label)
 
-func draw_elevator(canvas_item: RID, coords: Vector3i, pos: Vector2, size: Vector2, data: String):
+func draw_elevator(canvas_item: RID, coords: Vector3i, pos: Vector2, size: Vector2, data: String) -> void:
 	# For elevator to display, both top and bottom cell must be discovered.
 	if not MetSys.is_cell_discovered(coords + Vector3i(0, -1, 0)) and not MetSys.is_cell_discovered(coords + Vector3i(0, size.y, 0)):
 		return
@@ -19,7 +19,7 @@ func draw_elevator(canvas_item: RID, coords: Vector3i, pos: Vector2, size: Vecto
 		pos + Vector2(MetSys.CELL_SIZE.x * 0.5 - elevator_texture.get_width() * 0.5, 0),
 		Vector2(elevator_texture.get_width(), size.y)), true, MetSys.settings.theme.default_border_color)
 
-func draw_label(canvas_item: RID, coords: Vector3i, pos: Vector2, size: Vector2, data: String):
+func draw_label(canvas_item: RID, coords: Vector3i, pos: Vector2, size: Vector2, data: String) -> void:
 	# The label is only visible if it's cell is discovered.
 	if not MetSys.is_cell_discovered(coords):
 		return
