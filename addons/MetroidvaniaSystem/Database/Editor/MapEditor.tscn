@@ -425,4 +425,5 @@ vertical_alignment = 1
 [connection signal="file_selected" from="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign/FileDialog" to="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign" method="on_map_selected"]
 [connection signal="pressed" from="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign/FileDialog/Button" to="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign" method="create_new_scene"]
 [connection signal="confirmed" from="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign/CreateDialog" to="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign" method="create_scene_confirm"]
+[connection signal="text_changed" from="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign/CreateDialog/VBoxContainer/GridContainer/HBoxContainer/SceneName" to="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign" method="validate_scene" unbinds=1]
 [connection signal="draw" from="MapView/Grid" to="." method="_on_grid_draw"]

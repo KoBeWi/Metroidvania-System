@@ -263,7 +263,7 @@ func store_object(object: Object, map_marker := DEFAULT_SYMBOL):
 		save_data.add_custom_marker(get_object_coords(object), map_marker)
 
 ## Returns [code]true[/code] if the given [param id] was stored with [method store_object]. Useful if you want to display status of collected items.
-func is_object_id_stored(id: String) -> bool:
+func is_object_id_stored(id: StringName) -> bool:
 	return save_data.stored_objects.get(id, false)
 
 ## Returns the game-unique ID of an object. It's used to identify instances of objects in the game's world. It can be used manually when storable objects are insufficient for whatever reason.
