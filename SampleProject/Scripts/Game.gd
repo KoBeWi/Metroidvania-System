@@ -12,7 +12,7 @@ const SAVE_PATH = "user://example_save_data.sav"
 var collectibles: int:
 	set(count):
 		collectibles = count
-		%CollectibleCount.text = "%d/6" % count
+		%CollectibleCount.text = "%d/7" % count
 
 # The coordinates of generated rooms. MetSys does not keep this list, so it needs to be done manually.
 var generated_rooms: Array[Vector3i]
@@ -20,6 +20,8 @@ var generated_rooms: Array[Vector3i]
 var events: Array[String]
 # For Custom Runner integration.
 var custom_run: bool
+# See LoopScript.
+var loop: String
 
 func _ready() -> void:
 	# A trick for static object reference (before static vars were a thing).
@@ -70,6 +72,14 @@ func _ready() -> void:
 	# Make sure minimap is at correct position (required for themes to work correctly).
 	%Minimap.set_offsets_preset(Control.PRESET_TOP_RIGHT, Control.PRESET_MODE_MINSIZE, 8)
 
+func _input(event: InputEvent) -> void:
+	var k := event as InputEventKey
+	if k and k.pressed and k.keycode == KEY_F2:
+		if CustomRunner.is_custom_running():
+			get_tree().change_scene_to_file.call_deferred("res://SampleProject/CustomRunnerIntegration/CustomStart.tscn")
+		else:
+			get_tree().reload_current_scene()
+
 # Returns this node from anywhere.
 static func get_singleton() -> Game:
 	return (Game as Script).get_meta(&"singleton") as Game
@@ -95,9 +105,13 @@ func init_room():
 	if MetSys.last_player_position.x == Vector2i.MAX.x:
 		MetSys.set_player_position(player.position)
 
-# Customized load function that handles maps generated in Dice.tscn.
-func _load_map(path: String) -> Node:
+# Customized load function that handles maps generated in Dice.tscn and loops in LoopRoom.tscn.
+func _load_room(path: String) -> Node:
 	if not path.begins_with("GEN"):
+		# See LoopScript.
+		if not loop.is_empty():
+			path = loop
+			loop = ""
 		return super(path)
 	
 	# Base scene that will be customized (Junction.tscn).

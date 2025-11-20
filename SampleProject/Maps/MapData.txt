@@ -43,7 +43,7 @@ $ln;Defaltia;Shadia;Renegia
 [-3,1,1]
 1,0,-1,0|e646ff,e68bff,e68bff,,e68bff||uid://d4fjrnd3vvemj
 [-2,1,1]
-1,0,1,-1|e646ff,e68bff,e68bff,e68bff,e68bff||uid://bj1ygvl0h6s6s
+1,1,1,-1|e646ff,e68bff,e68bff,e68bff,e68bff||uid://bj1ygvl0h6s6s
 [-1,1,1]
 -1,0,1,0|e646ff,,e68bff,e68bff,e68bff||uid://th6yo5pc7h8e
 [0,1,1]
@@ -60,3 +60,9 @@ $ln;Defaltia;Shadia;Renegia
 0,0,-1,0|e646ff,e68bff,e68bff,,e68bff||uid://bj1ygvl0h6s6s
 [3,0,1]
 0,0,0,0|e646ff,e68bff,e68bff,e68bff,e68bff||uid://swme0gqqjneh
+[-2,2,1]
+1,0,1,1|e646ff,e68bff,e68bff,e68bff,e68bff||uid://cd5hqa33mccnu
+[-1,2,1]
+1,0,1,0|e646ff,e68bff,e68bff,e68bff,e68bff||uid://bbeer48b3sdk3
+[0,2,1]
+1,0,1,0|e646ff,e68bff,e68bff,e68bff,e68bff||uid://c8eic7p7bwbnk

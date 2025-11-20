@@ -30,7 +30,7 @@ func add_module(module_name: String) -> MetSysModule:
 	return module
 
 func _physics_tick():
-	if can_process():
+	if is_inside_tree() and can_process():
 		MetSys.set_player_position(player.position)
 
 ## Loads a map and adds as a child of this node. If a map already exists, it will be removed before the new one is loaded. This method is asynchronous, so you should call it with [code]await[/code] if you want to do something after the map is loaded. Alternatively, you can use [signal room_loaded].
@@ -46,7 +46,7 @@ func load_room(path: String):
 		await map.tree_exited
 		map = null
 	
-	map = _load_map(path)
+	map = _load_room(path)
 	add_child(map)
 	
 	MetSys.current_layer = MetSys.get_current_room_instance().get_layer()
@@ -54,7 +54,7 @@ func load_room(path: String):
 	room_loaded.emit()
 
 ## Virtual method to be optionally overriden in your game class. Return a Node representing a scene under given path. Overriding it is mainly useful for procedurally generated maps.
-func _load_map(path: String) -> Node:
+func _load_room(path: String) -> Node:
 	return load(path).instantiate()
 
 func get_save_data() -> Dictionary:

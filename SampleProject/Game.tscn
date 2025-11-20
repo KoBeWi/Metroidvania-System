@@ -286,6 +286,11 @@ layout_mode = 2
 texture = ExtResource("3_kng3d")
 id = "SecretChamber/./Collectible"
 
+[node name="CollectionGridItem6" parent="UI/CollectionGrid/CollectionGrid/VBoxContainer2" instance=ExtResource("4_uuja8")]
+layout_mode = 2
+texture = ExtResource("3_kng3d")
+id = "LoopRoom1/./Collectible"
+
 [node name="VBoxContainer3" type="VBoxContainer" parent="UI/CollectionGrid/CollectionGrid"]
 layout_mode = 2
 

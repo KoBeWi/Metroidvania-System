@@ -29,7 +29,7 @@ extends Area2D
 
 func _ready() -> void:
 	# Remove the blockade on the right when player has all collectibles.
-	if Game.get_singleton().collectibles == 6:
+	if Game.get_singleton().collectibles == 7:
 		%Gate.enabled = false
 
 func _on_body_entered(body: Node2D) -> void:
