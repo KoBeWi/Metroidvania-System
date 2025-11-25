@@ -72,10 +72,16 @@ func _ready() -> void:
 	# Make sure minimap is at correct position (required for themes to work correctly).
 	%Minimap.set_offsets_preset(Control.PRESET_TOP_RIGHT, Control.PRESET_MODE_MINSIZE, 8)
 
+# Debugging helper. Press F2 to quickly reload game.
 func _input(event: InputEvent) -> void:
 	var k := event as InputEventKey
 	if k and k.pressed and k.keycode == KEY_F2:
-		if CustomRunner.is_custom_running():
+		var cr: Script
+		# CustomRunner can't be used directly, since the addon is optional.
+		if ResourceLoader.exists("res://addons/CustomRunner/CustomRunner.gd"):
+			cr = load("res://addons/CustomRunner/CustomRunner.gd")
+		
+		if cr and cr.is_custom_running():
 			get_tree().change_scene_to_file.call_deferred("res://SampleProject/CustomRunnerIntegration/CustomStart.tscn")
 		else:
 			get_tree().reload_current_scene()
