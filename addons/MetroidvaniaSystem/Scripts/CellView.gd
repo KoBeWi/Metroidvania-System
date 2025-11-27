@@ -28,14 +28,18 @@ var _top_cell: MetroidvaniaSystem.CellView
 var _top_left_cell: MetroidvaniaSystem.CellView
 	
 var _theme: MapTheme
+var _cell_data: CellData
 var _force_mapped: bool
 
-func _init(parent_item: RID) -> void:
+func _init(parent_item: RID, theme: MapTheme = null) -> void:
 	_this = self # hack
-	unreference() # hack
+	# unreference() # hack
 	
 	_parent_item = parent_item
-	_theme = MetSys.settings.theme
+	if theme:
+		_theme = theme
+	else:
+		_theme = MetSys.settings.theme
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_PREDELETE:
@@ -76,7 +80,12 @@ func update():
 	_draw()
 
 func _draw():
-	var cell_data: CellData = MetSys.map_data.get_cell_at(coords)
+	var cell_data: CellData
+	if _cell_data:
+		cell_data = _cell_data
+	else:
+		cell_data = MetSys.map_data.get_cell_at(coords)
+	
 	if not cell_data:
 		if _canvas_item.is_valid():
 			delete_rids()
