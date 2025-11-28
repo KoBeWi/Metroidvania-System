@@ -12,7 +12,7 @@ extends Node
 # Gate layer index.
 @export var layer: int
 
-func open():
+func open() -> void:
 	# Disable the Gate layer.
 	%Gate.enabled = false
 "
