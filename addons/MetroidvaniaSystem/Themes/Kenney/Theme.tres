@@ -26,4 +26,4 @@ uncollected_item_symbol = 0
 wall = ExtResource("9_lik5d")
 passage = ExtResource("3_osw06")
 borders = Array[Texture2D]([ExtResource("1_sca7f")])
-metadata/_custom_type_script = ExtResource("1_dn1d3")
+metadata/_custom_type_script = "uid://b7ofctgav4kq4"
