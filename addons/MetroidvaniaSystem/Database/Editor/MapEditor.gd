@@ -126,14 +126,14 @@ func on_zoom_changed(new_zoom: float):
 
 func update_name():
 	if is_unsaved():
-		name = "Map Editor(*)"
+		name = tr("Map Editor") + "(*)"
 		MetSys.editor_plugin.is_unsaved = true
 	else:
 		name = "Map Editor"
 		MetSys.editor_plugin.is_unsaved = false
 
 func is_unsaved() -> bool:
-	return undo_redo.get_version() != saved_version
+	return undo_redo and undo_redo.get_version() != saved_version
 
 func mark_saved():
 	saved_version = undo_redo.get_version()
@@ -164,7 +164,11 @@ func _on_overlay_drop_data(at_pos: Vector2, data) -> void:
 	get_current_sub_editor().drop_data(at_pos, data)
 
 func _notification(what: int) -> void:
-	if what == NOTIFICATION_PREDELETE:
-		if undo_redo:
-			undo_redo.free()
-			undo_redo = null
+	match what:
+		NOTIFICATION_TRANSLATION_CHANGED:
+			if is_unsaved():
+				update_name()
+		NOTIFICATION_PREDELETE:
+			if undo_redo:
+				undo_redo.free()
+				undo_redo = null
