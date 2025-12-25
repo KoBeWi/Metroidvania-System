@@ -50,7 +50,7 @@ var visible: bool:
 var _canvas_item: RID
 var _cache: Dictionary[Vector3i, CellView]
 var _custom_elements_cache: Dictionary[Vector3i, CustomElementInstance]
-var _update_queue: Array[RefCounted]
+var _update_queue: Array[Object]
 
 var _force_mapped: bool
 
