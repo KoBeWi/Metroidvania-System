@@ -1,0 +1,21 @@
+name: Bug report
+description: Report a bug in the addon
+
+body:
+  - type: input
+    attributes:
+      label: Godot version
+    validations:
+      required: true
+
+  - type: input
+    attributes:
+      label: MetSys version
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Issue description
+    validations:
+      required: true
