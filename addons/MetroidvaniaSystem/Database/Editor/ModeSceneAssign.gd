@@ -38,7 +38,7 @@ func _editor_input(event: InputEvent):
 			if event.pressed:
 				if not highlighted_room.is_empty():
 					file_dialog.current_dir = MetSys.settings.get_scene_folder()
-					file_dialog.popup_centered_ratio(0.6)
+					file_dialog.popup_file_dialog()
 		elif event.button_index == MOUSE_BUTTON_RIGHT:
 			if event.pressed:
 				var prev_scene := clear_scene(highlighted_room)

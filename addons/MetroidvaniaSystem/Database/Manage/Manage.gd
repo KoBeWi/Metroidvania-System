@@ -63,7 +63,7 @@ func refresh_custom_elements() -> void:
 	MetSys.settings.custom_elements_changed.emit()
 
 func export_json() -> void:
-	$FileDialog.popup_centered_ratio(0.6)
+	$FileDialog.popup_file_dialog()
 
 func json_file_selected(path: String) -> void:
 	var map_data: Dictionary
