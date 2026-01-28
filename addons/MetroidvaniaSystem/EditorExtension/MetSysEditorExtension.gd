@@ -8,6 +8,7 @@ var hovered_preview: Control
 
 var inspector_plugin: EditorInspectorPlugin
 var export_plugin: EditorExportPlugin
+var preview_plugin: EditorResourcePreviewGenerator
 
 func _enter_tree() -> void:
 	button = Button.new()
@@ -22,11 +23,15 @@ func _enter_tree() -> void:
 	
 	export_plugin = MetSysExportPlugin.new()
 	add_export_plugin(export_plugin)
+	
+	preview_plugin = MapThemePreviewGenerator.new()
+	EditorInterface.get_resource_previewer().add_preview_generator(preview_plugin)
 
 func _exit_tree() -> void:
 	remove_control_from_container(EditorPlugin.CONTAINER_CANVAS_EDITOR_MENU, button)
 	remove_inspector_plugin(inspector_plugin)
 	remove_export_plugin(export_plugin)
+	EditorInterface.get_resource_previewer().remove_preview_generator(preview_plugin)
 
 func _make_visible(visible: bool) -> void:
 	button.visible = visible
@@ -224,3 +229,42 @@ class MetSysExportPlugin extends EditorExportPlugin:
 	func _export_file(path: String, type: String, features: PackedStringArray) -> void:
 		if path == map_data_path:
 			skip()
+
+class MapThemePreviewGenerator extends EditorResourcePreviewGenerator:
+	func _generate(resource: Resource, size: Vector2i, metadata: Dictionary) -> Texture2D:
+		var theme := resource as MapTheme
+		if not theme:
+			return null
+		
+		var cell_data := MetSys.MapData.CellData.new("")
+		cell_data.borders = [1, 0, 0, 0]
+		
+		var canvas := RenderingServer.canvas_create()
+		var cell_view := MetroidvaniaSystem.CellView.new(canvas, theme)
+		cell_view.use_save_data = false
+		cell_view.offset = (Vector2(size / 2) - theme.center_texture.get_size() / 2) / MetSys.CELL_SIZE
+		cell_view._cell_data = cell_data
+		
+		var was_shared := theme.use_shared_borders
+		theme.use_shared_borders = false
+		cell_view.update()
+		theme.use_shared_borders = was_shared
+		
+		var viewport := RenderingServer.viewport_create()
+		RenderingServer.viewport_set_active(viewport, true)
+		RenderingServer.viewport_set_size(viewport, size.x, size.y)
+		RenderingServer.viewport_set_transparent_background(viewport, true)
+		RenderingServer.viewport_attach_canvas(viewport, canvas)
+		RenderingServer.viewport_set_update_mode(viewport, RenderingServer.VIEWPORT_UPDATE_ONCE)
+		
+		request_draw_and_wait(viewport)
+		
+		var image := RenderingServer.texture_2d_get(RenderingServer.viewport_get_texture(viewport))
+		
+		RenderingServer.free_rid(canvas)
+		RenderingServer.free_rid(viewport)
+		
+		return ImageTexture.create_from_image(image)
+	
+	func _handles(type: String) -> bool:
+		return type == "Resource"

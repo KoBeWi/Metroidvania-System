@@ -50,7 +50,7 @@ var visible: bool:
 var _canvas_item: RID
 var _cache: Dictionary[Vector3i, CellView]
 var _custom_elements_cache: Dictionary[Vector3i, CustomElementInstance]
-var _update_queue: Array[RefCounted]
+var _update_queue: Array[Object]
 
 var _force_mapped: bool
 
@@ -62,9 +62,14 @@ func _init(parent_item: RID) -> void:
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_PREDELETE:
 		RenderingServer.free_rid(_canvas_item)
+		for cell in _cache.values():
+			cell.free()
 
 ## Discards all cached cells and initializes the whole map again. This method can update cell coordinates and map size, but it's rarely needed to be called manually.
 func recreate_cache():
+	for cell in _cache.values():
+		cell.free()
+	
 	_cache.clear()
 	_custom_elements_cache.clear()
 	var shared_borders: bool = MetSys.settings.theme.use_shared_borders
@@ -181,6 +186,10 @@ func move(offset: Vector2i, new_layer := layer):
 			continue
 		
 		_make_custom_element_instance(coords, element).update()
+	
+	for coords in _cache:
+		if not coords in new_cache:
+			_cache[coords].free()
 	
 	_cache = new_cache
 

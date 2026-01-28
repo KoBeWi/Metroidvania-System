@@ -1,4 +1,4 @@
-extends RefCounted
+extends Object
 
 const CellData = MetroidvaniaSystem.MapData.CellData
 
@@ -17,7 +17,6 @@ var offset: Vector2:
 		if _canvas_item.is_valid():
 			RenderingServer.canvas_item_set_transform(_canvas_item, Transform2D(0, offset * MetSys.CELL_SIZE))
 
-var _this: RefCounted # hack
 var _parent_item: RID
 var _canvas_item: RID
 var _shared_border_item: RID
@@ -28,19 +27,20 @@ var _top_cell: MetroidvaniaSystem.CellView
 var _top_left_cell: MetroidvaniaSystem.CellView
 	
 var _theme: MapTheme
+var _cell_data: CellData
 var _force_mapped: bool
 
-func _init(parent_item: RID) -> void:
-	_this = self # hack
-	unreference() # hack
-	
+func _init(parent_item: RID, theme: MapTheme = null) -> void:
 	_parent_item = parent_item
-	_theme = MetSys.settings.theme
+	if theme:
+		_theme = theme
+	else:
+		_theme = MetSys.settings.theme
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_PREDELETE:
-		if _this._canvas_item.is_valid():
-			_this.delete_rids()
+		if _canvas_item.is_valid():
+			delete_rids()
 
 func create_rids():
 	_canvas_item = RenderingServer.canvas_item_create()
@@ -73,10 +73,16 @@ func update():
 		if _shared_border_item.is_valid():
 			RenderingServer.canvas_item_clear(_shared_border_item)
 			RenderingServer.canvas_item_clear(_shared_corner_item)
+	
 	_draw()
 
 func _draw():
-	var cell_data: CellData = MetSys.map_data.get_cell_at(coords)
+	var cell_data: CellData
+	if _cell_data:
+		cell_data = _cell_data
+	else:
+		cell_data = MetSys.map_data.get_cell_at(coords)
+	
 	if not cell_data:
 		if _canvas_item.is_valid():
 			delete_rids()
