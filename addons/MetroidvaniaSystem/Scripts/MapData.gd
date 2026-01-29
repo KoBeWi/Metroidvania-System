@@ -284,6 +284,11 @@ class CustomElement:
 	var size: Vector2i
 	var data: String
 
+class TransferredCell:
+	var cell_data: CellData
+	var assigned_scene: String
+	var groups: Array[Array]
+
 var cells: Dictionary[Vector3i, CellData]
 var custom_cells: Dictionary[Vector3i, CellData]
 var assigned_scenes: Dictionary[String, Array]#[Vector3i]]
@@ -294,6 +299,8 @@ var layer_names: PackedStringArray
 var scene_remaps: Dictionary[String, String]
 var group_names: PackedStringArray
 var group_cache: Dictionary[Vector3i, PackedInt32Array]
+
+var transfer: Dictionary[Vector3i, TransferredCell]
 
 func load_data():
 	var file := FileAccess.open(get_map_data_path(), FileAccess.READ)
@@ -499,20 +506,35 @@ func erase_cell(coords: Vector3i):
 		group.erase(coords)
 
 func transfer_cell(from_coords: Vector3i, to_coords: Vector3i):
+	var transfered_cell := TransferredCell.new()
+	
 	var cell_data := get_cell_at(from_coords)
 	
 	var scene: String = cells[from_coords].scene
 	if not scene.is_empty():
 		assigned_scenes[scene].erase(from_coords)
-		assigned_scenes[scene].append(to_coords)
+		transfered_cell.assigned_scene = scene
 	
 	cells.erase(from_coords)
-	cells[to_coords] = cell_data
+	transfered_cell.cell_data = cell_data
 	
 	for group in cell_groups.values():
 		if from_coords in group:
 			group.erase(from_coords)
-			group.append(to_coords)
+			transfered_cell.groups.append(group)
+	
+	transfer[to_coords] = transfered_cell
+
+func commit_transfer():
+	for coords in transfer:
+		var transfered_cell := transfer[coords]
+		cells[coords] = transfered_cell.cell_data
+		if not transfered_cell.assigned_scene.is_empty():
+			assigned_scenes[transfered_cell.assigned_scene].append(coords)
+		for group in transfered_cell.groups:
+			group.append(coords)
+	
+	transfer.clear()
 
 func get_room_from_scene_path(scene: String, safe := true) -> String:
 	if scene.begins_with("res://") and OS.has_feature("editor"):

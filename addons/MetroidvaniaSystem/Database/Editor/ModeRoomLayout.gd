@@ -8,6 +8,8 @@ var dragging_room: Array[Vector3i]
 var dragging_room_cells: Array[MetroidvaniaSystem.CellView]
 var dragging_drawer: Node2D
 
+var transferred_cells_to_update: Array[Vector3i]
+
 func _ready() -> void:
 	if is_part_of_edited_scene():
 		return
@@ -83,14 +85,17 @@ func _editor_input(event: InputEvent):
 								drop_valid = false
 					
 					if drop_valid:
+						undo_begin()
 						for old_coords in dragging_room:
 							var new_coords := get_coords(get_cell_dragging_offset(old_coords))
-							MetSys.map_data.transfer_cell(old_coords, new_coords)
-							editor.update_cell(new_coords)
-							undo_handle_transfer(old_coords, new_coords)
-					
-					for coords in dragging_room:
-						editor.update_cell(coords)
+							transfer_cell(old_coords, new_coords)
+							editor.undo_redo.add_do_method(transfer_cell.bind(old_coords, new_coords))
+							editor.undo_redo.add_undo_method(transfer_cell.bind(new_coords, old_coords))
+						
+						commit_transfer()
+						editor.undo_redo.add_do_method(commit_transfer)
+						editor.undo_redo.add_undo_method(commit_transfer)
+						undo_end()
 					
 					set_dragging_room_visible(true)
 					dragging_room.clear()
@@ -248,3 +253,18 @@ func set_dragging_room_visible(vis: bool):
 	for coords in dragging_room:
 		var cell: MetroidvaniaSystem.CellView = editor.current_map_view._cache[coords]
 		cell.visible = vis
+
+func transfer_cell(old_coords: Vector3i, new_coords: Vector3i):
+	MetSys.map_data.transfer_cell(old_coords, new_coords)
+	
+	if not old_coords in transferred_cells_to_update:
+		transferred_cells_to_update.append(old_coords)
+	if not new_coords in transferred_cells_to_update:
+		transferred_cells_to_update.append(new_coords)
+
+func commit_transfer():
+	MetSys.map_data.commit_transfer()
+	
+	for coords in transferred_cells_to_update:
+		editor.update_cell(coords)
+	transferred_cells_to_update.clear()
