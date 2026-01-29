@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://crxgu2q73va5y"]
+[gd_scene format=3 uid="uid://crxgu2q73va5y"]
 
 [ext_resource type="Theme" uid="uid://dfyoc5jqnnpf5" path="res://addons/MetroidvaniaSystem/Database/DatabaseTheme.tres" id="1_hfop4"]
 [ext_resource type="PackedScene" uid="uid://dfbykrvyqnqr5" path="res://addons/MetroidvaniaSystem/Database/Editor/MapEditor.tscn" id="1_lpqq2"]
@@ -9,9 +9,9 @@
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0ndnc"]
 bg_color = Color(0, 0, 0, 0.501961)
 
-[sub_resource type="ButtonGroup" id="ButtonGroup_u4ywv"]
+[sub_resource type="ButtonGroup" id="ButtonGroup_bipp0"]
 
-[node name="Main" type="VBoxContainer"]
+[node name="Main" type="VBoxContainer" unique_id=1494807590]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -22,13 +22,13 @@ size_flags_vertical = 3
 theme = ExtResource("1_hfop4")
 script = ExtResource("2_bipp0")
 
-[node name="Label" type="Label" parent="."]
+[node name="Label" type="Label" parent="." unique_id=1508440694]
 layout_mode = 2
 theme_type_variation = &"HeaderSmall"
 text = "Metroidvania System Database v.%s"
 horizontal_alignment = 1
 
-[node name="TabContainer" type="TabContainer" parent="."]
+[node name="TabContainer" type="TabContainer" parent="." unique_id=1426857261]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -36,25 +36,25 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_0ndnc")
 tab_alignment = 1
 current_tab = 0
 
-[node name="Map Editor" parent="TabContainer" instance=ExtResource("1_lpqq2")]
+[node name="Map Editor" parent="TabContainer" unique_id=1541065233 instance=ExtResource("1_lpqq2")]
 unique_name_in_owner = true
 layout_mode = 2
-mode_group = SubResource("ButtonGroup_u4ywv")
+mode_group = SubResource("ButtonGroup_bipp0")
 metadata/_tab_index = 0
 
-[node name="Map Viewer" parent="TabContainer" instance=ExtResource("2_0tuq7")]
+[node name="Map Viewer" parent="TabContainer" unique_id=1898264915 instance=ExtResource("2_0tuq7")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 metadata/_tab_index = 1
 
-[node name="Manage" parent="TabContainer" instance=ExtResource("2_1dme8")]
+[node name="Manage" parent="TabContainer" unique_id=2028481219 instance=ExtResource("2_1dme8")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 metadata/_tab_index = 2
 
-[node name="ChangesDetected" type="ConfirmationDialog" parent="."]
+[node name="ChangesDetected" type="ConfirmationDialog" parent="." unique_id=920556128]
 size = Vector2i(441, 128)
 ok_button_text = "Reload From Disk"
 dialog_text = "Map data file was modified externally.

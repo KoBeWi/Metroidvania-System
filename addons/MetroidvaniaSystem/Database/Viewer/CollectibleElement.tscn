@@ -1,44 +1,44 @@
-[gd_scene load_steps=3 format=3 uid="uid://w48b71tv2d4v"]
+[gd_scene format=3 uid="uid://w48b71tv2d4v"]
 
 [ext_resource type="Script" uid="uid://2fu7dhm72l7r" path="res://addons/MetroidvaniaSystem/Database/Viewer/CollectibleElement.gd" id="1_1bebr"]
 [ext_resource type="Script" uid="uid://celtpddhdfods" path="res://addons/MetroidvaniaSystem/Database/EditorIconButton.gd" id="2_3d05g"]
 
-[node name="Collectible" type="PanelContainer"]
+[node name="Collectible" type="PanelContainer" unique_id=2106750799]
 script = ExtResource("1_1bebr")
 metadata/is_collectible = true
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=693485747]
 layout_mode = 2
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer" unique_id=2071404037]
 layout_mode = 2
 
-[node name="LineEdit" type="LineEdit" parent="VBoxContainer/HBoxContainer2"]
+[node name="LineEdit" type="LineEdit" parent="VBoxContainer/HBoxContainer2" unique_id=1849363203]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 placeholder_text = "Node Name"
 
-[node name="Button" type="Button" parent="VBoxContainer/HBoxContainer2"]
+[node name="Button" type="Button" parent="VBoxContainer/HBoxContainer2" unique_id=1400733554]
 layout_mode = 2
 script = ExtResource("2_3d05g")
 icon_name = "Remove"
 
-[node name="IconContainer" type="HBoxContainer" parent="VBoxContainer"]
+[node name="IconContainer" type="HBoxContainer" parent="VBoxContainer" unique_id=1246643632]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="VBoxContainer/IconContainer"]
+[node name="Label" type="Label" parent="VBoxContainer/IconContainer" unique_id=1600625692]
 layout_mode = 2
 size_flags_horizontal = 0
 text = "Icon"
 
-[node name="ResourcePicker" type="EditorResourcePicker" parent="VBoxContainer/IconContainer"]
+[node name="ResourcePicker" type="EditorResourcePicker" parent="VBoxContainer/IconContainer" unique_id=127541760]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 base_type = "Texture2D"
 
-[node name="SaveTimer" type="Timer" parent="."]
+[node name="SaveTimer" type="Timer" parent="." unique_id=602298494]
 wait_time = 0.5
 one_shot = true
 

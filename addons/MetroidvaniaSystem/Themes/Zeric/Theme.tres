@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="MapTheme" load_steps=20 format=3 uid="uid://b7a3sieqfuewe"]
+[gd_resource type="Resource" script_class="MapTheme" format=3 uid="uid://b7a3sieqfuewe"]
 
 [ext_resource type="Texture2D" uid="uid://ckdojstmtqikr" path="res://addons/MetroidvaniaSystem/Themes/Zeric/Borders/BlueBarrier.png" id="1_gcegi"]
 [ext_resource type="Texture2D" uid="uid://bpmgmiri5e6e2" path="res://addons/MetroidvaniaSystem/Themes/Zeric/Borders/RedBarrier.png" id="2_cjw1d"]

@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=3 uid="uid://c8j6i3fx8p758"]
+[gd_scene format=3 uid="uid://c8j6i3fx8p758"]
 
 [ext_resource type="Texture2D" uid="uid://wiq0mic5m6is" path="res://SampleProject/Sprites/Collectible.png" id="1_hy2v6"]
 
@@ -25,13 +25,13 @@ func collect(body: Node2D) -> void:
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_v5e3t"]
 size = Vector2(32, 32)
 
-[node name="Collectible" type="Area2D"]
+[node name="Collectible" type="Area2D" unique_id=1855826337]
 script = SubResource("GDScript_5wqrn")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=883647173]
 shape = SubResource("RectangleShape2D_v5e3t")
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=938371974]
 texture = ExtResource("1_hy2v6")
 
 [connection signal="body_entered" from="." to="." method="collect"]

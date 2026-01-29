@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="MapTheme" load_steps=15 format=3 uid="uid://e6e8dk7dxvt0"]
+[gd_resource type="Resource" script_class="MapTheme" format=3 uid="uid://e6e8dk7dxvt0"]
 
 [ext_resource type="Texture2D" uid="uid://biol1vsvxqe6y" path="res://addons/MetroidvaniaSystem/Themes/Fuzzy/Borders/HalfWall.png" id="1_jcvj8"]
 [ext_resource type="Texture2D" uid="uid://b58o75mw5xjej" path="res://addons/MetroidvaniaSystem/Themes/Fuzzy/Borders/HalfWall2.png" id="2_uc5ur"]

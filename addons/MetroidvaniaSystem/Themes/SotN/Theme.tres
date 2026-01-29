@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="MapTheme" load_steps=7 format=3 uid="uid://cpqftkus7vhk1"]
+[gd_resource type="Resource" script_class="MapTheme" format=3 uid="uid://cpqftkus7vhk1"]
 
 [ext_resource type="Texture2D" uid="uid://b4654oir6ffpi" path="res://addons/MetroidvaniaSystem/Themes/SotN/Corner.png" id="1_hvikm"]
 [ext_resource type="PackedScene" uid="uid://debgde56f1x6f" path="res://addons/MetroidvaniaSystem/Themes/SotN/PlayerLocation.tscn" id="4_70tgl"]

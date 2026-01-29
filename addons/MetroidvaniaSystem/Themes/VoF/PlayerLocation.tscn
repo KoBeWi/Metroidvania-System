@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://cy5v4y4jjdq3"]
+[gd_scene format=3 uid="uid://cy5v4y4jjdq3"]
 
 [ext_resource type="Texture2D" uid="uid://b050k4i01yhlw" path="res://addons/MetroidvaniaSystem/Themes/VoF/PlayerLocation.png" id="1_paeov"]
 
@@ -39,11 +39,9 @@ _data = {
 &"new_animation": SubResource("Animation_j5j13")
 }
 
-[node name="PlayerLocation" type="Sprite2D"]
+[node name="PlayerLocation" type="Sprite2D" unique_id=1444713050]
 texture = ExtResource("1_paeov")
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-libraries = {
-&"": SubResource("AnimationLibrary_vk7a8")
-}
-autoplay = "new_animation"
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=726237891]
+libraries/ = SubResource("AnimationLibrary_vk7a8")
+autoplay = &"new_animation"

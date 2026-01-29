@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=3 uid="uid://jm00e7eg4gpc"]
+[gd_scene format=3 uid="uid://jm00e7eg4gpc"]
 
 [sub_resource type="Animation" id="Animation_l8bj1"]
 length = 0.001
@@ -37,9 +37,9 @@ _data = {
 &"new_animation": SubResource("Animation_og8hk")
 }
 
-[node name="PlayerLocation" type="Node2D"]
+[node name="PlayerLocation" type="Node2D" unique_id=1042807139]
 
-[node name="ColorRect" type="ColorRect" parent="."]
+[node name="ColorRect" type="ColorRect" parent="." unique_id=1763556412]
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -52,9 +52,7 @@ offset_bottom = 16.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-libraries = {
-&"": SubResource("AnimationLibrary_d6kwd")
-}
-autoplay = "new_animation"
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=530484046]
+libraries/ = SubResource("AnimationLibrary_d6kwd")
+autoplay = &"new_animation"
 speed_scale = 4.0

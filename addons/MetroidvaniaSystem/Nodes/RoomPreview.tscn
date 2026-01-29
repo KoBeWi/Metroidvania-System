@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://bx8a6r0ee0l1b"]
+[gd_scene format=3 uid="uid://bx8a6r0ee0l1b"]
 
 [ext_resource type="Theme" uid="uid://dfyoc5jqnnpf5" path="res://addons/MetroidvaniaSystem/Database/DatabaseTheme.tres" id="1_f25u0"]
 
@@ -91,31 +91,31 @@ resource_local_to_scene = true
 shader = SubResource("Shader_bavq6")
 shader_parameter/direction = 0
 
-[node name="RoomPreview" type="MarginContainer" groups=["_MetSys_RoomPreview_"]]
+[node name="RoomPreview" type="MarginContainer" unique_id=1689148930 groups=["_MetSys_RoomPreview_"]]
 material = SubResource("ShaderMaterial_4y0d4")
 offset_right = 100.0
 offset_bottom = 100.0
 theme = ExtResource("1_f25u0")
 script = SubResource("GDScript_rf8ul")
 
-[node name="SubViewportContainer" type="SubViewportContainer" parent="."]
+[node name="SubViewportContainer" type="SubViewportContainer" parent="." unique_id=1429617093]
 material = SubResource("ShaderMaterial_r6wrf")
 layout_mode = 2
 stretch = true
 
-[node name="SubViewport" type="SubViewport" parent="SubViewportContainer"]
+[node name="SubViewport" type="SubViewport" parent="SubViewportContainer" unique_id=2067495683]
 unique_name_in_owner = true
 handle_input_locally = false
 size = Vector2i(100, 100)
 render_target_update_mode = 4
 
-[node name="Hover" type="ReferenceRect" parent="."]
+[node name="Hover" type="ReferenceRect" parent="." unique_id=771272994]
 visible = false
 layout_mode = 2
 border_color = Color(1, 1, 0, 1)
 border_width = 2.0
 
-[node name="Label" type="Label" parent="Hover"]
+[node name="Label" type="Label" parent="Hover" unique_id=1771397813]
 unique_name_in_owner = true
 z_index = 1
 layout_mode = 1

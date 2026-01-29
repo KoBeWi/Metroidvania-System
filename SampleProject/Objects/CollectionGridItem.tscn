@@ -1,4 +1,4 @@
-[gd_scene load_steps=2 format=3 uid="uid://bd5w7n7gew76f"]
+[gd_scene format=3 uid="uid://bd5w7n7gew76f"]
 
 [sub_resource type="GDScript" id="GDScript_h4gwg"]
 script/source = "extends TextureRect
@@ -11,13 +11,13 @@ func update_collectible():
 	self_modulate.a = float(MetSys.is_object_id_stored(id))
 "
 
-[node name="CollectionGridItem" type="TextureRect"]
+[node name="CollectionGridItem" type="TextureRect" unique_id=1245511340]
 custom_minimum_size = Vector2(20, 20)
 expand_mode = 1
 stretch_mode = 5
 script = SubResource("GDScript_h4gwg")
 
-[node name="ReferenceRect" type="ReferenceRect" parent="."]
+[node name="ReferenceRect" type="ReferenceRect" parent="." unique_id=88899400]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0

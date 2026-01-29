@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://xxqfc6h2rll"]
+[gd_scene format=3 uid="uid://xxqfc6h2rll"]
 
 [ext_resource type="Texture2D" uid="uid://oab88qe0m6jn" path="res://addons/MetroidvaniaSystem/Themes/Fuzzy/PlayerLocation.png" id="1_cf0gc"]
 
@@ -113,30 +113,28 @@ _data = {
 &"new_animation": SubResource("Animation_cf0gc")
 }
 
-[node name="PlayerLocation" type="Node2D"]
+[node name="PlayerLocation" type="Node2D" unique_id=1377426069]
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=839649134]
 position = Vector2(7, 7.0000005)
 rotation = 0.7853982
 texture = ExtResource("1_cf0gc")
 
-[node name="Sprite2D2" type="Sprite2D" parent="."]
+[node name="Sprite2D2" type="Sprite2D" parent="." unique_id=985928800]
 position = Vector2(-7.0000005, 7)
 rotation = 2.3561945
 texture = ExtResource("1_cf0gc")
 
-[node name="Sprite2D3" type="Sprite2D" parent="."]
+[node name="Sprite2D3" type="Sprite2D" parent="." unique_id=104017717]
 position = Vector2(-6.9999995, -7)
 rotation = 3.926991
 texture = ExtResource("1_cf0gc")
 
-[node name="Sprite2D4" type="Sprite2D" parent="."]
+[node name="Sprite2D4" type="Sprite2D" parent="." unique_id=1755060260]
 position = Vector2(7, -7)
 rotation = 5.4977875
 texture = ExtResource("1_cf0gc")
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-libraries = {
-&"": SubResource("AnimationLibrary_jyl5k")
-}
-autoplay = "new_animation"
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=242596792]
+libraries/ = SubResource("AnimationLibrary_jyl5k")
+autoplay = &"new_animation"

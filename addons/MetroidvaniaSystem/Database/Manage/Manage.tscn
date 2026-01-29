@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=3 uid="uid://he12yvtcmf87"]
+[gd_scene format=3 uid="uid://he12yvtcmf87"]
 
 [ext_resource type="Script" uid="uid://bygspb8mbbsgw" path="res://addons/MetroidvaniaSystem/Database/Manage/Manage.gd" id="1_dwgkh"]
 [ext_resource type="Script" uid="uid://dr3xoib02wmf1" path="res://addons/MetroidvaniaSystem/Database/Manage/Validation.gd" id="2_0llw0"]
@@ -15,7 +15,7 @@ corner_radius_bottom_right = 3
 corner_radius_bottom_left = 3
 corner_detail = 5
 
-[node name="Manage" type="MarginContainer"]
+[node name="Manage" type="MarginContainer" unique_id=2009462458]
 anchors_preset = 13
 anchor_left = 0.5
 anchor_right = 0.5
@@ -28,97 +28,97 @@ size_flags_vertical = 3
 theme_override_constants/margin_top = 32
 script = ExtResource("1_dwgkh")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=823180793]
 custom_minimum_size = Vector2(400, 0)
 layout_mode = 2
 size_flags_horizontal = 4
 
-[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer" unique_id=1665815433]
 layout_mode = 2
 size_flags_horizontal = 4
 
-[node name="Button" type="Button" parent="VBoxContainer/VBoxContainer"]
+[node name="Button" type="Button" parent="VBoxContainer/VBoxContainer" unique_id=788854740]
 layout_mode = 2
 text = "General Settings"
 
-[node name="Button6" type="Button" parent="VBoxContainer/VBoxContainer"]
+[node name="Button6" type="Button" parent="VBoxContainer/VBoxContainer" unique_id=1021542772]
 layout_mode = 2
 text = "Refresh Custom Elements"
 
-[node name="Button2" type="Button" parent="VBoxContainer/VBoxContainer"]
+[node name="Button2" type="Button" parent="VBoxContainer/VBoxContainer" unique_id=1607307075]
 layout_mode = 2
 text = "Reload and Cleanup Map Data"
 
-[node name="HSeparator3" type="HSeparator" parent="VBoxContainer/VBoxContainer"]
+[node name="HSeparator3" type="HSeparator" parent="VBoxContainer/VBoxContainer" unique_id=1462991167]
 layout_mode = 2
 
-[node name="Button4" type="Button" parent="VBoxContainer/VBoxContainer"]
+[node name="Button4" type="Button" parent="VBoxContainer/VBoxContainer" unique_id=1369147207]
 layout_mode = 2
 text = "Validate Map Data"
 
-[node name="Button5" type="Button" parent="VBoxContainer/VBoxContainer"]
+[node name="Button5" type="Button" parent="VBoxContainer/VBoxContainer" unique_id=456574296]
 layout_mode = 2
 text = "Validate Map Theme"
 
-[node name="Button7" type="Button" parent="VBoxContainer/VBoxContainer"]
+[node name="Button7" type="Button" parent="VBoxContainer/VBoxContainer" unique_id=774326918]
 layout_mode = 2
 text = "Export Map Data as JSON"
 
-[node name="HSeparator" type="HSeparator" parent="VBoxContainer/VBoxContainer"]
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer/VBoxContainer" unique_id=249633223]
 layout_mode = 2
 
-[node name="Button3" type="Button" parent="VBoxContainer/VBoxContainer"]
+[node name="Button3" type="Button" parent="VBoxContainer/VBoxContainer" unique_id=1938199]
 layout_mode = 2
 text = "Edit Database Theme"
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/VBoxContainer" unique_id=523821666]
 layout_mode = 2
 
-[node name="AllowReset" type="CheckBox" parent="VBoxContainer/VBoxContainer/HBoxContainer"]
+[node name="AllowReset" type="CheckBox" parent="VBoxContainer/VBoxContainer/HBoxContainer" unique_id=1764107176]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="ResetButton" type="Button" parent="VBoxContainer/VBoxContainer/HBoxContainer"]
+[node name="ResetButton" type="Button" parent="VBoxContainer/VBoxContainer/HBoxContainer" unique_id=2095262394]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 disabled = true
 text = "Reset Database Theme"
 
-[node name="HSeparator2" type="HSeparator" parent="VBoxContainer/VBoxContainer"]
+[node name="HSeparator2" type="HSeparator" parent="VBoxContainer/VBoxContainer" unique_id=1638117074]
 layout_mode = 2
 
-[node name="ValidationPanel" type="PanelContainer" parent="VBoxContainer"]
+[node name="ValidationPanel" type="PanelContainer" parent="VBoxContainer" unique_id=1828606343]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_styles/panel = SubResource("StyleBoxFlat_6lvlf")
 script = ExtResource("2_0llw0")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/ValidationPanel"]
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/ValidationPanel" unique_id=1619616762]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="VBoxContainer/ValidationPanel/VBoxContainer"]
+[node name="Label" type="Label" parent="VBoxContainer/ValidationPanel/VBoxContainer" unique_id=358138502]
 layout_mode = 2
 text = "Validation Result"
 horizontal_alignment = 1
 
-[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/ValidationPanel/VBoxContainer"]
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/ValidationPanel/VBoxContainer" unique_id=1709932018]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="Output" type="VBoxContainer" parent="VBoxContainer/ValidationPanel/VBoxContainer/ScrollContainer"]
+[node name="Output" type="VBoxContainer" parent="VBoxContainer/ValidationPanel/VBoxContainer/ScrollContainer" unique_id=2047754856]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="Button" type="Button" parent="VBoxContainer/ValidationPanel/VBoxContainer"]
+[node name="Button" type="Button" parent="VBoxContainer/ValidationPanel/VBoxContainer" unique_id=2012055629]
 layout_mode = 2
 size_flags_horizontal = 4
 text = "Close"
 
-[node name="FileDialog" type="FileDialog" parent="."]
+[node name="FileDialog" type="FileDialog" parent="." unique_id=1693727933]
 size = Vector2i(483, 175)
 access = 2
 filters = PackedStringArray("*.json;JSON File")

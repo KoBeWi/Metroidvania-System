@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://c3xqaietfgs7l"]
+[gd_scene format=3 uid="uid://c3xqaietfgs7l"]
 
 [ext_resource type="Script" uid="uid://btgvo27tngq4o" path="res://SampleProject/Scripts/Game.gd" id="1_xdpfu"]
 [ext_resource type="PackedScene" uid="uid://xpbhai8nlgtx" path="res://SampleProject/Player.tscn" id="2_bam1a"]
@@ -155,19 +155,19 @@ func _input(event: InputEvent) -> void:
 					propagate_call(&\"update_collectible\")
 "
 
-[node name="Game" type="Node2D"]
+[node name="Game" type="Node2D" unique_id=895939149]
 script = ExtResource("1_xdpfu")
 starting_map = "uid://cv55nv1c2sbiq"
 
-[node name="Player" parent="." groups=["player"] instance=ExtResource("2_bam1a")]
+[node name="Player" parent="." unique_id=1751422352 groups=["player"] instance=ExtResource("2_bam1a")]
 unique_name_in_owner = true
 position = Vector2(368, 248)
 
-[node name="Camera2D" type="Camera2D" parent="Player"]
+[node name="Camera2D" type="Camera2D" parent="Player" unique_id=892923152]
 
-[node name="UI" type="CanvasLayer" parent="."]
+[node name="UI" type="CanvasLayer" parent="." unique_id=1975343003]
 
-[node name="Minimap" parent="UI" instance=ExtResource("3_a3gfy")]
+[node name="Minimap" parent="UI" unique_id=1559842062 instance=ExtResource("3_a3gfy")]
 unique_name_in_owner = true
 anchors_preset = 1
 anchor_left = 1.0
@@ -179,7 +179,7 @@ offset_bottom = 104.0
 grow_horizontal = 0
 display_player_location = true
 
-[node name="Background" type="Panel" parent="UI/Minimap"]
+[node name="Background" type="Panel" parent="UI/Minimap" unique_id=423844745]
 show_behind_parent = true
 layout_mode = 1
 anchors_preset = 15
@@ -188,7 +188,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="MapWindow" type="Panel" parent="UI"]
+[node name="MapWindow" type="Panel" parent="UI" unique_id=1546358892]
 visible = false
 clip_contents = true
 anchors_preset = 8
@@ -204,14 +204,14 @@ grow_horizontal = 2
 grow_vertical = 2
 script = SubResource("GDScript_u7odr")
 
-[node name="Percent" type="Label" parent="UI/MapWindow"]
+[node name="Percent" type="Label" parent="UI/MapWindow" unique_id=1826549410]
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 23.0
 text = "0%"
 script = SubResource("GDScript_66suq")
 
-[node name="Label" type="Label" parent="UI/MapWindow"]
+[node name="Label" type="Label" parent="UI/MapWindow" unique_id=380615903]
 z_index = 5
 layout_mode = 1
 anchors_preset = 2
@@ -223,13 +223,13 @@ grow_vertical = 0
 theme_override_styles/normal = SubResource("StyleBoxFlat_vdqrf")
 text = "Press D to toggle delta vector"
 
-[node name="TopDraw" type="Control" parent="UI/MapWindow"]
+[node name="TopDraw" type="Control" parent="UI/MapWindow" unique_id=1014438623]
 z_index = 5
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 
-[node name="CollectionGrid" type="PanelContainer" parent="UI"]
+[node name="CollectionGrid" type="PanelContainer" parent="UI" unique_id=164676685]
 visible = false
 offset_left = 85.0
 offset_top = 81.0
@@ -237,86 +237,86 @@ offset_right = 153.0
 offset_bottom = 224.0
 script = SubResource("GDScript_lpbfn")
 
-[node name="CollectionGrid" type="HBoxContainer" parent="UI/CollectionGrid"]
+[node name="CollectionGrid" type="HBoxContainer" parent="UI/CollectionGrid" unique_id=300975833]
 layout_mode = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="UI/CollectionGrid/CollectionGrid"]
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/CollectionGrid/CollectionGrid" unique_id=111017558]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="UI/CollectionGrid/CollectionGrid/VBoxContainer"]
+[node name="Label" type="Label" parent="UI/CollectionGrid/CollectionGrid/VBoxContainer" unique_id=1567745961]
 layout_mode = 2
 text = "D"
 horizontal_alignment = 1
 
-[node name="CollectionGridItem" parent="UI/CollectionGrid/CollectionGrid/VBoxContainer" instance=ExtResource("4_uuja8")]
+[node name="CollectionGridItem" parent="UI/CollectionGrid/CollectionGrid/VBoxContainer" unique_id=689310005 instance=ExtResource("4_uuja8")]
 layout_mode = 2
 texture = ExtResource("3_kng3d")
 id = "StartingPoint/./Collectible"
 
-[node name="CollectionGridItem2" parent="UI/CollectionGrid/CollectionGrid/VBoxContainer" instance=ExtResource("4_uuja8")]
+[node name="CollectionGridItem2" parent="UI/CollectionGrid/CollectionGrid/VBoxContainer" unique_id=385020985 instance=ExtResource("4_uuja8")]
 layout_mode = 2
 texture = ExtResource("3_kng3d")
 id = "RelicRoom/./Collectible"
 
-[node name="CollectionGridItem3" parent="UI/CollectionGrid/CollectionGrid/VBoxContainer" instance=ExtResource("4_uuja8")]
+[node name="CollectionGridItem3" parent="UI/CollectionGrid/CollectionGrid/VBoxContainer" unique_id=1403602316 instance=ExtResource("4_uuja8")]
 layout_mode = 2
 texture = ExtResource("3_kng3d")
 id = "Corridor/./Collectible"
 
-[node name="CollectionGridItem4" parent="UI/CollectionGrid/CollectionGrid/VBoxContainer" instance=ExtResource("4_uuja8")]
+[node name="CollectionGridItem4" parent="UI/CollectionGrid/CollectionGrid/VBoxContainer" unique_id=1561531316 instance=ExtResource("4_uuja8")]
 layout_mode = 2
 texture = ExtResource("3_kng3d")
 id = "lava_orb"
 
-[node name="CollectionGridItem5" parent="UI/CollectionGrid/CollectionGrid/VBoxContainer" instance=ExtResource("4_uuja8")]
+[node name="CollectionGridItem5" parent="UI/CollectionGrid/CollectionGrid/VBoxContainer" unique_id=1891261917 instance=ExtResource("4_uuja8")]
 layout_mode = 2
 texture = ExtResource("6_lpbfn")
 id = "RightStaircase/./MapItem"
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="UI/CollectionGrid/CollectionGrid"]
+[node name="VBoxContainer2" type="VBoxContainer" parent="UI/CollectionGrid/CollectionGrid" unique_id=1620923670]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="UI/CollectionGrid/CollectionGrid/VBoxContainer2"]
+[node name="Label" type="Label" parent="UI/CollectionGrid/CollectionGrid/VBoxContainer2" unique_id=1185785528]
 layout_mode = 2
 text = "S"
 horizontal_alignment = 1
 
-[node name="CollectionGridItem5" parent="UI/CollectionGrid/CollectionGrid/VBoxContainer2" instance=ExtResource("4_uuja8")]
+[node name="CollectionGridItem5" parent="UI/CollectionGrid/CollectionGrid/VBoxContainer2" unique_id=2009210456 instance=ExtResource("4_uuja8")]
 layout_mode = 2
 texture = ExtResource("3_kng3d")
 id = "SecretChamber/./Collectible"
 
-[node name="CollectionGridItem6" parent="UI/CollectionGrid/CollectionGrid/VBoxContainer2" instance=ExtResource("4_uuja8")]
+[node name="CollectionGridItem6" parent="UI/CollectionGrid/CollectionGrid/VBoxContainer2" unique_id=1944160340 instance=ExtResource("4_uuja8")]
 layout_mode = 2
 texture = ExtResource("3_kng3d")
 id = "LoopRoom1/./Collectible"
 
-[node name="VBoxContainer3" type="VBoxContainer" parent="UI/CollectionGrid/CollectionGrid"]
+[node name="VBoxContainer3" type="VBoxContainer" parent="UI/CollectionGrid/CollectionGrid" unique_id=214665137]
 layout_mode = 2
 
-[node name="Label2" type="Label" parent="UI/CollectionGrid/CollectionGrid/VBoxContainer3"]
+[node name="Label2" type="Label" parent="UI/CollectionGrid/CollectionGrid/VBoxContainer3" unique_id=1380991608]
 layout_mode = 2
 text = "R"
 horizontal_alignment = 1
 
-[node name="CollectionGridItem5" parent="UI/CollectionGrid/CollectionGrid/VBoxContainer3" instance=ExtResource("4_uuja8")]
+[node name="CollectionGridItem5" parent="UI/CollectionGrid/CollectionGrid/VBoxContainer3" unique_id=1773096437 instance=ExtResource("4_uuja8")]
 layout_mode = 2
 texture = ExtResource("3_kng3d")
 id = "random_collectible"
 
-[node name="HBoxContainer" type="HBoxContainer" parent="UI"]
+[node name="HBoxContainer" type="HBoxContainer" parent="UI" unique_id=1200628004]
 offset_left = 8.0
 offset_top = 8.0
 offset_right = 48.0
 offset_bottom = 34.0
 
-[node name="TextureRect" type="TextureRect" parent="UI/HBoxContainer"]
+[node name="TextureRect" type="TextureRect" parent="UI/HBoxContainer" unique_id=650743358]
 layout_mode = 2
 texture = ExtResource("3_kng3d")
 expand_mode = 2
 stretch_mode = 5
 
-[node name="CollectibleCount" type="Label" parent="UI/HBoxContainer"]
+[node name="CollectibleCount" type="Label" parent="UI/HBoxContainer" unique_id=430617365]
 unique_name_in_owner = true
 layout_mode = 2
 text = "0"

@@ -1,5 +1,5 @@
 $ln;Defaltia;Shadia;Renegia
-0;Map 1:-5,1,0:-4,1,0:-3,1,0:-2,1,0:-2,0,0:-2,-1,0:-1,-1,0:-1,0,0:0,-1,0:0,0,0:1,0,0:1,-1,0:2,-1,0:2,0,0:-1,-7,0
+0;Map 1:-5,1,0:-4,1,0:-3,1,0:-1,-1,0:-1,0,0:0,-1,0:0,0,0:1,0,0:1,-1,0:-1,-7,0:2,0,0:2,-1,0:-2,1,0:-2,0,0:-2,-1,0
 1;LavaWater:0,-1,0:1,-1,0
 -1,-6,0/elevator/1x5
 -5,1,0/label/1x1/Shadia
@@ -12,16 +12,6 @@ $ln;Defaltia;Shadia;Renegia
 -1,0,-1,0||0|uid://cv55nv1c2sbiq
 [1,0,0]
 1,0,-1,0|||uid://cv55nv1c2sbiq
-[-2,-1,0]
-1,-1,0,0|||uid://b1nanw80m5sqa
-[-2,0,0]
-1,-1,0,-1|||uid://b1nanw80m5sqa
-[-2,1,0]
-0,0,1,-1|||uid://b1nanw80m5sqa
-[2,-1,0]
-0,-1,1,0|||uid://doae46einc26s
-[2,0,0]
-0,0,1,-1|||uid://doae46einc26s
 [3,0,0]
 0,0,1,0|008a4c,94ff8b,94ff8b,94ff8b,94ff8b||uid://c0bb83117idye
 [0,-1,0]
@@ -66,3 +56,13 @@ $ln;Defaltia;Shadia;Renegia
 1,0,1,0|e646ff,e68bff,e68bff,e68bff,e68bff||uid://bbeer48b3sdk3
 [0,2,1]
 1,0,1,0|e646ff,e68bff,e68bff,e68bff,e68bff||uid://c8eic7p7bwbnk
+[2,0,0]
+0,0,1,-1|||uid://doae46einc26s
+[2,-1,0]
+0,-1,1,0|||uid://doae46einc26s
+[-2,1,0]
+0,0,1,-1|||uid://b1nanw80m5sqa
+[-2,0,0]
+1,-1,0,-1|||uid://b1nanw80m5sqa
+[-2,-1,0]
+1,-1,0,0|||uid://b1nanw80m5sqa

@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="MapTheme" load_steps=16 format=3 uid="uid://bt6s3nd8xo6b"]
+[gd_resource type="Resource" script_class="MapTheme" format=3 uid="uid://bt6s3nd8xo6b"]
 
 [ext_resource type="Texture2D" uid="uid://6lyqjfj3vsy7" path="res://addons/MetroidvaniaSystem/Themes/Exquisite/BorderPassageHorizontal.png" id="1_hth3y"]
 [ext_resource type="Texture2D" uid="uid://c5wg3is8k5pux" path="res://addons/MetroidvaniaSystem/Themes/Exquisite/BorderWallHorizontal.png" id="2_tawyw"]

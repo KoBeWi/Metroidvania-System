@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="MapTheme" load_steps=7 format=3 uid="uid://do6um2iibxy0k"]
+[gd_resource type="Resource" script_class="MapTheme" format=3 uid="uid://do6um2iibxy0k"]
 
 [ext_resource type="Script" uid="uid://b7ofctgav4kq4" path="res://addons/MetroidvaniaSystem/Scripts/MapTheme.gd" id="1_3uqja"]
 [ext_resource type="Texture2D" uid="uid://xpajdnt80v8c" path="res://addons/MetroidvaniaSystem/Themes/EM/Center.png" id="1_yadks"]

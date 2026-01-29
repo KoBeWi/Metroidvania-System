@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://b1hnpnqaqqcds"]
+[gd_scene format=3 uid="uid://b1hnpnqaqqcds"]
 
 [ext_resource type="Texture2D" uid="uid://cg88cixacoi6n" path="res://addons/MetroidvaniaSystem/Themes/AoS/PlayerLocation.png" id="1_6xqmr"]
 
@@ -63,12 +63,10 @@ _data = {
 &"RESET": SubResource("Animation_4lnw3")
 }
 
-[node name="PlayerLocation" type="Sprite2D"]
+[node name="PlayerLocation" type="Sprite2D" unique_id=1069456950]
 modulate = Color(1, 1, 1, 0.0627451)
 texture = ExtResource("1_6xqmr")
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-libraries = {
-&"": SubResource("AnimationLibrary_qhx6n")
-}
-autoplay = "Animate"
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=794025600]
+libraries/ = SubResource("AnimationLibrary_qhx6n")
+autoplay = &"Animate"

@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://bex32x8t30k4n"]
+[gd_scene format=3 uid="uid://bex32x8t30k4n"]
 
 [ext_resource type="Texture2D" uid="uid://c2b8sodh13n7m" path="res://SampleProject/Sprites/ElevatorSprite.png" id="1_16218"]
 
@@ -79,22 +79,22 @@ size = Vector2(64, 32)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_fj1ik"]
 size = Vector2(64, 32)
 
-[node name="Elevator" type="StaticBody2D"]
+[node name="Elevator" type="StaticBody2D" unique_id=2019128130]
 script = SubResource("GDScript_bxd4l")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=2092322083]
 shape = SubResource("RectangleShape2D_q65hc")
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1445355675]
 texture = ExtResource("1_16218")
 
-[node name="Area2D" type="Area2D" parent="."]
+[node name="Area2D" type="Area2D" parent="." unique_id=936187461]
 position = Vector2(0, -48)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=946494147]
 shape = SubResource("RectangleShape2D_fj1ik")
 
-[node name="Label" type="Label" parent="."]
+[node name="Label" type="Label" parent="." unique_id=1624889499]
 visible = false
 offset_left = -32.0
 offset_top = 16.0

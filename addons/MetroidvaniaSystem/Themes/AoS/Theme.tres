@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="MapTheme" load_steps=7 format=3 uid="uid://bnbbd2mcri1tv"]
+[gd_resource type="Resource" script_class="MapTheme" format=3 uid="uid://bnbbd2mcri1tv"]
 
 [ext_resource type="Texture2D" uid="uid://gumwhy8sgmcu" path="res://addons/MetroidvaniaSystem/Themes/AoS/Corner.png" id="1_1n1yf"]
 [ext_resource type="PackedScene" uid="uid://b1hnpnqaqqcds" path="res://addons/MetroidvaniaSystem/Themes/AoS/PlayerLocation.tscn" id="3_bjiwt"]

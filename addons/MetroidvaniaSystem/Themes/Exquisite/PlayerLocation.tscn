@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://cm5d4lvki74cy"]
+[gd_scene format=3 uid="uid://cm5d4lvki74cy"]
 
 [ext_resource type="Texture2D" uid="uid://u3h7efr7bfkv" path="res://addons/MetroidvaniaSystem/Themes/Exquisite/PlayerLocation.png" id="1_8k1h2"]
 
@@ -39,12 +39,10 @@ _data = {
 &"Spin": SubResource("Animation_2cmdj")
 }
 
-[node name="PlayerLocation" type="Sprite2D"]
+[node name="PlayerLocation" type="Sprite2D" unique_id=1355322760]
 texture_filter = 1
 texture = ExtResource("1_8k1h2")
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-libraries = {
-&"": SubResource("AnimationLibrary_dyruj")
-}
-autoplay = "Spin"
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=307886757]
+libraries/ = SubResource("AnimationLibrary_dyruj")
+autoplay = &"Spin"

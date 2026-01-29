@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=3 uid="uid://d165fnekqr5ex"]
+[gd_scene format=3 uid="uid://d165fnekqr5ex"]
 
 [ext_resource type="Texture2D" uid="uid://dagy3gny0c0cg" path="res://SampleProject/Sprites/Button.png" id="1_umy0p"]
 
@@ -34,14 +34,14 @@ func press():
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_x8ufv"]
 size = Vector2(18, 17)
 
-[node name="Button" type="Area2D"]
+[node name="Button" type="Area2D" unique_id=1802338293]
 script = SubResource("GDScript_4b230")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1694214482]
 position = Vector2(0, -8.5)
 shape = SubResource("RectangleShape2D_x8ufv")
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1061901531]
 texture = ExtResource("1_umy0p")
 offset = Vector2(0, -12)
 

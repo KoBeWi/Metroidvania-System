@@ -1,6 +1,6 @@
-[gd_scene load_steps=2 format=3 uid="uid://bsg0351mx3b4u"]
+[gd_scene format=3 uid="uid://bsg0351mx3b4u"]
 
 [ext_resource type="Script" uid="uid://bbqs3ag2l1fk0" path="res://addons/MetroidvaniaSystem/Scripts/RoomInstance.gd" id="1_oi7y8"]
 
-[node name="RoomInstance" type="Node2D"]
+[node name="RoomInstance" type="Node2D" unique_id=1246059462]
 script = ExtResource("1_oi7y8")

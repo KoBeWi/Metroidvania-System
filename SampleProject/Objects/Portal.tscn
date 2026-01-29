@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://cwrf84g5mlucd"]
+[gd_scene format=3 uid="uid://cwrf84g5mlucd"]
 
 [ext_resource type="Script" uid="uid://b6hvngpyjmbfk" path="res://SampleProject/Scripts/Portal.gd" id="1_q6xcx"]
 [ext_resource type="Texture2D" uid="uid://cargdawan7gao" path="res://SampleProject/Sprites/Portal.png" id="2_j5rn3"]
@@ -44,19 +44,17 @@ _data = {
 &"Rotat": SubResource("Animation_g3r3d")
 }
 
-[node name="Portal" type="Area2D"]
+[node name="Portal" type="Area2D" unique_id=2037826492]
 script = ExtResource("1_q6xcx")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=843674452]
 shape = SubResource("CircleShape2D_vq33u")
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=838241498]
 texture = ExtResource("2_j5rn3")
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="Sprite2D"]
-libraries = {
-&"": SubResource("AnimationLibrary_0plid")
-}
-autoplay = "Rotat"
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Sprite2D" unique_id=674251110]
+libraries/ = SubResource("AnimationLibrary_0plid")
+autoplay = &"Rotat"
 
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]

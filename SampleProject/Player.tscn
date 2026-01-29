@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://xpbhai8nlgtx"]
+[gd_scene format=3 uid="uid://xpbhai8nlgtx"]
 
 [ext_resource type="Script" uid="uid://befxy1ldt1ys1" path="res://SampleProject/Scripts/Player.gd" id="1_ecbsx"]
 [ext_resource type="Texture2D" uid="uid://c3v5jdyj2jl4e" path="res://SampleProject/Sprites/MC.png" id="1_qiynj"]
@@ -95,23 +95,21 @@ _data = {
 &"Run": SubResource("Animation_l0tvd")
 }
 
-[node name="Player" type="CharacterBody2D"]
+[node name="Player" type="CharacterBody2D" unique_id=943434432]
 z_index = 1
 script = ExtResource("1_ecbsx")
 metadata/player = true
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1924217868]
 position = Vector2(2.25, 15)
 shape = SubResource("RectangleShape2D_yj7bn")
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1182774192]
 texture_filter = 1
 scale = Vector2(1.5, 1.5)
 texture = ExtResource("1_qiynj")
 hframes = 7
 vframes = 2
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-libraries = {
-&"": SubResource("AnimationLibrary_rqeoy")
-}
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=746633764]
+libraries/ = SubResource("AnimationLibrary_rqeoy")

@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://dfbykrvyqnqr5"]
+[gd_scene format=3 uid="uid://dfbykrvyqnqr5"]
 
 [ext_resource type="Script" uid="uid://cmjsph053oe5d" path="res://addons/MetroidvaniaSystem/Database/Editor/MapEditor.gd" id="1_i7yda"]
 [ext_resource type="PackedScene" uid="uid://w34y4dyx84y8" path="res://addons/MetroidvaniaSystem/Database/LayerSelector.tscn" id="2_rinoa"]
@@ -36,7 +36,7 @@ content_margin_left = 4.0
 content_margin_right = 4.0
 bg_color = Color(0, 0, 0, 0.501961)
 
-[node name="MapEditor" type="HBoxContainer"]
+[node name="MapEditor" type="HBoxContainer" unique_id=741498299]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -48,58 +48,58 @@ script = ExtResource("1_i7yda")
 mode_group = SubResource("ButtonGroup_pv7fp")
 metadata/_edit_lock_ = true
 
-[node name="Sidebar" type="PanelContainer" parent="."]
+[node name="Sidebar" type="PanelContainer" parent="." unique_id=1306679225]
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 
-[node name="ScrollContainer" type="ScrollContainer" parent="Sidebar"]
+[node name="ScrollContainer" type="ScrollContainer" parent="Sidebar" unique_id=1053684928]
 layout_mode = 2
 horizontal_scroll_mode = 0
 vertical_scroll_mode = 4
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Sidebar/ScrollContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Sidebar/ScrollContainer" unique_id=2093072910]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="Layer" type="VBoxContainer" parent="Sidebar/ScrollContainer/VBoxContainer"]
+[node name="Layer" type="VBoxContainer" parent="Sidebar/ScrollContainer/VBoxContainer" unique_id=2086355048]
 layout_mode = 2
 mouse_filter = 2
 metadata/_edit_lock_ = true
 
-[node name="Label" type="Label" parent="Sidebar/ScrollContainer/VBoxContainer/Layer"]
+[node name="Label" type="Label" parent="Sidebar/ScrollContainer/VBoxContainer/Layer" unique_id=1046388069]
 layout_mode = 2
 text = "Current Layer"
 horizontal_alignment = 1
 
-[node name="CurrentLayer" parent="Sidebar/ScrollContainer/VBoxContainer/Layer" instance=ExtResource("2_rinoa")]
+[node name="CurrentLayer" parent="Sidebar/ScrollContainer/VBoxContainer/Layer" unique_id=1098614605 instance=ExtResource("2_rinoa")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="Label2" type="Label" parent="Sidebar/ScrollContainer/VBoxContainer/Layer"]
+[node name="Label2" type="Label" parent="Sidebar/ScrollContainer/VBoxContainer/Layer" unique_id=474408094]
 layout_mode = 2
 text = "Preview Layer"
 horizontal_alignment = 1
 
-[node name="PreviewLayer" parent="Sidebar/ScrollContainer/VBoxContainer/Layer" instance=ExtResource("2_rinoa")]
+[node name="PreviewLayer" parent="Sidebar/ScrollContainer/VBoxContainer/Layer" unique_id=1713916833 instance=ExtResource("2_rinoa")]
 unique_name_in_owner = true
 layout_mode = 2
 allow_none = true
 
-[node name="RecenterButton" type="Button" parent="Sidebar/ScrollContainer/VBoxContainer/Layer"]
+[node name="RecenterButton" type="Button" parent="Sidebar/ScrollContainer/VBoxContainer/Layer" unique_id=1548458678]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 4
 text = "Recenter View"
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Sidebar/ScrollContainer/VBoxContainer/Layer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Sidebar/ScrollContainer/VBoxContainer/Layer" unique_id=1371535830]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Sidebar/ScrollContainer/VBoxContainer/Layer/HBoxContainer"]
+[node name="Label" type="Label" parent="Sidebar/ScrollContainer/VBoxContainer/Layer/HBoxContainer" unique_id=1207856752]
 layout_mode = 2
 text = "Zoom"
 
-[node name="ZoomSlider" type="HSlider" parent="Sidebar/ScrollContainer/VBoxContainer/Layer/HBoxContainer"]
+[node name="ZoomSlider" type="HSlider" parent="Sidebar/ScrollContainer/VBoxContainer/Layer/HBoxContainer" unique_id=1852392814]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -109,25 +109,25 @@ max_value = 3.0
 step = 0.5
 value = 1.0
 
-[node name="ZoomValue" type="Label" parent="Sidebar/ScrollContainer/VBoxContainer/Layer/HBoxContainer"]
+[node name="ZoomValue" type="Label" parent="Sidebar/ScrollContainer/VBoxContainer/Layer/HBoxContainer" unique_id=1930728658]
 unique_name_in_owner = true
 auto_translate_mode = 2
 layout_mode = 2
 text = "x1.0"
 
-[node name="HSeparator" type="HSeparator" parent="Sidebar/ScrollContainer/VBoxContainer"]
+[node name="HSeparator" type="HSeparator" parent="Sidebar/ScrollContainer/VBoxContainer" unique_id=1516585288]
 layout_mode = 2
 
-[node name="Modes" type="VBoxContainer" parent="Sidebar/ScrollContainer/VBoxContainer"]
+[node name="Modes" type="VBoxContainer" parent="Sidebar/ScrollContainer/VBoxContainer" unique_id=23077371]
 layout_mode = 2
 alignment = 1
 
-[node name="Label" type="Label" parent="Sidebar/ScrollContainer/VBoxContainer/Modes"]
+[node name="Label" type="Label" parent="Sidebar/ScrollContainer/VBoxContainer/Modes" unique_id=122422841]
 layout_mode = 2
 text = "Mode"
 horizontal_alignment = 1
 
-[node name="RoomLayout" type="Button" parent="Sidebar/ScrollContainer/VBoxContainer/Modes"]
+[node name="RoomLayout" type="Button" parent="Sidebar/ScrollContainer/VBoxContainer/Modes" unique_id=1509733259]
 layout_mode = 2
 toggle_mode = true
 button_pressed = true
@@ -135,55 +135,55 @@ button_group = SubResource("ButtonGroup_pv7fp")
 text = "Room Layout"
 script = ExtResource("3_7wfw0")
 
-[node name="CellColor" type="Button" parent="Sidebar/ScrollContainer/VBoxContainer/Modes"]
+[node name="CellColor" type="Button" parent="Sidebar/ScrollContainer/VBoxContainer/Modes" unique_id=2096078149]
 layout_mode = 2
 toggle_mode = true
 button_group = SubResource("ButtonGroup_pv7fp")
 text = "Cell Color"
 script = ExtResource("4_bsj0k")
 
-[node name="CellSymbol" type="Button" parent="Sidebar/ScrollContainer/VBoxContainer/Modes"]
+[node name="CellSymbol" type="Button" parent="Sidebar/ScrollContainer/VBoxContainer/Modes" unique_id=711875939]
 layout_mode = 2
 toggle_mode = true
 button_group = SubResource("ButtonGroup_pv7fp")
 text = "Cell Symbol"
 script = ExtResource("5_6qbrp")
 
-[node name="CellGroup" type="Button" parent="Sidebar/ScrollContainer/VBoxContainer/Modes"]
+[node name="CellGroup" type="Button" parent="Sidebar/ScrollContainer/VBoxContainer/Modes" unique_id=121067570]
 layout_mode = 2
 toggle_mode = true
 button_group = SubResource("ButtonGroup_pv7fp")
 text = "Cell Group"
 script = ExtResource("6_sce4u")
 
-[node name="BorderType" type="Button" parent="Sidebar/ScrollContainer/VBoxContainer/Modes"]
+[node name="BorderType" type="Button" parent="Sidebar/ScrollContainer/VBoxContainer/Modes" unique_id=194983608]
 layout_mode = 2
 toggle_mode = true
 button_group = SubResource("ButtonGroup_pv7fp")
 text = "Border Type"
 script = ExtResource("6_f7kq4")
 
-[node name="BorderColor" type="Button" parent="Sidebar/ScrollContainer/VBoxContainer/Modes"]
+[node name="BorderColor" type="Button" parent="Sidebar/ScrollContainer/VBoxContainer/Modes" unique_id=1959792858]
 layout_mode = 2
 toggle_mode = true
 button_group = SubResource("ButtonGroup_pv7fp")
 text = "Border Color"
 script = ExtResource("7_sce4u")
 
-[node name="SceneAssign" type="Button" parent="Sidebar/ScrollContainer/VBoxContainer/Modes"]
+[node name="SceneAssign" type="Button" parent="Sidebar/ScrollContainer/VBoxContainer/Modes" unique_id=1755674159]
 layout_mode = 2
 toggle_mode = true
 button_group = SubResource("ButtonGroup_pv7fp")
 text = "Scene Assign"
 script = ExtResource("8_bhmd4")
 
-[node name="FileDialog" type="EditorFileDialog" parent="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign"]
+[node name="FileDialog" type="EditorFileDialog" parent="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign" unique_id=521672297]
 size = Vector2i(600, 400)
 file_mode = 0
 filters = PackedStringArray("*.tscn,*.scn;Scene File")
 script = SubResource("GDScript_5yej3")
 
-[node name="Button" type="Button" parent="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign/FileDialog"]
+[node name="Button" type="Button" parent="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign/FileDialog" unique_id=465862053]
 offset_left = 8.0
 offset_top = 8.0
 offset_right = 592.0
@@ -192,35 +192,35 @@ size_flags_horizontal = 8
 size_flags_vertical = 0
 text = "Create New Scene"
 
-[node name="CreateDialog" type="ConfirmationDialog" parent="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign"]
+[node name="CreateDialog" type="ConfirmationDialog" parent="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign" unique_id=1117827316]
 title = "Create New Scene"
 position = Vector2i(300, 25)
 size = Vector2i(400, 166)
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign/CreateDialog"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign/CreateDialog" unique_id=216695475]
 offset_left = 4.0
 offset_top = 4.0
 offset_right = 396.0
 offset_bottom = 124.0
 
-[node name="GridContainer" type="GridContainer" parent="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign/CreateDialog/VBoxContainer"]
+[node name="GridContainer" type="GridContainer" parent="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign/CreateDialog/VBoxContainer" unique_id=564182579]
 layout_mode = 2
 columns = 2
 
-[node name="Label" type="Label" parent="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign/CreateDialog/VBoxContainer/GridContainer"]
+[node name="Label" type="Label" parent="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign/CreateDialog/VBoxContainer/GridContainer" unique_id=2092302308]
 layout_mode = 2
 size_flags_horizontal = 8
 text = "Scene Name"
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign/CreateDialog/VBoxContainer/GridContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign/CreateDialog/VBoxContainer/GridContainer" unique_id=385374687]
 layout_mode = 2
 
-[node name="SceneName" type="LineEdit" parent="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign/CreateDialog/VBoxContainer/GridContainer/HBoxContainer"]
+[node name="SceneName" type="LineEdit" parent="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign/CreateDialog/VBoxContainer/GridContainer/HBoxContainer" unique_id=1564486858]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="SceneExtension" type="OptionButton" parent="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign/CreateDialog/VBoxContainer/GridContainer/HBoxContainer"]
+[node name="SceneExtension" type="OptionButton" parent="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign/CreateDialog/VBoxContainer/GridContainer/HBoxContainer" unique_id=1852794877]
 unique_name_in_owner = true
 auto_translate_mode = 2
 layout_mode = 2
@@ -231,152 +231,152 @@ popup/item_0/id = 0
 popup/item_1/text = "scn"
 popup/item_1/id = 1
 
-[node name="Label2" type="Label" parent="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign/CreateDialog/VBoxContainer/GridContainer"]
+[node name="Label2" type="Label" parent="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign/CreateDialog/VBoxContainer/GridContainer" unique_id=988393805]
 layout_mode = 2
 size_flags_horizontal = 8
 text = "Root Name"
 
-[node name="RootName" type="LineEdit" parent="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign/CreateDialog/VBoxContainer/GridContainer"]
+[node name="RootName" type="LineEdit" parent="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign/CreateDialog/VBoxContainer/GridContainer" unique_id=1396384991]
 unique_name_in_owner = true
 auto_translate_mode = 2
 layout_mode = 2
 size_flags_horizontal = 3
 placeholder_text = "Map"
 
-[node name="ErrorLabel" type="Label" parent="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign/CreateDialog/VBoxContainer"]
+[node name="ErrorLabel" type="Label" parent="Sidebar/ScrollContainer/VBoxContainer/Modes/SceneAssign/CreateDialog/VBoxContainer" unique_id=585725490]
 unique_name_in_owner = true
 auto_translate_mode = 2
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0, 0, 1)
 
-[node name="CustomElements" type="Button" parent="Sidebar/ScrollContainer/VBoxContainer/Modes"]
+[node name="CustomElements" type="Button" parent="Sidebar/ScrollContainer/VBoxContainer/Modes" unique_id=614015555]
 layout_mode = 2
 toggle_mode = true
 button_group = SubResource("ButtonGroup_pv7fp")
 text = "Custom Elements"
 script = ExtResource("10_bhmd4")
 
-[node name="HSeparator2" type="HSeparator" parent="Sidebar/ScrollContainer/VBoxContainer"]
+[node name="HSeparator2" type="HSeparator" parent="Sidebar/ScrollContainer/VBoxContainer" unique_id=1394424786]
 layout_mode = 2
 
-[node name="EditControls" type="VBoxContainer" parent="Sidebar/ScrollContainer/VBoxContainer"]
+[node name="EditControls" type="VBoxContainer" parent="Sidebar/ScrollContainer/VBoxContainer" unique_id=909845684]
 layout_mode = 2
 size_flags_vertical = 0
 mouse_filter = 2
 alignment = 2
 metadata/_edit_lock_ = true
 
-[node name="Symbols" type="VBoxContainer" parent="Sidebar/ScrollContainer/VBoxContainer/EditControls"]
+[node name="Symbols" type="VBoxContainer" parent="Sidebar/ScrollContainer/VBoxContainer/EditControls" unique_id=527811395]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 
-[node name="SymbolContainer" type="HFlowContainer" parent="Sidebar/ScrollContainer/VBoxContainer/EditControls/Symbols"]
+[node name="SymbolContainer" type="HFlowContainer" parent="Sidebar/ScrollContainer/VBoxContainer/EditControls/Symbols" unique_id=1939707606]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="Borders" type="VBoxContainer" parent="Sidebar/ScrollContainer/VBoxContainer/EditControls"]
-unique_name_in_owner = true
-visible = false
-layout_mode = 2
-
-[node name="BorderContainer" type="HFlowContainer" parent="Sidebar/ScrollContainer/VBoxContainer/EditControls/Borders"]
-unique_name_in_owner = true
-layout_mode = 2
-
-[node name="Groups" type="VBoxContainer" parent="Sidebar/ScrollContainer/VBoxContainer/EditControls"]
+[node name="Borders" type="VBoxContainer" parent="Sidebar/ScrollContainer/VBoxContainer/EditControls" unique_id=1380084712]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Sidebar/ScrollContainer/VBoxContainer/EditControls/Groups"]
+[node name="BorderContainer" type="HFlowContainer" parent="Sidebar/ScrollContainer/VBoxContainer/EditControls/Borders" unique_id=785776100]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Groups" type="VBoxContainer" parent="Sidebar/ScrollContainer/VBoxContainer/EditControls" unique_id=1561912402]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Sidebar/ScrollContainer/VBoxContainer/EditControls/Groups" unique_id=1550331520]
 layout_mode = 2
 text = "Group ID"
 horizontal_alignment = 1
 
-[node name="CurrentGroup" parent="Sidebar/ScrollContainer/VBoxContainer/EditControls/Groups" instance=ExtResource("2_rinoa")]
+[node name="CurrentGroup" parent="Sidebar/ScrollContainer/VBoxContainer/EditControls/Groups" unique_id=1877021593 instance=ExtResource("2_rinoa")]
 unique_name_in_owner = true
 layout_mode = 2
 mode = 1
 
-[node name="Colors" type="VBoxContainer" parent="Sidebar/ScrollContainer/VBoxContainer/EditControls"]
+[node name="Colors" type="VBoxContainer" parent="Sidebar/ScrollContainer/VBoxContainer/EditControls" unique_id=1966721164]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 
-[node name="CurrentColor" type="ColorPickerButton" parent="Sidebar/ScrollContainer/VBoxContainer/EditControls/Colors"]
+[node name="CurrentColor" type="ColorPickerButton" parent="Sidebar/ScrollContainer/VBoxContainer/EditControls/Colors" unique_id=1931487990]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 30)
 layout_mode = 2
 edit_alpha = false
 
-[node name="SceneAssign" type="VBoxContainer" parent="Sidebar/ScrollContainer/VBoxContainer/EditControls"]
+[node name="SceneAssign" type="VBoxContainer" parent="Sidebar/ScrollContainer/VBoxContainer/EditControls" unique_id=299828352]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Sidebar/ScrollContainer/VBoxContainer/EditControls/SceneAssign"]
+[node name="Label" type="Label" parent="Sidebar/ScrollContainer/VBoxContainer/EditControls/SceneAssign" unique_id=2096425680]
 layout_mode = 2
 text = "Click a room or drag and drop a file"
 autowrap_mode = 2
 
-[node name="CustomElements" type="VBoxContainer" parent="Sidebar/ScrollContainer/VBoxContainer/EditControls"]
+[node name="CustomElements" type="VBoxContainer" parent="Sidebar/ScrollContainer/VBoxContainer/EditControls" unique_id=2068291566]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Sidebar/ScrollContainer/VBoxContainer/EditControls/CustomElements"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Sidebar/ScrollContainer/VBoxContainer/EditControls/CustomElements" unique_id=1296506817]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Sidebar/ScrollContainer/VBoxContainer/EditControls/CustomElements/HBoxContainer"]
+[node name="Label" type="Label" parent="Sidebar/ScrollContainer/VBoxContainer/EditControls/CustomElements/HBoxContainer" unique_id=1869405787]
 layout_mode = 2
 text = "Data"
 
-[node name="CustomData" type="LineEdit" parent="Sidebar/ScrollContainer/VBoxContainer/EditControls/CustomElements/HBoxContainer"]
+[node name="CustomData" type="LineEdit" parent="Sidebar/ScrollContainer/VBoxContainer/EditControls/CustomElements/HBoxContainer" unique_id=335380882]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="NoElements" type="Label" parent="Sidebar/ScrollContainer/VBoxContainer/EditControls/CustomElements"]
+[node name="NoElements" type="Label" parent="Sidebar/ScrollContainer/VBoxContainer/EditControls/CustomElements" unique_id=571282187]
 unique_name_in_owner = true
 layout_mode = 2
 text = "No Custom Elements Registered"
 autowrap_mode = 2
 
-[node name="CustomElementContainer" type="VBoxContainer" parent="Sidebar/ScrollContainer/VBoxContainer/EditControls/CustomElements"]
+[node name="CustomElementContainer" type="VBoxContainer" parent="Sidebar/ScrollContainer/VBoxContainer/EditControls/CustomElements" unique_id=1997846909]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="Shortcuts" type="VBoxContainer" parent="Sidebar/ScrollContainer/VBoxContainer/EditControls"]
+[node name="Shortcuts" type="VBoxContainer" parent="Sidebar/ScrollContainer/VBoxContainer/EditControls" unique_id=805924983]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="ShortcutPick" type="Label" parent="Sidebar/ScrollContainer/VBoxContainer/EditControls/Shortcuts"]
+[node name="ShortcutPick" type="Label" parent="Sidebar/ScrollContainer/VBoxContainer/EditControls/Shortcuts" unique_id=1124903608]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Ctrl+Click: Pick from map"
 autowrap_mode = 2
 
-[node name="ShortcutDrag" type="Label" parent="Sidebar/ScrollContainer/VBoxContainer/EditControls/Shortcuts"]
+[node name="ShortcutDrag" type="Label" parent="Sidebar/ScrollContainer/VBoxContainer/EditControls/Shortcuts" unique_id=965094567]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 text = "Shift+Drag: Move rooms"
 autowrap_mode = 2
 
-[node name="ShortcutWhole" type="Label" parent="Sidebar/ScrollContainer/VBoxContainer/EditControls/Shortcuts"]
+[node name="ShortcutWhole" type="Label" parent="Sidebar/ScrollContainer/VBoxContainer/EditControls/Shortcuts" unique_id=53579585]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Shift+Click: Set for the whole room"
 autowrap_mode = 2
 
-[node name="MapView" type="Control" parent="."]
+[node name="MapView" type="Control" parent="." unique_id=521328648]
 texture_filter = 1
 clip_contents = true
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="ColorRect" type="ColorRect" parent="MapView"]
+[node name="ColorRect" type="ColorRect" parent="MapView" unique_id=332759657]
 modulate = Color(0, 0, 0, 0.12549)
 layout_mode = 1
 anchors_preset = 15
@@ -385,7 +385,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Grid" type="Control" parent="MapView"]
+[node name="Grid" type="Control" parent="MapView" unique_id=170980526]
 unique_name_in_owner = true
 clip_contents = true
 layout_mode = 1
@@ -396,10 +396,10 @@ grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
 
-[node name="Map" type="Node2D" parent="MapView"]
+[node name="Map" type="Node2D" parent="MapView" unique_id=1013525378]
 unique_name_in_owner = true
 
-[node name="OverlayLayer" type="Control" parent="MapView"]
+[node name="OverlayLayer" type="Control" parent="MapView" unique_id=568938680]
 unique_name_in_owner = true
 z_index = 5
 layout_mode = 1
@@ -411,7 +411,7 @@ grow_vertical = 2
 focus_mode = 2
 mouse_filter = 1
 
-[node name="StatusLabel" type="Label" parent="MapView"]
+[node name="StatusLabel" type="Label" parent="MapView" unique_id=1794681648]
 unique_name_in_owner = true
 z_index = 5
 layout_mode = 0

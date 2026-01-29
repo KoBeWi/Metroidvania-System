@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="MapTheme" load_steps=19 format=3 uid="uid://cua5dfmrbmlho"]
+[gd_resource type="Resource" script_class="MapTheme" format=3 uid="uid://cua5dfmrbmlho"]
 
 [ext_resource type="Texture2D" uid="uid://bhu6ahuyeibux" path="res://addons/MetroidvaniaSystem/Themes/MF/Borders/Door1.png" id="1_bjnja"]
 [ext_resource type="Texture2D" uid="uid://s6mehjjuhuts" path="res://addons/MetroidvaniaSystem/Themes/MF/Corner.png" id="1_ygjik"]

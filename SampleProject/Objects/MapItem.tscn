@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=3 uid="uid://d0hyimq1tkfa2"]
+[gd_scene format=3 uid="uid://d0hyimq1tkfa2"]
 
 [ext_resource type="Texture2D" uid="uid://dpwli04va881g" path="res://SampleProject/Sprites/MapItem.png" id="1_gov3o"]
 
@@ -21,13 +21,13 @@ func collect(body: Node2D) -> void:
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_v5e3t"]
 size = Vector2(32, 32)
 
-[node name="MapItem" type="Area2D"]
+[node name="MapItem" type="Area2D" unique_id=442068787]
 script = SubResource("GDScript_5wqrn")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=177019657]
 shape = SubResource("RectangleShape2D_v5e3t")
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=483592013]
 texture = ExtResource("1_gov3o")
 
 [connection signal="body_entered" from="." to="." method="collect"]
