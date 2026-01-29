@@ -94,6 +94,8 @@ func _editor_input(event: InputEvent):
 					
 					set_dragging_room_visible(true)
 					dragging_room.clear()
+					for cell in dragging_room_cells:
+						cell.free()
 					dragging_room_cells.clear()
 					undo_end_with_redraw()
 		elif event.button_index == MOUSE_BUTTON_RIGHT:
