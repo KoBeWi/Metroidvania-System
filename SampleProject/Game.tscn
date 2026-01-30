@@ -96,7 +96,7 @@ func _input(event: InputEvent) -> void:
 				top_draw.queue_redraw()
 
 # Assigns the initial offset when the map is opened. It centers on the player position.
-func update_offset():
+func update_offset() -> void:
 	offset = MetSys.get_current_flat_coords() - SIZE / 2
 	# Player position node needs to be moved accordingly.
 	player_location.offset = -Vector2(offset) * MetSys.CELL_SIZE
@@ -105,7 +105,7 @@ func update_offset():
 	# Update all cells of MapView to reflect the current state.
 	map_view.update_all()
 
-func reset_starting_coords():
+func reset_starting_coords() -> void:
 	# Starting position for the delta vector.
 	var coords := MetSys.get_current_flat_coords()
 	starting_coords = Vector2i(coords.x, coords.y)
@@ -126,7 +126,7 @@ func _notification(what: int) -> void:
 	if what == NOTIFICATION_VISIBILITY_CHANGED:
 		update()
 
-func update():
+func update() -> void:
 	# Only update when visible.
 	if is_visible_in_tree():
 		# Show the percentage.

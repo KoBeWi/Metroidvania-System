@@ -6,7 +6,7 @@ script/source = "extends TextureRect
 # ID of the tracked object.
 @export var id: String
 
-func update_collectible():
+func update_collectible() -> void:
 	# Become visible if the tracked object was stored (collected).
 	self_modulate.a = float(MetSys.is_object_id_stored(id))
 "
