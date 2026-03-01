@@ -53,7 +53,7 @@ func _on_body_entered(body: Node2D) -> void:
 	%Gate.enabled = false
 
 # The thread method for generating maps. The algorithm is simple: pick random cell and direction and make an adjacent cell if it doesn't exist.
-func generate_map():
+func generate_map() -> void:
 	# Gets rid of errors. This method is thread-safe, trust me.
 	Thread.set_thread_safety_checks_enabled(false)
 	# The grid of generated cells. The key is cell coordinates relative to the first generated cell, the value is a bitmask of exits.
