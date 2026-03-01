@@ -32,10 +32,6 @@ func _ready() -> void:
 	if allow_none:
 		value = -1
 	update_buttons()
-	
-	await get_tree().process_frame
-	
-	editor = get_tree().get_first_node_in_group(&\"map_editor\")
 
 func _on_prev_pressed() -> void:
 	if prev_button.disabled:
@@ -60,7 +56,7 @@ func _on_layer_name_gui_input(event: InputEvent) -> void:
 		if not event.pressed or event.button_index != MOUSE_BUTTON_LEFT:
 			return
 		
-		if event.double_click:
+		if event.double_click and editor and value > -1:
 			popup_timer.stop()
 			name_edit.text = get_layer_name(value)
 			name_edit.show()

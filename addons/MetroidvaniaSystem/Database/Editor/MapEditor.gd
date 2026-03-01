@@ -18,7 +18,6 @@ func _ready() -> void:
 	if is_part_of_edited_scene():
 		return
 	
-	add_to_group(&"map_editor")
 	undo_redo = UndoRedo.new()
 	%Shortcuts.hide()
 	
@@ -32,6 +31,9 @@ func _ready() -> void:
 	MetSys.settings.theme_changed.connect(grid.queue_redraw)
 	map_overlay.mouse_entered.connect(map_overlay.grab_focus)
 	map_overlay.set_drag_forwarding(Callable(), _on_overlay_can_drop_data, _on_overlay_drop_data)
+	
+	current_layer_spinbox.editor = self
+	%PreviewLayer.editor = self
 
 func refresh():
 	preview_layers.clear()
