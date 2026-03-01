@@ -18,6 +18,7 @@ func _ready() -> void:
 	if is_part_of_edited_scene():
 		return
 	
+	add_to_group(&"map_editor")
 	undo_redo = UndoRedo.new()
 	%Shortcuts.hide()
 	

@@ -24,12 +24,18 @@ var value: int:
 		value = v
 		update_buttons()
 
+var editor
+
 signal value_changed(v: int)
 
 func _ready() -> void:
 	if allow_none:
 		value = -1
 	update_buttons()
+	
+	await get_tree().process_frame
+	
+	editor = get_tree().get_first_node_in_group(&\"map_editor\")
 
 func _on_prev_pressed() -> void:
 	if prev_button.disabled:
@@ -117,13 +123,33 @@ func get_layer_format(idx: int) -> String:
 
 func set_layer_name(idx: int, text: String):
 	var names := get_names()
+	var prev := names.duplicate()
+	
 	if idx >= names.size():
 		names.resize(idx + 1)
 	names[idx] = text
 	
+	var undo_redo: UndoRedo = editor.undo_redo
+	undo_redo.create_action(\"Rename layer\")
+	match mode:
+		Mode.LAYERS:
+			undo_redo.add_do_property(MetSys.map_data, &\"layer_names\", names.duplicate())
+			undo_redo.add_undo_property(MetSys.map_data, &\"layer_names\", prev)
+		Mode.GROUPS:
+			undo_redo.add_do_property(MetSys.map_data, &\"group_names\", names.duplicate())
+			undo_redo.add_undo_property(MetSys.map_data, &\"group_names\", prev)
+	undo_redo.add_do_method(update_all_buttons)
+	undo_redo.add_undo_method(update_all_buttons)
+	undo_redo.commit_action(false)
+	editor.update_name()
+	
 	for selector in get_tree().get_nodes_in_group(&\"layer_selectors\"):
 		if selector == self:
 			continue
+		selector.update_buttons()
+
+func update_all_buttons():
+	for selector in get_tree().get_nodes_in_group(&\"layer_selectors\"):
 		selector.update_buttons()
 
 func get_names() -> PackedStringArray:

@@ -74,6 +74,9 @@ func reload_map():
 	%Manage.force_reload()
 	%"Map Editor".refresh()
 	%"Map Viewer".refresh()
+	
+	for selector in get_tree().get_nodes_in_group(&"layer_selectors"):
+		selector.update_buttons()
 
 func POT_hack():
 	tr("Save Copy and Reload")
