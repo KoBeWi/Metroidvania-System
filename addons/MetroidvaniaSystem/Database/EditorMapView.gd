@@ -70,7 +70,7 @@ func setup_new_layer(layer: MapView):
 	pass
 
 func on_recenter_view() -> void:
-	map_offset = map_overlay.size * 0.5 / MetSys.CELL_SIZE
+	map_offset = map_overlay.size * 0.5 / MetSys.CELL_SIZE / map.scale
 	update_map_position()
 	map_overlay.queue_redraw()
 
