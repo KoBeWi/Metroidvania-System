@@ -33,7 +33,7 @@ func _on_body_exited(body: Node2D) -> void:
 			Game.get_singleton().loop = ""
 
 func on_cell_changed():
-	if loop_active:
+	if loop_active and not block_loop:
 		loop_active = false
 		
 		if loop_target != MetSys.get_current_room_id():
@@ -41,6 +41,9 @@ func on_cell_changed():
 			Game.get_singleton().load_room(loop_target)
 		# Move the player to intended position.
 		Game.get_singleton().player.position += loop_shift
+		# Ugly workaround for physics bug that causes area to detect at wrong position.
+		block_loop = true
+		get_tree().create_timer(0.05).timeout.connect(get_script().set.bind(&"block_loop", false))
 
 func on_room_changed():
 	if loop_active and not block_loop:
