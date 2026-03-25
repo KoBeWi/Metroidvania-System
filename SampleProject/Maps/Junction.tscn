@@ -12,7 +12,7 @@ var exits: int
 var has_collectible: bool
 
 # Remove the walls and collectible, based on the config values.
-func apply_config():
+func apply_config() -> void:
 	for i in 4:
 		%TileMap.get_child(i + 2).enabled = not bool(exits & 1 << i)
 	
