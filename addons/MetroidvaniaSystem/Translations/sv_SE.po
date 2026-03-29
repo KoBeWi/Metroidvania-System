@@ -7,15 +7,15 @@
 # res://addons/MetroidvaniaSystem/Nodes/CollectibleElement.tscn
 # res://addons/MetroidvaniaSystem/MetSysPlugin.gd
 #
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# Swedish translation for Metroidvania System
+# OpenClaw AI Agent <bosse@danielnylander.se>, 2026.
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Metroidvania System\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: \n"
-"Last-Translator: \n"
+"PO-Revision-Date: 2026-03-29 10:30+0200\n"
+"Last-Translator: OpenClaw AI Agent <bosse@danielnylander.se>\n"
 "Language-Team: \n"
 "Language: sv_SE\n"
 "MIME-Version: 1.0\n"
@@ -239,7 +239,7 @@ msgstr "%s är större än mittresursen. Det kommer att sticka ut ur cellerna."
 
 #: addons/MetroidvaniaSystem/Database/Manage.tscn
 msgid "%s is bigger than half of the center texture. It may cause overlaps."
-msgstr ""
+msgstr "%s är större än hälften av mittresursen. Det kan orsaka överlappningar."
 "%s är större än hälften av mittresursen. Det kan orsaka överlappningar."
 
 #: addons/MetroidvaniaSystem/Database/Manage.tscn
@@ -283,7 +283,7 @@ msgstr ""
 
 #: addons/MetroidvaniaSystem/Database/Main.tscn
 msgid "Save Copy and Reload"
-msgstr ""
+msgstr "Spara kopia och ladda om"
 
 #: addons/MetroidvaniaSystem/Database/Main.tscn
 msgid "Metroidvania System Database v.%s"
@@ -400,7 +400,7 @@ msgstr "Grupp-ID"
 
 #: addons/MetroidvaniaSystem/Database/MapEditor.tscn
 msgid "If enabled, the room will have scene's UID assigned instead of path."
-msgstr ""
+msgstr "Om det är aktiverat kommer rummets scen att få UID tilldelat istället för sökväg."
 "Om det är aktiverat kommer scenens UID att tilldelas istället för sökväg."
 
 #: addons/MetroidvaniaSystem/Database/MapEditor.tscn
@@ -481,7 +481,7 @@ msgstr ""
 
 #: addons/MetroidvaniaSystem/MetSysPlugin.gd
 msgid "Error!"
-msgstr ""
+msgstr "Fel!"
 
 #: addons/MetroidvaniaSystem/MetSysPlugin.gd
 msgid ""
