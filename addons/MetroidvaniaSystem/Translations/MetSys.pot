@@ -3,6 +3,7 @@
 # res://addons/MetroidvaniaSystem/Database/Editor/MapEditor.tscn
 # res://addons/MetroidvaniaSystem/Database/Editor/ModeSceneAssign.gd
 # res://addons/MetroidvaniaSystem/Database/LayerSelector.tscn
+# res://addons/MetroidvaniaSystem/Database/Main.gd
 # res://addons/MetroidvaniaSystem/Database/Main.tscn
 # res://addons/MetroidvaniaSystem/Database/Manage/Manage.tscn
 # res://addons/MetroidvaniaSystem/Database/Manage/Validation.gd
@@ -24,6 +25,11 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8-bit\n"
+
+#: addons/MetroidvaniaSystem/Database/Editor/MapEditor.gd:132
+#: addons/MetroidvaniaSystem/Database/Main.tscn
+msgid "Map Editor"
+msgstr ""
 
 #: addons/MetroidvaniaSystem/Database/Editor/MapEditor.tscn
 #: addons/MetroidvaniaSystem/Database/Viewer/MapViewer.tscn
@@ -77,6 +83,12 @@ msgid "Scene Assign"
 msgstr ""
 
 #: addons/MetroidvaniaSystem/Database/Editor/MapEditor.tscn
+#: addons/MetroidvaniaSystem/EditorExtension/MetSysEditorExtension.gd:187
+#: addons/MetroidvaniaSystem/MetSysPlugin.gd:181
+msgid "Scene File"
+msgstr ""
+
+#: addons/MetroidvaniaSystem/Database/Editor/MapEditor.tscn
 msgid "Create New Scene"
 msgstr ""
 
@@ -120,27 +132,27 @@ msgstr ""
 msgid "Shift+Click: Set for the whole room"
 msgstr ""
 
-#: addons/MetroidvaniaSystem/Database/Editor/ModeSceneAssign.gd
+#: addons/MetroidvaniaSystem/Database/Editor/ModeSceneAssign.gd:121
 msgid "Scene name can't be empty."
 msgstr ""
 
-#: addons/MetroidvaniaSystem/Database/Editor/ModeSceneAssign.gd
+#: addons/MetroidvaniaSystem/Database/Editor/ModeSceneAssign.gd:124
 msgid "Scene name contains invalid characters."
 msgstr ""
 
-#: addons/MetroidvaniaSystem/Database/Editor/ModeSceneAssign.gd
+#: addons/MetroidvaniaSystem/Database/Editor/ModeSceneAssign.gd:127
 msgid "Root node invalid."
 msgstr ""
 
-#: addons/MetroidvaniaSystem/Database/Editor/ModeSceneAssign.gd
+#: addons/MetroidvaniaSystem/Database/Editor/ModeSceneAssign.gd:131
 msgid "File already exists."
 msgstr ""
 
-#: addons/MetroidvaniaSystem/Database/LayerSelector.tscn
+#: addons/MetroidvaniaSystem/Database/LayerSelector.tscn:108
 msgid "None"
 msgstr ""
 
-#: addons/MetroidvaniaSystem/Database/LayerSelector.tscn
+#: addons/MetroidvaniaSystem/Database/LayerSelector.tscn:110
 msgid "Unnamed"
 msgstr ""
 
@@ -148,30 +160,26 @@ msgstr ""
 msgid "Double-click to edit name."
 msgstr ""
 
-#: addons/MetroidvaniaSystem/Database/Main.tscn
+#: addons/MetroidvaniaSystem/Database/Main.gd:26
 msgid ""
 "Discards local map data and loads the external one instead.\n"
 "If you made any local changes to the map, they will be lost."
 msgstr ""
 
-#: addons/MetroidvaniaSystem/Database/Main.tscn
+#: addons/MetroidvaniaSystem/Database/Main.gd:27
 msgid "Saves local map data to the file, overwriting whatever is stored on disk. If you are using version control (e.g. git), this allows you to manually merge changes."
 msgstr ""
 
-#: addons/MetroidvaniaSystem/Database/Main.tscn
-msgid "Save local map data into a backup file called \"MapData(Copy).txt\", then reloads map data. You can use the backup file to manually merge changes."
+#: addons/MetroidvaniaSystem/Database/Main.gd:50
+msgid "Save local map data into a backup file called \"%s.bak\", then reloads map data. You can use the backup file to manually merge changes."
 msgstr ""
 
-#: addons/MetroidvaniaSystem/Database/Main.tscn
+#: addons/MetroidvaniaSystem/Database/Main.gd:82
 msgid "Save Copy and Reload"
 msgstr ""
 
 #: addons/MetroidvaniaSystem/Database/Main.tscn
 msgid "Metroidvania System Database v.%s"
-msgstr ""
-
-#: addons/MetroidvaniaSystem/Database/Main.tscn
-msgid "Map Editor"
 msgstr ""
 
 #: addons/MetroidvaniaSystem/Database/Main.tscn
@@ -241,179 +249,183 @@ msgstr ""
 msgid "JSON File"
 msgstr ""
 
-#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd:37
 msgid "No assigned map at: %s"
 msgstr ""
 
-#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd:41
 msgid "Invalid symbol (%d) at: %s"
 msgstr ""
 
-#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd:48
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd:50
 msgid "Invalid border (%d) at: %s"
 msgstr ""
 
-#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd:54
 msgid "Passage to nowhere at: %s"
 msgstr ""
 
-#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd:57
 msgid "Potentially unused symbol: %d"
 msgstr ""
 
-#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd:60
 msgid "Map data is valid."
 msgstr ""
 
-#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd:69
 msgid "Cell Shape: %s"
 msgstr ""
 
-#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd:69
 msgid "Rectangle"
 msgstr ""
 
-#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd:69
 msgid "Square"
 msgstr ""
 
-#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd:70
 msgid "Base Cell Size: %s"
 msgstr ""
 
-#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd:72
 msgid "Theme is missing center texture. Map can't be drawn."
 msgstr ""
 
-#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd:76
 msgid "Uses unified corners."
 msgstr ""
 
-#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd:79
 msgid "Size mismatch between empty texture (%s) and center texture."
 msgstr ""
 
-#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd:83
 msgid "Number of horizontal and vertical borders do not match."
 msgstr ""
 
-#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd:85
 msgid "Vertical wall texture"
 msgstr ""
 
-#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd:86
 msgid "Vertical passage texture"
 msgstr ""
 
-#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd:90
 msgid "Vertical border texture at index %d"
 msgstr ""
 
-#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd:92
 msgid "Horizontal wall texture"
 msgstr ""
 
-#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd:93
 msgid "Horizontal passage texture"
 msgstr ""
 
-#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd:97
 msgid "Horizontal border texture at index %d"
 msgstr ""
 
-#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd:99
 msgid "Wall texture"
 msgstr ""
 
-#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd:100
 msgid "Passage texture"
 msgstr ""
 
-#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd:104
 msgid "Border texture at index %d"
 msgstr ""
 
-#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd:107
 msgid "Uncollected item symbol index is greater than number of available symbols."
 msgstr ""
 
-#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd:110
 msgid "Collected item symbol index is greater than number of available symbols."
 msgstr ""
 
-#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd:113
 msgid "Symbol %d texture"
 msgstr ""
 
-#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd:115
 msgid "U corner texture"
 msgstr ""
 
-#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd:116
 msgid "L corner texture"
 msgstr ""
 
-#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd:117
 msgid "T corner texture"
 msgstr ""
 
-#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd:118
 msgid "Cross corner texture"
 msgstr ""
 
-#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd:120
 msgid "Inner corner texture"
 msgstr ""
 
-#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd:121
 msgid "Outer corner texture"
 msgstr ""
 
-#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd:127
 msgid "Player location scene is not a Node2D."
 msgstr ""
 
-#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd:129
 msgid "Missing player location scene. Player location can't be displayed using built-in methods."
 msgstr ""
 
-#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd:132
 msgid "Theme is valid."
 msgstr ""
 
-#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd:138
 msgid "%s has invalid height (%d). It should be vertical, oriented towards the right side and match the height of the center texture."
 msgstr ""
 
-#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd:140
 msgid "%s is wider than half of the center texture. It may cause overlaps."
 msgstr ""
 
-#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd:142
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd:152
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd:160
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd:168
 msgid "%s is empty."
 msgstr ""
 
-#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd:148
 msgid "%s has invalid height (%d). It should be vertical, oriented towards the right side and height should match the width of the center texture."
 msgstr ""
 
-#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd:150
 msgid "%s is wider than half of the height of the center texture. It may cause overlaps."
 msgstr ""
 
-#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd:158
 msgid "%s is bigger than center texture. It will stick out of cells."
 msgstr ""
 
-#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd:166
 msgid "%s is bigger than half of the center texture. It may cause overlaps."
 msgstr ""
 
-#: addons/MetroidvaniaSystem/Database/Viewer/CollectibleElement.gd
+#: addons/MetroidvaniaSystem/Database/Viewer/CollectibleElement.gd:20
 msgid "Set Collectible Icon"
 msgstr ""
 
-#: addons/MetroidvaniaSystem/Database/Viewer/CollectibleElement.gd
+#: addons/MetroidvaniaSystem/Database/Viewer/CollectibleElement.gd:29
 msgid "Rename Collectible"
 msgstr ""
 
@@ -425,11 +437,11 @@ msgstr ""
 msgid "Icon"
 msgstr ""
 
-#: addons/MetroidvaniaSystem/Database/Viewer/CollectibleSettings.gd
+#: addons/MetroidvaniaSystem/Database/Viewer/CollectibleSettings.gd:36
 msgid "Add Collectible"
 msgstr ""
 
-#: addons/MetroidvaniaSystem/Database/Viewer/CollectibleSettings.gd
+#: addons/MetroidvaniaSystem/Database/Viewer/CollectibleSettings.gd:47
 msgid "Remove Collectible"
 msgstr ""
 
@@ -453,61 +465,57 @@ msgstr ""
 msgid "Display on Map"
 msgstr ""
 
-#: addons/MetroidvaniaSystem/EditorExtension/MetSysEditorExtension.gd
+#: addons/MetroidvaniaSystem/EditorExtension/MetSysEditorExtension.gd:15
 msgid "Refresh Adjacent Previews"
 msgstr ""
 
-#: addons/MetroidvaniaSystem/EditorExtension/MetSysEditorExtension.gd
-msgid ""
-msgstr ""
-
-#: addons/MetroidvaniaSystem/EditorExtension/MetSysEditorExtension.gd
+#: addons/MetroidvaniaSystem/EditorExtension/MetSysEditorExtension.gd:177
 msgid "Pick Scene..."
 msgstr ""
 
-#: addons/MetroidvaniaSystem/EditorExtension/MetSysEditorExtension.gd
+#: addons/MetroidvaniaSystem/EditorExtension/MetSysEditorExtension.gd:180
 msgid "<Invalid>"
 msgstr ""
 
-#: addons/MetroidvaniaSystem/MetSysPlugin.gd
+#: addons/MetroidvaniaSystem/MetSysPlugin.gd:80
 msgid "Print Object ID"
 msgstr ""
 
-#: addons/MetroidvaniaSystem/MetSysPlugin.gd
+#: addons/MetroidvaniaSystem/MetSysPlugin.gd:82
 msgid "Copy Object ID to Clipboard"
 msgstr ""
 
-#: addons/MetroidvaniaSystem/MetSysPlugin.gd
+#: addons/MetroidvaniaSystem/MetSysPlugin.gd:125
 msgid ""
 "MetSys map has been modified.\n"
 "Do you want to save?"
 msgstr ""
 
-#: addons/MetroidvaniaSystem/MetSysPlugin.gd
+#: addons/MetroidvaniaSystem/MetSysPlugin.gd:158
 msgid "No scene open to check Node."
 msgstr ""
 
-#: addons/MetroidvaniaSystem/MetSysPlugin.gd
+#: addons/MetroidvaniaSystem/MetSysPlugin.gd:163
 msgid "You need to select a single Node."
 msgstr ""
 
-#: addons/MetroidvaniaSystem/MetSysPlugin.gd
+#: addons/MetroidvaniaSystem/MetSysPlugin.gd:168
 msgid "Could not determine ID."
 msgstr ""
 
-#: addons/MetroidvaniaSystem/MetSysPlugin.gd
+#: addons/MetroidvaniaSystem/MetSysPlugin.gd:171
 msgid "ID of the selected Node is \"%s\"."
 msgstr ""
 
-#: addons/MetroidvaniaSystem/MetSysPlugin.gd
+#: addons/MetroidvaniaSystem/MetSysPlugin.gd:174
 msgid "ID \"%s\" copied to clipboard."
 msgstr ""
 
-#: addons/MetroidvaniaSystem/MetSysPlugin.gd
+#: addons/MetroidvaniaSystem/MetSysPlugin.gd:177
 msgid "Error!"
 msgstr ""
 
-#: addons/MetroidvaniaSystem/MetSysPlugin.gd
+#: addons/MetroidvaniaSystem/MetSysPlugin.gd:178
 msgid ""
 "MetSys restart failed, the singleton still can't be loaded. Make sure the \"MetroidvaniaSystem.gd\" script has no errors.\n"
 "\n"
@@ -518,14 +526,10 @@ msgid ""
 "The plugin will be now disabled. Fix the errors and try again."
 msgstr ""
 
-#: addons/MetroidvaniaSystem/MetSysPlugin.gd
+#: addons/MetroidvaniaSystem/MetSysPlugin.gd:179
 msgid "Runs get_object_id() for the selected Node and prints the result."
 msgstr ""
 
-#: addons/MetroidvaniaSystem/MetSysPlugin.gd
+#: addons/MetroidvaniaSystem/MetSysPlugin.gd:180
 msgid "Runs get_object_id() for the selected Node and copies the result to clipboard."
-msgstr ""
-
-#: addons/MetroidvaniaSystem/MetSysPlugin.gd
-msgid "Scene File"
 msgstr ""
