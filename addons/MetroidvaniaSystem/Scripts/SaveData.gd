@@ -88,8 +88,16 @@ func set_data(data: Dictionary):
 	if data.is_empty():
 		return
 	
-	for property in SIMPLE_STORABLE_PROPERTIES:
-		get(property).assign(data[property])
+	for property_name in SIMPLE_STORABLE_PROPERTIES:
+		var property = get(property_name)
+		if property is Dictionary or property is Array:
+			property.assign(data[property_name])
+		else:
+			if(typeof(property) != typeof(data[property_name])):
+				push_error("Wrong type of save property '%s'. Should be %s but provided %s. It failed to set." 
+				% [property_name, type_string(typeof(property)), type_string(typeof(data[property_name]))])
+			
+			set(property_name, data[property_name]) 
 	
 	for override_string in data.cell_overrides:
 		var override: MetroidvaniaSystem.MapData.CellOverride = MetroidvaniaSystem.MapData.CellOverride.load_from_line(override_string)
