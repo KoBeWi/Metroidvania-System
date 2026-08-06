@@ -97,7 +97,7 @@ func set_data(data: Dictionary):
 			if typeof(property) != typeof(data_property):
 				push_error("Wrong type of save property '%s'. Should be %s but provided %s. It failed to set." 
 				% [property_name, type_string(typeof(property)), type_string(typeof(data_property))])
-			
+				continue
 			set(property_name, data_property) 
 	
 	for override_string in data.cell_overrides:
