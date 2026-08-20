@@ -18,7 +18,7 @@ func _on_body_entered(body: Node2D) -> void:
 		Game.get_singleton().load_room(target_map)
 
 # Needs to be static, because the old portal disappears before the new scene is loaded.
-static func move_to_portal():
+static func move_to_portal() -> void:
 	var map := Game.get_singleton().map
 	# Get the portal node.
 	var portal: Node2D = map.get_node(^\"MiniPortal\")

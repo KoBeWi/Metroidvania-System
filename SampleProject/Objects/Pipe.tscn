@@ -20,7 +20,7 @@ func _ready() -> void:
 	add_point(current_point)
 	set_process(false)
 # Manually progresses the water (used to initialize pipes).
-func flow(delta: float):
+func flow(delta: float) -> void:
 	_process(delta  / FLOW_SPEED)
 
 func _process(delta: float) -> void:

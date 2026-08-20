@@ -91,7 +91,7 @@ static func get_singleton() -> Game:
 	return (Game as Script).get_meta(&"singleton") as Game
 
 # Save game using MetSys SaveManager.
-func save_game():
+func save_game() -> void:
 	var save_manager := SaveManager.new()
 	save_manager.set_value("collectible_count", collectibles)
 	save_manager.set_value("generated_rooms", generated_rooms)
@@ -100,10 +100,10 @@ func save_game():
 	save_manager.set_value("abilities", player.abilities)
 	save_manager.save_as_text(SAVE_PATH)
 
-func reset_map_starting_coords():
+func reset_map_starting_coords() -> void:
 	$UI/MapWindow.reset_starting_coords()
 
-func init_room():
+func init_room() -> void:
 	MetSys.get_current_room_instance().adjust_camera_limits($Player/Camera2D)
 	player.on_enter()
 	
