@@ -17,6 +17,7 @@ dest_files=["res://.godot/imported/Teleport.png-e13d2c8e824ea919a7d82cbb43428ba7
 
 compress/mode=0
 compress/high_quality=false
+compress/high_quality_mode=0
 compress/lossy_quality=0.7
 compress/uastc_level=0
 compress/rdo_quality_loss=0.0
