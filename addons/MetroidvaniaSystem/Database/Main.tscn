@@ -5,30 +5,36 @@
 [ext_resource type="PackedScene" uid="uid://df5fuj4vjr11p" path="res://addons/MetroidvaniaSystem/Database/Viewer/MapViewer.tscn" id="2_0tuq7"]
 [ext_resource type="PackedScene" uid="uid://he12yvtcmf87" path="res://addons/MetroidvaniaSystem/Database/Manage/Manage.tscn" id="2_1dme8"]
 [ext_resource type="Script" uid="uid://suhrm70o00in" path="res://addons/MetroidvaniaSystem/Database/Main.gd" id="2_bipp0"]
+[ext_resource type="Texture2D" uid="uid://chxprk5rw4ldq" path="res://addons/MetroidvaniaSystem/Icon.png" id="6_ps6gy"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0ndnc"]
 bg_color = Color(0, 0, 0, 0.501961)
 
 [sub_resource type="ButtonGroup" id="ButtonGroup_bipp0"]
 
-[node name="Main" type="VBoxContainer" unique_id=1494807590]
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+[node name="MetSys" type="EditorDock" unique_id=2012072601]
+offset_top = 480.0
+offset_right = 864.0
+offset_bottom = 480.0
+title = "MetSys"
+dock_icon = ExtResource("6_ps6gy")
+default_slot = 11
+available_layouts = 12
+script = ExtResource("2_bipp0")
+
+[node name="Main" type="VBoxContainer" parent="." unique_id=1494807590]
+layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme = ExtResource("1_hfop4")
-script = ExtResource("2_bipp0")
 
-[node name="Label" type="Label" parent="." unique_id=1508440694]
+[node name="Label" type="Label" parent="Main" unique_id=1508440694]
 layout_mode = 2
 theme_type_variation = &"HeaderSmall"
 text = "Metroidvania System Database v.%s"
 horizontal_alignment = 1
 
-[node name="TabContainer" type="TabContainer" parent="." unique_id=1426857261]
+[node name="TabContainer" type="TabContainer" parent="Main" unique_id=1426857261]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -36,25 +42,25 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_0ndnc")
 tab_alignment = 1
 current_tab = 0
 
-[node name="Map Editor" parent="TabContainer" unique_id=1541065233 instance=ExtResource("1_lpqq2")]
+[node name="Map Editor" parent="Main/TabContainer" unique_id=1541065233 instance=ExtResource("1_lpqq2")]
 unique_name_in_owner = true
 layout_mode = 2
 mode_group = SubResource("ButtonGroup_bipp0")
 metadata/_tab_index = 0
 
-[node name="Map Viewer" parent="TabContainer" unique_id=1898264915 instance=ExtResource("2_0tuq7")]
+[node name="Map Viewer" parent="Main/TabContainer" unique_id=1898264915 instance=ExtResource("2_0tuq7")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 metadata/_tab_index = 1
 
-[node name="Manage" parent="TabContainer" unique_id=2028481219 instance=ExtResource("2_1dme8")]
+[node name="Manage" parent="Main/TabContainer" unique_id=2028481219 instance=ExtResource("2_1dme8")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 metadata/_tab_index = 2
 
-[node name="ChangesDetected" type="ConfirmationDialog" parent="." unique_id=920556128]
+[node name="ChangesDetected" type="ConfirmationDialog" parent="Main" unique_id=920556128]
 size = Vector2i(441, 128)
 ok_button_text = "Reload From Disk"
 dialog_text = "Map data file was modified externally.
@@ -62,4 +68,4 @@ What action should be taken?
 (hover a button for more info)"
 cancel_button_text = "Re-save Map Data"
 
-[connection signal="confirmed" from="ChangesDetected" to="." method="_on_changes_detected_confirmed"]
+[connection signal="confirmed" from="Main/ChangesDetected" to="Main" method="_on_changes_detected_confirmed"]

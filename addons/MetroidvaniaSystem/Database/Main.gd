@@ -1,5 +1,5 @@
 @tool
-extends VBoxContainer
+extends EditorDock
 
 @onready var editor: Control = %"Map Editor"
 @onready var viewer: Control = %"Map Viewer"
