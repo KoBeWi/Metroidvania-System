@@ -19,12 +19,6 @@ signal saved
 func _has_main_screen() -> bool:
 	return true
 
-func _get_plugin_name() -> String:
-	return "MetSys"
-
-func _get_plugin_icon() -> Texture2D:
-	return load("res://addons/MetroidvaniaSystem/Icon.png")
-
 func _enable_plugin() -> void:
 	EditorInterface.set_plugin_enabled(EXTENSION_PATH, true)
 
@@ -73,8 +67,7 @@ func _enter_tree() -> void:
 	get_singleton().editor_plugin = self
 	
 	main = load("uid://crxgu2q73va5y").instantiate()
-	EditorInterface.get_editor_main_screen().add_child(main)
-	main.hide()
+	add_dock(main)
 	
 	var metsys_tools := PopupMenu.new()
 	metsys_tools.add_item("Print Object ID")
