@@ -3,8 +3,8 @@ extends EditorDock
 
 @onready var editor: Control = %"Map Editor"
 @onready var viewer: Control = %"Map Viewer"
-@onready var changes_detected: ConfirmationDialog = $ChangesDetected
-@onready var tabs = $TabContainer
+@onready var changes_detected: ConfirmationDialog = %ChangesDetected
+@onready var tabs = %TabContainer
 
 var backup_button: Button
 
@@ -51,9 +51,9 @@ func _notification(what: int) -> void:
 				changes_detected.popup_centered()
 	elif what == NOTIFICATION_TRANSLATION_CHANGED:
 		if header_text.is_empty():
-			header_text = $Label.text
+			header_text = %Label.text
 		
-		$Label.text = tr(header_text) % plugin_version
+		%Label.text = tr(header_text) % plugin_version
 
 func _on_changes_detected_confirmed() -> void:
 	reload_map()

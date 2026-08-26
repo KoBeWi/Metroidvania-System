@@ -10,7 +10,7 @@
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0ndnc"]
 bg_color = Color(0, 0, 0, 0.501961)
 
-[sub_resource type="ButtonGroup" id="ButtonGroup_bipp0"]
+[sub_resource type="ButtonGroup" id="ButtonGroup_ps6gy"]
 
 [node name="MetSys" type="EditorDock" unique_id=2012072601]
 offset_top = 480.0
@@ -29,12 +29,14 @@ size_flags_vertical = 3
 theme = ExtResource("1_hfop4")
 
 [node name="Label" type="Label" parent="Main" unique_id=1508440694]
+unique_name_in_owner = true
 layout_mode = 2
 theme_type_variation = &"HeaderSmall"
 text = "Metroidvania System Database v.%s"
 horizontal_alignment = 1
 
 [node name="TabContainer" type="TabContainer" parent="Main" unique_id=1426857261]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -45,7 +47,7 @@ current_tab = 0
 [node name="Map Editor" parent="Main/TabContainer" unique_id=1541065233 instance=ExtResource("1_lpqq2")]
 unique_name_in_owner = true
 layout_mode = 2
-mode_group = SubResource("ButtonGroup_bipp0")
+mode_group = SubResource("ButtonGroup_ps6gy")
 metadata/_tab_index = 0
 
 [node name="Map Viewer" parent="Main/TabContainer" unique_id=1898264915 instance=ExtResource("2_0tuq7")]
@@ -60,7 +62,8 @@ visible = false
 layout_mode = 2
 metadata/_tab_index = 2
 
-[node name="ChangesDetected" type="ConfirmationDialog" parent="Main" unique_id=920556128]
+[node name="ChangesDetected" type="ConfirmationDialog" parent="." unique_id=920556128]
+unique_name_in_owner = true
 size = Vector2i(441, 128)
 ok_button_text = "Reload From Disk"
 dialog_text = "Map data file was modified externally.
@@ -68,4 +71,4 @@ What action should be taken?
 (hover a button for more info)"
 cancel_button_text = "Re-save Map Data"
 
-[connection signal="confirmed" from="Main/ChangesDetected" to="Main" method="_on_changes_detected_confirmed"]
+[connection signal="confirmed" from="ChangesDetected" to="Main" method="_on_changes_detected_confirmed"]
