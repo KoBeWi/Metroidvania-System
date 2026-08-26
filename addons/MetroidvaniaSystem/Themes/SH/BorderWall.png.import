@@ -17,6 +17,7 @@ dest_files=["res://.godot/imported/BorderWall.png-24b3c6b95a048a90c271cd8a61fa8b
 
 compress/mode=0
 compress/high_quality=false
+compress/high_quality_mode=0
 compress/lossy_quality=0.7
 compress/uastc_level=0
 compress/rdo_quality_loss=0.0

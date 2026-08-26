@@ -17,6 +17,7 @@ dest_files=["res://.godot/imported/HealZone.png-7b93d6df486a0363574f4d20ba880109
 
 compress/mode=0
 compress/high_quality=false
+compress/high_quality_mode=0
 compress/lossy_quality=0.7
 compress/uastc_level=0
 compress/rdo_quality_loss=0.0

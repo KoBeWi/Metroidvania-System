@@ -17,6 +17,7 @@ dest_files=["res://.godot/imported/WarpDown.png-cfe02667c94e1ae8d8be072a15d72cf1
 
 compress/mode=0
 compress/high_quality=false
+compress/high_quality_mode=0
 compress/lossy_quality=0.7
 compress/uastc_level=0
 compress/rdo_quality_loss=0.0

@@ -17,7 +17,7 @@ metroidvania_system/settings_file="res://SampleProject/Resources/Settings.tres"
 config/name="Metroidvania System"
 config/tags=PackedStringArray("addon")
 run/main_scene="res://SampleProject/Game.tscn"
-config/features=PackedStringArray("4.6")
+config/features=PackedStringArray("4.8")
 config/icon="res://icon.svg"
 
 [autoload]
@@ -40,10 +40,6 @@ gdscript/warnings/narrowing_conversion=0
 window/size/viewport_width=864
 window/size/viewport_height=480
 window/per_pixel_transparency/allowed=true
-
-[editor]
-
-script/search_in_file_extensions=PackedStringArray("gd", "gdshader", "tscn")
 
 [editor_plugins]
 
