@@ -35,10 +35,6 @@ func _enter_tree() -> void:
 		if file.get_extension() == "po":
 			translation_list.append(load("res://addons/MetroidvaniaSystem/Translations".path_join(file)))
 	
-	var editor_translation := TranslationServer.get_or_add_domain(&"godot.editor")
-	for translation in translation_list:
-		editor_translation.add_translation(translation)
-	
 	await get_tree().process_frame
 	if not get_singleton():
 		if FileAccess.file_exists("user://MetSysFail"):
@@ -67,6 +63,7 @@ func _enter_tree() -> void:
 	get_singleton().editor_plugin = self
 	
 	main = load("uid://crxgu2q73va5y").instantiate()
+	main.translation_changed.connect(inject_translations)
 	add_dock(main)
 	
 	var metsys_tools := PopupMenu.new()
@@ -88,6 +85,7 @@ func _exit_tree() -> void:
 	for translation in translation_list:
 		editor_translation.remove_translation(translation)
 	
+	remove_dock(main)
 	main.queue_free()
 	remove_tool_menu_item("MetSys")
 	
@@ -128,6 +126,14 @@ func _set_window_layout(configuration: ConfigFile) -> void:
 		main.editor.update_map_position()
 		main.viewer.map_offset = configuration.get_value("MetSys", "viewer_offset")
 		main.viewer.update_map_position()
+
+func inject_translations():
+	var editor_translation := TranslationServer.get_or_add_domain(&"godot.editor")
+	if editor_translation.has_translation(translation_list[0]):
+		return
+	
+	for translation in translation_list:
+		editor_translation.add_translation(translation)
 
 func get_singleton():# -> MetroidvaniaSystem:
 	return get_tree().root.get_node_or_null(^"MetSys")

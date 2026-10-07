@@ -14,6 +14,8 @@ var header_text: String
 var modtime: int
 var md5: String
 
+signal translation_changed
+
 func _init() -> void:
 	var cfg := ConfigFile.new()
 	cfg.load("res://addons/MetroidvaniaSystem/plugin.cfg")
@@ -50,6 +52,8 @@ func _notification(what: int) -> void:
 				backup_button.tooltip_text = tr("Save local map data into a backup file called \"%s.bak\", then reloads map data. You can use the backup file to manually merge changes.") % MetSys.settings.map_data_file.get_file()
 				changes_detected.popup_centered()
 	elif what == NOTIFICATION_TRANSLATION_CHANGED:
+		translation_changed.emit()
+		
 		if header_text.is_empty():
 			header_text = %Label.text
 		
