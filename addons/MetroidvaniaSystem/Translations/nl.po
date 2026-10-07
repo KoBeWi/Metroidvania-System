@@ -1,0 +1,602 @@
+# LANGUAGE translation for Metroidvania System for the following files:
+# res://addons/MetroidvaniaSystem/Database/Manage.tscn
+# res://addons/MetroidvaniaSystem/Database/Main.tscn
+# res://addons/MetroidvaniaSystem/Database/MapEditor.tscn
+# res://addons/MetroidvaniaSystem/Database/MapViewer.tscn
+# res://addons/MetroidvaniaSystem/Nodes/LayerSelector.tscn
+# res://addons/MetroidvaniaSystem/Nodes/CollectibleElement.tscn
+# res://addons/MetroidvaniaSystem/MetSysPlugin.gd
+#
+# ne <delsin_yu@qq.com>, 2025.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Metroidvania System\n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: nl\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.9\n"
+
+#: addons/MetroidvaniaSystem/Database/Editor/MapEditor.gd:132
+#: addons/MetroidvaniaSystem/Database/Main.tscn
+msgid "Map Editor"
+msgstr "Kaart Editor"
+
+#: addons/MetroidvaniaSystem/Database/Editor/MapEditor.tscn
+#: addons/MetroidvaniaSystem/Database/Viewer/MapViewer.tscn
+msgid "Current Layer"
+msgstr "Huidige Laag"
+
+#: addons/MetroidvaniaSystem/Database/Editor/MapEditor.tscn
+msgid "Preview Layer"
+msgstr "Voorbeeldweergave Laag"
+
+#: addons/MetroidvaniaSystem/Database/Editor/MapEditor.tscn
+#: addons/MetroidvaniaSystem/Database/Viewer/MapViewer.tscn
+msgid "Recenter View"
+msgstr "Centreer Zicht"
+
+#: addons/MetroidvaniaSystem/Database/Editor/MapEditor.tscn
+#: addons/MetroidvaniaSystem/Database/Viewer/MapViewer.tscn
+msgid "Zoom"
+msgstr "Zoom"
+
+#: addons/MetroidvaniaSystem/Database/Editor/MapEditor.tscn
+msgid "Mode"
+msgstr "Modus"
+
+#: addons/MetroidvaniaSystem/Database/Editor/MapEditor.tscn
+msgid "Room Layout"
+msgstr "Kamerindeling"
+
+#: addons/MetroidvaniaSystem/Database/Editor/MapEditor.tscn
+msgid "Cell Color"
+msgstr "Cell Kleur"
+
+#: addons/MetroidvaniaSystem/Database/Editor/MapEditor.tscn
+msgid "Cell Symbol"
+msgstr "Cell Symbool"
+
+#: addons/MetroidvaniaSystem/Database/Editor/MapEditor.tscn
+msgid "Cell Group"
+msgstr "Cell Groep"
+
+#: addons/MetroidvaniaSystem/Database/Editor/MapEditor.tscn
+msgid "Border Type"
+msgstr "Rand Type"
+
+#: addons/MetroidvaniaSystem/Database/Editor/MapEditor.tscn
+msgid "Border Color"
+msgstr "Rand Kleur"
+
+#: addons/MetroidvaniaSystem/Database/Editor/MapEditor.tscn
+msgid "Scene Assign"
+msgstr "Wijs Scene Toe"
+
+#: addons/MetroidvaniaSystem/Database/Editor/MapEditor.tscn
+#: addons/MetroidvaniaSystem/EditorExtension/MetSysEditorExtension.gd:187
+#: addons/MetroidvaniaSystem/MetSysPlugin.gd:181
+msgid "Scene File"
+msgstr "Scene Bestand"
+
+#: addons/MetroidvaniaSystem/Database/Editor/MapEditor.tscn
+msgid "Create New Scene"
+msgstr "Maak nieuwe Scene aan"
+
+#: addons/MetroidvaniaSystem/Database/Editor/MapEditor.tscn
+msgid "Scene Name"
+msgstr "Scene Naam"
+
+#: addons/MetroidvaniaSystem/Database/Editor/MapEditor.tscn
+msgid "Root Name"
+msgstr "Stam Naam"
+
+#: addons/MetroidvaniaSystem/Database/Editor/MapEditor.tscn
+msgid "Custom Elements"
+msgstr "Speciale Elementen"
+
+#: addons/MetroidvaniaSystem/Database/Editor/MapEditor.tscn
+msgid "Group ID"
+msgstr "Groep ID"
+
+#: addons/MetroidvaniaSystem/Database/Editor/MapEditor.tscn
+msgid "Click a room or drag and drop a file"
+msgstr "Klik op een kamer of sleep en drop een bestand"
+
+#: addons/MetroidvaniaSystem/Database/Editor/MapEditor.tscn
+msgid "Data"
+msgstr "Data"
+
+#: addons/MetroidvaniaSystem/Database/Editor/MapEditor.tscn
+msgid "No Custom Elements Registered"
+msgstr "Geen Speciale Elementen Geregisteerd"
+
+#: addons/MetroidvaniaSystem/Database/Editor/MapEditor.tscn
+msgid "Ctrl+Click: Pick from map"
+msgstr "Ctrl+Click: Kies van kaart"
+
+#: addons/MetroidvaniaSystem/Database/Editor/MapEditor.tscn
+msgid "Shift+Drag: Move rooms"
+msgstr "Shift+Sleep: Beweeg kamers"
+
+#: addons/MetroidvaniaSystem/Database/Editor/MapEditor.tscn
+msgid "Shift+Click: Set for the whole room"
+msgstr "Shift+Click: Zet voor de hele kamer"
+
+#: addons/MetroidvaniaSystem/Database/Editor/ModeSceneAssign.gd:121
+msgid "Scene name can't be empty."
+msgstr "Scene naam kan niet leeg zijn."
+
+#: addons/MetroidvaniaSystem/Database/Editor/ModeSceneAssign.gd:124
+msgid "Scene name contains invalid characters."
+msgstr "Scene naam bevat invalide tekens."
+
+#: addons/MetroidvaniaSystem/Database/Editor/ModeSceneAssign.gd:127
+msgid "Root node invalid."
+msgstr "Ongeldige wortelknoop"
+
+#: addons/MetroidvaniaSystem/Database/Editor/ModeSceneAssign.gd:131
+msgid "File already exists."
+msgstr "Bestand bestaat al."
+
+#: addons/MetroidvaniaSystem/Database/LayerSelector.tscn:108
+msgid "None"
+msgstr "Geen"
+
+#: addons/MetroidvaniaSystem/Database/LayerSelector.tscn:110
+msgid "Unnamed"
+msgstr "Ongenaamd"
+
+#: addons/MetroidvaniaSystem/Database/LayerSelector.tscn
+msgid "Double-click to edit name."
+msgstr "Duble Klik om naam te veranderen."
+
+#: addons/MetroidvaniaSystem/Database/Main.gd:26
+msgid ""
+"Discards local map data and loads the external one instead.\n"
+"If you made any local changes to the map, they will be lost."
+msgstr ""
+"Verwijder lokaale kaart data en laad een externe inplaats daarvan.\n"
+"Als je lokale veranderingen hebt gemaakt aan de kaart zullen ze kwijt worden "
+"geraakt."
+
+#: addons/MetroidvaniaSystem/Database/Main.gd:27
+msgid ""
+"Saves local map data to the file, overwriting whatever is stored on disk. If "
+"you are using version control (e.g. git), this allows you to manually merge "
+"changes."
+msgstr ""
+"Slaat lokale kaart data op in het bestand, waarbij alles dat is opgeslagen "
+"op de disk wordt overschreven. Als je versie controle (e.g git) gebruikt, "
+"laat dit je handmatig veranderingen combineren."
+
+#: addons/MetroidvaniaSystem/Database/Main.gd:50
+msgid ""
+"Save local map data into a backup file called \"%s.bak\", then reloads map "
+"data. You can use the backup file to manually merge changes."
+msgstr ""
+"Sla lokale kaart data in een back-up file genaamd \"%s.bak\", dan herlaad de "
+"kaart data. Je kan de back-up file gebruiken om handmatig veranderingen te "
+"combineren."
+
+#: addons/MetroidvaniaSystem/Database/Main.gd:82
+msgid "Save Copy and Reload"
+msgstr "Sla op, kopieer en herlaad"
+
+#: addons/MetroidvaniaSystem/Database/Main.tscn
+msgid "Metroidvania System Database v.%s"
+msgstr "Metroidvania Systeem Database v.%s"
+
+#: addons/MetroidvaniaSystem/Database/Main.tscn
+msgid "Map Viewer"
+msgstr "Kaart Bekijker"
+
+#: addons/MetroidvaniaSystem/Database/Main.tscn
+msgid "Manage"
+msgstr "Beheer"
+
+#: addons/MetroidvaniaSystem/Database/Main.tscn
+msgid "Reload From Disk"
+msgstr "Herlaad Van Disk"
+
+#: addons/MetroidvaniaSystem/Database/Main.tscn
+msgid ""
+"Map data file was modified externally.\n"
+"What action should be taken?\n"
+"(hover a button for more info)"
+msgstr ""
+"Map data was gemodificeerd extern.\n"
+"Welke actie zou nu moeten worden genomen?\n"
+"(Zweef over een knop voor meer info.)"
+
+#: addons/MetroidvaniaSystem/Database/Main.tscn
+msgid "Re-save Map Data"
+msgstr "Sla Kaart data weer op"
+
+#: addons/MetroidvaniaSystem/Database/Manage/Manage.tscn
+msgid "General Settings"
+msgstr "Generale instellingen"
+
+#: addons/MetroidvaniaSystem/Database/Manage/Manage.tscn
+msgid "Refresh Custom Elements"
+msgstr "Hervers Aangepaste Elementen"
+
+#: addons/MetroidvaniaSystem/Database/Manage/Manage.tscn
+msgid "Reload and Cleanup Map Data"
+msgstr "Herlaad en Herschoon Kaart Data"
+
+#: addons/MetroidvaniaSystem/Database/Manage/Manage.tscn
+msgid "Validate Map Data"
+msgstr "Valideer Kaart Data"
+
+#: addons/MetroidvaniaSystem/Database/Manage/Manage.tscn
+msgid "Validate Map Theme"
+msgstr "Valideer Kaart Thema"
+
+#: addons/MetroidvaniaSystem/Database/Manage/Manage.tscn
+msgid "Export Map Data as JSON"
+msgstr "Export Kaart Data als JSON"
+
+#: addons/MetroidvaniaSystem/Database/Manage/Manage.tscn
+msgid "Edit Database Theme"
+msgstr "Pas Database Thema aan"
+
+#: addons/MetroidvaniaSystem/Database/Manage/Manage.tscn
+msgid "Reset Database Theme"
+msgstr "Reset Database Thema"
+
+#: addons/MetroidvaniaSystem/Database/Manage/Manage.tscn
+msgid "Validation Result"
+msgstr "Valideer resultaat"
+
+#: addons/MetroidvaniaSystem/Database/Manage/Manage.tscn
+msgid "Close"
+msgstr "Sluit"
+
+#: addons/MetroidvaniaSystem/Database/Manage/Manage.tscn
+msgid "JSON File"
+msgstr "JSON Bestand"
+
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd:37
+msgid "No assigned map at: %s"
+msgstr "Geen aangeweze kaart op: %s"
+
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd:41
+msgid "Invalid symbol (%d) at: %s"
+msgstr "Ongeldig Symbool (%d) op: %s"
+
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd:48
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd:50
+msgid "Invalid border (%d) at: %s"
+msgstr "Ongeldige rand (%d) op: %s"
+
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd:54
+msgid "Passage to nowhere at: %s"
+msgstr "Ingang naar nergens op: %s"
+
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd:57
+msgid "Potentially unused symbol: %d"
+msgstr "Mogelijk ongebruikt symbool: %d"
+
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd:60
+msgid "Map data is valid."
+msgstr "Kaart data is geldig."
+
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd:69
+msgid "Cell Shape: %s"
+msgstr "Cell Vorm: %s"
+
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd:69
+msgid "Rectangle"
+msgstr "Rechthoek"
+
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd:69
+msgid "Square"
+msgstr "Vierkant"
+
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd:70
+msgid "Base Cell Size: %s"
+msgstr "Basis Cell Groote: %s"
+
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd:72
+msgid "Theme is missing center texture. Map can't be drawn."
+msgstr "Thema mist midden afbeelding. Kaart kan niet worden getekent."
+
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd:76
+msgid "Uses unified corners."
+msgstr "Gebruikt geünificeerde hoeken."
+
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd:79
+msgid "Size mismatch between empty texture (%s) and center texture."
+msgstr "Groote mismatch tussen leege textuur (%s) en midden textuur."
+
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd:83
+msgid "Number of horizontal and vertical borders do not match."
+msgstr "Numer horizontale en verticale randen zijn niet hetzelfde."
+
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd:85
+msgid "Vertical wall texture"
+msgstr "Verticale muur afbeelding"
+
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd:86
+msgid "Vertical passage texture"
+msgstr "Verticale doorgang afbeelding"
+
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd:90
+msgid "Vertical border texture at index %d"
+msgstr "Verticale rand afbeelding op index %d"
+
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd:92
+msgid "Horizontal wall texture"
+msgstr "Horizontale muur afbeelding"
+
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd:93
+msgid "Horizontal passage texture"
+msgstr "Horizontale doorgang afbeelding"
+
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd:97
+msgid "Horizontal border texture at index %d"
+msgstr "Horizontale rand afbeelding op index %d"
+
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd:99
+msgid "Wall texture"
+msgstr "Muur afbeelding"
+
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd:100
+msgid "Passage texture"
+msgstr "Doorgang afbeelding"
+
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd:104
+msgid "Border texture at index %d"
+msgstr "Rand afbeelding op index %d"
+
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd:107
+msgid ""
+"Uncollected item symbol index is greater than number of available symbols."
+msgstr ""
+"Niet verzameld item symbool index is groter dan nummer van mogelijke "
+"symbolen."
+
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd:110
+msgid ""
+"Collected item symbol index is greater than number of available symbols."
+msgstr ""
+"Verzameld item symbool index is groter dan nummer van mogelijke symbolen."
+
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd:113
+msgid "Symbol %d texture"
+msgstr "Symbool %d afbeelding"
+
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd:115
+msgid "U corner texture"
+msgstr "U hoek afbeelding"
+
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd:116
+msgid "L corner texture"
+msgstr "L hoek afbeelding"
+
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd:117
+msgid "T corner texture"
+msgstr "T hoek afbeelding"
+
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd:118
+msgid "Cross corner texture"
+msgstr "Kruis hoek afbeelding"
+
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd:120
+msgid "Inner corner texture"
+msgstr "Inerlijke hoek afbeelding"
+
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd:121
+msgid "Outer corner texture"
+msgstr "Uiterlijke hoek afbeelding"
+
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd:127
+msgid "Player location scene is not a Node2D."
+msgstr "Speler locatie scene is niet een Node2D."
+
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd:129
+msgid ""
+"Missing player location scene. Player location can't be displayed using "
+"built-in methods."
+msgstr ""
+"Missende speler locatie scene. Speler locatie kan niet weergegeven worden "
+"door ingebouwde methodes."
+
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd:132
+msgid "Theme is valid."
+msgstr "Thema is valide."
+
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd:138
+msgid ""
+"%s has invalid height (%d). It should be vertical, oriented towards the "
+"right side and match the height of the center texture."
+msgstr ""
+"%s heeft invalide hoogte (%d). Het zou verticaal, georienteerd naar de "
+"rechter kant en bijpassend bij de hoogte van de midden afbeelding."
+
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd:140
+msgid "%s is wider than half of the center texture. It may cause overlaps."
+msgstr ""
+"%s is wijder dan de helft van de midden afbeelding. Het zou overlap kunnen "
+"veroorzaken."
+
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd:142
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd:152
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd:160
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd:168
+msgid "%s is empty."
+msgstr "%s is leeg."
+
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd:148
+msgid ""
+"%s has invalid height (%d). It should be vertical, oriented towards the "
+"right side and height should match the width of the center texture."
+msgstr ""
+"%s heeft invalide hoogte (%d). Het zou verticaal, georienteerd naar de "
+"rechter kant en bijpassend bij de hoogte van de midden afbeelding."
+
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd:150
+msgid ""
+"%s is wider than half of the height of the center texture. It may cause "
+"overlaps."
+msgstr ""
+"%s is wijder dan de helft van de hoogte van de midden afbeelding. Het kan "
+"overlap veroorzaken."
+
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd:158
+msgid "%s is bigger than center texture. It will stick out of cells."
+msgstr ""
+"%s is groter dan de midden afbeelding. Het zal uitsteken uit de cellen."
+
+#: addons/MetroidvaniaSystem/Database/Manage/Validation.gd:166
+msgid "%s is bigger than half of the center texture. It may cause overlaps."
+msgstr ""
+"%s is grooter dan de helft van de midden afbeelding. Het kan overlap "
+"veroorzaken."
+
+#: addons/MetroidvaniaSystem/Database/Viewer/CollectibleElement.gd:20
+msgid "Set Collectible Icon"
+msgstr "Zet Verzamelobject Icoon"
+
+#: addons/MetroidvaniaSystem/Database/Viewer/CollectibleElement.gd:29
+msgid "Rename Collectible"
+msgstr "Hernoem Verzamelobject"
+
+#: addons/MetroidvaniaSystem/Database/Viewer/CollectibleElement.tscn
+msgid "Node Name"
+msgstr "Node Naam"
+
+#: addons/MetroidvaniaSystem/Database/Viewer/CollectibleElement.tscn
+msgid "Icon"
+msgstr "Icoon"
+
+#: addons/MetroidvaniaSystem/Database/Viewer/CollectibleSettings.gd:36
+msgid "Add Collectible"
+msgstr "Voeg verzamelobject toe"
+
+#: addons/MetroidvaniaSystem/Database/Viewer/CollectibleSettings.gd:47
+msgid "Remove Collectible"
+msgstr "Verwijder verzamelobject"
+
+#: addons/MetroidvaniaSystem/Database/Viewer/MapViewer.tscn
+msgid "Preview Mapped"
+msgstr "Voorbeeld Weergave"
+
+#: addons/MetroidvaniaSystem/Database/Viewer/MapViewer.tscn
+msgid "Collectible Settings"
+msgstr "VerzamelObject Instellingen"
+
+#: addons/MetroidvaniaSystem/Database/Viewer/MapViewer.tscn
+msgid "Collectible Finder"
+msgstr "VerzamelObject Vinder"
+
+#: addons/MetroidvaniaSystem/Database/Viewer/MapViewer.tscn
+msgid "Scan Maps"
+msgstr "Scan Kaart"
+
+#: addons/MetroidvaniaSystem/Database/Viewer/MapViewer.tscn
+msgid "Display on Map"
+msgstr "Laat zien op kaart"
+
+#: addons/MetroidvaniaSystem/EditorExtension/MetSysEditorExtension.gd:15
+msgid "Refresh Adjacent Previews"
+msgstr "Hervers Aangrezende Voorbeeldweergave"
+
+#: addons/MetroidvaniaSystem/EditorExtension/MetSysEditorExtension.gd:177
+msgid "Pick Scene..."
+msgstr "Kies Scene..."
+
+#: addons/MetroidvaniaSystem/EditorExtension/MetSysEditorExtension.gd:180
+msgid "<Invalid>"
+msgstr "<Invalide>"
+
+#: addons/MetroidvaniaSystem/MetSysPlugin.gd:80
+msgid "Print Object ID"
+msgstr "Print Object ID"
+
+#: addons/MetroidvaniaSystem/MetSysPlugin.gd:82
+msgid "Copy Object ID to Clipboard"
+msgstr "Kopieer object ID naar Clipboard."
+
+#: addons/MetroidvaniaSystem/MetSysPlugin.gd:125
+msgid ""
+"MetSys map has been modified.\n"
+"Do you want to save?"
+msgstr ""
+"MetSys MetSys kaart is gemodificeerd.\n"
+"Wilt u opslaan?"
+
+#: addons/MetroidvaniaSystem/MetSysPlugin.gd:158
+msgid "No scene open to check Node."
+msgstr "Geen scene open om Node te checken."
+
+#: addons/MetroidvaniaSystem/MetSysPlugin.gd:163
+msgid "You need to select a single Node."
+msgstr "Je moet 1 node selecteren."
+
+#: addons/MetroidvaniaSystem/MetSysPlugin.gd:168
+msgid "Could not determine ID."
+msgstr "Kon ID niet bepalen."
+
+#: addons/MetroidvaniaSystem/MetSysPlugin.gd:171
+msgid "ID of the selected Node is \"%s\"."
+msgstr "ID van geselecteerde Node is \"%s\"."
+
+#: addons/MetroidvaniaSystem/MetSysPlugin.gd:174
+msgid "ID \"%s\" copied to clipboard."
+msgstr "ID \"%s\"gekopieerd naar clipboard."
+
+#: addons/MetroidvaniaSystem/MetSysPlugin.gd:177
+msgid "Error!"
+msgstr "Error!"
+
+#: addons/MetroidvaniaSystem/MetSysPlugin.gd:178
+msgid ""
+"MetSys restart failed, the singleton still can't be loaded. Make sure the "
+"\"MetroidvaniaSystem.gd\" script has no errors.\n"
+"\n"
+"Common cause of errors are:\n"
+"- Using Godot version older than 4.4.\n"
+"- Name conflicts with one of the classes.\n"
+"\n"
+"The plugin will be now disabled. Fix the errors and try again."
+msgstr ""
+"MetSys herstart mislukt, de singleton kan nog steeds niet worden geladen. "
+"Zorg dat het \"MetroidvaniaSystem.gd\" script geen errors heeft.\n"
+"\n"
+"Veel voorkomende errors zijn:\n"
+"- Godot gebruiken ouder dan 4.4\n"
+"- Naam Conflicteert met 1 van de klasses\n"
+"\n"
+"De plug-in zal nu worden uitgeschakeld. Fix de errors en probeer opnieuw."
+
+#: addons/MetroidvaniaSystem/MetSysPlugin.gd:179
+msgid "Runs get_object_id() for the selected Node and prints the result."
+msgstr ""
+"Runt get_object_id() voor de geselecteerde Node en prints het resultaat."
+
+#: addons/MetroidvaniaSystem/MetSysPlugin.gd:180
+msgid ""
+"Runs get_object_id() for the selected Node and copies the result to "
+"clipboard."
+msgstr ""
+"Runt get_object_id() voor de geselecteerde Node en kopieert het resultaat "
+"naar klipboard."
+
+#~ msgid "Map"
+#~ msgstr "Kaart"
+
+#~ msgid "If enabled, the room will have scene's UID assigned instead of path."
+#~ msgstr ""
+#~ "Als dit aan staat zal de kamer zijn scene's UID aangewezen krijgen in "
+#~ "plaats van zijn pad."
+
+#~ msgid "Assign UID"
+#~ msgstr "Wijs UID aan"
