@@ -60,7 +60,7 @@ func _physics_process(delta: float) -> void:
 		$Label.hide()
 
 # Called after being transported to the target room.
-func enter():
+func enter() -> void:
 	# Set initial position of the elevator.
 	if up:
 		position.y = -64
