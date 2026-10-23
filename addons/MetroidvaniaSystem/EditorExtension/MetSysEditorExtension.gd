@@ -29,6 +29,7 @@ func _enter_tree() -> void:
 
 func _exit_tree() -> void:
 	remove_control_from_container(EditorPlugin.CONTAINER_CANVAS_EDITOR_MENU, button)
+	button.queue_free()
 	remove_inspector_plugin(inspector_plugin)
 	remove_export_plugin(export_plugin)
 	EditorInterface.get_resource_previewer().remove_preview_generator(preview_plugin)
